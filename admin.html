@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>예약 관리 | 고래상어 투어</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo">🐋 고래상어 투어</a>
+    <nav class="nav">
+      <a href="index.html">홈</a>
+      <a href="reservation.html">예약하기</a>
+      <a href="admin.html">예약 관리</a>
+    </nav>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="container">
+    <h1>예약 관리</h1>
+    <p>접수된 예약 목록입니다. (이 페이지는 인증이 적용되어 있지 않으니 배포 전 README의 보안 안내를 꼭 확인하세요.)</p>
+  </div>
+</section>
+
+<section class="container admin-section">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>신청일시</th>
+        <th>상태</th>
+        <th>투어</th>
+        <th>희망날짜</th>
+        <th>인원</th>
+        <th>예약자</th>
+        <th>연락처</th>
+        <th>이메일</th>
+        <th>요청사항</th>
+        <th>관리</th>
+      </tr>
+    </thead>
+    <tbody id="reservation-list">
+      <tr><td colspan="10" class="loading">불러오는 중...</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>고래상어 투어 · 관리자 페이지</p>
+  </div>
+</footer>
+
+<script type="module" src="js/admin.js"></script>
+</body>
+</html>

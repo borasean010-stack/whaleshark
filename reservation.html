@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>예약하기 | 고래상어 투어</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo">🐋 고래상어 투어</a>
+    <nav class="nav">
+      <a href="index.html">홈</a>
+      <a href="index.html#tours">투어 소개</a>
+      <a href="reservation.html">예약하기</a>
+    </nav>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="container">
+    <h1>예약하기</h1>
+    <p>아래 정보를 입력하시면 담당자가 확인 후 연락드립니다.</p>
+  </div>
+</section>
+
+<section class="container form-section">
+  <form id="reservation-form" class="reservation-form">
+
+    <div class="form-row">
+      <label for="tourType">투어 종류 *</label>
+      <select id="tourType" name="tourType" required>
+        <option value="">선택해주세요</option>
+        <option value="스노클링 체험">스노클링 체험</option>
+        <option value="스쿠버 다이빙 체험">스쿠버 다이빙 체험</option>
+        <option value="프라이빗 보트 투어">프라이빗 보트 투어</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label for="date">희망 날짜 *</label>
+      <input type="date" id="date" name="date" required>
+    </div>
+
+    <div class="form-row">
+      <label for="people">인원 수 *</label>
+      <input type="number" id="people" name="people" min="1" max="20" value="1" required>
+    </div>
+
+    <div class="form-row">
+      <label for="name">예약자 이름 *</label>
+      <input type="text" id="name" name="name" placeholder="홍길동" required>
+    </div>
+
+    <div class="form-row">
+      <label for="phone">연락처 *</label>
+      <input type="tel" id="phone" name="phone" placeholder="010-1234-5678" required>
+    </div>
+
+    <div class="form-row">
+      <label for="email">이메일</label>
+      <input type="email" id="email" name="email" placeholder="example@email.com">
+    </div>
+
+    <div class="form-row">
+      <label for="message">요청 사항</label>
+      <textarea id="message" name="message" rows="4" placeholder="궁금하신 점이나 요청 사항을 남겨주세요."></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block" id="submit-btn">예약 신청하기</button>
+
+    <p id="form-status" class="form-status" role="status"></p>
+  </form>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>고래상어 투어 · 문의 010-0000-0000 · info@example.com</p>
+  </div>
+</footer>
+
+<script type="module" src="js/reservation.js"></script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /reservations/{reservationId} {
+      // 누구나 새 예약을 "생성"할 수 있습니다 (예약 폼 제출).
+      // 필수 필드와 타입을 검증해 잘못된 데이터가 들어오는 것을 막습니다.
+      allow create: if
+        request.resource.data.keys().hasAll(['tourType', 'date', 'people', 'name', 'phone', 'status']) &&
+        request.resource.data.tourType is string &&
+        request.resource.data.name is string &&
+        request.resource.data.phone is string &&
+        request.resource.data.people is number &&
+        request.resource.data.status == 'pending';
+
+      // 기본값: 읽기/수정/삭제는 전면 차단 (admin.html 은 이 상태에서는 동작하지 않습니다).
+      allow read, update, delete: if false;
+
+      // --- 관리자 페이지(admin.html)를 실제로 쓰려면 ---
+      // 1) Firebase Authentication(이메일/비밀번호 등)을 활성화하고 관리자 계정을 만드세요.
+      // 2) 위의 "allow read, update, delete: if false;" 줄을 지우고 아래 주석을 해제하세요.
+      //    (관리자만 로그인 가능하도록 이메일을 지정하는 예시입니다. 실제 관리자 이메일로 바꿔서 사용하세요.)
+      //
+      // allow read, update, delete: if request.auth != null &&
+      //   request.auth.token.email == 'admin@example.com';
+    }
+  }
+}
