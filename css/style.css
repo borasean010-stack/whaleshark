@@ -57,13 +57,151 @@ p { margin: 0 0 12px; color: var(--muted); }
 
 /* Hero */
 .hero {
-  background: linear-gradient(160deg, var(--ocean-900), var(--ocean-500));
-  color: var(--white);
-  padding: 96px 0;
+  position: relative;
+  overflow: hidden;
+  min-height: 620px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: clamp(24px, 7vw, 100px);
   text-align: center;
+  color: var(--white);
+  perspective: 2000px;
+  isolation: isolate;
 }
 .hero h1 { color: var(--white); font-size: 2.4rem; line-height: 1.35; }
 .hero p { color: rgba(255,255,255,0.85); font-size: 1.05rem; margin-bottom: 28px; }
+
+/* Ocean background */
+.ocean-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(ellipse 120% 80% at 50% 20%, #1c6d92 0%, #0b3f5c 45%, #051826 100%);
+  overflow: hidden;
+}
+.light-rays {
+  position: absolute;
+  inset: -20% -20% -60% -20%;
+  background: repeating-conic-gradient(from 0deg at 50% 0%, rgba(255,255,255,0.07) 0deg 6deg, transparent 6deg 22deg);
+  mix-blend-mode: screen;
+  transform-origin: 50% 0%;
+  animation: rotateRays 50s linear infinite;
+  opacity: 0.55;
+}
+@keyframes rotateRays {
+  to { transform: rotate(360deg); }
+}
+.bubbles { position: absolute; inset: 0; }
+.bubbles span {
+  position: absolute;
+  bottom: -40px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.75), rgba(255,255,255,0.08) 70%);
+  animation-name: bubbleRise;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+@keyframes bubbleRise {
+  0%   { transform: translateY(0) translateX(0); opacity: 0; }
+  12%  { opacity: 0.6; }
+  100% { transform: translateY(-640px) translateX(24px); opacity: 0; }
+}
+.impact-flash {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  width: 160px;
+  height: 160px;
+  margin: -80px 0 0 -80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.9), rgba(255,255,255,0) 70%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+#hero-scene.enter-play .impact-flash {
+  animation: flashPulse 0.9s ease-out;
+  animation-delay: 1.7s;
+}
+@keyframes flashPulse {
+  0%   { opacity: 0; transform: scale(0.4); }
+  40%  { opacity: 0.85; transform: scale(1.6); }
+  100% { opacity: 0; transform: scale(2.4); }
+}
+
+/* Whale shark 3D entrance */
+.shark-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+.whale-shark {
+  width: min(560px, 70vw);
+  height: auto;
+  opacity: 0;
+  transform-style: preserve-3d;
+  will-change: transform, opacity, filter;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.45));
+}
+.whale-shark .body { fill: url(#sharkBody); }
+.whale-shark .sheen { fill: url(#sharkSheen); }
+.whale-shark .fin { fill: #123a52; }
+.whale-shark .spots circle { fill: rgba(255,255,255,0.55); }
+.whale-shark .gills path { fill: none; stroke: rgba(6,26,42,0.35); stroke-width: 3; stroke-linecap: round; }
+.whale-shark .eye { fill: #061c2c; }
+.whale-shark .mouth { fill: none; stroke: rgba(6,26,42,0.5); stroke-width: 3; stroke-linecap: round; }
+
+#hero-scene.enter-play .whale-shark {
+  animation: sharkEmerge 3.4s cubic-bezier(.22,.85,.35,1) forwards;
+  animation-delay: 0.2s;
+}
+.whale-shark.idle-swim {
+  opacity: 1;
+  animation: sharkIdle 6s ease-in-out infinite;
+}
+@keyframes sharkEmerge {
+  0%   { opacity: 0; filter: blur(10px) drop-shadow(0 20px 40px rgba(0,0,0,0.45)); transform: translate3d(6%, 34%, -1100px) scale(.26) rotateY(20deg) rotateZ(34deg); }
+  10%  { opacity: 1; }
+  46%  { opacity: 1; filter: blur(0) drop-shadow(0 20px 40px rgba(0,0,0,0.45)); transform: translate3d(14%, 4%, -40px) scale(1.05) rotateY(-6deg) rotateZ(22deg); }
+  58%  { transform: translate3d(18%, -2%, 10px) scale(1.16) rotateY(3deg) rotateZ(17deg); }
+  72%  { transform: translate3d(20%, -6%, -60px) scale(0.98) rotateY(-3deg) rotateZ(21deg); }
+  100% { opacity: 1; transform: translate3d(22%, -9%, -260px) scale(0.84) rotateY(-8deg) rotateZ(24deg); }
+}
+@keyframes sharkIdle {
+  0%, 100% { transform: translate3d(22%, -9%, -260px) scale(0.84) rotateY(-8deg) rotateZ(24deg); }
+  50%      { transform: translate3d(19%, -12%, -280px) scale(0.82) rotateY(-6deg) rotateZ(21deg); }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  max-width: 440px;
+  text-align: left;
+  padding: 36px 32px;
+  background: rgba(6, 26, 42, 0.35);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 20px;
+}
+.hero-content .btn { display: block; text-align: center; }
+
+@media (prefers-reduced-motion: reduce) {
+  .light-rays, .bubbles span, .impact-flash,
+  #hero-scene.enter-play .whale-shark, .whale-shark.idle-swim {
+    animation: none !important;
+  }
+  .whale-shark {
+    opacity: 1;
+    filter: none;
+    transform: translate3d(22%, -9%, -260px) scale(0.84) rotateY(-8deg) rotateZ(24deg);
+  }
+}
 
 .page-hero {
   background: var(--ocean-100);
