@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
 
 :root {
-  --ocean-900: #041018;
+  --ocean-900: #041018; /* Deep Ocean */
   --ocean-700: #0b2536;
   --ocean-500: #1a4a6b;
   --sand: #f8f9fa;
@@ -10,6 +10,23 @@
   --white: #ffffff;
   --radius: 12px;
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+  /* UI/UX Pro Max Design Standard Tokens (Boracay Whale Shark) */
+  --pm-hero-font: clamp(3.5rem, 8vw, 7rem);
+  --pm-hero-weight: 900;
+  --pm-hero-ls: -0.05em;
+  
+  --pm-glass-bg-strong: rgba(10, 15, 20, 0.6);
+  --pm-glass-bg-light: rgba(255, 255, 255, 0.03);
+  --pm-glass-blur: blur(24px);
+  --pm-glass-border: 1px solid rgba(255, 255, 255, 0.15);
+  --pm-glass-shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  
+  --pm-btn-gradient: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+  --pm-btn-gradient-hover: rgba(255,255,255,0.15);
+  --pm-btn-blur: blur(10px);
+  
+  --pm-transition-bounce: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 * { box-sizing: border-box; }
@@ -116,10 +133,10 @@ p { margin: 0 0 16px; color: var(--muted); }
   max-width: 600px;
 }
 .hero-text h1 {
-  font-size: clamp(3.5rem, 8vw, 7rem);
-  font-weight: 900;
+  font-size: var(--pm-hero-font);
+  font-weight: var(--pm-hero-weight);
   line-height: 1.1;
-  letter-spacing: -0.05em;
+  letter-spacing: var(--pm-hero-ls);
   margin-bottom: 24px;
 }
 .hero-text p {
@@ -143,17 +160,17 @@ p { margin: 0 0 16px; color: var(--muted); }
   transition: all 0.3s ease;
 }
 .btn-primary {
-  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
-  border: 1px solid rgba(255,255,255,0.2);
+  background: var(--pm-btn-gradient);
+  border: var(--pm-glass-border);
   color: #fff;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 15px rgba(0,0,0,0.5);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  box-shadow: var(--pm-glass-shadow-inset), 0 4px 15px rgba(0,0,0,0.5);
+  backdrop-filter: var(--pm-btn-blur);
+  -webkit-backdrop-filter: var(--pm-btn-blur);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 .btn-primary:hover { 
-  background: rgba(255,255,255,0.15); 
+  background: var(--pm-btn-gradient-hover); 
   border-color: rgba(255,255,255,0.4);
   transform: translateY(-2px); 
 }

@@ -90,11 +90,11 @@ body {
 
 /* Right Side: Booking Card */
 .booking-card {
-  background: rgba(10, 15, 20, 0.6);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 50px 100px -20px rgba(0, 0, 0, 0.8);
+  background: var(--pm-glass-bg-strong);
+  backdrop-filter: var(--pm-glass-blur);
+  -webkit-backdrop-filter: var(--pm-glass-blur);
+  border: var(--pm-glass-border);
+  box-shadow: var(--pm-glass-shadow-inset), 0 50px 100px -20px rgba(0, 0, 0, 0.8);
   border-radius: 30px;
   padding: 40px;
 }
@@ -128,13 +128,13 @@ body {
   cursor: pointer;
 }
 .tour-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  background: var(--pm-glass-bg-light);
+  border: var(--pm-glass-border);
+  box-shadow: var(--pm-glass-shadow-inset);
   border-radius: 16px;
   padding: 20px;
   text-align: center;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: var(--pm-transition-bounce);
 }
 .tour-card h4 {
   margin: 0 0 8px 0;
