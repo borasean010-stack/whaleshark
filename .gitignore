@@ -2,3 +2,7 @@
 node_modules/
 .firebase/
 firebase-debug.log
+firestore-debug.log
+ui-debug.log
+functions/firebase-debug.log
+*.mp4

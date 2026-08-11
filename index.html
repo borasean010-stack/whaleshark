@@ -1,167 +1,198 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BORACAY WHALE SHARK | 고래상어 투어 예약</title>
-<meta name="description" content="보라카이 고래상어와 함께하는 스노클링 · 다이빙 체험 예약 사이트">
+<meta name="description" content="보라카이 현지에서 직접 운영하는 고래상어 투어 예약 사이트입니다. 스노클링부터 다이빙까지 프리미엄 서비스를 경험하세요.">
+
+<!-- Naver SEO Meta Tags -->
+<meta name="naver-site-verification" content="temporary-verification-code-here">
+<meta property="og:type" content="website">
+<meta property="og:title" content="BORACAY WHALE SHARK">
+<meta property="og:description" content="보라카이 고래상어와 함께하는 스노클링 · 다이빙 체험 예약 사이트">
+<meta property="og:image" content="https://boracaywhaleshark.pages.dev/assets/hero-bg.jpg">
+<meta property="og:url" content="https://boracaywhaleshark.pages.dev">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/main.css">
 </head>
 <body>
 
+<!-- ===== HEADER (원래 유지) ===== -->
 <header class="site-header">
   <div class="container header-inner">
     <a href="index.html" class="logo">🐋 BORACAY WHALE SHARK</a>
     <nav class="nav">
-      <a href="index.html">홈</a>
-      <a href="index.html#tours">투어 소개</a>
-      <a href="reservation.html">예약하기</a>
+      <a href="index.html" data-en="Home" data-ko="홈">Home</a>
+      <a href="index.html#tours" data-en="Tours" data-ko="투어 소개">Tours</a>
+      <a href="reservation.html" data-en="Book Now" data-ko="예약하기">Book Now</a>
     </nav>
+    <button id="lang-toggle" class="btn-lang" style="display:none;" aria-label="Toggle language">🇰🇷 한국어로 보기</button>
   </div>
 </header>
 
+<!-- ===== HERO (원래 유지 — 절대 수정 금지) ===== -->
 <section class="hero" id="hero-scene">
-  <div class="ocean-bg">
-    <div class="light-rays"></div>
-    <div class="bubbles">
-      <span style="left:6%;width:8px;height:8px;animation-duration:8s;animation-delay:.2s"></span>
-      <span style="left:14%;width:14px;height:14px;animation-duration:11s;animation-delay:1.6s"></span>
-      <span style="left:23%;width:6px;height:6px;animation-duration:7s;animation-delay:.9s"></span>
-      <span style="left:34%;width:10px;height:10px;animation-duration:9.5s;animation-delay:2.4s"></span>
-      <span style="left:47%;width:7px;height:7px;animation-duration:8.5s;animation-delay:0s"></span>
-      <span style="left:58%;width:12px;height:12px;animation-duration:10.5s;animation-delay:1.1s"></span>
-      <span style="left:69%;width:5px;height:5px;animation-duration:7.5s;animation-delay:2.8s"></span>
-      <span style="left:78%;width:9px;height:9px;animation-duration:9s;animation-delay:.6s"></span>
-      <span style="left:88%;width:13px;height:13px;animation-duration:11.5s;animation-delay:1.9s"></span>
-      <span style="left:95%;width:6px;height:6px;animation-duration:8s;animation-delay:3.2s"></span>
+  <iframe class="hero-bg-video" src="https://www.youtube.com/embed/GnC-jWDaqgY?autoplay=1&mute=1&loop=1&playlist=GnC-jWDaqgY&controls=0&showinfo=0&rel=0&playsinline=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  <div class="hero-bg-overlay"></div>
+  <div class="container hero-container">
+    <div class="hero-text">
+      <h1 data-en="BORACAY<br>WHALE SHARK." data-ko="보라카이<br>고래상어.">BORACAY<br>WHALE SHARK.</h1>
+      <p data-en="Operated locally in Antique Libertad. Experience the magic of swimming with whale sharks in the deep blue sea. Let us bring you closer to the wonders of mother nature." data-ko="안티케 리베르타드(Antique Libertad) 현지에서 직접 운영합니다. 깊고 푸른 바다에서 고래상어와 함께 헤엄치는 마법 같은 경험을 해보세요. 경이로운 대자연의 세계로 여러분을 안내합니다.">Operated locally in Antique Libertad. Experience the magic of swimming with whale sharks in the deep blue sea. Let us bring you closer to the wonders of mother nature.</p>
     </div>
-    <div class="impact-flash"></div>
   </div>
 
-  <div class="shark-stage" aria-hidden="true">
-    <svg class="whale-shark" viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="sharkBody" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#123a52"/>
-          <stop offset="55%" stop-color="#1f6a8c"/>
-          <stop offset="100%" stop-color="#eaf6fb"/>
-        </linearGradient>
-        <radialGradient id="sharkSheen" cx="50%" cy="20%" r="70%">
-          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35"/>
-          <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
-        </radialGradient>
-      </defs>
-
-      <path class="fin fin-tail" d="M60,150 L2,78 L26,150 L2,222 Z"/>
-      <path class="fin fin-dorsal" d="M300,64 L344,6 L392,66 Z"/>
-      <path class="fin fin-pectoral" d="M540,205 L610,272 L512,222 Z"/>
-
-      <path class="body" d="M40,150
-        C40,108 104,66 210,56
-        C330,44 490,52 626,88
-        C706,109 762,130 782,150
-        C762,170 706,191 626,212
-        C490,248 330,256 210,244
-        C104,234 40,192 40,150 Z"/>
-      <path class="sheen" d="M40,150
-        C40,108 104,66 210,56
-        C330,44 490,52 626,88
-        C706,109 762,130 782,150
-        C762,170 706,191 626,212
-        C490,248 330,256 210,244
-        C104,234 40,192 40,150 Z"/>
-
-      <g class="spots">
-        <circle cx="240" cy="90" r="6"/>
-        <circle cx="278" cy="112" r="4.5"/>
-        <circle cx="312" cy="82" r="5"/>
-        <circle cx="352" cy="104" r="6.5"/>
-        <circle cx="392" cy="80" r="4"/>
-        <circle cx="420" cy="108" r="5.5"/>
-        <circle cx="460" cy="86" r="4.5"/>
-        <circle cx="498" cy="100" r="6"/>
-        <circle cx="330" cy="130" r="4"/>
-        <circle cx="370" cy="140" r="5"/>
-        <circle cx="410" cy="128" r="4"/>
-        <circle cx="450" cy="132" r="5.5"/>
-        <circle cx="530" cy="96" r="5"/>
-        <circle cx="560" cy="118" r="4"/>
-        <circle cx="590" cy="100" r="4.5"/>
-        <circle cx="260" cy="140" r="3.5"/>
-        <circle cx="220" cy="118" r="3"/>
-        <circle cx="300" cy="150" r="4"/>
-        <circle cx="340" cy="76" r="3.5"/>
-        <circle cx="380" cy="128" r="3"/>
-        <circle cx="440" cy="76" r="3.5"/>
-        <circle cx="480" cy="126" r="4"/>
-        <circle cx="510" cy="70" r="3"/>
-        <circle cx="550" cy="82" r="3.5"/>
-        <circle cx="610" cy="112" r="3"/>
-        <circle cx="290" cy="96" r="2.8"/>
-        <circle cx="400" cy="150" r="3"/>
-        <circle cx="470" cy="150" r="2.8"/>
-      </g>
-
-      <g class="gills">
-        <path d="M680,110 C676,130 676,150 680,172"/>
-        <path d="M696,106 C692,128 692,152 696,176"/>
-        <path d="M712,104 C708,127 708,153 712,178"/>
-      </g>
-
-      <circle class="eye" cx="742" cy="126" r="6"/>
-      <path class="mouth" d="M754,168 C764,176 774,176 782,170"/>
-    </svg>
-  </div>
-
-  <div class="hero-content">
-    <h1>고래상어와 함께하는<br>특별한 바다 체험</h1>
-    <p>보라카이 바닷속, 스노클링부터 스쿠버 다이빙까지 잊지 못할 순간을 예약하세요.</p>
-    <a href="reservation.html" class="btn btn-primary">지금 예약하기</a>
+  <!-- 스크롤 유도 모션 -->
+  <div class="hero-scroll-indicator">
+    <span class="scroll-text">SCROLL</span>
+    <div class="scroll-mouse">
+      <div class="scroll-wheel"></div>
+    </div>
   </div>
 </section>
 
-<section id="tours" class="tours container">
-  <h2>투어 상품</h2>
-  <div class="tour-grid">
-    <article class="tour-card">
-      <div class="tour-emoji">🤿</div>
-      <h3>스노클링 체험</h3>
-      <p>초보자도 안전하게 즐기는 고래상어 스노클링 투어입니다. 장비 대여 포함.</p>
-      <span class="tour-price">1인 80,000원~</span>
-    </article>
-    <article class="tour-card">
-      <div class="tour-emoji">🐠</div>
-      <h3>스쿠버 다이빙 체험</h3>
-      <p>전문 강사와 함께하는 다이빙 체험 프로그램. 자격증 없이도 참여 가능합니다.</p>
-      <span class="tour-price">1인 150,000원~</span>
-    </article>
-    <article class="tour-card">
-      <div class="tour-emoji">🚤</div>
-      <h3>프라이빗 보트 투어</h3>
-      <p>소규모 그룹을 위한 전세 보트 투어로 여유롭게 바다를 즐기세요.</p>
-      <span class="tour-price">보트 1대 400,000원~</span>
-    </article>
+<!-- ===== FAST TRACK — HYPER STYLE ===== -->
+<section class="hyper-section" id="fast-track-section">
+
+  <!-- 배경 이미지 (즉시 등장) -->
+  <div class="ws-motion-wrap">
+    <img src="assets/fast.jpg" alt="Whale Shark" class="ws-motion-img" id="ws-img">
   </div>
-  <div class="tours-cta">
-    <a href="reservation.html" class="btn btn-primary">원하는 투어 예약하기</a>
+
+  <!-- 대형 배경 글씨 -->
+  <div class="ft-word" id="ft-word">FAST<br>TRACK</div>
+
+  <!-- 콘텐츠: 상단 중앙 -->
+  <div class="hyper-center-block ft-content" id="ft-content">
+    <span class="hyper-label cyan">VIP 패스트트랙</span>
+    <p>대기 없이 가장 빠르고 쾌적하게 즐기는 최고급 고래상어 투어.<br>전문 가이드 동행, 액션캠 무료. 오리발·마스크 무료 대여.</p>
+    <a href="fast-track-details.html" class="hyper-btn">BOOK NOW</a>
   </div>
+
 </section>
 
-<section class="info container">
-  <h2>이용 안내</h2>
-  <ul class="info-list">
-    <li>예약 확정 후 담당자가 연락드립니다 (영업일 기준 1일 이내).</li>
-    <li>기상 상황에 따라 일정이 변경될 수 있습니다.</li>
-    <li>당일 취소는 환불이 어려우니 유의해 주세요.</li>
-  </ul>
+<!-- ===== BASIC TOUR — HYPER STYLE ===== -->
+<section class="hyper-section hyper-section--blue" id="basic-tour-section">
+
+  <!-- 배경 이미지 (즉시 등장) -->
+  <div class="ws-motion-wrap">
+    <img src="assets/basic.png" alt="Basic Tour" class="ws-motion-img basic-motion-img" id="basic-img">
+  </div>
+
+  <!-- 대형 배경 글씨 -->
+  <div class="ft-word basic-word" id="basic-word">BASIC<br>TOUR</div>
+
+  <!-- 콘텐츠: 상단 중앙 -->
+  <div class="hyper-center-block ft-content basic-content" id="basic-content">
+    <span class="hyper-label orange">에센셜 투어</span>
+    <p>보라카이 ↔ 안티케 리베르타드 왕복 교통 전부 포함.<br>번거로움 없는 올인클루시브.</p>
+    <a href="basic-details.html" class="hyper-btn hyper-btn--orange">BOOK NOW</a>
+  </div>
+
 </section>
 
-<footer class="site-footer">
-  <div class="container">
-    <p>BORACAY WHALE SHARK · 문의 010-0000-0000 · info@example.com</p>
-  </div>
-</footer>
+<!-- ===== 4번째 스냅 섹션: PARTNERS + INFO + FOOTER ===== -->
+<div class="snap-last" id="last-section">
 
-<script src="js/hero.js" defer></script>
+  <!-- PARTNERS -->
+  <section class="hyper-partners" id="partners-section">
+    <div class="hyper-partners-header" data-scroll-up>
+      <span class="hyper-eyebrow">TRUSTED BY &amp; IN PARTNERSHIP WITH</span>
+    </div>
+    <div class="partners-grid" data-scroll-up data-scroll-delay="0.15">
+      <div class="partner-card"><img src="assets/1.png" alt="Partner 1"></div>
+      <div class="partner-card"><img src="assets/2.png" alt="Partner 2"></div>
+      <div class="partner-card"><img src="assets/3.png" alt="Partner 3"></div>
+      <div class="partner-card"><img src="assets/4.png" alt="Partner 4"></div>
+      <div class="partner-card"><img src="assets/5.png" alt="Partner 5"></div>
+      <div class="partner-card"><img src="assets/6.png" alt="Partner 6"></div>
+      <div class="partner-card"><img src="assets/7.png" alt="Partner 7"></div>
+      <div class="partner-card"><img src="assets/8.png" alt="Partner 8"></div>
+    </div>
+  </section>
+
+  <!-- INFO -->
+  <section class="hyper-info" id="info-section">
+    <div class="container">
+      <div class="hyper-info-grid">
+        <div class="hyper-info-title" data-scroll-up>
+          <span class="hyper-eyebrow">이용 안내</span>
+          <h2>예약 전<br>확인하세요</h2>
+        </div>
+        <ul class="hyper-info-list" data-scroll-up data-scroll-delay="0.1">
+          <li>
+            <span class="info-num">01</span>
+            <p data-en="A representative will contact you within 1 business day after booking." data-ko="예약 확정 후 담당자가 연락드립니다 (영업일 기준 1일 이내).">예약 확정 후 담당자가 연락드립니다 (영업일 기준 1일 이내).</p>
+          </li>
+          <li>
+            <span class="info-num">02</span>
+            <p data-en="Schedules may change depending on weather conditions." data-ko="기상 상황에 따라 일정이 변경될 수 있습니다.">기상 상황에 따라 일정이 변경될 수 있습니다.</p>
+          </li>
+          <li>
+            <span class="info-num">03</span>
+            <p data-en="Same-day cancellations are non-refundable." data-ko="당일 취소는 환불이 어려우니 유의해 주세요.">당일 취소는 환불이 어려우니 유의해 주세요.</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="hyper-footer">
+    <div class="container hyper-footer-inner">
+      <div class="footer-logo">BORACAY<br>WHALE SHARK</div>
+      <div class="footer-links">
+        <a href="fast-track-details.html">Fast Track</a>
+        <a href="basic-details.html">Basic Tour</a>
+        <a href="reservation.html">예약하기</a>
+      </div>
+      <div class="footer-contact">
+        <span data-en="Contact: +82-10-0000-0000" data-ko="문의: 010-0000-0000">Contact: +82-10-0000-0000</span>
+        <span>info@boracaywhaleshark.com</span>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- /.snap-last -->
+
+<script src="js/i18n.js" defer></script>
+<script>
+  // ── 1. 일반 Intersection Observer (basic-tour, partners 등) ──
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      } else {
+        entry.target.classList.remove('visible');
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('[data-scroll-word],[data-scroll-img],[data-scroll-left],[data-scroll-right],[data-scroll-up]')
+    .forEach(el => io.observe(el));
+
+  // ── 2. FAST TRACK & BASIC: 섹션 진입 시 이미지+글씨+콘텐츠 동시 등장 ──
+  function makeSnapObserver(sectionId, imgId, wordId, contentId) {
+    const section = document.getElementById(sectionId);
+    const img     = document.getElementById(imgId);
+    const word    = document.getElementById(wordId);
+    const content = document.getElementById(contentId);
+
+    new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const on = entry.isIntersecting;
+        img    && img.classList.toggle('ws-enter', on);
+        word   && word.classList.toggle('ft-word--visible', on);
+        content && content.classList.toggle('visible', on);
+      });
+    }, { threshold: 0.7 }).observe(section);
+  }
+
+  makeSnapObserver('fast-track-section',  'ws-img',    'ft-word',    'ft-content');
+  makeSnapObserver('basic-tour-section',  'basic-img', 'basic-word', 'basic-content');
+</script>
 </body>
 </html>
