@@ -3,99 +3,195 @@ import {
   collection,
   query,
   orderBy,
-  onSnapshot,
+  getDocs,
   doc,
   updateDoc,
   deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const listEl = document.getElementById("reservation-list");
+// DOM Elements
+const loginOverlay = document.getElementById("login-overlay");
+const dashboard = document.getElementById("dashboard");
+const pinInput = document.getElementById("pin-input");
+const loginBtn = document.getElementById("login-btn");
+const loginError = document.getElementById("login-error");
+const logoutBtn = document.getElementById("logout-btn");
+const refreshBtn = document.getElementById("refresh-btn");
 
-const statusLabel = {
-  pending: "대기",
-  confirmed: "확정",
-  cancelled: "취소"
-};
+const tbody = document.getElementById("reservation-tbody");
+const statTotal = document.getElementById("stat-total");
+const statPending = document.getElementById("stat-pending");
+const statConfirmed = document.getElementById("stat-confirmed");
 
-function formatTimestamp(ts) {
-  if (!ts) return "-";
-  const d = ts.toDate ? ts.toDate() : new Date(ts);
-  return d.toLocaleString("ko-KR");
-}
+// Simple PIN Auth (For demonstration purposes)
+const ADMIN_PIN = "1234";
 
-function td(text) {
-  const cell = document.createElement("td");
-  cell.textContent = text ?? "";
-  return cell;
-}
-
-function renderRow(id, data) {
-  const row = document.createElement("tr");
-
-  row.appendChild(td(formatTimestamp(data.createdAt)));
-
-  const statusCell = document.createElement("td");
-  const select = document.createElement("select");
-  Object.entries(statusLabel).forEach(([value, label]) => {
-    const opt = document.createElement("option");
-    opt.value = value;
-    opt.textContent = label;
-    if (data.status === value) opt.selected = true;
-    select.appendChild(opt);
-  });
-  select.addEventListener("change", async () => {
-    await updateDoc(doc(db, "reservations", id), { status: select.value });
-  });
-  statusCell.appendChild(select);
-  row.appendChild(statusCell);
-
-  row.appendChild(td(data.tourType));
-  row.appendChild(td(data.date));
-  row.appendChild(td(String(data.people ?? "")));
-  row.appendChild(td(data.name));
-  row.appendChild(td(data.phone));
-  row.appendChild(td(data.email));
-  row.appendChild(td(data.message));
-
-  const actionCell = document.createElement("td");
-  const delBtn = document.createElement("button");
-  delBtn.textContent = "삭제";
-  delBtn.addEventListener("click", async () => {
-    if (confirm("이 예약을 삭제할까요?")) {
-      await deleteDoc(doc(db, "reservations", id));
-    }
-  });
-  actionCell.appendChild(delBtn);
-  row.appendChild(actionCell);
-
-  return row;
-}
-
-const q = query(collection(db, "reservations"), orderBy("createdAt", "desc"));
-
-onSnapshot(q, (snapshot) => {
-  listEl.innerHTML = "";
-  if (snapshot.empty) {
-    const row = document.createElement("tr");
-    const cell = document.createElement("td");
-    cell.colSpan = 10;
-    cell.className = "loading";
-    cell.textContent = "접수된 예약이 없습니다.";
-    row.appendChild(cell);
-    listEl.appendChild(row);
-    return;
+function checkAuth() {
+  if (sessionStorage.getItem("adminAuth") === "true") {
+    loginOverlay.style.display = "none";
+    dashboard.style.display = "block";
+    loadReservations();
+  } else {
+    loginOverlay.style.display = "flex";
+    dashboard.style.display = "none";
   }
-  snapshot.forEach((docSnap) => {
-    listEl.appendChild(renderRow(docSnap.id, docSnap.data()));
-  });
-}, (err) => {
-  console.error(err);
-  listEl.innerHTML = "";
-  const row = document.createElement("tr");
-  const cell = document.createElement("td");
-  cell.colSpan = 10;
-  cell.className = "loading";
-  cell.textContent = "예약 목록을 불러오지 못했습니다. Firestore 설정을 확인해주세요.";
-  row.appendChild(cell);
-  listEl.appendChild(row);
+}
+
+loginBtn.addEventListener("click", () => {
+  if (pinInput.value === ADMIN_PIN) {
+    sessionStorage.setItem("adminAuth", "true");
+    loginError.style.display = "none";
+    checkAuth();
+  } else {
+    loginError.style.display = "block";
+    pinInput.value = "";
+  }
 });
+
+pinInput.addEventListener("keyup", (e) => {
+  if (e.key === "Enter") loginBtn.click();
+});
+
+logoutBtn.addEventListener("click", () => {
+  sessionStorage.removeItem("adminAuth");
+  pinInput.value = "";
+  checkAuth();
+});
+
+refreshBtn.addEventListener("click", () => {
+  loadReservations();
+});
+
+// Load Data from Firestore
+async function loadReservations() {
+  tbody.innerHTML = "<tr><td colspan='8' style='text-align:center;'>로딩 중...</td></tr>";
+  try {
+    const q = query(collection(db, "reservations"), orderBy("createdAt", "desc"));
+    const querySnapshot = await getDocs(q);
+    
+    let total = 0;
+    let pending = 0;
+    let confirmed = 0;
+    
+    tbody.innerHTML = "";
+    
+    querySnapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      const id = docSnap.id;
+      
+      total++;
+      if (data.status === "pending") pending++;
+      if (data.status === "confirmed") confirmed++;
+      
+      const tr = document.createElement("tr");
+      
+      // Format Date
+      let createdDate = "N/A";
+      if (data.createdAt) {
+        const d = data.createdAt.toDate();
+        createdDate = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+      }
+      
+      // Tour Type Mapping
+      let tourName = data.tourType;
+      if (tourName === "VF") tourName = "VIP패스트트랙";
+      if (tourName === "F") tourName = "패스트트랙";
+      if (tourName === "R") tourName = "레귤러";
+      if (tourName === "T") tourName = "티켓온리";
+
+      // Status Select
+      const selectHtml = `
+        <div class="badge ${data.status}">
+          <select class="status-select" data-id="${id}">
+            <option value="pending" ${data.status === "pending" ? "selected" : ""}>대기중</option>
+            <option value="confirmed" ${data.status === "confirmed" ? "selected" : ""}>예약확정</option>
+            <option value="cancelled" ${data.status === "cancelled" ? "selected" : ""}>취소됨</option>
+          </select>
+        </div>
+      `;
+
+      tr.innerHTML = `
+        <td>
+          <div style="font-weight: 600;">${data.date}</div>
+          <div style="font-size: 0.8rem; color: var(--admin-text-muted);">신청: ${createdDate}</div>
+        </td>
+        <td style="font-weight: bold;">${data.name}</td>
+        <td>${tourName}</td>
+        <td>${data.people}명</td>
+        <td>
+          <div>${data.phone}</div>
+          ${data.email ? `<div style="font-size: 0.8rem; color: var(--admin-text-muted);">${data.email}</div>` : ''}
+        </td>
+        <td style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${data.message || ''}">
+          ${data.message || '-'}
+        </td>
+        <td>${selectHtml}</td>
+        <td>
+          <button class="action-btn delete-btn" data-id="${id}">삭제</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    if (total === 0) {
+      tbody.innerHTML = "<tr><td colspan='8' style='text-align:center;'>예약 내역이 없습니다.</td></tr>";
+    }
+
+    statTotal.textContent = total;
+    statPending.textContent = pending;
+    statConfirmed.textContent = confirmed;
+
+    attachEventListeners();
+
+  } catch (error) {
+    console.error("Error loading reservations: ", error);
+    tbody.innerHTML = "<tr><td colspan='8' style='text-align:center; color: red;'>데이터를 불러오는 중 오류가 발생했습니다.</td></tr>";
+  }
+}
+
+// Action Event Listeners
+function attachEventListeners() {
+  // Status Change
+  const selects = document.querySelectorAll(".status-select");
+  selects.forEach(select => {
+    select.addEventListener("change", async (e) => {
+      const id = e.target.getAttribute("data-id");
+      const newStatus = e.target.value;
+      const badgeDiv = e.target.parentElement;
+      
+      // Update badge class visually immediately
+      badgeDiv.className = `badge ${newStatus}`;
+
+      try {
+        await updateDoc(doc(db, "reservations", id), {
+          status: newStatus
+        });
+        // Update stats
+        loadReservations();
+      } catch (err) {
+        console.error("Error updating status: ", err);
+        alert("상태 업데이트에 실패했습니다.");
+      }
+    });
+  });
+
+  // Delete
+  const deleteBtns = document.querySelectorAll(".delete-btn");
+  deleteBtns.forEach(btn => {
+    btn.addEventListener("click", async (e) => {
+      if (confirm("정말로 이 예약을 삭제하시겠습니까? 복구할 수 없습니다.")) {
+        const id = e.target.getAttribute("data-id");
+        try {
+          await deleteDoc(doc(db, "reservations", id));
+          loadReservations();
+        } catch (err) {
+          console.error("Error deleting reservation: ", err);
+          alert("삭제에 실패했습니다.");
+        }
+      }
+    });
+  });
+}
+
+// Initialize
+checkAuth();

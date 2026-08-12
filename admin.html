@@ -1,59 +1,101 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>예약 관리 | BORACAY WHALE SHARK</title>
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | BORACAY WHALE SHARK</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
 
-<header class="site-header">
-  <div class="container header-inner">
-    <a href="index.html" class="logo">🐋 BORACAY WHALE SHARK</a>
-    <nav class="nav">
-      <a href="index.html">홈</a>
-      <a href="reservation.html">예약하기</a>
-      <a href="admin.html">예약 관리</a>
-    </nav>
+  <!-- PIN Login Overlay -->
+  <div id="login-overlay">
+    <div class="login-box">
+      <h2>관리자 인증</h2>
+      <p style="color: var(--admin-text-muted); margin-bottom: 30px;">어드민 페이지에 접근하려면 핀 번호를 입력하세요.</p>
+      <input type="password" id="pin-input" class="login-input" placeholder="PIN CODE" maxlength="4">
+      <button id="login-btn" class="login-btn">접속하기</button>
+      <div id="login-error">핀 번호가 올바르지 않습니다.</div>
+    </div>
   </div>
-</header>
 
-<section class="page-hero">
-  <div class="container">
-    <h1>예약 관리</h1>
-    <p>접수된 예약 목록입니다. (이 페이지는 인증이 적용되어 있지 않으니 배포 전 README의 보안 안내를 꼭 확인하세요.)</p>
+  <!-- Dashboard -->
+  <div id="dashboard">
+    <div class="layout">
+      
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h1>🐋 ADMIN PANEL</h1>
+        </div>
+        <nav class="sidebar-nav">
+          <a href="#" class="nav-item active">예약 관리 (Reservations)</a>
+          <a href="index.html" class="nav-item">메인 사이트로 돌아가기</a>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="topbar">
+          <h2 style="margin: 0; font-size: 1.25rem;">예약 대시보드</h2>
+          <div style="display:flex; gap: 10px;">
+            <button id="refresh-btn" class="action-btn">새로고침</button>
+            <button id="logout-btn" class="action-btn" style="background: var(--admin-danger);">로그아웃</button>
+          </div>
+        </header>
+
+        <div class="content-body">
+          
+          <!-- Stats -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <h3>전체 예약건수</h3>
+              <div class="value" id="stat-total">0</div>
+            </div>
+            <div class="stat-card">
+              <h3>대기중 (Pending)</h3>
+              <div class="value" id="stat-pending" style="color: var(--admin-warning);">0</div>
+            </div>
+            <div class="stat-card">
+              <h3>예약확정 (Confirmed)</h3>
+              <div class="value" id="stat-confirmed" style="color: var(--admin-success);">0</div>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="table-container">
+            <div class="table-header">
+              <h2>최신 예약 목록</h2>
+            </div>
+            <div style="overflow-x: auto;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>날짜(Date)</th>
+                    <th>예약자명(Name)</th>
+                    <th>투어 종류(Tour)</th>
+                    <th>인원(Pax)</th>
+                    <th>연락처(Contact)</th>
+                    <th>메모(Memo)</th>
+                    <th>상태(Status)</th>
+                    <th>관리(Action)</th>
+                  </tr>
+                </thead>
+                <tbody id="reservation-tbody">
+                  <!-- JS로 데이터 삽입 -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+        </div>
+      </main>
+
+    </div>
   </div>
-</section>
 
-<section class="container admin-section">
-  <table class="admin-table">
-    <thead>
-      <tr>
-        <th>신청일시</th>
-        <th>상태</th>
-        <th>투어</th>
-        <th>희망날짜</th>
-        <th>인원</th>
-        <th>예약자</th>
-        <th>연락처</th>
-        <th>이메일</th>
-        <th>요청사항</th>
-        <th>관리</th>
-      </tr>
-    </thead>
-    <tbody id="reservation-list">
-      <tr><td colspan="10" class="loading">불러오는 중...</td></tr>
-    </tbody>
-  </table>
-</section>
-
-<footer class="site-footer">
-  <div class="container">
-    <p>BORACAY WHALE SHARK · 관리자 페이지</p>
-  </div>
-</footer>
-
-<script type="module" src="js/admin.js"></script>
+  <script type="module" src="js/admin.js"></script>
 </body>
 </html>
