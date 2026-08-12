@@ -1,7 +1,7 @@
 /* reservation.css - Premium Split-Screen Layout */
 
 body {
-  background-color: var(--color-bg);
+  background-color: transparent;
   color: var(--color-fg);
   font-family: 'Inter', sans-serif;
   margin: 0;

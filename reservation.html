@@ -6,6 +6,9 @@
 <title>예약하기 | BORACAY WHALE SHARK</title>
 <link rel="stylesheet" href="css/style.css"> <!-- for nav -->
 <link rel="stylesheet" href="css/reservation.css">
+<!-- Flatpickr (Premium Datepicker) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
 <style>
 /* 추가: 배경 비디오를 위한 스타일 */
 .res-bg-video {
@@ -201,6 +204,21 @@
     
     updateLeftPanel();
     radios.forEach(r => r.addEventListener('change', updateLeftPanel));
+  });
+</script>
+
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    flatpickr("#date", {
+      minDate: "today",
+      disableMobile: "true", // ensures the custom UI is used on mobile instead of native
+      dateFormat: "Y-m-d",
+      altInput: true,
+      altFormat: "Y년 m월 d일",
+      placeholder: "예약 날짜를 선택해주세요"
+    });
   });
 </script>
 <script type="module" src="js/reservation.js"></script>
