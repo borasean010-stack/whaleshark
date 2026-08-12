@@ -6,45 +6,12 @@
 <title>REGULAR TOUR - Boracay Whale Shark</title>
 <link rel="stylesheet" href="css/details.css">
 <style>
-/* ── 버튼 (BOOK NOW) 색상 맞춤 ── */
-.hyper-btn-detail {
-  background: #3b82f6 !important;
-  box-shadow: 0 0 15px #3b82f680 !important;
-  color: #fff !important;
-}
-.hyper-btn-detail:hover {
-  background: #fff !important;
-  color: #3b82f6 !important;
-}
-.detail-sidebar-price {
-  color: #3b82f6 !important;
-}
-/* Premium 3D Icon Container */
-.learn-card-vertical {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 30px 20px;
-  border-radius: 24px !important;
-  overflow: hidden;
-  position: relative;
-}
-.learn-card-3d-icon {
-  width: 120px;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 20px;
-  margin-bottom: 25px;
-  box-shadow: 0 15px 30px rgba(0,0,0,0.8);
-  border: 1px solid rgba(255,255,255,0.1);
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
-}
-.learn-card-vertical:hover .learn-card-3d-icon {
-  transform: translateY(-15px) scale(1.15) rotate(5deg);
-  box-shadow: 0 25px 40px rgba(0,0,0,1);
-}
+.hyper-btn-detail { background: #3b82f6 !important; box-shadow: 0 0 15px #3b82f680 !important; color: #fff !important; }
+.hyper-btn-detail:hover { background: #fff !important; color: #3b82f6 !important; }
+.detail-sidebar-price { color: #3b82f6 !important; }
+.learn-card-vertical { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px 20px; border-radius: 24px !important; overflow: hidden; position: relative; }
+.learn-card-3d-icon { width: 120px; height: 120px; object-fit: cover; border-radius: 20px; margin-bottom: 25px; box-shadow: 0 15px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease; }
+.learn-card-vertical:hover .learn-card-3d-icon { transform: translateY(-15px) scale(1.15) rotate(5deg); box-shadow: 0 25px 40px rgba(0,0,0,1); }
 </style>
 </head>
 <body class="theme-red">
@@ -54,125 +21,135 @@
   <a href="index.html" class="detail-nav-close">✕ Close</a>
 </nav>
 
-<!-- 1. 히어로 배경 이미지 -->
 <section class="detail-hero">
   <img src="assets/fast.jpg" class="detail-hero-bg" alt="REGULAR TOUR Hero">
   <div class="detail-hero-overlay" style="background: linear-gradient(to bottom, rgba(15,23,42,0.3) 0%, rgba(15,23,42,1) 100%);"></div>
   <div class="detail-hero-content">
-    <div class="hero-title-word" style="margin-bottom:0; color: #fff; text-shadow: 0 0 40px #3b82f6, 0 0 100px #3b82f680;">
-      REGULAR<br>TOUR
+    <div class="hero-title-word" style="margin-bottom:0; color: #fff; text-shadow: 0 0 40px #3b82f6, 0 0 100px #3b82f680; font-size: 5rem;">
+      레귤러 고래상어
     </div>
+    <p style="font-size: 1.5rem; color: rgba(255,255,255,0.9); margin-top: 20px; font-weight: 300;">고래상어 투어의 기본을 경험하세요! 합리적인 가격에 꼭 필요한 모든 것!</p>
   </div>
 </section>
 
-<!-- 2. 2단 레이아웃 (메인 + 사이드바) -->
 <div class="detail-content-wrap">
-  
   <main class="detail-main">
-    <!-- ===== 포함사항 (INCLUSIONS) ===== -->
+    
     <section class="learn-section" style="padding-top:0;">
       <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #3b82f6;">포함사항 <span>INCLUSIONS</span></h2>
       <div class="learn-grid-vertical">
         
         <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(15,23,42,0.6);">
-          <img src="assets/icons/icon_van_1786500857429.jpg" alt="3d icon" class="learn-card-3d-icon">
-          <div class="learn-card-vertical-text">
-            <h3 style="color: #fff; font-size:1.15rem; line-height: 1.4; font-weight: 600;">사우스웨스트(이동수단) 이용</h3>
-          </div>
-        </div>
-        
-        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(15,23,42,0.6);">
           <img src="assets/icons/icon_ticket_1786501021694.jpg" alt="3d icon" class="learn-card-3d-icon">
           <div class="learn-card-vertical-text">
-            <h3 style="color: #fff; font-size:1.15rem; line-height: 1.4; font-weight: 600;">고래상어 투어 관람료 및 환경세</h3>
+            <h3 style="color: #fff; font-size:1.15rem; line-height: 1.4; font-weight: 600;">고래상어 투어 입장권, 관람료, 환경세</h3>
           </div>
         </div>
-        
+        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(15,23,42,0.6);">
+          <img src="assets/icons/icon_van_1786500857429.jpg" alt="3d icon" class="learn-card-3d-icon">
+          <div class="learn-card-vertical-text">
+            <h3 style="color: #fff; font-size:1.15rem; line-height: 1.4; font-weight: 600;">이동 차량비용 모두 포함</h3>
+          </div>
+        </div>
+        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(15,23,42,0.6);">
+          <img src="assets/icons/icon_island_1786501084846.jpg" alt="3d icon" class="learn-card-3d-icon">
+          <div class="learn-card-vertical-text">
+            <h3 style="color: #fff; font-size:1.15rem; line-height: 1.4; font-weight: 600;">구명조끼 제공</h3>
+          </div>
+        </div>
         <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(15,23,42,0.6);">
           <img src="assets/icons/icon_snorkeling_1786501047285.jpg" alt="3d icon" class="learn-card-3d-icon">
           <div class="learn-card-vertical-text">
-            <h3 style="color: #fff; font-size:1.15rem; line-height: 1.4; font-weight: 600;">오리발 포함</h3>
+            <h3 style="color: #fff; font-size:1.15rem; line-height: 1.4; font-weight: 600;">핀 무료대여</h3>
           </div>
         </div>
-        
-        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(15,23,42,0.6);">
-          <img src="assets/icons/icon_ticket_1786501021694.jpg" alt="3d icon" class="learn-card-3d-icon">
-          <div class="learn-card-vertical-text">
-            <h3 style="color: #fff; font-size:1.15rem; line-height: 1.4; font-weight: 600;">※ 티켓은 보라카이션 티켓 이용</h3>
-          </div>
-        </div>
-        
       </div>
     </section>
 
-    <!-- ===== 불포함사항 (EXCLUSIONS) ===== -->
-    <section class="learn-section" style="padding-top:20px;">
-      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #3b82f6;">불포함사항 <span>EXCLUSIONS</span></h2>
-      <div class="learn-grid-vertical">
+    <section class="learn-section">
+      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #3b82f6;">이런 분께 추천해요! <span>RECOMMENDATIONS</span></h2>
+      <ul style="list-style: none; padding: 0;">
         
-        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(15,23,42,0.6);">
-          <img src="assets/icons/icon_ticket_1786501021694.jpg" alt="3d icon" class="learn-card-3d-icon" style="filter: grayscale(1) opacity(0.6);">
-          <div class="learn-card-vertical-text">
-            <h3 style="color: rgba(255,255,255,0.5); font-size:1.15rem; line-height: 1.4;">개인 경비 및 매너팁</h3>
-          </div>
+        <li style="color: rgba(255,255,255,0.85); font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 15px;">
+          <span style="display:inline-block; width:24px; height:24px; background:#3b82f6; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
+          고래상어 투어를 합리적인 가격으로 경험하고 싶은 분
+        </li>
+        <li style="color: rgba(255,255,255,0.85); font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 15px;">
+          <span style="display:inline-block; width:24px; height:24px; background:#3b82f6; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
+          기본 구성만으로도 충분히 만족스러운 투어를 원하는 분
+        </li>
+        <li style="color: rgba(255,255,255,0.85); font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 15px;">
+          <span style="display:inline-block; width:24px; height:24px; background:#3b82f6; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
+          개별적으로 자유롭게 일정 운영을 계획 중인 분
+        </li>
+      </ul>
+    </section>
+
+    <section class="learn-section">
+      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #3b82f6;">이용 방법 <span>PROCESS</span></h2>
+      <div class="timeline" style="display: flex; gap: 20px; flex-wrap: wrap;">
+        
+        <div style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.03); padding: 30px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
+          <div style="font-size: 3rem; font-weight: 900; color: #3b82f6; margin-bottom: 15px; opacity: 0.5;">01</div>
+          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">예약 및 결제</h3>
+          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">원하는 날짜에 예약 및 결제</p>
         </div>
-        
+        <div style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.03); padding: 30px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
+          <div style="font-size: 3rem; font-weight: 900; color: #3b82f6; margin-bottom: 15px; opacity: 0.5;">02</div>
+          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">예약확정</h3>
+          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">예약 확정 후 바우처 수신</p>
+        </div>
+        <div style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.03); padding: 30px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
+          <div style="font-size: 3rem; font-weight: 900; color: #3b82f6; margin-bottom: 15px; opacity: 0.5;">03</div>
+          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">미팅장소 집결</h3>
+          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">미팅시간 내 디몰 맥도날드</p>
+        </div>
+        <div style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.03); padding: 30px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
+          <div style="font-size: 3rem; font-weight: 900; color: #3b82f6; margin-bottom: 15px; opacity: 0.5;">04</div>
+          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">고래상어 투어 참여</h3>
+          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">고래상어 투어를 즐겁게 참여!</p>
+        </div>
       </div>
     </section>
 
-    <!-- ===== 진행과정 (ITINERARY) 타임라인 ===== -->
-    <section class="learn-section" style="padding-top:20px;">
-      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #3b82f6;">진행과정 <span>ITINERARY</span></h2>
-      
-      <div class="timeline-wrap">
+    <section class="learn-section">
+      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #3b82f6;">안내사항 및 규정 <span>NOTICES</span></h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
         
-        <div class="timeline-item">
-          <div class="timeline-dot" style="background: #3b82f6; box-shadow: 0 0 10px #3b82f6;"></div>
-          <div class="timeline-content">
-            <div class="timeline-text">
-              <h3 style="text-align:left; color: #fff;">1. 예약 및 결제</h3>
-              <p style="text-align:left; color: rgba(255,255,255,0.7);">온라인 예약을 완료합니다.</p>
-            </div>
-          </div>
+        <div style="background: rgba(15,23,42,0.8); padding: 25px; border-radius: 16px; border-left: 4px solid #3b82f6;">
+          <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">미팅시간 엄수</h4>
+          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">운영시간 내 도착 필수 지각 시 참여 제한</p>
         </div>
-
-        <div class="timeline-item">
-          <div class="timeline-dot" style="background: #3b82f6; box-shadow: 0 0 10px #3b82f6;"></div>
-          <div class="timeline-content">
-            <div class="timeline-text">
-              <h3 style="text-align:left; color: #fff;">2. 확정 안내</h3>
-              <p style="text-align:left; color: rgba(255,255,255,0.7);">담당자가 확인 후 바우처를 전송합니다.</p>
-            </div>
-          </div>
+        <div style="background: rgba(15,23,42,0.8); padding: 25px; border-radius: 16px; border-left: 4px solid #3b82f6;">
+          <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">노쇼 주의</h4>
+          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">미팅시간에 불참할 경우 노쇼로 처리되며, 환불 불가</p>
         </div>
-        
-        <div class="timeline-item">
-          <div class="timeline-dot" style="background: #3b82f6; box-shadow: 0 0 10px #3b82f6;"></div>
-          <div class="timeline-content">
-            <div class="timeline-text">
-              <h3 style="text-align:left; color: #fff;">3. 투어 당일</h3>
-              <p style="text-align:left; color: rgba(255,255,255,0.7);">안내받은 미팅 장소 및 시간에 맞춰 합류합니다.</p>
-            </div>
-          </div>
+        <div style="background: rgba(15,23,42,0.8); padding: 25px; border-radius: 16px; border-left: 4px solid #3b82f6;">
+          <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">조인 투어로 진행</h4>
+          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">조인 투어로 진행이 되므로 개인활동 시간은 없습니다.</p>
         </div>
-
+        <div style="background: rgba(15,23,42,0.8); padding: 25px; border-radius: 16px; border-left: 4px solid #3b82f6;">
+          <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">현장 규정 준수</h4>
+          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">현지 환경 보호 및 안내 규정을 반드시 준수해주세요.</p>
+        </div>
+        <div style="background: rgba(15,23,42,0.8); padding: 25px; border-radius: 16px; border-left: 4px solid #3b82f6;">
+          <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">현지 교통 상황</h4>
+          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">현지 교통 상황에 따라 일정 및 시간이 변경될 수 있습니다.</p>
+        </div>
       </div>
     </section>
 
   </main>
-
-  <!-- 3. 오른쪽 고정 예약 탭 -->
-  <aside class="detail-sidebar" style="background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1);">
-    <div style="font-size:1.2rem; font-weight:800; margin-bottom:10px; color:#3b82f6;">REGULAR TOUR</div>
-    <p style="margin: 0 0 20px 0; font-size:0.9rem; color: rgba(255,255,255,0.8); line-height: 1.5;">합리적인 가격으로 만나는 사우스웨스트 이동 고래상어 투어</p>
-    
-    <div class="detail-sidebar-price" style="color: #fff;">75,000원</div>
-    
-    <a href="reservation.html?tour=R" class="hyper-btn-detail">BOOK NOW</a>
+  
+  <aside class="detail-sidebar">
+    <div class="detail-sidebar-sticky">
+      <div class="detail-sidebar-title">레귤러 고래상어</div>
+      <div class="detail-sidebar-price" style="margin-bottom:30px; font-size: 2.5rem; font-weight: 900;">74,900원</div>
+      <a href="reservation.html" class="hyper-btn-detail" style="display:block; text-align:center; padding: 18px 0; border-radius: 99px; font-weight: 800; font-size: 1.2rem; text-decoration: none;">지금 바로 예약하기</a>
+    </div>
   </aside>
 
 </div>
 
-<script src="js/i18n.js"></script>
 </body>
 </html>
