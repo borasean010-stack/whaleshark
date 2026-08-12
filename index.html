@@ -22,7 +22,7 @@
 <body>
 
 
-<!-- ===== HEADER (원래 유지) ===== -->
+<!-- ===== HEADER ===== -->
 <header class="site-header">
   <div class="container header-inner">
     <a href="index.html" class="logo">🐋 BORACAY WHALE SHARK</a>
@@ -35,7 +35,7 @@
   </div>
 </header>
 
-<!-- ===== HERO (원래 유지 — 절대 수정 금지) ===== -->
+<!-- ===== HERO ===== -->
 <section class="hero" id="hero-scene">
   <iframe class="hero-bg-video" src="https://www.youtube.com/embed/GnC-jWDaqgY?autoplay=1&mute=1&loop=1&playlist=GnC-jWDaqgY&controls=0&showinfo=0&rel=0&playsinline=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
   <div class="hero-bg-overlay"></div>
@@ -46,7 +46,7 @@
     </div>
   </div>
 
-  <!-- 스크롤 유도 모션 -->
+  <!-- Scroll Motion -->
   <div class="hero-scroll-indicator">
     <span class="scroll-text">SCROLL</span>
     <div class="scroll-mouse">
@@ -141,13 +141,13 @@
 
 <!-- ===== SECTION 1: VIP FAST TRACK ===== -->
 <section class="hyper-section" id="vf-section">
-  <!-- 배경 이미지 (즉시 등장) -->
+  <!-- Background Image -->
   <div class="ws-motion-wrap" style="background: #000;">
     <img src="assets/fast.jpg" alt="VIP Fast Track" class="ws-motion-img" id="vf-img" style="opacity: 0.6;">
   </div>
-  <!-- 대형 배경 글씨 -->
+  <!-- Large Background Text -->
   <div class="ft-word" id="vf-word" style="color: rgba(255, 255, 255, 0.1);">VIP FAST<br>TRACK</div>
-  <!-- 콘텐츠: 상단 중앙 -->
+  <!-- Content: Top Center -->
   <div class="hyper-center-block ft-content" id="vf-content" style="background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(15px); padding: 40px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); border: 1px solid rgba(168, 85, 247, 0.3);">
     <h2 style="color: #fff; font-size: 3.5rem; margin: 0 0 10px 0; font-weight: 900; line-height: 1.1; text-shadow: 0 0 40px rgba(168, 85, 247, 0.8);">VIP Fast Track</h2>
     <span class="hyper-label" style="display:inline-block; font-size:1.2rem; padding: 6px 20px; border-radius: 30px; background: rgba(168, 85, 247, 0.25); color: #e9d5ff; border: 1px solid rgba(168, 85, 247, 0.5); margin-bottom: 20px; letter-spacing: 1px; font-weight: 800;">5,820PHP</span>
@@ -198,7 +198,7 @@
   </div>
 </section>
 
-<!-- ===== 4번째 스냅 섹션: PARTNERS + INFO + FOOTER ===== -->
+<!-- ===== 4th Snap Section: PARTNERS + INFO + FOOTER ===== -->
 <div class="snap-last" id="last-section">
 
   <!-- PARTNERS -->
@@ -264,7 +264,7 @@
 
 <script src="js/i18n.js" defer></script>
 <script>
-  // ── 1. 일반 Intersection Observer (basic-tour, partners 등) ──
+  // ── 1. General Intersection Observer ──
   const io = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -278,7 +278,7 @@
   document.querySelectorAll('[data-scroll-word],[data-scroll-img],[data-scroll-left],[data-scroll-right],[data-scroll-up]')
     .forEach(el => io.observe(el));
 
-  // ── 2. 스냅 섹션 진입 시 이미지+글씨+콘텐츠 동시 등장 ──
+  // ── 2. Snap section: simultaneous image + text entrance ──
   function makeSnapObserver(sectionId, imgId, wordId, contentId) {
     const section = document.getElementById(sectionId);
     if (!section) return;

@@ -27,7 +27,7 @@
 
 <!-- Background Video -->
 <iframe class="res-bg-video" src="https://www.youtube.com/embed/GnC-jWDaqgY?autoplay=1&mute=1&loop=1&playlist=GnC-jWDaqgY&controls=0&showinfo=0&rel=0&playsinline=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-<!-- 투명도(불투명도) 오버레이 -->
+<!-- Overlay -->
 <div class="res-overlay"></div>
 
 <!-- Split Layout -->
@@ -80,9 +80,9 @@
           </label>
         </div>
         
-        <!-- 포함사항 안내 패널 -->
+        <!-- Inclusions Info Panel -->
         <div id="tour-inclusions" style="margin-top: 16px; padding: 16px; background: rgba(37, 99, 235, 0.05); border: 1px solid rgba(37, 99, 235, 0.2); border-radius: 12px; font-size: 0.9rem; line-height: 1.6; color: var(--color-fg); display: none;">
-          <!-- JS로 내용이 채워집니다 -->
+          <!-- Content filled by JS -->
         </div>
       </div>
 
@@ -119,14 +119,14 @@
 
 </div>
 
-<!-- 동적 텍스트 및 예약 스크립트 -->
+<!-- Dynamic Text and Reservation Script -->
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
     const requestedTour = urlParams.get('tour');
-    const tourParam = urlParams.get('tour'); // 기존 로직 유지용
+    const tourParam = urlParams.get('tour'); // for routing logic
     
-    // 포함사항 데이터
+    // Inclusions data
     const inclusionsData = {
       'F': '<b>[Fast Track Inclusions]</b><br>Admission, viewing, environmental fee, round-trip vehicle all included<br>Free rental of life jacket, luggage storage, fins, and bottled water provided<br>Fast Track (minimal wait for Whale Shark)<br>Hotel drop-off after Whale Shark tour<br>Whale Shark underwater photography included<br>One free shrimp per person when using Jumbo Crab<br>Free Island Tour worth $30 per person',
       'VF': '<b>[VIP Fast Track Inclusions]</b><br>Admission, viewing, environmental fee, <b>Exclusive private vehicle</b> all included<br>Free rental of life jacket, luggage storage, fins, snorkel mask, and bottled water<br>Fast Track (minimal wait for Whale Shark)<br>Hotel drop-off after Whale Shark tour<br><b>Libertad Professional Underwater Photographer Service</b><br>One free shrimp per person when using Jumbo Crab<br>Free Island Tour worth $30 per person',
@@ -152,10 +152,10 @@
       if (radio) radio.checked = true;
     }
     
-    // 초기 로딩 시 포함사항 업데이트
+    // Update inclusions on initial load
     updateInclusions();
 
-    // 라디오 버튼 변경 시마다 포함사항 업데이트
+    // Update inclusions on radio button change
     radios.forEach(r => r.addEventListener('change', updateInclusions));
 
     const badge = document.getElementById('dyn-badge');
@@ -163,7 +163,7 @@
     const desc = document.getElementById('dyn-desc');
     const btn = document.getElementById('submit-btn');
     
-    // 왼쪽 패널 다이내믹 변경 (옵션)
+    // Dynamically update left panel
     function updateLeftPanel() {
       const val = document.querySelector('input[name="tourType"]:checked').value;
       if (val === 'VF') {
@@ -172,7 +172,7 @@
         btn.style.background = 'var(--color-primary)';
       } else if (val === 'F') {
         title.innerHTML = 'FAST<br>TRACK';
-        desc.innerHTML = '가장 인기 있는 All-inclusive 패키지. 최소한의 대기로 쾌적하게 즐기세요.';
+        desc.innerHTML = 'The most popular All-inclusive package. Enjoy comfortably with minimal wait time.';
         btn.style.background = 'var(--color-accent)';
       } else if (val === 'R') {
         title.innerHTML = 'REGULAR<br>TOUR';
