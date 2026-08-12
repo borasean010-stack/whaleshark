@@ -125,7 +125,8 @@ p { margin: 0 0 16px; color: var(--muted); }
   line-height: 1.2;
   letter-spacing: -0.02em;
   margin-bottom: 20px;
-  color: var(--color-fg);
+  color: #ffffff;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); /* added shadow for better visibility over video */
 }
 .hero-text p {
   font-size: 1.1rem;
