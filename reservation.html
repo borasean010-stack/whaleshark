@@ -20,6 +20,7 @@
     <nav class="nav">
       <a href="index.html">Home</a>
       <a href="index.html#tours">Tours</a>
+      <button id="lang-btn" onclick="toggleLang()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color:#fff; padding: 6px 16px; border-radius:99px; font-size:0.85rem; font-weight:700; cursor:pointer; transition:all 0.2s;">🇰🇷 한국어</button>
       <a href="reservation.html">Book Now</a>
     </nav>
   </div>
@@ -111,7 +112,7 @@
 
 
 
-      <button type="submit" class="btn-submit" id="submit-btn">Pay with PayMongo</button>
+      <button type="submit" class="btn-submit" id="submit-btn">Proceed to Payment</button>
       
       <p id="form-status" class="form-status" role="status"></p>
     </form>
@@ -198,12 +199,79 @@
   document.addEventListener("DOMContentLoaded", () => {
     flatpickr("#date", {
       minDate: "today",
-      disableMobile: "true", // ensures the custom UI is used on mobile instead of native
+      disableMobile: "true",
       dateFormat: "Y-m-d",
       altInput: true,
       altFormat: "F j, Y",
       placeholder: "Please select a date"
     });
+  });
+</script>
+<script>
+  // ── Language Toggle ──
+  const TEXTS = {
+    en: {
+      title: 'Book Your Tour',
+      subtitle: 'Book easily and meet the miracle of Boracay.',
+      labelDate: 'Desired Tour Date *',
+      labelPeople: 'Number of People *',
+      labelName: 'Name (English) *',
+      labelEmail: 'Email *',
+      placeholderName: 'HONG GILDONG',
+      placeholderEmail: 'Enter your email address',
+      btnSubmit: 'Proceed to Payment',
+      btnLang: '🇰🇷 한국어',
+    },
+    ko: {
+      title: '투어 예약하기',
+      subtitle: '간편하게 예약하고 보라카이의 기적을 만나보세요.',
+      labelDate: '투어 희망 날짜 *',
+      labelPeople: '참여 인원 *',
+      labelName: '예약자 성함 (영문) *',
+      labelEmail: '이메일 *',
+      placeholderName: '홍길동',
+      placeholderEmail: '이메일 주소를 입력해주세요',
+      btnSubmit: '결제하기',
+      btnLang: '🇺🇸 English',
+    }
+  };
+  let currentLang = 'en';
+
+  function toggleLang() {
+    currentLang = currentLang === 'en' ? 'ko' : 'en';
+    applyLang(currentLang);
+  }
+
+  function applyLang(lang) {
+    const t = TEXTS[lang];
+    document.querySelector('.res-hero-title') && (document.querySelector('.res-hero-title').textContent = t.title);
+    document.querySelector('.res-hero-subtitle') && (document.querySelector('.res-hero-subtitle').textContent = t.subtitle);
+    const labels = document.querySelectorAll('label');
+    const inputs = document.querySelectorAll('input');
+    // Labels
+    document.querySelector('label[for="date"]') && (document.querySelector('label[for="date"]').textContent = t.labelDate);
+    document.querySelector('label[for="people"]') && (document.querySelector('label[for="people"]').textContent = t.labelPeople);
+    document.querySelector('label[for="name"]') && (document.querySelector('label[for="name"]').textContent = t.labelName);
+    document.querySelector('label[for="email"]') && (document.querySelector('label[for="email"]').textContent = t.labelEmail);
+    // Placeholders
+    document.getElementById('name') && (document.getElementById('name').placeholder = t.placeholderName);
+    document.getElementById('email') && (document.getElementById('email').placeholder = t.placeholderEmail);
+    // Submit button
+    document.getElementById('submit-btn') && (document.getElementById('submit-btn').textContent = t.btnSubmit);
+    // Lang button
+    document.getElementById('lang-btn') && (document.getElementById('lang-btn').textContent = t.btnLang);
+    // html lang
+    document.documentElement.lang = lang;
+  }
+
+  // Auto-apply language from sessionStorage (set when clicking 한국어로 예약 on homepage)
+  document.addEventListener('DOMContentLoaded', () => {
+    const saved = sessionStorage.getItem('lang');
+    if (saved === 'ko') {
+      currentLang = 'ko';
+      applyLang('ko');
+      sessionStorage.removeItem('lang');
+    }
   });
 </script>
 <script type="module" src="js/reservation.js"></script>

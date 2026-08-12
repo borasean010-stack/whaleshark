@@ -30,6 +30,7 @@
       <a href="index.html"  >Home</a>
       <a href="index.html#tours"  >Tours</a>
       <a href="reservation.html"  >Book Now</a>
+      <a href="reservation.html" id="lang-btn-main" onclick="window.location.href='reservation.html'; sessionStorage.setItem('lang','ko'); return false;" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color:#fff; padding: 5px 14px; border-radius:99px; font-size:0.82rem; font-weight:700; text-decoration:none;">🇰🇷 한국어로 예약</a>
     </nav>
     
   </div>
@@ -250,13 +251,28 @@
     <div class="container hyper-footer-inner">
       <div class="footer-logo">BORACAY<br>WHALE SHARK</div>
       <div class="footer-links">
-        <a href="fast-track-details.html">Fast Track</a>
-        <a href="basic-details.html">Basic Tour</a>
+        <a href="f-details.html">Fast Track</a>
+        <a href="vf-details.html">VIP Fast Track</a>
+        <a href="r-details.html">Regular Tour</a>
+        <a href="t-details.html">Ticket Only</a>
         <a href="reservation.html">Book Now</a>
       </div>
-      <div class="footer-contact">
-        <span  >Contact: +82-10-0000-0000</span>
-        <span>info@boracaywhaleshark.com</span>
+      <div class="footer-contact" style="display:flex; flex-direction:column; gap:10px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:1.2rem;">📍</span>
+          <span style="color:rgba(255,255,255,0.75); font-size:0.9rem;">Libertad, Antique, Philippines</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:1.2rem;">📧</span>
+          <a href="mailto:info@boracaywhaleshark.com" style="color:rgba(255,255,255,0.75); font-size:0.9rem; text-decoration:none;">info@boracaywhaleshark.com</a>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:1.2rem;">💬</span>
+          <a href="https://open.kakao.com" target="_blank" style="color:rgba(255,255,255,0.75); font-size:0.9rem; text-decoration:none;">KakaoTalk Open Chat</a>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+          <span style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:rgba(255,255,255,0.5); font-size:0.75rem; padding:3px 10px; border-radius:99px;">🔒 Secure Payment via PayMongo</span>
+        </div>
       </div>
     </div>
   </footer>
