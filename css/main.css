@@ -12,8 +12,9 @@ body {
   height: 100%;
 }
 
-/* 스냅 적용 대상 4개 섹션 */
+/* 스냅 적용 대상 5개 섹션 */
 .hero,
+#comparison-section,
 #vf-section,
 #f-section,
 #r-section,
@@ -561,4 +562,213 @@ body {
 @media (max-width: 480px) {
   .partners-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; }
   .hyper-bg-word { font-size: clamp(4rem, 20vw, 8rem); letter-spacing: -2px; }
+}
+
+/* ── COMPARISON SECTION (쿠폰 비교표) ── */
+#comparison-section {
+  background: #060910;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 100px 24px;
+}
+
+.comparison-title {
+  text-align: center;
+  color: #fff;
+  font-family: 'Outfit', 'Noto Sans KR', sans-serif;
+  margin-bottom: 60px;
+}
+.comparison-title h2 {
+  font-size: 3rem;
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+.comparison-title p {
+  color: rgba(255,255,255,0.6);
+  font-size: 1.1rem;
+}
+
+.coupon-container {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.coupon-card {
+  display: flex;
+  height: 130px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+  border: 3px solid var(--card-color);
+  position: relative;
+  text-decoration: none;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+  overflow: visible;
+}
+.coupon-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 25px 45px rgba(0,0,0,0.8);
+}
+
+.coupon-left {
+  flex: 0 0 55%;
+  background-color: var(--card-color);
+  border-radius: 16px 0 0 16px;
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+  position: relative;
+}
+/* Right pointing arrow cutout */
+.coupon-left::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -24px;
+  transform: translateY(-50%);
+  border-top: 24px solid transparent;
+  border-bottom: 24px solid transparent;
+  border-left: 24px solid var(--card-color);
+  z-index: 5;
+}
+
+.coupon-icon {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  margin-right: 25px;
+  filter: drop-shadow(0 10px 10px rgba(0,0,0,0.4));
+}
+.coupon-left-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.coupon-left-text h3 {
+  font-size: 2.2rem;
+  font-weight: 900;
+  margin: 0 0 5px 0;
+  color: #fff;
+  line-height: 1.1;
+  letter-spacing: -1px;
+}
+.coupon-left-text p {
+  font-size: 1.05rem;
+  margin: 0;
+  color: rgba(255,255,255,0.9);
+}
+
+.coupon-right {
+  flex: 1;
+  background: #fff;
+  border-radius: 0 16px 16px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+/* Dotted line */
+.coupon-divider {
+  position: absolute;
+  left: 45px;
+  top: 20px;
+  bottom: 20px;
+  border-left: 3px dotted rgba(0,0,0,0.15);
+  z-index: 1;
+}
+
+.coupon-right-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 45px;
+  z-index: 2;
+}
+
+.price-label {
+  background: #222;
+  color: #fff;
+  font-size: 0.85rem;
+  padding: 6px 20px;
+  border-radius: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: 2px;
+}
+.price-value {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #111;
+  line-height: 1;
+  letter-spacing: -2px;
+}
+.price-value span {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-left: 4px;
+}
+
+/* Card Variables */
+.card-vip { --card-color: #a855f7; }
+.card-f { --card-color: #f97316; }
+.card-r { --card-color: #3b82f6; }
+.card-t { --card-color: #10b981; }
+
+@media (max-width: 900px) {
+  .coupon-card {
+    height: auto;
+    flex-direction: column;
+    border-radius: 20px;
+    padding-bottom: 30px;
+  }
+  .coupon-left {
+    flex: 1;
+    border-radius: 16px 16px 0 0;
+    padding: 30px 20px;
+  }
+  .coupon-left::after {
+    /* Arrow points down instead of right on mobile */
+    top: auto;
+    bottom: -24px;
+    right: 50%;
+    transform: translateX(50%);
+    border-left: 24px solid transparent;
+    border-right: 24px solid transparent;
+    border-top: 24px solid var(--card-color);
+    border-bottom: none;
+  }
+  .coupon-right {
+    flex: 1;
+    border-radius: 0 0 16px 16px;
+    padding-top: 40px;
+  }
+  .coupon-divider {
+    /* horizontal dotted line */
+    left: 20px;
+    right: 20px;
+    top: 30px;
+    bottom: auto;
+    border-left: none;
+    border-top: 3px dotted rgba(0,0,0,0.15);
+  }
+  .coupon-right-content {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+  .coupon-icon {
+    width: 50px;
+    height: 50px;
+  }
+  .coupon-left-text h3 {
+    font-size: 1.8rem;
+  }
+  .price-value {
+    font-size: 2.8rem;
+  }
 }
