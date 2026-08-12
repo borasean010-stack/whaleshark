@@ -97,7 +97,7 @@ async function loadReservations() {
       if (tourName === "VF") tourName = "VIP패스트트랙";
       if (tourName === "F") tourName = "패스트트랙";
       if (tourName === "R") tourName = "레귤러 고래상어투어";
-      if (tourName === "T") tourName = "티켓온리";
+      if (tourName === "T") tourName = "고래상어 티켓만";
 
       // Status Select
       const selectHtml = `
