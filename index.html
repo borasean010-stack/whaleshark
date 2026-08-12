@@ -55,48 +55,62 @@
   </div>
 </section>
 
-<!-- ===== TOUR OPTIONS ===== -->
-<section class="tours" id="tours">
-  <div class="container">
-    <h2>투어 옵션 및 가격</h2>
-    <div class="tour-grid">
-      <!-- 1. T (티켓 온리) -->
-      <div class="tour-card" style="background: rgba(255,255,255,0.8); border: 1px solid rgba(0,0,0,0.05); backdrop-filter: blur(10px); border-radius: 16px;">
-        <div class="tour-emoji">🎫</div>
-        <h3>T (티켓 온리)</h3>
-        <p>보라카이션 사무실 수령<br>오전 8시 ~ 오후 6시</p>
-        <span class="tour-price">50,000원</span>
-      </div>
-      
-      <!-- 2. R (레귤러) -->
-      <div class="tour-card" style="background: rgba(255,255,255,0.8); border: 1px solid rgba(0,0,0,0.05); backdrop-filter: blur(10px); border-radius: 16px;">
-        <div class="tour-emoji">🚌</div>
-        <h3>R (레귤러 고래상어)</h3>
-        <p>사우스웨스트 이동<br>헬퍼, 오리발 포함</p>
-        <span class="tour-price">75,000원</span>
-      </div>
-      
-      <!-- 3. F (패스트트랙) -->
-      <div class="tour-card" style="background: rgba(255,255,255,0.8); border: 1px solid rgba(0,0,0,0.05); backdrop-filter: blur(10px); border-radius: 16px; position: relative; overflow: hidden;">
-        <div style="position: absolute; top: 10px; right: -30px; background: var(--color-accent); color: #fff; font-size: 0.7rem; font-weight: bold; padding: 4px 30px; transform: rotate(45deg);">BEST</div>
-        <div class="tour-emoji">🐋</div>
-        <h3>F (패스트트랙)</h3>
-        <p>왕복차량, 액션캠 무료<br>아일랜드 투어 & 점보크랩 혜택</p>
-        <span class="tour-price">95,000원</span>
-      </div>
-      
-      <!-- 4. VF (VIP 패스트트랙) -->
-      <div class="tour-card" style="background: rgba(37,99,235,0.05); border: 1px solid var(--color-primary); backdrop-filter: blur(10px); border-radius: 16px;">
-        <div class="tour-emoji">👑</div>
-        <h3 style="color: var(--color-primary);">V F (VIP 패스트트랙)</h3>
-        <p>전용 단독차량 이동<br>전문 수중촬영가 서비스 포함</p>
-        <span class="tour-price">별도 문의</span>
-      </div>
-    </div>
-    
-    <div class="tours-cta">
-      <a href="reservation.html" class="btn btn-primary" style="display:inline-block; padding:16px 40px; font-size:1.1rem; font-weight:800; border-radius:99px; text-decoration:none;">지금 바로 예약하기</a>
-    </div>
+<!-- ===== SECTION 1: VIP FAST TRACK ===== -->
+<section class="hyper-section" id="vf-section">
+  <!-- 배경 이미지 (즉시 등장) -->
+  <div class="ws-motion-wrap" style="background: rgba(248, 250, 252, 0.9);">
+    <img src="assets/fast.jpg" alt="VIP Fast Track" class="ws-motion-img" id="vf-img" style="opacity: 0.3;">
+  </div>
+  <!-- 대형 배경 글씨 -->
+  <div class="ft-word" id="vf-word" style="color: rgba(37, 99, 235, 0.05);">VIP FAST<br>TRACK</div>
+  <!-- 콘텐츠: 상단 중앙 -->
+  <div class="hyper-center-block ft-content" id="vf-content" style="background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid rgba(37, 99, 235, 0.2);">
+    <span class="hyper-label cyan" style="background: rgba(37, 99, 235, 0.1); color: var(--color-primary); border-color: var(--color-primary);">V F (VIP 패스트트랙)</span>
+    <h3 style="color: var(--color-primary); font-size: 2rem; margin: 10px 0;">별도 문의</h3>
+    <p style="color: var(--color-fg); font-weight: 500;">전용 단독차량 이동<br>전문 수중촬영가 서비스 포함<br>고래상어 투어 완전체 프리미엄</p>
+    <a href="reservation.html?tour=VF" class="hyper-btn" style="background: var(--color-primary); color: #fff;">BOOK NOW</a>
+  </div>
+</section>
+
+<!-- ===== SECTION 2: FAST TRACK ===== -->
+<section class="hyper-section" id="f-section">
+  <div class="ws-motion-wrap" style="background: rgba(248, 250, 252, 0.9);">
+    <img src="assets/basic.png" alt="Fast Track" class="ws-motion-img" id="f-img" style="opacity: 0.3;">
+  </div>
+  <div class="ft-word" id="f-word" style="color: rgba(37, 99, 235, 0.05);">FAST<br>TRACK</div>
+  <div class="hyper-center-block ft-content" id="f-content" style="background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05);">
+    <span class="hyper-label orange" style="background: rgba(249, 115, 22, 0.1); color: var(--color-accent); border-color: var(--color-accent);">F (패스트트랙)</span>
+    <h3 style="color: var(--color-fg); font-size: 2rem; margin: 10px 0;">95,000원</h3>
+    <p style="color: var(--color-fg); font-weight: 500;">왕복차량, 액션캠 무료<br>아일랜드 투어 & 점보크랩 혜택<br>가장 인기있는 올인클루시브</p>
+    <a href="reservation.html?tour=F" class="hyper-btn hyper-btn--orange" style="background: var(--color-accent); color: #fff;">BOOK NOW</a>
+  </div>
+</section>
+
+<!-- ===== SECTION 3: REGULAR ===== -->
+<section class="hyper-section" id="r-section">
+  <div class="ws-motion-wrap" style="background: rgba(248, 250, 252, 0.9);">
+    <img src="assets/fast.jpg" alt="Regular" class="ws-motion-img" id="r-img" style="opacity: 0.2;">
+  </div>
+  <div class="ft-word" id="r-word" style="color: rgba(37, 99, 235, 0.05);">REGULAR<br>TOUR</div>
+  <div class="hyper-center-block ft-content" id="r-content" style="background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05);">
+    <span class="hyper-label cyan" style="background: rgba(0, 0, 0, 0.05); color: var(--color-fg); border-color: rgba(0,0,0,0.2);">R (레귤러 고래상어)</span>
+    <h3 style="color: var(--color-fg); font-size: 2rem; margin: 10px 0;">75,000원</h3>
+    <p style="color: var(--color-fg); font-weight: 500;">사우스웨스트 이동<br>헬퍼, 오리발 기본 포함</p>
+    <a href="reservation.html?tour=R" class="hyper-btn" style="background: var(--color-fg); color: #fff;">BOOK NOW</a>
+  </div>
+</section>
+
+<!-- ===== SECTION 4: TICKET ONLY ===== -->
+<section class="hyper-section" id="t-section">
+  <div class="ws-motion-wrap" style="background: rgba(248, 250, 252, 0.9);">
+    <img src="assets/basic.png" alt="Ticket Only" class="ws-motion-img" id="t-img" style="opacity: 0.1;">
+  </div>
+  <div class="ft-word" id="t-word" style="color: rgba(37, 99, 235, 0.05);">TICKET<br>ONLY</div>
+  <div class="hyper-center-block ft-content" id="t-content" style="background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05);">
+    <span class="hyper-label cyan" style="background: rgba(0, 0, 0, 0.05); color: var(--color-fg); border-color: rgba(0,0,0,0.2);">T (티켓 온리)</span>
+    <h3 style="color: var(--color-fg); font-size: 2rem; margin: 10px 0;">50,000원</h3>
+    <p style="color: var(--color-fg); font-weight: 500;">보라카이션 사무실 수령<br>오전 8시 ~ 오후 6시</p>
+    <a href="reservation.html?tour=T" class="hyper-btn" style="background: transparent; color: var(--color-fg); border: 2px solid var(--color-fg);">BOOK NOW</a>
   </div>
 </section>
 
@@ -180,7 +194,28 @@
   document.querySelectorAll('[data-scroll-word],[data-scroll-img],[data-scroll-left],[data-scroll-right],[data-scroll-up]')
     .forEach(el => io.observe(el));
 
-  // Removed snap observers because sections were replaced by Tour Grid
+  // ── 2. 스냅 섹션 진입 시 이미지+글씨+콘텐츠 동시 등장 ──
+  function makeSnapObserver(sectionId, imgId, wordId, contentId) {
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+    const img     = document.getElementById(imgId);
+    const word    = document.getElementById(wordId);
+    const content = document.getElementById(contentId);
+
+    new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const on = entry.isIntersecting;
+        img    && img.classList.toggle('ws-enter', on);
+        word   && word.classList.toggle('ft-word--visible', on);
+        content && content.classList.toggle('visible', on);
+      });
+    }, { threshold: 0.5 }).observe(section);
+  }
+
+  makeSnapObserver('vf-section', 'vf-img', 'vf-word', 'vf-content');
+  makeSnapObserver('f-section',  'f-img',  'f-word',  'f-content');
+  makeSnapObserver('r-section',  'r-img',  'r-word',  'r-content');
+  makeSnapObserver('t-section',  't-img',  't-word',  't-content');
 </script>
 </body>
 </html>
