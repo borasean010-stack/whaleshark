@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>레귤러 - Boracay Whale Shark</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  body { background: #060910; color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
+  .detail-nav { display: flex; justify-content: space-between; padding: 20px 40px; position: fixed; top: 0; width: 100%; box-sizing: border-box; z-index: 100; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
+  .detail-nav a { color: #fff; text-decoration: none; font-weight: bold; font-size: 1.2rem; }
+  .hero-section { height: 50vh; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .hero-section img { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.5; z-index: 1; }
+  .hero-section h1 { position: relative; z-index: 2; font-size: 4rem; margin: 0; text-align: center; }
+  .content-section { max-width: 800px; margin: -50px auto 100px auto; position: relative; z-index: 3; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+  .content-section h2 { font-size: 2rem; color: #3b82f6; margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; }
+  .price { font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; color: #f97316; }
+  .desc { font-size: 1.1rem; line-height: 1.6; margin-bottom: 30px; opacity: 0.9; }
+  .inclusions { list-style: none; padding: 0; margin: 0 0 40px 0; }
+  .inclusions li { margin-bottom: 15px; padding-left: 30px; position: relative; font-size: 1.1rem; }
+  .inclusions li::before { content: '✓'; position: absolute; left: 0; color: #3b82f6; font-weight: bold; }
+  .book-btn { display: block; width: 100%; padding: 20px; text-align: center; background: #3b82f6; color: #fff; text-decoration: none; font-size: 1.3rem; font-weight: bold; border-radius: 12px; transition: background 0.3s; }
+  .book-btn:hover { background: #2563eb; }
+</style>
+</head>
+<body>
+
+<nav class="detail-nav">
+  <div class="detail-nav-title">레귤러</div>
+  <a href="index.html" class="detail-nav-close">✕ 닫기</a>
+</nav>
+
+<section class="hero-section">
+  <img src="assets/fast.jpg" alt="레귤러">
+  <h1>REGULAR TOUR</h1>
+</section>
+
+<div class="content-section">
+  <h2>투어 포함사항 안내</h2>
+  <div class="price">결제 금액: 75,000원</div>
+  <div class="desc">합리적인 가격으로 만나는 사우스웨스트 이동 고래상어 투어</div>
+  
+  <ul class="inclusions">
+    <li>사우스웨스트 이동</li>
+    <li>헬퍼 포함</li>
+    <li>오리발 포함</li>
+    <li>※ 티켓은 보라카이션 티켓 이용</li>
+  </ul>
+  
+  <a href="reservation.html?tour=R" class="book-btn">바로 예약하기 (BOOK NOW)</a>
+</div>
+
+</body>
+</html>
