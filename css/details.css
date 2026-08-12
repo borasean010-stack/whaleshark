@@ -489,3 +489,25 @@ body {
   .learn-card { flex-direction: column; height: auto; text-align: center; }
   .learn-card-text { text-align: center; }
 }
+
+.premium-icon {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.5rem;
+  margin: 35px auto 5px auto;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  transition: transform 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
+}
+.learn-card-vertical:hover .premium-icon {
+  transform: translateY(-10px) scale(1.1);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+  background: rgba(255, 255, 255, 0.15);
+}

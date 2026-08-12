@@ -10,8 +10,8 @@
 .hyper-btn-detail:hover { background: #fff !important; color: #10b981 !important; }
 .detail-sidebar-price { color: #10b981 !important; }
 .learn-card-vertical { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px 20px; border-radius: 24px !important; overflow: hidden; position: relative; }
-.learn-card-3d-icon { display: none; width: 120px; height: 120px; object-fit: cover; border-radius: 20px; margin-bottom: 25px; box-shadow: 0 15px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease; }
-.learn-card-vertical:hover .learn-card-3d-icon { display: none; transform: translateY(-15px) scale(1.15) rotate(5deg); box-shadow: 0 25px 40px rgba(0,0,0,1); }
+.learn-card-3d-icon { width: 120px; height: 120px; object-fit: cover; border-radius: 20px; margin-bottom: 25px; box-shadow: 0 15px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease; }
+.learn-card-vertical:hover .learn-card-3d-icon { transform: translateY(-15px) scale(1.15) rotate(5deg); box-shadow: 0 25px 40px rgba(0,0,0,1); }
 </style>
 </head>
 <body class="theme-red">
@@ -40,7 +40,7 @@
       <div class="learn-grid-vertical">
         
         <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(15,23,42,0.6);">
-          <img src="assets/icons/icon_ticket_1786501021694.jpg" alt="3d icon" class="learn-card-3d-icon">
+          <div class="premium-icon">✨</div>
           <div class="learn-card-vertical-text">
             <h3 style="color: #fff; font-size:1.15rem; line-height: 1.4; font-weight: 600;">고래상어 투어 입장권을 직접 구매하여 자유롭게 이용할 수 있습니다.</h3>
           </div>
