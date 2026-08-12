@@ -1,9 +1,9 @@
 /* reservation.css - Premium Split-Screen Layout */
 
 body {
-  background-color: #050a0e;
-  color: #fff;
-  font-family: 'Outfit', 'Noto Sans KR', sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  font-family: 'Inter', sans-serif;
   margin: 0;
   padding: 0;
   min-height: 100vh;
@@ -27,7 +27,7 @@ body {
 .res-overlay {
   position: fixed;
   inset: 0;
-  background: linear-gradient(to right, rgba(5,10,14,0.95) 0%, rgba(5,10,14,0.6) 50%, rgba(5,10,14,0.9) 100%);
+  background: linear-gradient(to right, rgba(248, 250, 252, 0.95) 0%, rgba(248, 250, 252, 0.4) 50%, rgba(248, 250, 252, 0.9) 100%);
   z-index: -1;
   backdrop-filter: blur(5px);
 }
@@ -90,11 +90,11 @@ body {
 
 /* Right Side: Booking Card */
 .booking-card {
-  background: var(--pm-glass-bg-strong);
+  background: var(--pm-glass-bg);
   backdrop-filter: var(--pm-glass-blur);
   -webkit-backdrop-filter: var(--pm-glass-blur);
   border: var(--pm-glass-border);
-  box-shadow: var(--pm-glass-shadow-inset), 0 50px 100px -20px rgba(0, 0, 0, 0.8);
+  box-shadow: var(--pm-glass-shadow);
   border-radius: 30px;
   padding: 40px;
 }
@@ -108,7 +108,7 @@ body {
   font-weight: 600;
   margin-bottom: 12px;
   letter-spacing: 1px;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--color-fg);
   text-transform: uppercase;
 }
 
@@ -128,40 +128,41 @@ body {
   cursor: pointer;
 }
 .tour-card {
-  background: var(--pm-glass-bg-light);
+  background: rgba(255, 255, 255, 0.8);
   border: var(--pm-glass-border);
-  box-shadow: var(--pm-glass-shadow-inset);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   border-radius: 16px;
   padding: 20px;
   text-align: center;
-  transition: var(--pm-transition-bounce);
+  transition: all 0.3s ease;
 }
 .tour-card h4 {
   margin: 0 0 8px 0;
   font-size: 1.1rem;
   font-weight: 800;
+  color: var(--color-primary);
 }
 .tour-card span {
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(30, 41, 59, 0.7);
 }
 .tour-option input:checked + .tour-card {
-  background: rgba(0, 120, 255, 0.1);
-  border-color: #0078ff;
-  box-shadow: 0 10px 30px rgba(0, 120, 255, 0.2);
+  background: rgba(37, 99, 235, 0.05);
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.15);
 }
 .tour-option input:checked + .tour-card h4 {
-  color: #00e5ff;
+  color: var(--color-primary);
 }
 
 /* Luxury Inputs */
 .input-luxury {
   width: 100%;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 12px;
   padding: 16px;
-  color: #fff;
+  color: var(--color-fg);
   font-size: 1rem;
   font-family: inherit;
   transition: all 0.3s ease;
@@ -169,17 +170,15 @@ body {
 }
 .input-luxury:focus {
   outline: none;
-  background: rgba(255, 255, 255, 0.1);
-  border-color: #0078ff;
-  box-shadow: 0 0 15px rgba(0, 120, 255, 0.3);
+  background: #fff;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
 }
 .input-luxury::placeholder {
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(30, 41, 59, 0.4);
 }
 /* Native date picker icon icon color */
 .input-luxury::-webkit-calendar-picker-indicator {
-  filter: invert(1);
-  opacity: 0.5;
   cursor: pointer;
 }
 
@@ -187,21 +186,20 @@ body {
   width: 100%;
   padding: 20px 0;
   margin-top: 20px;
-  background: #00e5ff;
+  background: var(--color-accent);
   border: none;
   border-radius: 999px;
-  color: #050a0e;
+  color: #fff;
   font-size: 1.1rem;
   font-weight: 800;
   letter-spacing: 2px;
   text-transform: uppercase;
   cursor: pointer;
-  box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+  box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
   transition: all 0.3s ease;
 }
 .btn-submit:hover {
-  background: #fff;
-  box-shadow: 0 0 40px rgba(255, 255, 255, 0.8);
+  background: #ea580c;
   transform: translateY(-2px);
 }
 
@@ -211,8 +209,8 @@ body {
   font-weight: 600;
   min-height: 24px;
 }
-.form-status.success { color: #00e5ff; }
-.form-status.error { color: #ff2828; }
+.form-status.success { color: var(--color-primary); }
+.form-status.error { color: #ef4444; }
 
 @media (max-width: 600px) {
   .tour-options {
