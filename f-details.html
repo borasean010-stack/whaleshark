@@ -3,58 +3,181 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>패스트트랙 - Boracay Whale Shark</title>
-<link rel="stylesheet" href="css/style.css">
+<title>FAST TRACK - Boracay Whale Shark</title>
+<link rel="stylesheet" href="css/details.css">
 <style>
-  body { background: #060910; color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
-  .detail-nav { display: flex; justify-content: space-between; padding: 20px 40px; position: fixed; top: 0; width: 100%; box-sizing: border-box; z-index: 100; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
-  .detail-nav a { color: #fff; text-decoration: none; font-weight: bold; font-size: 1.2rem; }
-  .hero-section { height: 50vh; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-  .hero-section img { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.5; z-index: 1; }
-  .hero-section h1 { position: relative; z-index: 2; font-size: 4rem; margin: 0; text-align: center; }
-  .content-section { max-width: 800px; margin: -50px auto 100px auto; position: relative; z-index: 3; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-  .content-section h2 { font-size: 2rem; color: #f97316; margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; }
-  .price { font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; color: #f97316; }
-  .desc { font-size: 1.1rem; line-height: 1.6; margin-bottom: 30px; opacity: 0.9; }
-  .inclusions { list-style: none; padding: 0; margin: 0 0 40px 0; }
-  .inclusions li { margin-bottom: 15px; padding-left: 30px; position: relative; font-size: 1.1rem; }
-  .inclusions li::before { content: '✓'; position: absolute; left: 0; color: #f97316; font-weight: bold; }
-  .book-btn { display: block; width: 100%; padding: 20px; text-align: center; background: #f97316; color: #fff; text-decoration: none; font-size: 1.3rem; font-weight: bold; border-radius: 12px; transition: background 0.3s; }
-  .book-btn:hover { background: #ea580c; }
+/* ── 버튼 (BOOK NOW) 색상 맞춤 ── */
+.hyper-btn-detail {
+  background: #f97316 !important;
+  box-shadow: 0 0 15px #f9731680 !important;
+  color: #fff !important;
+}
+.hyper-btn-detail:hover {
+  background: #fff !important;
+  color: #f97316 !important;
+}
+.detail-sidebar-price {
+  color: #f97316 !important;
+}
 </style>
 </head>
-<body>
+<body class="theme-red">
 
 <nav class="detail-nav">
-  <div class="detail-nav-title">패스트트랙</div>
-  <a href="index.html" class="detail-nav-close">✕ 닫기</a>
+  <div class="detail-nav-title">FAST TRACK</div>
+  <a href="index.html" class="detail-nav-close">✕ Close</a>
 </nav>
 
-<section class="hero-section">
-  <img src="assets/basic.png" alt="패스트트랙">
-  <h1>FAST TRACK</h1>
+<!-- 1. 히어로 배경 이미지 -->
+<section class="detail-hero">
+  <img src="assets/basic.png" class="detail-hero-bg" alt="FAST TRACK Hero">
+  <div class="detail-hero-overlay" style="background: linear-gradient(to bottom, rgba(15,23,42,0.3) 0%, rgba(15,23,42,1) 100%);"></div>
+  <div class="detail-hero-content">
+    <div class="hero-title-word" style="margin-bottom:0; color: #fff; text-shadow: 0 0 40px #f97316, 0 0 100px #f9731680;">
+      FAST<br>TRACK
+    </div>
+  </div>
 </section>
 
-<div class="content-section">
-  <h2>투어 포함사항 안내</h2>
-  <div class="price">결제 금액: 95,000원</div>
-  <div class="desc">왕복차량, 액션캠 무료! 가장 인기있는 올인클루시브 패키지</div>
+<!-- 2. 2단 레이아웃 (메인 + 사이드바) -->
+<div class="detail-content-wrap">
   
-  <ul class="inclusions">
-    <li>입장료, 관람료, 환경세</li>
-    <li>왕복 차량비용 전부 포함</li>
-    <li>구명조끼, 짐보관, 핀 무료 대여</li>
-    <li>생수 제공</li>
-    <li>패스트트랙 (대기없이 바로 이용)</li>
-    <li>종료 후 호텔 드랍 서비스</li>
-    <li>액션캠 무료 대여</li>
-    <li>점보크랩 이용시 인당 새우 한마리 무료</li>
-    <li>1인 $30 상당 아일랜드투어 무료</li>
-    <li>보라카이션 멤버십 카드</li>
-  </ul>
-  
-  <a href="reservation.html?tour=F" class="book-btn">바로 예약하기 (BOOK NOW)</a>
+  <main class="detail-main">
+    <!-- ===== 포함사항 (INCLUSIONS) ===== -->
+    <section class="learn-section" style="padding-top:0;">
+      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #f97316;">포함사항 <span>INCLUSIONS</span></h2>
+      <div class="learn-grid-vertical">
+        
+        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.1); background: rgba(15,23,42,0.6);">
+          <div class="learn-card-vertical-text">
+            <h3 style="color: #fff;">✓ 패스트트랙 (대기없이 바로이용)</h3>
+          </div>
+        </div>
+        
+        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.1); background: rgba(15,23,42,0.6);">
+          <div class="learn-card-vertical-text">
+            <h3 style="color: #fff;">✓ 왕복 이동 전용 차량 전부 포함</h3>
+          </div>
+        </div>
+        
+        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.1); background: rgba(15,23,42,0.6);">
+          <div class="learn-card-vertical-text">
+            <h3 style="color: #fff;">✓ 액션캠 무료 대여</h3>
+          </div>
+        </div>
+        
+        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.1); background: rgba(15,23,42,0.6);">
+          <div class="learn-card-vertical-text">
+            <h3 style="color: #fff;">✓ 투어 입장료, 관람료, 환경세 전부 포함</h3>
+          </div>
+        </div>
+        
+        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.1); background: rgba(15,23,42,0.6);">
+          <div class="learn-card-vertical-text">
+            <h3 style="color: #fff;">✓ 종료 후 호텔 드랍 서비스</h3>
+          </div>
+        </div>
+        
+        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.1); background: rgba(15,23,42,0.6);">
+          <div class="learn-card-vertical-text">
+            <h3 style="color: #fff;">✓ 구명조끼, 짐보관 무료서비스</h3>
+          </div>
+        </div>
+        
+        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.1); background: rgba(15,23,42,0.6);">
+          <div class="learn-card-vertical-text">
+            <h3 style="color: #fff;">✓ 핀(오리발) 무료대여</h3>
+          </div>
+        </div>
+        
+        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.1); background: rgba(15,23,42,0.6);">
+          <div class="learn-card-vertical-text">
+            <h3 style="color: #fff;">✓ 생수 무료 제공</h3>
+          </div>
+        </div>
+        
+        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.1); background: rgba(15,23,42,0.6);">
+          <div class="learn-card-vertical-text">
+            <h3 style="color: #fff;">✓ 점보크랩 이용시 인당 새우 한마리 무료</h3>
+          </div>
+        </div>
+        
+        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.1); background: rgba(15,23,42,0.6);">
+          <div class="learn-card-vertical-text">
+            <h3 style="color: #fff;">✓ $30상당 아일랜드투어 무료, 멤버십 카드 제공</h3>
+          </div>
+        </div>
+        
+      </div>
+    </section>
+
+    <!-- ===== 불포함사항 (EXCLUSIONS) ===== -->
+    <section class="learn-section" style="padding-top:20px;">
+      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #f97316;">불포함사항 <span>EXCLUSIONS</span></h2>
+      <div class="learn-grid-vertical">
+        
+        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.1); background: rgba(15,23,42,0.6);">
+          <div class="learn-card-vertical-text">
+            <h3 style="color: rgba(255,255,255,0.6);">✗ 개인 경비 및 매너팁</h3>
+          </div>
+        </div>
+        
+      </div>
+    </section>
+
+    <!-- ===== 진행과정 (ITINERARY) 타임라인 ===== -->
+    <section class="learn-section" style="padding-top:20px;">
+      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #f97316;">진행과정 <span>ITINERARY</span></h2>
+      
+      <div class="timeline-wrap">
+        
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background: #f97316; box-shadow: 0 0 10px #f97316;"></div>
+          <div class="timeline-content">
+            <div class="timeline-text">
+              <h3 style="text-align:left; color: #fff;">1. 예약 및 결제</h3>
+              <p style="text-align:left; color: rgba(255,255,255,0.7);">온라인 예약을 완료합니다.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background: #f97316; box-shadow: 0 0 10px #f97316;"></div>
+          <div class="timeline-content">
+            <div class="timeline-text">
+              <h3 style="text-align:left; color: #fff;">2. 확정 안내</h3>
+              <p style="text-align:left; color: rgba(255,255,255,0.7);">담당자가 확인 후 바우처를 전송합니다.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background: #f97316; box-shadow: 0 0 10px #f97316;"></div>
+          <div class="timeline-content">
+            <div class="timeline-text">
+              <h3 style="text-align:left; color: #fff;">3. 투어 당일</h3>
+              <p style="text-align:left; color: rgba(255,255,255,0.7);">안내받은 미팅 장소 및 시간에 맞춰 합류합니다.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 3. 오른쪽 고정 예약 탭 -->
+  <aside class="detail-sidebar" style="background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1);">
+    <div style="font-size:1.2rem; font-weight:800; margin-bottom:10px; color:#f97316;">FAST TRACK</div>
+    <p style="margin: 0 0 20px 0; font-size:0.9rem; color: rgba(255,255,255,0.8); line-height: 1.5;">왕복차량, 액션캠 무료! 가장 인기있는 올인클루시브</p>
+    
+    <div class="detail-sidebar-price" style="color: #fff;">95,000원</div>
+    
+    <a href="reservation.html?tour=F" class="hyper-btn-detail">BOOK NOW</a>
+  </aside>
+
 </div>
 
+<script src="js/i18n.js"></script>
 </body>
 </html>
