@@ -96,7 +96,7 @@ async function loadReservations() {
       let tourName = data.tourType;
       if (tourName === "VF") tourName = "VIP패스트트랙";
       if (tourName === "F") tourName = "패스트트랙";
-      if (tourName === "R") tourName = "레귤러";
+      if (tourName === "R") tourName = "레귤러 고래상어투어";
       if (tourName === "T") tourName = "티켓온리";
 
       // Status Select
