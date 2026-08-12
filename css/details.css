@@ -501,10 +501,20 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 2.5rem;
   margin: 35px auto 5px auto;
   box-shadow: 0 10px 25px rgba(0,0,0,0.3);
   transition: transform 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
+}
+.premium-icon svg {
+  width: 44px;
+  height: 44px;
+  stroke: var(--white, #ffffff);
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 8px rgba(255,255,255,0.4));
+  transition: transform 0.4s ease;
+}
+.learn-card-vertical:hover .premium-icon svg {
+  transform: scale(1.1);
 }
 .learn-card-vertical:hover .premium-icon {
   transform: translateY(-10px) scale(1.1);

@@ -13,6 +13,7 @@
 .learn-card-3d-icon { width: 120px; height: 120px; object-fit: cover; border-radius: 20px; margin-bottom: 25px; box-shadow: 0 15px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease; }
 .learn-card-vertical:hover .learn-card-3d-icon { transform: translateY(-15px) scale(1.15) rotate(5deg); box-shadow: 0 25px 40px rgba(0,0,0,1); }
 </style>
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="theme-red">
 
@@ -40,25 +41,33 @@
       <div class="learn-grid-vertical">
         
         <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(15,23,42,0.6);">
-          <div class="premium-icon">🎫</div>
+          <div class="premium-icon">
+            <i data-lucide="ticket"></i>
+          </div>
           <div class="learn-card-vertical-text">
             <h3 style="color: #fff; font-size:1.15rem; line-height: 1.4; font-weight: 600;">고래상어 투어 입장권, 관람료, 환경세</h3>
           </div>
         </div>
         <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(15,23,42,0.6);">
-          <div class="premium-icon">🚐</div>
+          <div class="premium-icon">
+            <i data-lucide="bus"></i>
+          </div>
           <div class="learn-card-vertical-text">
             <h3 style="color: #fff; font-size:1.15rem; line-height: 1.4; font-weight: 600;">이동 차량비용 모두 포함</h3>
           </div>
         </div>
         <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(15,23,42,0.6);">
-          <div class="premium-icon">🦺</div>
+          <div class="premium-icon">
+            <i data-lucide="life-buoy"></i>
+          </div>
           <div class="learn-card-vertical-text">
             <h3 style="color: #fff; font-size:1.15rem; line-height: 1.4; font-weight: 600;">구명조끼 제공</h3>
           </div>
         </div>
         <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(15,23,42,0.6);">
-          <div class="premium-icon">🤿</div>
+          <div class="premium-icon">
+            <i data-lucide="waves"></i>
+          </div>
           <div class="learn-card-vertical-text">
             <h3 style="color: #fff; font-size:1.15rem; line-height: 1.4; font-weight: 600;">핀 무료대여</h3>
           </div>
@@ -151,5 +160,8 @@
 
 </div>
 
+  <script>
+    lucide.createIcons();
+  </script>
 </body>
 </html>
