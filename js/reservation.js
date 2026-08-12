@@ -20,14 +20,12 @@ form.addEventListener("submit", async (e) => {
     date: formData.get("date"),
     people: Number(formData.get("people")),
     name: formData.get("name").trim(),
-    phone: formData.get("phone").trim(),
     email: formData.get("email").trim(),
-    message: formData.get("message").trim(),
     status: "pending",
     createdAt: serverTimestamp()
   };
 
-  if (!reservation.tourType || !reservation.date || !reservation.name || !reservation.phone) {
+  if (!reservation.tourType || !reservation.date || !reservation.name || !reservation.email) {
     statusEl.textContent = "필수 항목을 모두 입력해주세요.";
     statusEl.classList.add("error");
     return;

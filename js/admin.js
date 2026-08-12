@@ -119,11 +119,7 @@ async function loadReservations() {
         <td>${tourName}</td>
         <td>${data.people}명</td>
         <td>
-          <div>${data.phone}</div>
-          ${data.email ? `<div style="font-size: 0.8rem; color: var(--admin-text-muted);">${data.email}</div>` : ''}
-        </td>
-        <td style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${data.message || ''}">
-          ${data.message || '-'}
+          <div>${data.email}</div>
         </td>
         <td>${selectHtml}</td>
         <td>
