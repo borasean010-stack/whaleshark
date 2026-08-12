@@ -120,13 +120,15 @@ p { margin: 0 0 16px; color: var(--muted); }
   max-width: 600px;
 }
 .hero-text h1 {
-  font-size: clamp(2.5rem, 6vw, 5rem);
-  font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  font-size: clamp(3rem, 8vw, 6.5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
   margin-bottom: 20px;
-  color: #ffffff;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); /* added shadow for better visibility over video */
+  background: linear-gradient(135deg, #ffffff 0%, #a8c0ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 255, 255, 0.2);
 }
 .hero-text p {
   font-size: 1.1rem;
