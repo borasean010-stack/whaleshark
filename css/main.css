@@ -212,8 +212,8 @@ body {
   text-align: center;
   pointer-events: none;
   white-space: nowrap;
-  text-shadow: 0 0 40px rgba(255, 40, 40, 0.9), 0 0 100px rgba(255, 40, 40, 0.5);
 
+  /* 각 섹션별 고유 컬러 텍스트 섀도우를 위해 여기서는 공통 그림자 제거 */
   /* 초기: 투명 */
   opacity: 0;
   transition: opacity 1s ease;
@@ -221,6 +221,13 @@ body {
 .ft-word--visible {
   opacity: 1;
 }
+
+/* ── 섹션별 배경 텍스트 섀도우 ── */
+#vf-word { text-shadow: 0 0 40px rgba(168, 85, 247, 0.9), 0 0 100px rgba(168, 85, 247, 0.5); }
+#f-word  { text-shadow: 0 0 40px rgba(249, 115, 22, 0.9), 0 0 100px rgba(249, 115, 22, 0.5); }
+#r-word  { text-shadow: 0 0 40px rgba(59, 130, 246, 0.9), 0 0 100px rgba(59, 130, 246, 0.5); }
+#t-word  { text-shadow: 0 0 40px rgba(16, 185, 129, 0.9), 0 0 100px rgba(16, 185, 129, 0.5); }
+
 
 /* ft-content: 상단 중앙 플렉스 배치 */
 .ft-content {
