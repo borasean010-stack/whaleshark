@@ -117,6 +117,12 @@ async function loadReservations() {
         </td>
         <td style="font-weight: bold;">${data.name}</td>
         <td>${tourName}</td>
+        <td>
+          <div class="badge ${data.paymentStatus === 'paid' ? 'confirmed' : 'pending'}">
+            ${data.paymentStatus === 'paid' ? '결제완료' : '미결제'}
+          </div>
+          ${data.paymentMethod ? `<div style="font-size:0.75rem; color:#10b981; margin-top:4px;">${data.paymentMethod}</div>` : ''}
+        </td>
         <td>${data.people}명</td>
         <td>
           <div>${data.email}</div>

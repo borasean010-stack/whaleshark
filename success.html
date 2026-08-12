@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reservation Success - Boracay Whale Shark</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  body {
+    background: #020617;
+    color: #f8fafc;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .success-container {
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 60px 40px;
+    border-radius: 30px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  @keyframes slideUp {
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .icon-wrapper {
+    width: 100px;
+    height: 100px;
+    background: rgba(16, 185, 129, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 30px auto;
+    color: #10b981;
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.4);
+    animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s forwards;
+    transform: scale(0);
+  }
+  @keyframes popIn {
+    to { transform: scale(1); }
+  }
+  .success-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+  .success-desc {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 40px;
+    word-break: keep-all;
+  }
+  .home-btn {
+    display: inline-block;
+    background: #3b82f6;
+    color: #fff;
+    padding: 16px 40px;
+    border-radius: 99px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.1rem;
+    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4);
+    transition: all 0.3s ease;
+  }
+  .home-btn:hover {
+    background: #2563eb;
+    box-shadow: 0 15px 25px rgba(59, 130, 246, 0.6);
+    transform: translateY(-2px);
+  }
+</style>
+<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+<div class="success-container">
+  <div class="icon-wrapper">
+    <i data-lucide="check" style="width: 50px; height: 50px; stroke-width: 3px;"></i>
+  </div>
+  <h1 class="success-title">결제 및 예약 완료!</h1>
+  <p class="success-desc">
+    고객님의 결제가 성공적으로 처리되었으며,<br>
+    예약 신청이 안전하게 접수되었습니다.<br><br>
+    빠른 시일 내에 이메일 혹은 연락처로 담당자가 확정 바우처를 안내해 드릴 예정입니다.
+  </p>
+  <a href="index.html" class="home-btn">홈으로 돌아가기</a>
+</div>
+
+<script>
+  lucide.createIcons();
+</script>
+</body>
+</html>
