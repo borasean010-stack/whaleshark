@@ -55,44 +55,49 @@
   </div>
 </section>
 
-<!-- ===== FAST TRACK — HYPER STYLE ===== -->
-<section class="hyper-section" id="fast-track-section">
-
-  <!-- 배경 이미지 (즉시 등장) -->
-  <div class="ws-motion-wrap">
-    <img src="assets/fast.jpg" alt="Whale Shark" class="ws-motion-img" id="ws-img">
+<!-- ===== TOUR OPTIONS ===== -->
+<section class="tours" id="tours">
+  <div class="container">
+    <h2>투어 옵션 및 가격</h2>
+    <div class="tour-grid">
+      <!-- 1. T (티켓 온리) -->
+      <div class="tour-card" style="background: rgba(255,255,255,0.8); border: 1px solid rgba(0,0,0,0.05); backdrop-filter: blur(10px); border-radius: 16px;">
+        <div class="tour-emoji">🎫</div>
+        <h3>T (티켓 온리)</h3>
+        <p>보라카이션 사무실 수령<br>오전 8시 ~ 오후 6시</p>
+        <span class="tour-price">50,000원</span>
+      </div>
+      
+      <!-- 2. R (레귤러) -->
+      <div class="tour-card" style="background: rgba(255,255,255,0.8); border: 1px solid rgba(0,0,0,0.05); backdrop-filter: blur(10px); border-radius: 16px;">
+        <div class="tour-emoji">🚌</div>
+        <h3>R (레귤러 고래상어)</h3>
+        <p>사우스웨스트 이동<br>헬퍼, 오리발 포함</p>
+        <span class="tour-price">75,000원</span>
+      </div>
+      
+      <!-- 3. F (패스트트랙) -->
+      <div class="tour-card" style="background: rgba(255,255,255,0.8); border: 1px solid rgba(0,0,0,0.05); backdrop-filter: blur(10px); border-radius: 16px; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 10px; right: -30px; background: var(--color-accent); color: #fff; font-size: 0.7rem; font-weight: bold; padding: 4px 30px; transform: rotate(45deg);">BEST</div>
+        <div class="tour-emoji">🐋</div>
+        <h3>F (패스트트랙)</h3>
+        <p>왕복차량, 액션캠 무료<br>아일랜드 투어 & 점보크랩 혜택</p>
+        <span class="tour-price">95,000원</span>
+      </div>
+      
+      <!-- 4. VF (VIP 패스트트랙) -->
+      <div class="tour-card" style="background: rgba(37,99,235,0.05); border: 1px solid var(--color-primary); backdrop-filter: blur(10px); border-radius: 16px;">
+        <div class="tour-emoji">👑</div>
+        <h3 style="color: var(--color-primary);">V F (VIP 패스트트랙)</h3>
+        <p>전용 단독차량 이동<br>전문 수중촬영가 서비스 포함</p>
+        <span class="tour-price">별도 문의</span>
+      </div>
+    </div>
+    
+    <div class="tours-cta">
+      <a href="reservation.html" class="btn btn-primary" style="display:inline-block; padding:16px 40px; font-size:1.1rem; font-weight:800; border-radius:99px; text-decoration:none;">지금 바로 예약하기</a>
+    </div>
   </div>
-
-  <!-- 대형 배경 글씨 -->
-  <div class="ft-word" id="ft-word">FAST<br>TRACK</div>
-
-  <!-- 콘텐츠: 상단 중앙 -->
-  <div class="hyper-center-block ft-content" id="ft-content">
-    <span class="hyper-label cyan">VIP 패스트트랙</span>
-    <p>대기 없이 가장 빠르고 쾌적하게 즐기는 최고급 고래상어 투어.<br>전문 가이드 동행, 액션캠 무료. 오리발·마스크 무료 대여.</p>
-    <a href="fast-track-details.html" class="hyper-btn">BOOK NOW</a>
-  </div>
-
-</section>
-
-<!-- ===== BASIC TOUR — HYPER STYLE ===== -->
-<section class="hyper-section hyper-section--blue" id="basic-tour-section">
-
-  <!-- 배경 이미지 (즉시 등장) -->
-  <div class="ws-motion-wrap">
-    <img src="assets/basic.png" alt="Basic Tour" class="ws-motion-img basic-motion-img" id="basic-img">
-  </div>
-
-  <!-- 대형 배경 글씨 -->
-  <div class="ft-word basic-word" id="basic-word">BASIC<br>TOUR</div>
-
-  <!-- 콘텐츠: 상단 중앙 -->
-  <div class="hyper-center-block ft-content basic-content" id="basic-content">
-    <span class="hyper-label orange">에센셜 투어</span>
-    <p>보라카이 ↔ 안티케 리베르타드 왕복 교통 전부 포함.<br>번거로움 없는 올인클루시브.</p>
-    <a href="basic-details.html" class="hyper-btn hyper-btn--orange">BOOK NOW</a>
-  </div>
-
 </section>
 
 <!-- ===== 4번째 스냅 섹션: PARTNERS + INFO + FOOTER ===== -->
@@ -175,25 +180,7 @@
   document.querySelectorAll('[data-scroll-word],[data-scroll-img],[data-scroll-left],[data-scroll-right],[data-scroll-up]')
     .forEach(el => io.observe(el));
 
-  // ── 2. FAST TRACK & BASIC: 섹션 진입 시 이미지+글씨+콘텐츠 동시 등장 ──
-  function makeSnapObserver(sectionId, imgId, wordId, contentId) {
-    const section = document.getElementById(sectionId);
-    const img     = document.getElementById(imgId);
-    const word    = document.getElementById(wordId);
-    const content = document.getElementById(contentId);
-
-    new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        const on = entry.isIntersecting;
-        img    && img.classList.toggle('ws-enter', on);
-        word   && word.classList.toggle('ft-word--visible', on);
-        content && content.classList.toggle('visible', on);
-      });
-    }, { threshold: 0.7 }).observe(section);
-  }
-
-  makeSnapObserver('fast-track-section',  'ws-img',    'ft-word',    'ft-content');
-  makeSnapObserver('basic-tour-section',  'basic-img', 'basic-word', 'basic-content');
+  // Removed snap observers because sections were replaced by Tour Grid
 </script>
 </body>
 </html>
