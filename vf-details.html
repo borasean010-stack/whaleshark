@@ -1,21 +1,27 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VIP FAST TRACK - Boracay Whale Shark</title>
+<title>VIP Fast Track Tour - Boracay Whale Shark</title>
 <link rel="stylesheet" href="css/details.css">
 <style>
 .hyper-btn-detail { background: #a855f7 !important; box-shadow: 0 0 15px #a855f780 !important; color: #fff !important; }
 .hyper-btn-detail:hover { background: #fff !important; color: #a855f7 !important; }
 .detail-sidebar-price { color: #a855f7 !important; }
 .learn-card-vertical { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px 20px; border-radius: 24px !important; overflow: hidden; position: relative; }
-.learn-card-3d-icon { width: 120px; height: 120px; object-fit: cover; border-radius: 20px; margin-bottom: 25px; box-shadow: 0 15px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease; }
-.learn-card-vertical:hover .learn-card-3d-icon { transform: translateY(-15px) scale(1.15) rotate(5deg); box-shadow: 0 25px 40px rgba(0,0,0,1); }
+.inclusion-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 20px; }
+.inclusion-item { background: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.25); border-radius: 16px; padding: 24px 20px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; transition: transform 0.2s, box-shadow 0.2s; }
+.inclusion-item:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(168,85,247,0.2); }
+.inclusion-item.highlight { background: rgba(168,85,247,0.18); border-color: rgba(168,85,247,0.6); }
+.inclusion-icon { font-size: 2rem; }
+.inclusion-label { color: #fff; font-size: 0.95rem; font-weight: 600; line-height: 1.4; }
+.inclusion-sub { color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-top: 4px; }
+.vip-badge { display: inline-block; background: linear-gradient(135deg, #a855f7, #7c3aed); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 99px; margin-top: 6px; letter-spacing: 0.05em; }
 </style>
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="theme-red">
+<body class="theme-purple">
 
 <nav class="detail-nav">
   <div class="detail-nav-title">VIP FAST TRACK</div>
@@ -27,143 +33,193 @@
   <div class="detail-hero-overlay" style="background: linear-gradient(to bottom, rgba(15,23,42,0.3) 0%, rgba(15,23,42,1) 100%);"></div>
   <div class="detail-hero-content">
     <div class="hero-title-word" style="margin-bottom:0; color: #fff; text-shadow: 0 0 40px #a855f7, 0 0 100px #a855f780; font-size: clamp(2.5rem, 6vw, 4rem); word-break: keep-all; line-height: 1.2;">
-      VIP Fast Track Tour
+      VIP Fast Track
     </div>
-    <p style="font-size: 1.5rem; color: rgba(255,255,255,0.9); margin-top: 20px; font-weight: 300;">Minimal wait time<br>Fast and comfortable premium tour!</p>
+    <p style="font-size: 1.5rem; color: rgba(255,255,255,0.9); margin-top: 20px; font-weight: 300;">The ultimate private experience.<br>Your exclusive vehicle, your photographer, your tour.</p>
   </div>
 </section>
 
 <div class="detail-content-wrap">
   <main class="detail-main">
-    
+
+    <!-- INCLUSIONS -->
     <section class="learn-section" style="padding-top:0;">
-      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #a855f7;">Inclusions <span>INCLUSIONS</span></h2>
-      <div class="learn-grid-vertical">
-        
-        
-        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(15,23,42,0.6);">
-          <div class="premium-icon">
-            <i data-lucide="zap"></i>
-          </div>
-          <div class="learn-card-vertical-text">
-            <h3 style="color: #fff; font-size:1.15rem; line-height: 1.4; font-weight: 600;">Fast Track<br>(Minimal wait for Whale Shark) (Enter with minimal wait! Save your time)</h3>
-          </div>
-        </div>
-        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(15,23,42,0.6);">
-          <div class="premium-icon">
-            <i data-lucide="bus"></i>
-          </div>
-          <div class="learn-card-vertical-text">
-            <h3 style="color: #fff; font-size:1.15rem; line-height: 1.4; font-weight: 600;">Hotel drop-off after Whale Shark tour<br>(We will comfortably take you to your hotel after the tour)</h3>
+      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #a855f7;">Inclusions <span>WHAT'S INCLUDED</span></h2>
+      <div class="inclusion-grid">
+
+        <div class="inclusion-item highlight">
+          <div class="inclusion-icon">🚗</div>
+          <div>
+            <div class="inclusion-label">Exclusive Private Vehicle</div>
+            <div class="inclusion-sub">Just for your group — no sharing</div>
+            <span class="vip-badge">VIP ONLY</span>
           </div>
         </div>
-        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(15,23,42,0.6);">
-          <div class="premium-icon">
-            <i data-lucide="camera"></i>
-          </div>
-          <div class="learn-card-vertical-text">
-            <h3 style="color: #fff; font-size:1.15rem; line-height: 1.4; font-weight: 600;">Libertad Professional Underwater Photographer Service<br>(A professional will take underwater photos of your precious moments)</h3>
-          </div>
-        </div>
-        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(15,23,42,0.6);">
-          <div class="premium-icon">
-            <i data-lucide="waves"></i>
-          </div>
-          <div class="learn-card-vertical-text">
-            <h3 style="color: #fff; font-size:1.15rem; line-height: 1.4; font-weight: 600;">Free Snorkel Mask Rental<br>(Clean and safe snorkel masks provided)</h3>
+
+        <div class="inclusion-item highlight">
+          <div class="inclusion-icon">🤿</div>
+          <div>
+            <div class="inclusion-label">Libertad Professional Underwater Photographer</div>
+            <div class="inclusion-sub">Expert photographer dedicated to your group</div>
+            <span class="vip-badge">VIP ONLY</span>
           </div>
         </div>
-        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(15,23,42,0.6);">
-          <div class="premium-icon">
-            <i data-lucide="camera"></i>
-          </div>
-          <div class="learn-card-vertical-text">
-            <h3 style="color: #fff; font-size:1.15rem; line-height: 1.4; font-weight: 600;">Whale Shark Underwater Photography Included<br>(OSMO ACTION 5 PRO) (Capture precious moments vividly! Keep memories with the latest action cam)</h3>
+
+        <div class="inclusion-item">
+          <div class="inclusion-icon">🎟️</div>
+          <div>
+            <div class="inclusion-label">Admission + Viewing + Environmental Fee</div>
+            <div class="inclusion-sub">All entrance fees covered</div>
           </div>
         </div>
+
+        <div class="inclusion-item">
+          <div class="inclusion-icon">⚡</div>
+          <div>
+            <div class="inclusion-label">Fast Track Entry</div>
+            <div class="inclusion-sub">Skip the queue entirely</div>
+          </div>
+        </div>
+
+        <div class="inclusion-item">
+          <div class="inclusion-icon">🎽</div>
+          <div>
+            <div class="inclusion-label">Life Jacket + Fins + Snorkel Mask</div>
+            <div class="inclusion-sub">Full equipment free rental</div>
+          </div>
+        </div>
+
+        <div class="inclusion-item">
+          <div class="inclusion-icon">🧳</div>
+          <div>
+            <div class="inclusion-label">Luggage Storage</div>
+            <div class="inclusion-sub">Safe storage while you swim</div>
+          </div>
+        </div>
+
+        <div class="inclusion-item">
+          <div class="inclusion-icon">💧</div>
+          <div>
+            <div class="inclusion-label">Bottled Water</div>
+            <div class="inclusion-sub">Provided during the tour</div>
+          </div>
+        </div>
+
+        <div class="inclusion-item">
+          <div class="inclusion-icon">📸</div>
+          <div>
+            <div class="inclusion-label">Underwater Photography</div>
+            <div class="inclusion-sub">OSMO ACTION 5 PRO</div>
+          </div>
+        </div>
+
+        <div class="inclusion-item">
+          <div class="inclusion-icon">🏨</div>
+          <div>
+            <div class="inclusion-label">Hotel Drop-off</div>
+            <div class="inclusion-sub">Private ride back to your hotel</div>
+          </div>
+        </div>
+
+        <div class="inclusion-item">
+          <div class="inclusion-icon">🦐</div>
+          <div>
+            <div class="inclusion-label">Free Shrimp at Jumbo Crab</div>
+            <div class="inclusion-sub">1 shrimp per person</div>
+          </div>
+        </div>
+
+        <div class="inclusion-item">
+          <div class="inclusion-icon">🏝️</div>
+          <div>
+            <div class="inclusion-label">Free Island Tour</div>
+            <div class="inclusion-sub">Worth $30 per person</div>
+          </div>
+        </div>
+
       </div>
     </section>
 
+    <!-- RECOMMENDATIONS -->
     <section class="learn-section">
-      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #a855f7;">Recommendations <span>RECOMMENDATIONS</span></h2>
+      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #a855f7;">Recommendations <span>BEST FOR</span></h2>
       <ul style="list-style: none; padding: 0;">
-        
-        <li style="color: rgba(255,255,255,0.85); font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 15px;">
-          <span style="display:inline-block; width:24px; height:24px; background:#a855f7; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
-          Those who want to enjoy the tour with minimal wait time
+        <li style="color: rgba(255,255,255,0.85); font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 15px;">
+          <span style="display:inline-block; min-width:24px; height:24px; background:#a855f7; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
+          Families, couples, or groups who want a completely private tour experience
         </li>
-        <li style="color: rgba(255,255,255,0.85); font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 15px;">
-          <span style="display:inline-block; width:24px; height:24px; background:#a855f7; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
-          Those who want to use their time efficiently
+        <li style="color: rgba(255,255,255,0.85); font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 15px;">
+          <span style="display:inline-block; min-width:24px; height:24px; background:#a855f7; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
+          Those who want a dedicated professional photographer capturing every moment
         </li>
-        <li style="color: rgba(255,255,255,0.85); font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 15px;">
-          <span style="display:inline-block; width:24px; height:24px; background:#a855f7; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
-          Those who want more comfortable and premium services
+        <li style="color: rgba(255,255,255,0.85); font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 15px;">
+          <span style="display:inline-block; min-width:24px; height:24px; background:#a855f7; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
+          Travelers who refuse to share a vehicle and want full exclusivity
         </li>
-        <li style="color: rgba(255,255,255,0.85); font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 15px;">
-          <span style="display:inline-block; width:24px; height:24px; background:#a855f7; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
-          Those who want a special experience with family, lovers, or friends
+        <li style="color: rgba(255,255,255,0.85); font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 15px;">
+          <span style="display:inline-block; min-width:24px; height:24px; background:#a855f7; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
+          Anyone who wants the absolute best Boracay whale shark experience available
         </li>
       </ul>
     </section>
 
+    <!-- PROCESS -->
     <section class="learn-section">
-      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #a855f7;">Process <span>PROCESS</span></h2>
-      <div class="timeline" style="display: flex; gap: 20px; flex-wrap: wrap;">
-        
+      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #a855f7;">Process <span>HOW IT WORKS</span></h2>
+      <div style="display: flex; gap: 20px; flex-wrap: wrap;">
         <div style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.03); padding: 30px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
           <div style="font-size: 3rem; font-weight: 900; color: #a855f7; margin-bottom: 15px; opacity: 0.5;">01</div>
           <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">Booking & Payment</h3>
-          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Book and pay for your desired date</p>
+          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Book online and pay securely</p>
         </div>
         <div style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.03); padding: 30px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
           <div style="font-size: 3rem; font-weight: 900; color: #a855f7; margin-bottom: 15px; opacity: 0.5;">02</div>
-          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">Confirmed</h3>
-          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Receive voucher after confirmation</p>
+          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">Receive Voucher</h3>
+          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Confirmation voucher sent to your email</p>
         </div>
         <div style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.03); padding: 30px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
           <div style="font-size: 3rem; font-weight: 900; color: #a855f7; margin-bottom: 15px; opacity: 0.5;">03</div>
-          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">Meet at the Meeting Point</h3>
-          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">At Main Road Jollibee within the meeting time</p>
+          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">Private Pickup</h3>
+          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Your exclusive vehicle picks you up at the agreed location</p>
         </div>
         <div style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.03); padding: 30px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
           <div style="font-size: 3rem; font-weight: 900; color: #a855f7; margin-bottom: 15px; opacity: 0.5;">04</div>
-          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">Join the Whale Shark Tour</h3>
-          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Enter with minimal wait! Enjoy the tour!</p>
+          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">VIP Whale Shark Experience</h3>
+          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Fast Track entry with your private photographer!</p>
         </div>
       </div>
     </section>
 
+    <!-- NOTICES -->
     <section class="learn-section">
       <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #a855f7;">Notices & Rules <span>NOTICES</span></h2>
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-        
         <div style="background: rgba(15,23,42,0.8); padding: 25px; border-radius: 16px; border-left: 4px solid #a855f7;">
-          <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">Cancellation 15 days in advance</h4>
-          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">100% Refund</p>
+          <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">Cancellation 15+ days in advance</h4>
+          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">100% Full Refund</p>
         </div>
         <div style="background: rgba(15,23,42,0.8); padding: 25px; border-radius: 16px; border-left: 4px solid #a855f7;">
-          <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">Cancellation 8 days in advance</h4>
+          <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">Cancellation 8–14 days in advance</h4>
           <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">80% Refund</p>
         </div>
         <div style="background: rgba(15,23,42,0.8); padding: 25px; border-radius: 16px; border-left: 4px solid #a855f7;">
-          <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">Cancellation 4 days in advance</h4>
+          <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">Cancellation 4–7 days in advance</h4>
           <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">50% Refund</p>
         </div>
         <div style="background: rgba(15,23,42,0.8); padding: 25px; border-radius: 16px; border-left: 4px solid #a855f7;">
-          <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">Cancellation 3 days in advance</h4>
+          <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">Cancellation within 3 days</h4>
           <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">Non-refundable</p>
         </div>
       </div>
     </section>
 
   </main>
-  
+
   <aside class="detail-sidebar">
     <div class="detail-sidebar-sticky">
-      <div class="detail-sidebar-title">VIP Fast Track Tour</div>
-      <div class="detail-sidebar-price" style="margin-bottom:30px; font-size: 2.5rem; font-weight: 900;">5,820PHP</div>
-      <a href="reservation.html?tour=VF" class="hyper-btn-detail" style="display:block; text-align:center; padding: 18px 0; border-radius: 99px; font-weight: 800; font-size: 1.2rem; text-decoration: none;">Book Now</a>
+      <div class="detail-sidebar-title">VIP Fast Track</div>
+      <div class="detail-sidebar-price" style="margin-bottom:30px; font-size: 2.5rem; font-weight: 900;">₱5,820</div>
+      <a href="reservation.html?tour=VF" class="hyper-btn-detail" style="display:block; text-align:center; padding: 18px 0; border-radius: 99px; font-weight: 800; font-size: 1.2rem; text-decoration: none;">BOOK NOW</a>
     </div>
   </aside>
 

@@ -1,21 +1,26 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TICKET ONLY - Boracay Whale Shark</title>
+<title>Ticket Only - Boracay Whale Shark</title>
 <link rel="stylesheet" href="css/details.css">
 <style>
 .hyper-btn-detail { background: #10b981 !important; box-shadow: 0 0 15px #10b98180 !important; color: #fff !important; }
 .hyper-btn-detail:hover { background: #fff !important; color: #10b981 !important; }
 .detail-sidebar-price { color: #10b981 !important; }
 .learn-card-vertical { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px 20px; border-radius: 24px !important; overflow: hidden; position: relative; }
-.learn-card-3d-icon { width: 120px; height: 120px; object-fit: cover; border-radius: 20px; margin-bottom: 25px; box-shadow: 0 15px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease; }
-.learn-card-vertical:hover .learn-card-3d-icon { transform: translateY(-15px) scale(1.15) rotate(5deg); box-shadow: 0 25px 40px rgba(0,0,0,1); }
+.inclusion-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 20px; }
+.inclusion-item { background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.25); border-radius: 16px; padding: 24px 20px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; transition: transform 0.2s, box-shadow 0.2s; }
+.inclusion-item:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(16,185,129,0.2); }
+.inclusion-icon { font-size: 2rem; }
+.inclusion-label { color: #fff; font-size: 0.95rem; font-weight: 600; line-height: 1.4; }
+.inclusion-sub { color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-top: 4px; }
+.info-box { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); border-radius: 20px; padding: 30px; margin-top: 30px; }
 </style>
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="theme-red">
+<body class="theme-green">
 
 <nav class="detail-nav">
   <div class="detail-nav-title">TICKET ONLY</div>
@@ -23,111 +28,144 @@
 </nav>
 
 <section class="detail-hero">
-  <img src="assets/basic.png" class="detail-hero-bg" alt="TICKET ONLY Hero">
+  <img src="assets/basic.png" class="detail-hero-bg" alt="Ticket Only Hero">
   <div class="detail-hero-overlay" style="background: linear-gradient(to bottom, rgba(15,23,42,0.3) 0%, rgba(15,23,42,1) 100%);"></div>
   <div class="detail-hero-content">
     <div class="hero-title-word" style="margin-bottom:0; color: #fff; text-shadow: 0 0 40px #10b981, 0 0 100px #10b98180; font-size: clamp(2.5rem, 6vw, 4rem); word-break: keep-all; line-height: 1.2;">
       Ticket Only
     </div>
-    <p style="font-size: 1.5rem; color: rgba(255,255,255,0.9); margin-top: 20px; font-weight: 300;">Purchase your ticket in advance<br>and enjoy freely on-site!</p>
+    <p style="font-size: 1.5rem; color: rgba(255,255,255,0.9); margin-top: 20px; font-weight: 300;">Purchase your admission ticket in advance.<br>Explore the Whale Shark site freely at your own pace.</p>
   </div>
 </section>
 
 <div class="detail-content-wrap">
   <main class="detail-main">
-    
+
+    <!-- WHAT YOU GET -->
     <section class="learn-section" style="padding-top:0;">
-      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #10b981;">Inclusions <span>INCLUSIONS</span></h2>
-      <div class="learn-grid-vertical">
-        
-        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(15,23,42,0.6);">
-          <div class="premium-icon">
-            <i data-lucide="check-circle"></i>
+      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #10b981;">Inclusions <span>WHAT'S INCLUDED</span></h2>
+      <div class="inclusion-grid">
+
+        <div class="inclusion-item">
+          <div class="inclusion-icon">🎟️</div>
+          <div>
+            <div class="inclusion-label">Official Whale Shark Admission Ticket</div>
+            <div class="inclusion-sub">Valid for entry to the Whale Shark site</div>
           </div>
-          <div class="learn-card-vertical-text">
-            <h3 style="color: #fff; font-size:1.15rem; line-height: 1.4; font-weight: 600;">Purchase your own Whale Shark tour ticket and enjoy it at your own pace.</h3>
+        </div>
+
+      </div>
+
+      <!-- NOT INCLUDED -->
+      <h3 style="color: rgba(255,255,255,0.5); font-size: 1rem; font-weight: 600; margin: 40px 0 16px 0; text-transform: uppercase; letter-spacing: 0.1em;">Not Included — Arrange Independently</h3>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+        <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); padding: 8px 16px; border-radius: 99px; font-size: 0.9rem;">❌ Transport to site</span>
+        <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); padding: 8px 16px; border-radius: 99px; font-size: 0.9rem;">❌ Guide</span>
+        <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); padding: 8px 16px; border-radius: 99px; font-size: 0.9rem;">❌ Equipment</span>
+        <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); padding: 8px 16px; border-radius: 99px; font-size: 0.9rem;">❌ Photography</span>
+        <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); padding: 8px 16px; border-radius: 99px; font-size: 0.9rem;">❌ Hotel Drop-off</span>
+      </div>
+
+      <!-- PICKUP INFO -->
+      <div class="info-box" style="margin-top: 40px;">
+        <h3 style="color: #10b981; font-size: 1.3rem; margin: 0 0 20px 0;">📍 Ticket Pickup Information</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
+          <div>
+            <div style="color: rgba(255,255,255,0.5); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;">Location</div>
+            <div style="color: #fff; font-weight: 600; font-size: 1rem;">Official Boracay Whale Shark Office</div>
+          </div>
+          <div>
+            <div style="color: rgba(255,255,255,0.5); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;">Operating Hours</div>
+            <div style="color: #fff; font-weight: 600; font-size: 1rem;">8:00 AM – 6:00 PM</div>
+          </div>
+          <div>
+            <div style="color: rgba(255,255,255,0.5); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;">Required</div>
+            <div style="color: #fff; font-weight: 600; font-size: 1rem;">Show your booking voucher</div>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- RECOMMENDATIONS -->
     <section class="learn-section">
-      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #10b981;">Recommendations <span>RECOMMENDATIONS</span></h2>
+      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #10b981;">Recommendations <span>BEST FOR</span></h2>
       <ul style="list-style: none; padding: 0;">
-        
-        <li style="color: rgba(255,255,255,0.85); font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 15px;">
-          <span style="display:inline-block; width:24px; height:24px; background:#10b981; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
-          Those who want to freely choose schedules and options on-site.
+        <li style="color: rgba(255,255,255,0.85); font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 15px;">
+          <span style="display:inline-block; min-width:24px; height:24px; background:#10b981; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
+          Travelers who prefer to arrange their own transport and schedule
         </li>
-        <li style="color: rgba(255,255,255,0.85); font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 15px;">
-          <span style="display:inline-block; width:24px; height:24px; background:#10b981; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
-          Those who want to enjoy the tour independently without a guide or vehicle.
+        <li style="color: rgba(255,255,255,0.85); font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 15px;">
+          <span style="display:inline-block; min-width:24px; height:24px; background:#10b981; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
+          Those who already have their own gear or guide
+        </li>
+        <li style="color: rgba(255,255,255,0.85); font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 15px;">
+          <span style="display:inline-block; min-width:24px; height:24px; background:#10b981; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
+          Budget travelers who want the lowest possible price just to get in
+        </li>
+        <li style="color: rgba(255,255,255,0.85); font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 15px;">
+          <span style="display:inline-block; min-width:24px; height:24px; background:#10b981; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
+          Experienced divers or repeat visitors who know the site well
         </li>
       </ul>
     </section>
 
+    <!-- PROCESS -->
     <section class="learn-section">
-      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #10b981;">Process <span>PROCESS</span></h2>
-      <div class="timeline" style="display: flex; gap: 20px; flex-wrap: wrap;">
-        
+      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #10b981;">Process <span>HOW IT WORKS</span></h2>
+      <div style="display: flex; gap: 20px; flex-wrap: wrap;">
         <div style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.03); padding: 30px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
           <div style="font-size: 3rem; font-weight: 900; color: #10b981; margin-bottom: 15px; opacity: 0.5;">01</div>
-          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">Ticket Only</h3>
-          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Book and pay for your preferred date</p>
+          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">Booking & Payment</h3>
+          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Book online and pay securely</p>
         </div>
         <div style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.03); padding: 30px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
           <div style="font-size: 3rem; font-weight: 900; color: #10b981; margin-bottom: 15px; opacity: 0.5;">02</div>
-          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">Confirmed</h3>
-          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Receive voucher after confirmation</p>
+          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">Receive Voucher</h3>
+          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Confirmation voucher sent to your email</p>
         </div>
         <div style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.03); padding: 30px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
           <div style="font-size: 3rem; font-weight: 900; color: #10b981; margin-bottom: 15px; opacity: 0.5;">03</div>
-          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">Visit Office</h3>
-          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Visit the official Boracay Whale Shark office during operating hours</p>
+          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">Visit Our Office</h3>
+          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Official Whale Shark Office — 8AM to 6PM</p>
         </div>
         <div style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.03); padding: 30px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
           <div style="font-size: 3rem; font-weight: 900; color: #10b981; margin-bottom: 15px; opacity: 0.5;">04</div>
-          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">Ticket Pickup</h3>
-          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Pick up ticket after verifying voucher</p>
-        </div>
-        <div style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.03); padding: 30px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
-          <div style="font-size: 3rem; font-weight: 900; color: #10b981; margin-bottom: 15px; opacity: 0.5;">05</div>
-          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">Enter Site</h3>
-          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Enter the Whale Shark tour site</p>
+          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">Pick Up Ticket & Enter!</h3>
+          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Show voucher → receive ticket → enjoy freely!</p>
         </div>
       </div>
     </section>
 
+    <!-- NOTICES -->
     <section class="learn-section">
       <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #10b981;">Notices & Rules <span>NOTICES</span></h2>
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-        
         <div style="background: rgba(15,23,42,0.8); padding: 25px; border-radius: 16px; border-left: 4px solid #10b981;">
-          <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">Strict Operating Hours</h4>
-          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">Must visit during operating hours from 8:00 AM to 6:00 PM</p>
+          <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">Operating Hours</h4>
+          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">Must pick up your ticket between 8:00 AM and 6:00 PM.</p>
         </div>
         <div style="background: rgba(15,23,42,0.8); padding: 25px; border-radius: 16px; border-left: 4px solid #10b981;">
-          <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">Do not lose your ticket</h4>
+          <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">Do Not Lose Your Ticket</h4>
           <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">Lost tickets may not be reissued or refunded.</p>
         </div>
         <div style="background: rgba(15,23,42,0.8); padding: 25px; border-radius: 16px; border-left: 4px solid #10b981;">
           <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">Personal Responsibility</h4>
-          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">You are individually responsible for any accidents during your independent schedule.</p>
+          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">You are fully responsible for your own schedule and safety.</p>
         </div>
         <div style="background: rgba(15,23,42,0.8); padding: 25px; border-radius: 16px; border-left: 4px solid #10b981;">
           <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">Follow Site Rules</h4>
-          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">Please follow local environmental protection and safety guidelines.</p>
+          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">Please follow local environmental protection and safety guidelines on site.</p>
         </div>
       </div>
     </section>
 
   </main>
-  
+
   <aside class="detail-sidebar">
     <div class="detail-sidebar-sticky">
       <div class="detail-sidebar-title">Ticket Only</div>
-      <div class="detail-sidebar-price" style="margin-bottom:30px; font-size: 2.5rem; font-weight: 900;">1,920PHP</div>
-      <a href="reservation.html?tour=T" class="hyper-btn-detail" style="display:block; text-align:center; padding: 18px 0; border-radius: 99px; font-weight: 800; font-size: 1.2rem; text-decoration: none;">Book Now</a>
+      <div class="detail-sidebar-price" style="margin-bottom:30px; font-size: 2.5rem; font-weight: 900;">₱1,920</div>
+      <a href="reservation.html?tour=T" class="hyper-btn-detail" style="display:block; text-align:center; padding: 18px 0; border-radius: 99px; font-weight: 800; font-size: 1.2rem; text-decoration: none;">BOOK NOW</a>
     </div>
   </aside>
 

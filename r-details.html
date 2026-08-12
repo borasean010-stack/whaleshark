@@ -1,21 +1,25 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>REGULAR TOUR - Boracay Whale Shark</title>
+<title>Regular Tour - Boracay Whale Shark</title>
 <link rel="stylesheet" href="css/details.css">
 <style>
 .hyper-btn-detail { background: #3b82f6 !important; box-shadow: 0 0 15px #3b82f680 !important; color: #fff !important; }
 .hyper-btn-detail:hover { background: #fff !important; color: #3b82f6 !important; }
 .detail-sidebar-price { color: #3b82f6 !important; }
 .learn-card-vertical { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px 20px; border-radius: 24px !important; overflow: hidden; position: relative; }
-.learn-card-3d-icon { width: 120px; height: 120px; object-fit: cover; border-radius: 20px; margin-bottom: 25px; box-shadow: 0 15px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease; }
-.learn-card-vertical:hover .learn-card-3d-icon { transform: translateY(-15px) scale(1.15) rotate(5deg); box-shadow: 0 25px 40px rgba(0,0,0,1); }
+.inclusion-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 20px; }
+.inclusion-item { background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.25); border-radius: 16px; padding: 24px 20px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; transition: transform 0.2s, box-shadow 0.2s; }
+.inclusion-item:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(59,130,246,0.2); }
+.inclusion-icon { font-size: 2rem; }
+.inclusion-label { color: #fff; font-size: 0.95rem; font-weight: 600; line-height: 1.4; }
+.inclusion-sub { color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-top: 4px; }
 </style>
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="theme-red">
+<body class="theme-blue">
 
 <nav class="detail-nav">
   <div class="detail-nav-title">REGULAR TOUR</div>
@@ -23,138 +27,165 @@
 </nav>
 
 <section class="detail-hero">
-  <img src="assets/fast.jpg" class="detail-hero-bg" alt="REGULAR TOUR Hero">
+  <img src="assets/basic.png" class="detail-hero-bg" alt="Regular Tour Hero">
   <div class="detail-hero-overlay" style="background: linear-gradient(to bottom, rgba(15,23,42,0.3) 0%, rgba(15,23,42,1) 100%);"></div>
   <div class="detail-hero-content">
     <div class="hero-title-word" style="margin-bottom:0; color: #fff; text-shadow: 0 0 40px #3b82f6, 0 0 100px #3b82f680; font-size: clamp(2.5rem, 6vw, 4rem); word-break: keep-all; line-height: 1.2;">
       Regular Tour
     </div>
-    <p style="font-size: 1.5rem; color: rgba(255,255,255,0.9); margin-top: 20px; font-weight: 300;">Experience the basics of the Whale Shark Tour!<br>Everything you need at a reasonable price!</p>
+    <p style="font-size: 1.5rem; color: rgba(255,255,255,0.9); margin-top: 20px; font-weight: 300;">Experience the basics of the Whale Shark Tour!<br>Everything you need at a reasonable price.</p>
   </div>
 </section>
 
 <div class="detail-content-wrap">
   <main class="detail-main">
-    
+
+    <!-- INCLUSIONS -->
     <section class="learn-section" style="padding-top:0;">
-      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #3b82f6;">Inclusions <span>INCLUSIONS</span></h2>
-      <div class="learn-grid-vertical">
-        
-        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(15,23,42,0.6);">
-          <div class="premium-icon">
-            <i data-lucide="ticket"></i>
-          </div>
-          <div class="learn-card-vertical-text">
-            <h3 style="color: #fff; font-size:1.15rem; line-height: 1.4; font-weight: 600;">Whale shark tour ticket, viewing fee, environmental fee</h3>
-          </div>
-        </div>
-        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(15,23,42,0.6);">
-          <div class="premium-icon">
-            <i data-lucide="bus"></i>
-          </div>
-          <div class="learn-card-vertical-text">
-            <h3 style="color: #fff; font-size:1.15rem; line-height: 1.4; font-weight: 600;">Transportation costs all included</h3>
+      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #3b82f6;">Inclusions <span>WHAT'S INCLUDED</span></h2>
+      <div class="inclusion-grid">
+
+        <div class="inclusion-item">
+          <div class="inclusion-icon">🎟️</div>
+          <div>
+            <div class="inclusion-label">Admission + Viewing + Environmental Fee</div>
+            <div class="inclusion-sub">All entrance fees covered</div>
           </div>
         </div>
-        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(15,23,42,0.6);">
-          <div class="premium-icon">
-            <i data-lucide="life-buoy"></i>
-          </div>
-          <div class="learn-card-vertical-text">
-            <h3 style="color: #fff; font-size:1.15rem; line-height: 1.4; font-weight: 600;">Life jacket provided</h3>
-          </div>
-        </div>
-        <div class="learn-card-vertical" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(15,23,42,0.6);">
-          <div class="premium-icon">
-            <i data-lucide="waves"></i>
-          </div>
-          <div class="learn-card-vertical-text">
-            <h3 style="color: #fff; font-size:1.15rem; line-height: 1.4; font-weight: 600;">Free fins rental</h3>
+
+        <div class="inclusion-item">
+          <div class="inclusion-icon">🚐</div>
+          <div>
+            <div class="inclusion-label">Round-trip Vehicle</div>
+            <div class="inclusion-sub">Shared group transport</div>
           </div>
         </div>
+
+        <div class="inclusion-item">
+          <div class="inclusion-icon">🧑‍✈️</div>
+          <div>
+            <div class="inclusion-label">Local Guide</div>
+            <div class="inclusion-sub">Staff escort throughout the tour</div>
+          </div>
+        </div>
+
+        <div class="inclusion-item">
+          <div class="inclusion-icon">🐠</div>
+          <div>
+            <div class="inclusion-label">Premium Fins (Flipper) Rental</div>
+            <div class="inclusion-sub">Quality fins included at no extra cost</div>
+          </div>
+        </div>
+
+        <div class="inclusion-item">
+          <div class="inclusion-icon">🎽</div>
+          <div>
+            <div class="inclusion-label">Life Jacket</div>
+            <div class="inclusion-sub">Provided for safety</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- NOT INCLUDED -->
+      <h3 style="color: rgba(255,255,255,0.5); font-size: 1rem; font-weight: 600; margin: 40px 0 16px 0; text-transform: uppercase; letter-spacing: 0.1em;">Not Included</h3>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+        <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); padding: 8px 16px; border-radius: 99px; font-size: 0.9rem;">❌ Underwater Photography</span>
+        <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); padding: 8px 16px; border-radius: 99px; font-size: 0.9rem;">❌ Hotel Drop-off</span>
+        <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); padding: 8px 16px; border-radius: 99px; font-size: 0.9rem;">❌ Island Tour</span>
+        <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); padding: 8px 16px; border-radius: 99px; font-size: 0.9rem;">❌ Jumbo Crab Shrimp</span>
+        <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); padding: 8px 16px; border-radius: 99px; font-size: 0.9rem;">❌ Fast Track</span>
       </div>
     </section>
 
+    <!-- RECOMMENDATIONS -->
     <section class="learn-section">
-      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #3b82f6;">Recommendations <span>RECOMMENDATIONS</span></h2>
+      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #3b82f6;">Recommendations <span>BEST FOR</span></h2>
       <ul style="list-style: none; padding: 0;">
-        
-        <li style="color: rgba(255,255,255,0.85); font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 15px;">
-          <span style="display:inline-block; width:24px; height:24px; background:#3b82f6; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
-          Those who want to experience the tour at a reasonable price
+        <li style="color: rgba(255,255,255,0.85); font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 15px;">
+          <span style="display:inline-block; min-width:24px; height:24px; background:#3b82f6; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
+          Budget-conscious travelers who still want the full whale shark experience
         </li>
-        <li style="color: rgba(255,255,255,0.85); font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 15px;">
-          <span style="display:inline-block; width:24px; height:24px; background:#3b82f6; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
-          Those who are satisfied with just the basic inclusions
+        <li style="color: rgba(255,255,255,0.85); font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 15px;">
+          <span style="display:inline-block; min-width:24px; height:24px; background:#3b82f6; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
+          Travelers who prefer to explore on their own after the tour
         </li>
-        <li style="color: rgba(255,255,255,0.85); font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 15px;">
-          <span style="display:inline-block; width:24px; height:24px; background:#3b82f6; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
-          Those who are planning their own flexible schedule
+        <li style="color: rgba(255,255,255,0.85); font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 15px;">
+          <span style="display:inline-block; min-width:24px; height:24px; background:#3b82f6; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
+          Those who want the essentials without extras
+        </li>
+        <li style="color: rgba(255,255,255,0.85); font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 15px;">
+          <span style="display:inline-block; min-width:24px; height:24px; background:#3b82f6; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
+          Repeat visitors who already know the site
         </li>
       </ul>
     </section>
 
+    <!-- PROCESS -->
     <section class="learn-section">
-      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #3b82f6;">Process <span>PROCESS</span></h2>
-      <div class="timeline" style="display: flex; gap: 20px; flex-wrap: wrap;">
-        
+      <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #3b82f6;">Process <span>HOW IT WORKS</span></h2>
+      <div style="display: flex; gap: 20px; flex-wrap: wrap;">
         <div style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.03); padding: 30px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
           <div style="font-size: 3rem; font-weight: 900; color: #3b82f6; margin-bottom: 15px; opacity: 0.5;">01</div>
           <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">Booking & Payment</h3>
-          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Book and pay for your desired date</p>
+          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Book online and pay securely</p>
         </div>
         <div style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.03); padding: 30px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
           <div style="font-size: 3rem; font-weight: 900; color: #3b82f6; margin-bottom: 15px; opacity: 0.5;">02</div>
-          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">Confirmed</h3>
-          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Receive voucher after confirmation</p>
+          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">Receive Voucher</h3>
+          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Confirmation voucher sent to your email</p>
         </div>
         <div style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.03); padding: 30px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
           <div style="font-size: 3rem; font-weight: 900; color: #3b82f6; margin-bottom: 15px; opacity: 0.5;">03</div>
-          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">Meet at the Meeting Point</h3>
-          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">At D'Mall McDonald's within the meeting time</p>
+          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">Meet at D'Mall McDonald's</h3>
+          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">D'Mall McDonald's, Boracay — at the agreed time</p>
         </div>
         <div style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.03); padding: 30px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
           <div style="font-size: 3rem; font-weight: 900; color: #3b82f6; margin-bottom: 15px; opacity: 0.5;">04</div>
-          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">Join the Whale Shark Tour</h3>
-          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Enjoy the whale shark tour!</p>
+          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;">Swim with Whale Sharks!</h3>
+          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Join the group tour and enjoy!</p>
         </div>
       </div>
     </section>
 
+    <!-- NOTICES -->
     <section class="learn-section">
       <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #3b82f6;">Notices & Rules <span>NOTICES</span></h2>
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-        
         <div style="background: rgba(15,23,42,0.8); padding: 25px; border-radius: 16px; border-left: 4px solid #3b82f6;">
           <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">Strict Meeting Time</h4>
-          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">Must arrive within operating hours, latecomers may be restricted</p>
+          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">Must arrive on time. Latecomers may be restricted from joining.</p>
         </div>
         <div style="background: rgba(15,23,42,0.8); padding: 25px; border-radius: 16px; border-left: 4px solid #3b82f6;">
           <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">No-show Policy</h4>
-          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">Failure to attend the meeting time will be considered a no-show, non-refundable</p>
+          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">Failure to attend without notice is treated as a no-show — non-refundable.</p>
         </div>
         <div style="background: rgba(15,23,42,0.8); padding: 25px; border-radius: 16px; border-left: 4px solid #3b82f6;">
           <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">Join-in Tour</h4>
-          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">Since this is a Join-in Tour, there is no personal free time.</p>
-        </div>
-        <div style="background: rgba(15,23,42,0.8); padding: 25px; border-radius: 16px; border-left: 4px solid #3b82f6;">
-          <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">Follow Site Rules</h4>
-          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">Please follow local environmental protection and safety guidelines.</p>
+          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">This is a shared group tour. No personal free time during the tour.</p>
         </div>
         <div style="background: rgba(15,23,42,0.8); padding: 25px; border-radius: 16px; border-left: 4px solid #3b82f6;">
           <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">Local Traffic Conditions</h4>
-          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">Schedules and times may change depending on Local Traffic Conditions.</p>
+          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">Schedules and times may change depending on local traffic conditions.</p>
+        </div>
+        <div style="background: rgba(15,23,42,0.8); padding: 25px; border-radius: 16px; border-left: 4px solid #3b82f6;">
+          <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">Cancellation 15+ days</h4>
+          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">100% Full Refund</p>
+        </div>
+        <div style="background: rgba(15,23,42,0.8); padding: 25px; border-radius: 16px; border-left: 4px solid #3b82f6;">
+          <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;">Cancellation within 3 days</h4>
+          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;">Non-refundable</p>
         </div>
       </div>
     </section>
 
   </main>
-  
+
   <aside class="detail-sidebar">
     <div class="detail-sidebar-sticky">
       <div class="detail-sidebar-title">Regular Tour</div>
-      <div class="detail-sidebar-price" style="margin-bottom:30px; font-size: 2.5rem; font-weight: 900;">2,820PHP</div>
-      <a href="reservation.html?tour=R" class="hyper-btn-detail" style="display:block; text-align:center; padding: 18px 0; border-radius: 99px; font-weight: 800; font-size: 1.2rem; text-decoration: none;">Book Now</a>
+      <div class="detail-sidebar-price" style="margin-bottom:30px; font-size: 2.5rem; font-weight: 900;">₱2,820</div>
+      <a href="reservation.html?tour=R" class="hyper-btn-detail" style="display:block; text-align:center; padding: 18px 0; border-radius: 99px; font-weight: 800; font-size: 1.2rem; text-decoration: none;">BOOK NOW</a>
     </div>
   </aside>
 
