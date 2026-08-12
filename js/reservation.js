@@ -26,13 +26,13 @@ form.addEventListener("submit", async (e) => {
   };
 
   if (!reservation.tourType || !reservation.date || !reservation.name || !reservation.email) {
-    statusEl.textContent = "필수 항목을 모두 입력해주세요.";
+    statusEl.textContent = "Please fill in all required fields.";
     statusEl.classList.add("error");
     return;
   }
 
   submitBtn.disabled = true;
-  submitBtn.textContent = "PayMongo 연결 중...";
+  submitBtn.textContent = "Connecting to PayMongo...";
 
   try {
     // 1. Simulate API call to create PayMongo checkout session
@@ -42,12 +42,12 @@ form.addEventListener("submit", async (e) => {
     const confirmPayment = confirm("[테스트 모드] PayMongo 결제창이 호출되었습니다.\\n\\n'확인'을 누르시면 결제가 성공적으로 완료되었다고 가정하고 데이터베이스에 예약을 확정합니다.");
     
     if (!confirmPayment) {
-      statusEl.textContent = "결제가 취소되었습니다.";
+      statusEl.textContent = "Payment cancelled.";
       statusEl.classList.add("error");
       return;
     }
 
-    submitBtn.textContent = "결제 승인 중...";
+    submitBtn.textContent = "Approving payment...";
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     // 3. Add payment info
@@ -63,10 +63,10 @@ form.addEventListener("submit", async (e) => {
     window.location.href = "success.html";
   } catch (err) {
     console.error(err);
-    statusEl.textContent = "예약 신청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+    statusEl.textContent = "An error occurred during reservation. Please try again later.";
     statusEl.classList.add("error");
   } finally {
     submitBtn.disabled = false;
-    submitBtn.textContent = "결제하기 (PayMongo)";
+    submitBtn.textContent = "Pay with PayMongo";
   }
 });

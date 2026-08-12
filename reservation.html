@@ -48,34 +48,34 @@
       
       <!-- Tour Options Selection (Hidden as requested) -->
       <div class="form-group" style="display: none;">
-        <label>투어 옵션 선택 *</label>
+        <label>Select Tour Option *</label>
         <div class="tour-options">
           <label class="tour-option">
             <input type="radio" name="tourType" value="F" checked required>
             <div class="tour-card">
-              <h4>패스트트랙</h4>
-              <span>3,800페소<br><small>올인클루시브 + 패스트트랙</small></span>
+              <h4>Fast Track</h4>
+              <span>3,800PHP<br><small>올인클루시브 + Fast Track</small></span>
             </div>
           </label>
           <label class="tour-option">
             <input type="radio" name="tourType" value="VF" required>
             <div class="tour-card">
-              <h4>VIP패스트트랙</h4>
-              <span>5,820페소<br><small>단독차량 + 수중촬영가</small></span>
+              <h4>VIPFast Track</h4>
+              <span>5,820PHP<br><small>Private vehicle + Photographer</small></span>
             </div>
           </label>
           <label class="tour-option">
             <input type="radio" name="tourType" value="R" required>
             <div class="tour-card">
-              <h4>레귤러 고래상어투어</h4>
-              <span>2,820페소<br><small>기본 포함</small></span>
+              <h4>Regular Tour</h4>
+              <span>2,820PHP<br><small>Basics included</small></span>
             </div>
           </label>
           <label class="tour-option">
             <input type="radio" name="tourType" value="T" required>
             <div class="tour-card">
-              <h4>고래상어 티켓만</h4>
-              <span>1,920페소<br><small>티켓만 단독 구매</small></span>
+              <h4>Ticket Only</h4>
+              <span>1,920PHP<br><small>Purchase ticket only</small></span>
             </div>
           </label>
         </div>
@@ -94,7 +94,7 @@
 
       <!-- Guests -->
       <div class="form-group">
-        <label for="people">참여 인원 *</label>
+        <label for="people">Number of People *</label>
         <input type="number" id="people" name="people" class="input-luxury" min="1" max="20" value="2" required>
       </div>
 
@@ -105,13 +105,13 @@
       </div>
 
       <div class="form-group">
-        <label for="email">이메일 *</label>
-        <input type="email" id="email" name="email" class="input-luxury" placeholder="이메일 주소를 남겨주세요" required>
+        <label for="email">Email *</label>
+        <input type="email" id="email" name="email" class="input-luxury" placeholder="Enter your email address" required>
       </div>
 
 
 
-      <button type="submit" class="btn-submit" id="submit-btn">결제하기 (PayMongo)</button>
+      <button type="submit" class="btn-submit" id="submit-btn">Pay with PayMongo</button>
       
       <p id="form-status" class="form-status" role="status"></p>
     </form>
@@ -128,10 +128,10 @@
     
     // 포함사항 데이터
     const inclusionsData = {
-      'F': '<b>[패스트트랙 포함사항]</b><br>입장료, 관람료, 환경세, 왕복 차량비용 전부 포함<br>구명조끼, 짐보관, 핀 무료 대여, 생수 제공<br>패스트트랙 (고래상어 최소한의 대기로 이용)<br>고래상어 종료 후 호텔 드랍 서비스<br>고래상어 수중 촬영 포함<br>점보크랩 이용시 인당 새우 한마리 무료<br>1인 $30 상당 아일랜드투어 무료 제공',
-      'VF': '<b>[VIP 패스트트랙 포함사항]</b><br>입장료, 관람료, 환경세, <b>전용 단독 차량비용</b> 전부 포함<br>구명조끼, 짐보관, 핀, 스노클마스크 무료 대여, 생수 제공<br>패스트트랙 (고래상어 최소한의 대기로 이용)<br>고래상어 종료 후 호텔 드랍 서비스<br><b>리버타드 전문 수중촬영가 서비스</b><br>점보크랩 이용시 인당 새우 한마리 무료<br>1인 $30 상당 아일랜드투어 무료 제공',
-      'R': '<b>[레귤러 고래상어투어 포함사항]</b><br>안내직원, 오리발 포함<br>※ 티켓은 보라카이션 티켓 이용',
-      'T': '<b>[고래상어 티켓만 안내]</b><br>입장 티켓만 단독 판매 (1,920페소)<br>티켓 수령처: 보라카이 고래상어 공식 사무실<br>수령 가능 시간: 오전 8시 ~ 오후 6시'
+      'F': '<b>[Fast Track Inclusions]</b><br>Admission, viewing, environmental fee, round-trip vehicle all included<br>Free rental of life jacket, luggage storage, fins, and bottled water provided<br>Fast Track (minimal wait for Whale Shark)<br>Hotel drop-off after Whale Shark tour<br>Whale Shark underwater photography included<br>One free shrimp per person when using Jumbo Crab<br>Free Island Tour worth $30 per person',
+      'VF': '<b>[VIP Fast Track Inclusions]</b><br>Admission, viewing, environmental fee, <b>Exclusive private vehicle</b> all included<br>Free rental of life jacket, luggage storage, fins, snorkel mask, and bottled water<br>Fast Track (minimal wait for Whale Shark)<br>Hotel drop-off after Whale Shark tour<br><b>Libertad Professional Underwater Photographer Service</b><br>One free shrimp per person when using Jumbo Crab<br>Free Island Tour worth $30 per person',
+      'R': '<b>[Regular Tour Inclusions]</b><br>Guide and fins included<br>※ Tickets used are Boracation tickets',
+      'T': '<b>[Ticket Only Info]</b><br>Exclusive sale of admission tickets only (1,920PHP)<br>Ticket pickup: Official Boracay Whale Shark Office<br>Available time: 8:00 AM ~ 6:00 PM'
     };
 
     const radios = document.querySelectorAll('input[name="tourType"]');
