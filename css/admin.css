@@ -19,6 +19,8 @@ body {
   background-color: var(--admin-bg);
   color: var(--admin-text);
   overflow-x: hidden;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 /* PIN Login Overlay */

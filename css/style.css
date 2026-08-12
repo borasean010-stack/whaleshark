@@ -25,6 +25,8 @@ html, body {
   color: var(--color-fg);
   background: var(--color-bg);
   line-height: 1.6;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 .container {
