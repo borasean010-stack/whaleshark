@@ -14,8 +14,10 @@ body {
 
 /* 스냅 적용 대상 4개 섹션 */
 .hero,
-#fast-track-section,
-#basic-tour-section,
+#vf-section,
+#f-section,
+#r-section,
+#t-section,
 .snap-last {
   scroll-snap-align: start;
   scroll-snap-stop: always;   /* 한 번에 여러 섹션 건너뛰기 방지 */
