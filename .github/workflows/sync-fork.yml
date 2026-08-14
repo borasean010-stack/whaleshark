@@ -1,0 +1,20 @@
+name: Auto Sync to Fork
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push to fork (choheejung1979/whaleshark)
+        run: |
+          git remote add fork https://x-access-token:${{ secrets.FORK_SYNC_TOKEN }}@github.com/choheejung1979/whaleshark.git
+          git push fork main --force
