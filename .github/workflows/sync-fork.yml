@@ -1,20 +1,35 @@
-name: Auto Sync to Fork
+name: Sync to Cho Fork
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   sync:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout source
+      - name: Checkout Cho fork
         uses: actions/checkout@v4
         with:
+          repository: choheejung1979/whaleshark
+          token: ${{ secrets.FORK_SYNC_TOKEN }}
+          ref: main
           fetch-depth: 0
 
-      - name: Push to fork (choheejung1979/whaleshark)
+      - name: Add original repository
         run: |
-          git remote add fork https://x-access-token:${{ secrets.FORK_SYNC_TOKEN }}@github.com/choheejung1979/whaleshark.git
-          git push fork main --force
+          git remote add upstream https://github.com/borasean010-stack/whaleshark.git
+          git fetch upstream main
+
+      - name: Merge latest original changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git merge upstream/main --no-edit
+
+      - name: Push to Cho fork
+        run: |
+          git push origin main
