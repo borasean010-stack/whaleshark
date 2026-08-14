@@ -11,25 +11,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Cho fork
+      - name: Checkout original repo
         uses: actions/checkout@v4
         with:
-          repository: choheejung1979/whaleshark
-          token: ${{ secrets.FORK_SYNC_TOKEN }}
-          ref: main
           fetch-depth: 0
 
-      - name: Add original repository
+      - name: Push to Cho fork via token
         run: |
-          git remote add upstream https://github.com/borasean010-stack/whaleshark.git
-          git fetch upstream main
-
-      - name: Merge latest original changes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git merge upstream/main --no-edit
-
-      - name: Push to Cho fork
-        run: |
-          git push origin main --force
+          git remote add fork https://x-access-token:${{ secrets.FORK_SYNC_TOKEN }}@github.com/choheejung1979/whaleshark.git
+          git fetch fork || true
+          git push fork HEAD:main --force
