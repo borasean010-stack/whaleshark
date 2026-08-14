@@ -32,4 +32,4 @@ jobs:
 
       - name: Push to Cho fork
         run: |
-          git push origin main
+          git push origin main --force
