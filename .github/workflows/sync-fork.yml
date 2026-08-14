@@ -18,6 +18,6 @@ jobs:
 
       - name: Push to Cho fork via token
         run: |
-          git remote add fork https://x-access-token:${{ secrets.FORK_SYNC_TOKEN }}@github.com/choheejung1979/whaleshark.git
+          git remote add fork https://${{ secrets.FORK_SYNC_TOKEN }}@github.com/choheejung1979/whaleshark.git
           git fetch fork || true
           git push fork HEAD:main --force
