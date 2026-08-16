@@ -1319,6 +1319,54 @@ body.lang-ko .lang-en-block { display: none; }
   .conservation-inner { grid-template-columns: 1fr; gap: 32px; }
 }
 
+/* ── Facebook video gallery ── */
+.fb-video-section {
+  background: #fff;
+  padding: 80px 24px;
+}
+.fb-video-title {
+  text-align: center;
+  color: #0A2540;
+  font-family: 'Outfit', 'Noto Sans KR', sans-serif;
+  margin-bottom: 40px;
+}
+.fb-video-title h2 {
+  font-size: 2.2rem;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+.fb-video-title p {
+  color: rgba(10,37,64,0.6);
+  font-size: 1rem;
+}
+.fb-video-row {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4px 4px 16px;
+}
+.fb-video-item {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(10,37,64,0.1);
+  line-height: 0;
+}
+.fb-video-item iframe {
+  display: block;
+  max-width: 80vw;
+}
+
+@media (max-width: 760px) {
+  .fb-video-section { padding: 56px 16px; }
+  .fb-video-title h2 { font-size: 1.6rem; }
+  .fb-video-item iframe { width: 260px; height: 540px; }
+}
+
 /* ── Guest Rules / Safety ── */
 .guest-rules {
   background: #F8FAFC;
