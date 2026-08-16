@@ -1012,11 +1012,20 @@ body {
 }
 .pkg-card-cta:hover { background: #0077C8; }
 
+/* Always horizontal - on narrow screens the row scrolls sideways
+   instead of stacking the cards into a vertical list */
 @media (max-width: 900px) {
-  .pkg-grid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 520px) {
-  .pkg-grid { grid-template-columns: 1fr; max-width: 420px; }
+  .pkg-grid {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 8px;
+  }
+  .pkg-card {
+    flex: 0 0 260px;
+    scroll-snap-align: start;
+  }
 }
 
 /* ── Language block toggle (for long-form content where per-attribute
