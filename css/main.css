@@ -823,9 +823,13 @@ body {
   padding: 14px 24px;
 }
 .price-compare-icon {
-  font-size: 2.2rem;
-  line-height: 1;
+  width: 56px;
+  height: 56px;
   flex-shrink: 0;
+  border-radius: 12px;
+}
+.price-compare-icon .img-placeholder-icon {
+  font-size: 1.6rem;
 }
 .price-compare-text h4 {
   margin: 0 0 2px;
