@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.documentElement.lang = lang;
+    document.body.classList.toggle('lang-ko', lang === 'ko');
 
     // Update button text
     if (lang === 'ko') {

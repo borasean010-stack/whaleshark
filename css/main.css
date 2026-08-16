@@ -2,9 +2,8 @@
    css/main.css  —  HYPER Style (히어로 아래 전용)
    ========================================= */
 
-/* ── 풀페이지 스크롤 스냅 (마우스 휠 1번 = 섹션 1개) ── */
+/* ── 연속 스크롤 (콘텐츠가 길어져서 섹션별 강제 스냅은 제거) ── */
 html {
-  scroll-snap-type: y mandatory;
   overflow-y: scroll;
   height: 100%;
 }
@@ -12,25 +11,7 @@ body {
   height: 100%;
 }
 
-/* 스냅 적용 대상 섹션 */
-.hero,
-#official-section,
-#comparison-section,
-#vf-section,
-#f-section,
-#r-section,
-#t-section,
 .snap-last {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;   /* 한 번에 여러 섹션 건너뛰기 방지 */
-}
-
-/* 마지막 섹션(파트너+안내+푸터): 내부 스크롤 가능하게 */
-.snap-last {
-  height: 100vh;
-  overflow-y: auto;
-  /* 내부 스냅 해제 */
-  scroll-snap-type: none;
   background: #FFFFFF;
 }
 
@@ -512,13 +493,6 @@ body {
   border-top: 1px solid #E5E7EB;
   padding: 60px 24px;
 }
-.hyper-footer-inner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 32px;
-  flex-wrap: wrap;
-}
 .footer-logo {
   font-family: 'Outfit', sans-serif;
   font-size: 1.1rem;
@@ -527,20 +501,64 @@ body {
   letter-spacing: 1px;
   line-height: 1.3;
 }
-.footer-links { display: flex; gap: 32px; }
-.footer-links a {
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 40px;
+}
+.footer-brand p {
+  margin: 14px 0 0;
   font-size: 0.85rem;
   color: rgba(10,37,64,0.55);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  transition: color 0.3s;
+  line-height: 1.65;
+  max-width: 280px;
 }
-.footer-links a:hover { color: #0077C8; }
-.footer-contact {
-  display: flex; flex-direction: column; gap: 4px;
-  font-size: 0.8rem;
+.footer-col h4 {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #0A2540;
+  margin: 0 0 18px;
+}
+.footer-col a,
+.footer-contact-item {
+  display: block;
+  margin-bottom: 11px;
+  font-size: 0.85rem;
+  color: rgba(10,37,64,0.6);
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+.footer-col a:hover { color: #0077C8; }
+
+.footer-bottom {
+  border-top: 1px solid #E5E7EB;
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.footer-payment-badge {
+  background: rgba(10,37,64,0.06);
+  border: 1px solid rgba(10,37,64,0.12);
+  color: rgba(10,37,64,0.55);
+  font-size: 0.75rem;
+  padding: 4px 12px;
+  border-radius: 99px;
+}
+.footer-bottom p {
+  margin: 0;
+  font-size: 0.78rem;
   color: rgba(10,37,64,0.45);
-  text-align: right;
+}
+
+@media (max-width: 700px) {
+  .footer-grid { grid-template-columns: 1fr; gap: 32px; }
 }
 
 /* ── 반응형 ── */
@@ -822,7 +840,6 @@ body {
   border: 1px solid #E5E7EB;
   border-radius: 18px;
   padding: 28px 22px;
-  text-decoration: none;
   box-shadow: 0 4px 16px rgba(10,37,64,0.06);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
@@ -861,8 +878,27 @@ body {
   font-size: 0.88rem;
   color: rgba(10,37,64,0.6);
   line-height: 1.5;
+  margin: 0 0 16px;
+}
+.pkg-card-inclusions {
+  list-style: none;
   margin: 0 0 20px;
+  padding: 0;
   flex: 1;
+}
+.pkg-card-inclusions li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 0.83rem;
+  color: rgba(10,37,64,0.72);
+  line-height: 1.6;
+}
+.pkg-card-inclusions li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #0077C8;
+  font-weight: 800;
 }
 .pkg-card-price {
   display: flex;
@@ -880,6 +916,25 @@ body {
   font-weight: 700;
   color: rgba(10,37,64,0.5);
 }
+.pkg-card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pkg-card-link {
+  display: block;
+  text-align: center;
+  padding: 10px 0;
+  border-radius: 99px;
+  background: transparent;
+  border: 1px solid #E5E7EB;
+  color: #0A2540;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: border-color 0.25s ease;
+}
+.pkg-card-link:hover { border-color: #0077C8; color: #0077C8; }
 .pkg-card-cta {
   display: block;
   text-align: center;
@@ -890,9 +945,10 @@ body {
   font-size: 0.85rem;
   font-weight: 800;
   letter-spacing: 0.03em;
+  text-decoration: none;
   transition: background 0.25s ease;
 }
-.pkg-card:hover .pkg-card-cta { background: #0077C8; }
+.pkg-card-cta:hover { background: #0077C8; }
 
 @media (max-width: 900px) {
   .pkg-grid { grid-template-columns: repeat(2, 1fr); }
@@ -901,88 +957,164 @@ body {
   .pkg-grid { grid-template-columns: 1fr; max-width: 420px; }
 }
 
-/* ── Package detail sections (VF / F / R / T) — clean editorial layout ── */
-.pkg-detail {
-  background: #FFFFFF;
-  padding: 90px 24px;
-}
-#f-section, #t-section { background: #F8FAFC; }
-.pkg-detail-inner {
-  max-width: 1080px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: center;
+/* ── Language block toggle (for long-form content where per-attribute
+   translation strings would be unwieldy) — driven by body.lang-ko,
+   which js/i18n.js toggles alongside the existing data-en/data-ko swap ── */
+.lang-ko-block { display: none; }
+body.lang-ko .lang-ko-block { display: block; }
+body.lang-ko .lang-en-block { display: none; }
 
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.85s ease, transform 0.85s cubic-bezier(.2,1,.2,1);
+/* ── About the Whale Shark ── */
+.about-shark {
+  background: #FFFFFF;
+  padding: 100px 24px;
 }
-.pkg-detail-inner.visible {
-  opacity: 1;
-  transform: translateY(0);
+.about-shark-inner {
+  max-width: 760px;
+  margin: 0 auto;
 }
-.pkg-detail-media {
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 20px 50px rgba(10,37,64,0.15);
-}
-#f-section .pkg-detail-media, #t-section .pkg-detail-media { order: 1; }
-.pkg-detail-media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.about-shark-tagline {
   display: block;
-  aspect-ratio: 4/3;
-}
-.pkg-detail-badge {
-  display: inline-block;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 6px 16px;
-  border-radius: 99px;
-  margin-bottom: 16px;
-}
-.pkg-detail-content h2 {
-  font-size: clamp(1.8rem, 3vw, 2.4rem);
-  font-weight: 900;
-  color: #0A2540;
-  margin: 0 0 12px;
-  line-height: 1.15;
-}
-.pkg-detail-price {
-  font-size: 1.4rem;
-  font-weight: 900;
-  color: #0077C8;
-  margin-bottom: 16px;
-}
-.pkg-detail-price span { font-size: 0.85rem; font-weight: 700; color: rgba(10,37,64,0.5); margin-left: 4px; }
-.pkg-detail-content p {
-  color: rgba(10,37,64,0.7);
-  font-size: 1rem;
-  line-height: 1.75;
-  margin-bottom: 28px;
-}
-.pkg-detail-btn {
-  display: inline-block;
-  padding: 14px 36px;
-  border-radius: 99px;
-  color: #fff;
+  text-align: center;
   font-size: 0.85rem;
   font-weight: 800;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  text-decoration: none;
-  box-shadow: 0 10px 25px rgba(10,37,64,0.2);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  color: #0077C8;
+  margin-bottom: 14px;
 }
-.pkg-detail-btn:hover { transform: translateY(-2px); }
+.about-shark-inner h2 {
+  text-align: center;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 900;
+  color: #0A2540;
+  margin: 0 0 40px;
+}
+.about-shark-inner p {
+  font-size: 1.02rem;
+  line-height: 1.85;
+  color: rgba(10,37,64,0.75);
+  margin: 0 0 22px;
+}
+.about-shark-quote {
+  margin: 44px 0;
+  padding: 32px;
+  border-left: 4px solid #0077C8;
+  background: #F8FAFC;
+  border-radius: 0 16px 16px 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  font-style: italic;
+  color: #0A2540;
+  line-height: 1.6;
+}
+.about-shark-inner h3 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0A2540;
+  margin: 48px 0 20px;
+}
 
-@media (max-width: 860px) {
-  .pkg-detail { padding: 60px 24px; }
-  .pkg-detail-inner { grid-template-columns: 1fr; gap: 32px; }
-  .pkg-detail-inner .pkg-detail-media { order: -1; }
+/* ── Guest Rules / Safety ── */
+.guest-rules {
+  background: #F8FAFC;
+  padding: 100px 24px;
+}
+.guest-rules-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+.guest-rules-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.guest-rules-header h2 {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 900;
+  color: #0A2540;
+  margin: 0 0 10px;
+}
+.guest-rules-header p {
+  color: rgba(10,37,64,0.6);
+  font-size: 1rem;
+}
+.guest-rules-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 48px 0;
+}
+.guest-rules-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 32px;
+  border-top: 4px solid #10b981;
+  box-shadow: 0 4px 16px rgba(10,37,64,0.06);
+}
+.guest-rules-card.donts { border-top-color: #dc2626; }
+.guest-rules-card h3 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #10b981;
+  margin: 0 0 20px;
+}
+.guest-rules-card.donts h3 { color: #dc2626; }
+.guest-rules-card ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.guest-rules-card li {
+  position: relative;
+  padding-left: 26px;
+  margin-bottom: 14px;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: rgba(10,37,64,0.75);
+}
+.guest-rules-card li:last-child { margin-bottom: 0; }
+.guest-rules-card:not(.donts) li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #10b981;
+  font-weight: 800;
+}
+.guest-rules-card.donts li::before {
+  content: "✕";
+  position: absolute;
+  left: 0;
+  color: #dc2626;
+  font-weight: 800;
+}
+.guest-rules-info {
+  background: #fff;
+  border-radius: 20px;
+  padding: 32px;
+  border-left: 4px solid #F47A20;
+}
+.guest-rules-info h3 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #F47A20;
+  margin: 0 0 16px;
+}
+.guest-rules-info ul {
+  margin: 0 0 16px;
+  padding-left: 20px;
+  color: rgba(10,37,64,0.75);
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+.guest-rules-info p {
+  color: rgba(10,37,64,0.75);
+  font-size: 0.92rem;
+  line-height: 1.7;
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .about-shark, .guest-rules { padding: 70px 20px; }
+  .guest-rules-grid { grid-template-columns: 1fr; }
 }
