@@ -8,14 +8,6 @@
 
   gsap.registerPlugin(ScrollTrigger);
 
-  // ---- Lenis smooth scroll, wired into GSAP's ticker + ScrollTrigger ----
-  if (window.Lenis) {
-    const lenis = new Lenis({ duration: 1.05, smoothWheel: true });
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => lenis.raf(time * 1000));
-    gsap.ticker.lagSmoothing(0);
-  }
-
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const isMobile = window.matchMedia('(max-width: 780px)').matches;
 
