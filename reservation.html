@@ -151,10 +151,18 @@
     
     // Inclusions data
     const inclusionsData = {
-      'F': '<b>[Fast Track Inclusions]</b><br>Admission, viewing, environmental fee, round-trip vehicle all included<br>Free rental of life jacket, luggage storage, fins, and bottled water provided<br>Fast Track (minimal wait for Whale Shark)<br>Hotel drop-off after Whale Shark tour<br>Whale Shark underwater photography included<br>One free shrimp per person when using Jumbo Crab<br>Free Island Tour worth $30 per person',
-      'VF': '<b>[VIP Fast Track Inclusions]</b><br>Admission, viewing, environmental fee, <b>Exclusive private vehicle</b> all included<br>Free rental of life jacket, luggage storage, fins, snorkel mask, and bottled water<br>Fast Track (minimal wait for Whale Shark)<br>Hotel drop-off after Whale Shark tour<br><b>Libertad Professional Underwater Photographer Service</b><br>One free shrimp per person when using Jumbo Crab<br>Free Island Tour worth $30 per person',
-      'R': '<b>[Regular Tour Inclusions]</b><br>Guide and fins included<br>※ General admission tickets are used',
-      'T': '<b>[Ticket Only Info]</b><br>Exclusive sale of admission tickets only (1,920PHP)<br>Ticket pickup: Official Boracay Whale Shark Office<br>Available time: 8:00 AM ~ 6:00 PM'
+      en: {
+        'F': '<b>[Fast Track Inclusions]</b><br>Admission, viewing, environmental fee, round-trip vehicle all included<br>Free rental of life jacket, luggage storage, fins, and bottled water provided<br>Fast Track (minimal wait for Whale Shark)<br>Hotel drop-off after Whale Shark tour<br>Whale Shark underwater photography included<br>One free shrimp per person when using Jumbo Crab<br>Free Island Tour worth $30 per person',
+        'VF': '<b>[VIP Fast Track Inclusions]</b><br>Admission, viewing, environmental fee, <b>Exclusive private vehicle</b> all included<br>Free rental of life jacket, luggage storage, fins, snorkel mask, and bottled water<br>Fast Track (minimal wait for Whale Shark)<br>Hotel drop-off after Whale Shark tour<br><b>Libertad Professional Underwater Photographer Service</b><br>One free shrimp per person when using Jumbo Crab<br>Free Island Tour worth $30 per person',
+        'R': '<b>[Regular Tour Inclusions]</b><br>Guide and fins included<br>※ General admission tickets are used',
+        'T': '<b>[Ticket Only Info]</b><br>Exclusive sale of admission tickets only (1,920PHP)<br>Ticket pickup: Official Boracay Whale Shark Office<br>Available time: 8:00 AM ~ 6:00 PM'
+      },
+      ko: {
+        'F': '<b>[Fast Track 포함사항]</b><br>입장료, 관람료, 환경보호세, 왕복 차량 모두 포함<br>구명조끼, 짐 보관, 오리발, 생수 무료 제공<br>Fast Track (고래상어 대기 최소화)<br>고래상어 투어 후 호텔 샌딩<br>고래상어 수중 촬영 포함<br>점보크랩 이용 시 1인당 새우 1마리 무료<br>1인당 $30 상당 무료 아일랜드 투어',
+        'VF': '<b>[VIP Fast Track 포함사항]</b><br>입장료, 관람료, 환경보호세, <b>전용 프라이빗 차량</b> 모두 포함<br>구명조끼, 짐 보관, 오리발, 스노클마스크, 생수 무료 제공<br>Fast Track (고래상어 대기 최소화)<br>고래상어 투어 후 호텔 샌딩<br><b>리버타드 전문 수중 사진작가 서비스</b><br>점보크랩 이용 시 1인당 새우 1마리 무료<br>1인당 $30 상당 무료 아일랜드 투어',
+        'R': '<b>[Regular 투어 포함사항]</b><br>가이드 및 오리발 포함<br>※ 일반 입장권 사용',
+        'T': '<b>[티켓 단독 안내]</b><br>입장권만 단독 판매 (1,920PHP)<br>티켓 수령: 보라카이 고래상어 공식 사무소<br>운영 시간: 오전 8:00 ~ 오후 6:00'
+      }
     };
 
     const radios = document.querySelectorAll('input[name="tourType"]');
@@ -162,8 +170,10 @@
 
     function updateInclusions() {
       const selectedValue = document.querySelector('input[name="tourType"]:checked').value;
-      if (inclusionsData[selectedValue]) {
-        inclusionsPanel.innerHTML = inclusionsData[selectedValue];
+      const lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
+      const data = inclusionsData[lang];
+      if (data[selectedValue]) {
+        inclusionsPanel.innerHTML = data[selectedValue];
         inclusionsPanel.style.display = 'block';
       } else {
         inclusionsPanel.style.display = 'none';
@@ -187,23 +197,40 @@
     const btn = document.getElementById('submit-btn');
     
     // Dynamically update left panel
+    const leftPanelDesc = {
+      en: {
+        VF: 'A perfect premium tour with an exclusive private vehicle and underwater photographer.',
+        F: 'The most popular All-inclusive package. Enjoy comfortably with minimal wait time.',
+        R: 'A whale shark tour that stays true to the basics.',
+        T: 'Simply pick up your admission ticket at the official Boracay Whale Shark office.'
+      },
+      ko: {
+        VF: '전용 차량과 수중 사진작가가 포함된 완벽한 프리미엄 투어입니다.',
+        F: '가장 인기 있는 올인클루시브 패키지. 최소 대기시간으로 편안하게 즐기세요.',
+        R: '고래상어 투어의 기본에 충실한 상품입니다.',
+        T: '보라카이 고래상어 공식 사무소에서 입장권만 간편하게 수령하세요.'
+      }
+    };
+
     function updateLeftPanel() {
       const val = document.querySelector('input[name="tourType"]:checked').value;
+      const lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
+      const d = leftPanelDesc[lang];
       if (val === 'VF') {
         title.innerHTML = 'VIP FAST<br>TRACK';
-        desc.innerHTML = 'A perfect premium tour with an exclusive private vehicle and underwater photographer.';
+        desc.innerHTML = d.VF;
         btn.style.background = 'var(--color-primary)';
       } else if (val === 'F') {
         title.innerHTML = 'FAST<br>TRACK';
-        desc.innerHTML = 'The most popular All-inclusive package. Enjoy comfortably with minimal wait time.';
+        desc.innerHTML = d.F;
         btn.style.background = 'var(--color-accent)';
       } else if (val === 'R') {
         title.innerHTML = 'REGULAR<br>TOUR';
-        desc.innerHTML = 'A whale shark tour that stays true to the basics.';
+        desc.innerHTML = d.R;
         btn.style.background = 'var(--color-fg)';
       } else if (val === 'T') {
         title.innerHTML = 'TICKET<br>ONLY';
-        desc.innerHTML = 'Simply pick up your admission ticket at the official Boracay Whale Shark office.';
+        desc.innerHTML = d.T;
         btn.style.background = 'transparent';
         btn.style.color = 'var(--color-fg)';
         btn.style.border = '2px solid var(--color-fg)';
@@ -212,6 +239,10 @@
     
     updateLeftPanel();
     radios.forEach(r => r.addEventListener('change', updateLeftPanel));
+
+    // Expose so the language toggle (defined in a later, separate script) can re-render on switch
+    window.updateInclusions = updateInclusions;
+    window.updateLeftPanel = updateLeftPanel;
   });
 </script>
 
@@ -284,6 +315,9 @@
     document.getElementById('lang-btn') && (document.getElementById('lang-btn').textContent = t.btnLang);
     // html lang
     document.documentElement.lang = lang;
+    // Re-render tour-dependent dynamic content in the new language
+    window.updateInclusions && window.updateInclusions();
+    window.updateLeftPanel && window.updateLeftPanel();
   }
 
   // Auto-apply language from sessionStorage (set when clicking 한국어로 예약 on homepage)
