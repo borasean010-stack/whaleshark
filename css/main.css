@@ -880,17 +880,30 @@ body {
   position: absolute;
   top: 14px;
   right: 14px;
-  font-size: 0.66rem;
+  font-size: 0.62rem;
   font-weight: 800;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: #fff;
   background: #F47A20;
-  padding: 5px 12px;
+  padding: 5px 11px;
   border-radius: 99px;
   white-space: nowrap;
   box-shadow: 0 4px 12px rgba(244,122,32,0.4);
 }
+
+/* Per-package accent (top border on the card + matching badge color),
+   so VIP / Fast Track / Regular / Ticket Only read as distinct tiers
+   at a glance instead of four identical-looking cards */
+.pkg-card--vip { border-top: 4px solid #a855f7; }
+.pkg-card--f   { border-top: 4px solid #f97316; }
+.pkg-card--r   { border-top: 4px solid #3b82f6; }
+.pkg-card--t   { border-top: 4px solid #10b981; }
+
+.pkg-card-tag--vip { background: #a855f7; box-shadow: 0 4px 12px rgba(168,85,247,0.4); }
+.pkg-card-tag--f   { background: #f97316; box-shadow: 0 4px 12px rgba(249,115,22,0.4); }
+.pkg-card-tag--r   { background: #3b82f6; box-shadow: 0 4px 12px rgba(59,130,246,0.4); }
+.pkg-card-tag--t   { background: #10b981; box-shadow: 0 4px 12px rgba(16,185,129,0.4); }
 
 .pkg-card-body {
   padding: 22px 20px 24px;
