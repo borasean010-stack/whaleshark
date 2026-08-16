@@ -857,20 +857,21 @@ body {
   align-items: center;
   justify-content: center;
 }
-.pkg-card-icon {
-  font-size: 4.5rem;
+.pkg-card-img--placeholder {
+  background: repeating-linear-gradient(
+    45deg,
+    #F1F3F5,
+    #F1F3F5 10px,
+    #E9ECEF 10px,
+    #E9ECEF 20px
+  );
+  border-bottom: 1px dashed #CBD2D9;
+}
+.pkg-card-img-placeholder-icon {
+  font-size: 2.4rem;
+  opacity: 0.35;
   line-height: 1;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
 }
-.pkg-card:hover .pkg-card-icon {
-  transform: scale(1.12);
-}
-
-.pkg-card-img--vip { background: linear-gradient(145deg, #f3e8ff 0%, #e9d5ff 100%); }
-.pkg-card-img--f   { background: linear-gradient(145deg, #ffedd5 0%, #fed7aa 100%); }
-.pkg-card-img--r   { background: linear-gradient(145deg, #dbeafe 0%, #bfdbfe 100%); }
-.pkg-card-img--t   { background: linear-gradient(145deg, #d1fae5 0%, #a7f3d0 100%); }
 .pkg-card-tag {
   position: absolute;
   top: 14px;
