@@ -967,11 +967,42 @@ body.lang-ko .lang-en-block { display: none; }
 /* ── About the Whale Shark ── */
 .about-shark {
   background: #FFFFFF;
-  padding: 100px 24px;
+  padding-bottom: 0;
+}
+.about-shark-banner {
+  width: 100%;
+  height: 46vh;
+  min-height: 320px;
+  max-height: 520px;
+  overflow: hidden;
+}
+.about-shark-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 .about-shark-inner {
   max-width: 760px;
   margin: 0 auto;
+  padding: 90px 24px 100px;
+
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(.2,1,.2,1);
+}
+.about-shark-inner.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.conservation-inner {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(.2,1,.2,1);
+}
+.conservation-inner.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 .about-shark-tagline {
   display: block;
@@ -988,7 +1019,16 @@ body.lang-ko .lang-en-block { display: none; }
   font-size: clamp(2rem, 4vw, 2.8rem);
   font-weight: 900;
   color: #0A2540;
-  margin: 0 0 40px;
+  margin: 0 0 28px;
+}
+.about-shark-lead {
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1.75;
+  color: #0A2540;
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 48px;
 }
 .about-shark-inner p {
   font-size: 1.02rem;
@@ -1012,7 +1052,116 @@ body.lang-ko .lang-en-block { display: none; }
   font-size: 1.5rem;
   font-weight: 800;
   color: #0A2540;
-  margin: 48px 0 20px;
+  margin: 0 0 16px;
+}
+
+/* Stat grid */
+.shark-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 56px;
+}
+.shark-stat {
+  text-align: center;
+  padding: 24px 12px;
+  background: #F8FAFC;
+  border-radius: 16px;
+}
+.shark-stat-num {
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  color: #0077C8;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.shark-stat-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: rgba(10,37,64,0.6);
+  line-height: 1.4;
+}
+
+/* Image + text split */
+.shark-split {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 40px;
+  align-items: center;
+  margin-bottom: 36px;
+}
+.shark-split-media {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(10,37,64,0.12);
+}
+.shark-split-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  aspect-ratio: 3/4;
+}
+.shark-split-text p:last-child { margin-bottom: 0; }
+
+/* Conservation callout band */
+.conservation-block {
+  background: #0A2540;
+  padding: 90px 24px;
+}
+.conservation-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 56px;
+  align-items: center;
+}
+.conservation-media {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+}
+.conservation-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  aspect-ratio: 4/3;
+}
+.conservation-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #fca5a5;
+  background: rgba(220,38,38,0.15);
+  padding: 5px 14px;
+  border-radius: 99px;
+  margin-bottom: 16px;
+}
+.conservation-text h3 {
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  font-weight: 900;
+  color: #fff;
+  margin: 0 0 20px;
+}
+.conservation-text p {
+  color: rgba(255,255,255,0.75);
+  font-size: 1rem;
+  line-height: 1.8;
+  margin: 0 0 18px;
+}
+.conservation-text p:last-child { margin-bottom: 0; }
+
+@media (max-width: 760px) {
+  .shark-stats { grid-template-columns: repeat(2, 1fr); }
+  .shark-split { grid-template-columns: 1fr; }
+  .shark-split-media img { aspect-ratio: 16/10; }
+  .conservation-inner { grid-template-columns: 1fr; gap: 32px; }
 }
 
 /* ── Guest Rules / Safety ── */
@@ -1023,6 +1172,14 @@ body.lang-ko .lang-en-block { display: none; }
 .guest-rules-inner {
   max-width: 900px;
   margin: 0 auto;
+
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(.2,1,.2,1);
+}
+.guest-rules-inner.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 .guest-rules-header {
   text-align: center;
