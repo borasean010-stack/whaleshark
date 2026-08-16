@@ -6,6 +6,3 @@
 
 /css/*
   Cache-Control: no-cache, must-revalidate
-
-/js/*
-  Cache-Control: no-cache, must-revalidate

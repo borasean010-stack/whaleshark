@@ -2,9 +2,9 @@
    css/main.css  —  HYPER Style (히어로 아래 전용)
    ========================================= */
 
-/* ── 연속 시네마틱 스크롤 (Lenis + GSAP ScrollTrigger가 스크롤을 구동) ──
-   과거의 섹션별 mandatory snap은 ws-cinema의 스크럽 연출과 충돌해서 제거함. */
+/* ── 풀페이지 스크롤 스냅 (마우스 휠 1번 = 섹션 1개) ── */
 html {
+  scroll-snap-type: y mandatory;
   overflow-y: scroll;
   height: 100%;
 }
@@ -12,7 +12,25 @@ body {
   height: 100%;
 }
 
+/* 스냅 적용 대상 섹션 */
+.hero,
+#official-section,
+#comparison-section,
+#vf-section,
+#f-section,
+#r-section,
+#t-section,
 .snap-last {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;   /* 한 번에 여러 섹션 건너뛰기 방지 */
+}
+
+/* 마지막 섹션(파트너+안내+푸터): 내부 스크롤 가능하게 */
+.snap-last {
+  height: 100vh;
+  overflow-y: auto;
+  /* 내부 스냅 해제 */
+  scroll-snap-type: none;
   background: #060910;
 }
 
