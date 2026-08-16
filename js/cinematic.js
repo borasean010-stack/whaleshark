@@ -8,20 +8,6 @@
 
   gsap.registerPlugin(ScrollTrigger);
 
-  // ---- Lenis smooth scroll: plain rAF loop (Lenis's own documented pattern) ----
-  if (window.Lenis) {
-    try {
-      const lenis = new Lenis({ duration: 1.05, smoothWheel: true });
-      lenis.on('scroll', ScrollTrigger.update);
-      requestAnimationFrame(function raf(time) {
-        lenis.raf(time);
-        requestAnimationFrame(raf);
-      });
-    } catch (e) {
-      // If Lenis fails for any reason, fall through to native scroll.
-    }
-  }
-
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const isMobile = window.matchMedia('(max-width: 780px)').matches;
 
