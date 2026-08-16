@@ -1,14 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
   const langToggleBtn = document.getElementById('lang-toggle');
-  let currentLang = 'en'; // default language
+  if (!langToggleBtn) return;
 
-  // Detect user's browser language
-  const userLang = navigator.language || navigator.userLanguage;
-  
-  // If the user's language is Korean, show the translation button
-  if (userLang.toLowerCase().includes('ko')) {
-    langToggleBtn.style.display = 'inline-block';
-  }
+  let currentLang = 'en'; // default language
 
   // Elements that have dual languages
   const elements = document.querySelectorAll('[data-en][data-ko]');
@@ -23,6 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
         el.innerHTML = el.getAttribute(`data-${lang}`);
       }
     });
+
+    document.documentElement.lang = lang;
 
     // Update button text
     if (lang === 'ko') {
