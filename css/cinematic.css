@@ -5,7 +5,7 @@
 
 .ws-cinema {
   position: relative;
-  height: 500vh; /* scroll distance that drives the whole sequence */
+  height: 200vh; /* compressed - short scroll distance drives the whole sequence */
   background: #020608;
 }
 
@@ -204,7 +204,7 @@
 }
 
 @media (max-width: 780px) {
-  .ws-cinema { height: 400vh; }
+  .ws-cinema { height: 200vh; }
   .ws-copy-1 { padding-left: 6vw; }
   .ws-copy-3 { padding-right: 6vw; }
   .ws-img-primary .ws-img { transform: translate(-50%, -50%) scale(2.1); }
