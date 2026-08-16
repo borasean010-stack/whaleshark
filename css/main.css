@@ -622,28 +622,28 @@ body {
 
 .coupon-card {
   display: flex;
-  height: 130px;
+  min-height: 130px;
   background: #fff;
   border-radius: 20px;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+  box-shadow: 0 10px 30px rgba(10,37,64,0.1);
   border: 3px solid var(--card-color);
   position: relative;
-  text-decoration: none;
   transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
   overflow: visible;
 }
 .coupon-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 25px 45px rgba(0,0,0,0.8);
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 20px 40px rgba(10,37,64,0.18);
 }
 
 .coupon-left {
-  flex: 0 0 55%;
+  flex: 0 0 42%;
   background-color: var(--card-color);
   border-radius: 16px 0 0 16px;
   display: flex;
   align-items: center;
-  padding: 0 40px;
+  gap: 20px;
+  padding: 32px;
   position: relative;
 }
 /* Right pointing arrow cutout */
@@ -660,29 +660,48 @@ body {
 }
 
 .coupon-icon {
-  width: 70px;
-  height: 70px;
-  object-fit: contain;
-  margin-right: 25px;
-  filter: drop-shadow(0 10px 10px rgba(0,0,0,0.4));
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+.coupon-icon .img-placeholder-icon { font-size: 1.6rem; opacity: 0.55; }
 .coupon-left-text {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  min-width: 0;
+}
+.coupon-tag {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(255,255,255,0.22);
+  padding: 4px 10px;
+  border-radius: 99px;
+  margin-bottom: 8px;
+  white-space: nowrap;
 }
 .coupon-left-text h3 {
-  font-size: 2.2rem;
+  font-size: 1.7rem;
   font-weight: 900;
   margin: 0 0 5px 0;
   color: #fff;
   line-height: 1.1;
-  letter-spacing: -1px;
+  letter-spacing: -0.5px;
 }
 .coupon-left-text p {
-  font-size: 1.05rem;
+  font-size: 0.92rem;
   margin: 0;
   color: rgba(255,255,255,0.9);
+  line-height: 1.4;
 }
 
 .coupon-right {
@@ -692,16 +711,16 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
   position: relative;
+  padding: 28px 0;
 }
 /* Dotted line */
 .coupon-divider {
   position: absolute;
-  left: 45px;
-  top: 20px;
-  bottom: 20px;
-  border-left: 3px dotted rgba(0,0,0,0.15);
+  left: 40px;
+  top: 24px;
+  bottom: 24px;
+  border-left: 3px dotted rgba(0,0,0,0.12);
   z-index: 1;
 }
 
@@ -709,32 +728,92 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: 45px;
+  text-align: center;
+  margin-left: 60px;
+  margin-right: 28px;
   z-index: 2;
+}
+
+.coupon-inclusions {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+  text-align: left;
+  align-self: stretch;
+}
+.coupon-inclusions li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 0.82rem;
+  color: rgba(10,37,64,0.68);
+  line-height: 1.7;
+}
+.coupon-inclusions li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--card-color);
+  font-weight: 800;
 }
 
 .price-label {
   background: #222;
   color: #fff;
-  font-size: 0.85rem;
-  padding: 6px 20px;
+  font-size: 0.75rem;
+  padding: 5px 16px;
   border-radius: 20px;
   font-weight: 700;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   letter-spacing: 2px;
 }
 .price-value {
-  font-size: 3.5rem;
+  font-size: 2.2rem;
   font-weight: 900;
   color: #111;
   line-height: 1;
-  letter-spacing: -2px;
+  letter-spacing: -1px;
+  margin-bottom: 18px;
 }
 .price-value span {
-  font-size: 2rem;
+  font-size: 1.2rem;
   font-weight: 700;
   margin-left: 4px;
 }
+
+.coupon-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+.coupon-link {
+  flex: 1;
+  text-align: center;
+  padding: 9px 0;
+  border-radius: 99px;
+  background: transparent;
+  border: 1px solid #E5E7EB;
+  color: #0A2540;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-color 0.25s ease;
+}
+.coupon-link:hover { border-color: var(--card-color); color: var(--card-color); }
+.coupon-cta {
+  flex: 1;
+  text-align: center;
+  padding: 10px 0;
+  border-radius: 99px;
+  background: var(--card-color);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: filter 0.25s ease;
+}
+.coupon-cta:hover { filter: brightness(1.1); }
 
 /* Card Variables */
 .card-vip { --card-color: #a855f7; }
@@ -780,7 +859,8 @@ body {
     border-top: 3px dotted rgba(0,0,0,0.15);
   }
   .coupon-right-content {
-    margin-left: 0;
+    margin-left: 20px;
+    margin-right: 20px;
     margin-top: 10px;
   }
   .coupon-icon {
@@ -788,10 +868,13 @@ body {
     height: 50px;
   }
   .coupon-left-text h3 {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
   }
   .price-value {
-    font-size: 2.8rem;
+    font-size: 2rem;
+  }
+  .coupon-actions {
+    flex-direction: column;
   }
 }
 
@@ -824,209 +907,6 @@ body {
 }
 .trust-item .trust-icon { font-size: 1.05rem; }
 
-/* ── Package grid (replaces the coupon-ticket comparison row) ── */
-.pkg-grid {
-  width: 100%;
-  max-width: 1080px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-.pkg-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  background: #FFFFFF;
-  border: 1px solid rgba(10,37,64,0.04);
-  border-radius: 25px;
-  overflow: hidden;
-  box-shadow: 0 9px 27px rgba(10,37,64,0.07);
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.pkg-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 22px 45px rgba(0,119,200,0.18);
-}
-
-.pkg-card-img {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-/* Shared "image goes here later" placeholder, used across the package
-   cards and the About section media slots until real photos are set */
-.img-placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: repeating-linear-gradient(
-    45deg,
-    #F1F3F5,
-    #F1F3F5 10px,
-    #E9ECEF 10px,
-    #E9ECEF 20px
-  );
-}
-.img-placeholder--dark {
-  background: repeating-linear-gradient(
-    45deg,
-    #0d2c4a,
-    #0d2c4a 10px,
-    #123a5f 10px,
-    #123a5f 20px
-  );
-}
-.img-placeholder-icon {
-  font-size: 2.6rem;
-  opacity: 0.3;
-  line-height: 1;
-}
-.img-placeholder--dark .img-placeholder-icon { opacity: 0.4; }
-
-.pkg-card-img--placeholder {
-  border-bottom: 1px dashed #CBD2D9;
-}
-.pkg-card-tag {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  font-size: 0.62rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: #fff;
-  background: #F47A20;
-  padding: 5px 11px;
-  border-radius: 99px;
-  white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(244,122,32,0.4);
-}
-
-/* Per-package accent (top border on the card + matching badge color),
-   so VIP / Fast Track / Regular / Ticket Only read as distinct tiers
-   at a glance instead of four identical-looking cards */
-.pkg-card--vip { border-top: 4px solid #a855f7; }
-.pkg-card--f   { border-top: 4px solid #f97316; }
-.pkg-card--r   { border-top: 4px solid #3b82f6; }
-.pkg-card--t   { border-top: 4px solid #10b981; }
-
-.pkg-card-tag--vip { background: #a855f7; box-shadow: 0 4px 12px rgba(168,85,247,0.4); }
-.pkg-card-tag--f   { background: #f97316; box-shadow: 0 4px 12px rgba(249,115,22,0.4); }
-.pkg-card-tag--r   { background: #3b82f6; box-shadow: 0 4px 12px rgba(59,130,246,0.4); }
-.pkg-card-tag--t   { background: #10b981; box-shadow: 0 4px 12px rgba(16,185,129,0.4); }
-
-.pkg-card-body {
-  padding: 22px 20px 24px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-.pkg-card h3 {
-  font-size: 1.15rem;
-  font-weight: 800;
-  color: #0A2540;
-  margin: 0 0 6px;
-}
-.pkg-card p {
-  font-size: 0.85rem;
-  color: rgba(10,37,64,0.55);
-  line-height: 1.5;
-  margin: 0 0 16px;
-}
-.pkg-card-inclusions {
-  list-style: none;
-  margin: 0 0 18px;
-  padding: 0;
-  text-align: left;
-  flex: 1;
-}
-.pkg-card-inclusions li {
-  position: relative;
-  padding-left: 20px;
-  font-size: 0.82rem;
-  color: rgba(10,37,64,0.68);
-  line-height: 1.7;
-}
-.pkg-card-inclusions li::before {
-  content: "✓";
-  position: absolute;
-  left: 0;
-  color: #0077C8;
-  font-weight: 800;
-}
-.pkg-card-price {
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  gap: 4px;
-  margin-bottom: 16px;
-  padding-top: 14px;
-  border-top: 1px dashed #E5E7EB;
-}
-.pkg-card-price .amount {
-  font-size: 1.6rem;
-  font-weight: 900;
-  color: #0077C8;
-}
-.pkg-card-price .currency {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: rgba(10,37,64,0.5);
-}
-.pkg-card-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.pkg-card-link {
-  display: block;
-  text-align: center;
-  padding: 10px 0;
-  border-radius: 99px;
-  background: transparent;
-  border: 1px solid #E5E7EB;
-  color: #0A2540;
-  font-size: 0.82rem;
-  font-weight: 700;
-  text-decoration: none;
-  transition: border-color 0.25s ease;
-}
-.pkg-card-link:hover { border-color: #0077C8; color: #0077C8; }
-.pkg-card-cta {
-  display: block;
-  text-align: center;
-  padding: 11px 0;
-  border-radius: 99px;
-  background: #0A2540;
-  color: #fff;
-  font-size: 0.85rem;
-  font-weight: 800;
-  letter-spacing: 0.03em;
-  text-decoration: none;
-  transition: background 0.25s ease;
-}
-.pkg-card-cta:hover { background: #0077C8; }
-
-/* Always horizontal - on narrow screens the row scrolls sideways
-   instead of stacking the cards into a vertical list */
-@media (max-width: 900px) {
-  .pkg-grid {
-    display: flex;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x mandatory;
-    padding-bottom: 8px;
-  }
-  .pkg-card {
-    flex: 0 0 260px;
-    scroll-snap-align: start;
-  }
-}
 
 /* ── Language block toggle (for long-form content where per-attribute
    translation strings would be unwieldy) — driven by body.lang-ko,
