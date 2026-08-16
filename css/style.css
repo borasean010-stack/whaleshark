@@ -27,6 +27,8 @@ html, body {
   line-height: 1.6;
   word-break: keep-all;
   overflow-wrap: break-word;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .container {
@@ -467,4 +469,25 @@ p { margin: 0 0 16px; color: var(--muted); }
   .partner-card {
     padding: 5px;
   }
+}
+
+/* ── Mobile: header / nav ── */
+@media (max-width: 640px) {
+  .header-inner { padding: 14px 16px; }
+  .logo-text { display: none; }
+  .nav { gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+  .nav a { font-size: 0.82rem; }
+  #lang-toggle, #lang-btn {
+    padding: 8px 12px !important;
+    font-size: 0.72rem !important;
+  }
+}
+@media (max-width: 400px) {
+  .nav a:first-child { display: none; }
+}
+
+/* ── Mobile: official banner - avoid extreme crop on tall/narrow screens ── */
+@media (max-width: 640px) {
+  .official-section { height: auto; }
+  .official-banner-img { height: auto; aspect-ratio: 1774 / 887; object-fit: contain; background: #060910; }
 }

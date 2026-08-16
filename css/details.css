@@ -59,6 +59,13 @@ body {
 }
 .detail-nav-close:hover { color: var(--white); }
 
+@media (max-width: 640px) {
+  .detail-nav { padding: 14px 16px; gap: 10px; flex-wrap: wrap; }
+  .detail-nav-title { font-size: 0.95rem; letter-spacing: 1px; }
+  .detail-nav #lang-toggle { padding: 7px 12px !important; font-size: 0.7rem !important; }
+  .detail-nav-close { font-size: 0.82rem; white-space: nowrap; }
+}
+
 /* Hero Section */
 .detail-hero {
   position: relative;
@@ -138,6 +145,7 @@ body {
   box-shadow: 0 0 40px rgba(255, 178, 107, 0.8);
 }
 
+.thumb-item {
   width: 70px;
   height: 70px;
   background: var(--glass-bg);
