@@ -12,8 +12,9 @@ body {
   height: 100%;
 }
 
-/* 스냅 적용 대상 5개 섹션 */
+/* 스냅 적용 대상 섹션 */
 .hero,
+#official-section,
 #comparison-section,
 #vf-section,
 #f-section,
