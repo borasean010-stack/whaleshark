@@ -776,3 +776,213 @@ body {
     font-size: 2.8rem;
   }
 }
+
+/* =========================================
+   Light redesign — trust bar + package grid + package detail sections
+   ========================================= */
+
+/* ── Trust badge bar (right under hero) ── */
+.trust-bar {
+  background: #FFFFFF;
+  border-bottom: 1px solid #E5E7EB;
+  padding: 22px 24px;
+}
+.trust-bar-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 36px;
+}
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0A2540;
+  white-space: nowrap;
+}
+.trust-item .trust-icon { font-size: 1.05rem; }
+
+/* ── Package grid (replaces the coupon-ticket comparison row) ── */
+.pkg-grid {
+  width: 100%;
+  max-width: 1080px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+.pkg-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 18px;
+  padding: 28px 22px;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(10,37,64,0.06);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.pkg-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 32px rgba(10,37,64,0.12);
+}
+.pkg-card-tag {
+  position: absolute;
+  top: -12px;
+  left: 22px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  background: #F47A20;
+  padding: 5px 12px;
+  border-radius: 99px;
+  white-space: nowrap;
+}
+.pkg-card-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  object-fit: contain;
+  margin-bottom: 16px;
+}
+.pkg-card h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0A2540;
+  margin: 0 0 8px;
+}
+.pkg-card p {
+  font-size: 0.88rem;
+  color: rgba(10,37,64,0.6);
+  line-height: 1.5;
+  margin: 0 0 20px;
+  flex: 1;
+}
+.pkg-card-price {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+.pkg-card-price .amount {
+  font-size: 1.7rem;
+  font-weight: 900;
+  color: #0077C8;
+}
+.pkg-card-price .currency {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: rgba(10,37,64,0.5);
+}
+.pkg-card-cta {
+  display: block;
+  text-align: center;
+  padding: 11px 0;
+  border-radius: 99px;
+  background: #0A2540;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  transition: background 0.25s ease;
+}
+.pkg-card:hover .pkg-card-cta { background: #0077C8; }
+
+@media (max-width: 900px) {
+  .pkg-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 520px) {
+  .pkg-grid { grid-template-columns: 1fr; max-width: 420px; }
+}
+
+/* ── Package detail sections (VF / F / R / T) — clean editorial layout ── */
+.pkg-detail {
+  background: #FFFFFF;
+  padding: 90px 24px;
+}
+#f-section, #t-section { background: #F8FAFC; }
+.pkg-detail-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.85s ease, transform 0.85s cubic-bezier(.2,1,.2,1);
+}
+.pkg-detail-inner.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.pkg-detail-media {
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(10,37,64,0.15);
+}
+#f-section .pkg-detail-media, #t-section .pkg-detail-media { order: 1; }
+.pkg-detail-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  aspect-ratio: 4/3;
+}
+.pkg-detail-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 99px;
+  margin-bottom: 16px;
+}
+.pkg-detail-content h2 {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 900;
+  color: #0A2540;
+  margin: 0 0 12px;
+  line-height: 1.15;
+}
+.pkg-detail-price {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #0077C8;
+  margin-bottom: 16px;
+}
+.pkg-detail-price span { font-size: 0.85rem; font-weight: 700; color: rgba(10,37,64,0.5); margin-left: 4px; }
+.pkg-detail-content p {
+  color: rgba(10,37,64,0.7);
+  font-size: 1rem;
+  line-height: 1.75;
+  margin-bottom: 28px;
+}
+.pkg-detail-btn {
+  display: inline-block;
+  padding: 14px 36px;
+  border-radius: 99px;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 0 10px 25px rgba(10,37,64,0.2);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.pkg-detail-btn:hover { transform: translateY(-2px); }
+
+@media (max-width: 860px) {
+  .pkg-detail { padding: 60px 24px; }
+  .pkg-detail-inner { grid-template-columns: 1fr; gap: 32px; }
+  .pkg-detail-inner .pkg-detail-media { order: -1; }
+}
