@@ -197,6 +197,10 @@
     const btn = document.getElementById('submit-btn');
     
     // Dynamically update left panel
+    const leftPanelTitle = {
+      en: { VF: 'VIP FAST<br>TRACK', F: 'FAST<br>TRACK', R: 'REGULAR<br>TOUR', T: 'TICKET<br>ONLY' },
+      ko: { VF: 'VIP 패스트<br>트랙', F: '패스트<br>트랙', R: '레귤러<br>투어', T: '티켓<br>단독' }
+    };
     const leftPanelDesc = {
       en: {
         VF: 'A perfect premium tour with an exclusive private vehicle and underwater photographer.',
@@ -216,20 +220,21 @@
       const val = document.querySelector('input[name="tourType"]:checked').value;
       const lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
       const d = leftPanelDesc[lang];
+      const t = leftPanelTitle[lang];
       if (val === 'VF') {
-        title.innerHTML = 'VIP FAST<br>TRACK';
+        title.innerHTML = t.VF;
         desc.innerHTML = d.VF;
         btn.style.background = 'var(--color-primary)';
       } else if (val === 'F') {
-        title.innerHTML = 'FAST<br>TRACK';
+        title.innerHTML = t.F;
         desc.innerHTML = d.F;
         btn.style.background = 'var(--color-accent)';
       } else if (val === 'R') {
-        title.innerHTML = 'REGULAR<br>TOUR';
+        title.innerHTML = t.R;
         desc.innerHTML = d.R;
         btn.style.background = 'var(--color-fg)';
       } else if (val === 'T') {
-        title.innerHTML = 'TICKET<br>ONLY';
+        title.innerHTML = t.T;
         desc.innerHTML = d.T;
         btn.style.background = 'transparent';
         btn.style.color = 'var(--color-fg)';
