@@ -2,7 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const langToggleBtn = document.getElementById('lang-toggle');
   if (!langToggleBtn) return;
 
-  let currentLang = 'en'; // default language
+  const STORAGE_KEY = 'ws_lang';
+  let currentLang = localStorage.getItem(STORAGE_KEY) || 'en';
 
   // Elements that have dual languages
   const elements = document.querySelectorAll('[data-en][data-ko]');
@@ -28,9 +29,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  // Apply the saved language immediately (persists across pages/reloads)
+  applyTranslation(currentLang);
+
   // Toggle button event listener
   langToggleBtn.addEventListener('click', () => {
     currentLang = currentLang === 'en' ? 'ko' : 'en';
+    localStorage.setItem(STORAGE_KEY, currentLang);
     applyTranslation(currentLang);
   });
 });

@@ -288,10 +288,12 @@
       btnLang: '🇺🇸 English',
     }
   };
-  let currentLang = 'en';
+  const LANG_STORAGE_KEY = 'ws_lang';
+  let currentLang = localStorage.getItem(LANG_STORAGE_KEY) || 'en';
 
   function toggleLang() {
     currentLang = currentLang === 'en' ? 'ko' : 'en';
+    localStorage.setItem(LANG_STORAGE_KEY, currentLang);
     applyLang(currentLang);
   }
 
@@ -320,14 +322,11 @@
     window.updateLeftPanel && window.updateLeftPanel();
   }
 
-  // Auto-apply language from sessionStorage (set when clicking 한국어로 예약 on homepage)
+  // Apply the saved site-wide language preference on load (static text only -
+  // updateInclusions/updateLeftPanel already render correctly on first paint
+  // since currentLang above is read from localStorage before they run)
   document.addEventListener('DOMContentLoaded', () => {
-    const saved = sessionStorage.getItem('lang');
-    if (saved === 'ko') {
-      currentLang = 'ko';
-      applyLang('ko');
-      sessionStorage.removeItem('lang');
-    }
+    if (currentLang === 'ko') applyLang('ko');
   });
 </script>
 <script type="module" src="js/reservation.js?v=20260813-1"></script>
