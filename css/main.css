@@ -1365,6 +1365,17 @@ body.lang-ko .lang-en-block { display: none; }
   height: 390px;
   position: relative;
 }
+video.fb-video-thumb {
+  object-fit: cover;
+  display: block;
+  background: #000;
+}
+.fb-video-item--playable {
+  cursor: default;
+}
+.fb-video-item--playable:hover {
+  transform: none;
+}
 .fb-video-play {
   font-size: 2.2rem;
   color: rgba(10,37,64,0.35);
