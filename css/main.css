@@ -1164,6 +1164,12 @@ body.lang-ko .lang-en-block { display: none; }
   box-shadow: 0 16px 40px rgba(10,37,64,0.12);
   aspect-ratio: 3/4;
 }
+.shark-split-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 .shark-split-text p:last-child { margin-bottom: 0; }
 
 /* Conservation callout band */
