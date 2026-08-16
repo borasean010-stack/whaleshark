@@ -1,0 +1,215 @@
+/* =========================================
+   css/cinematic.css — Whale Shark Cinematic Sequence
+   Scroll-scrubbed, photo-based (real footage, no synthetic 3D)
+   ========================================= */
+
+.ws-cinema {
+  position: relative;
+  height: 500vh; /* scroll distance that drives the whole sequence */
+  background: #020608;
+}
+
+.ws-cinema-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.ws-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #020608;
+  overflow: hidden;
+}
+
+/* ---------- image layers ---------- */
+.ws-img-wrap {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  will-change: transform, opacity, filter;
+}
+
+.ws-img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  max-width: none;
+  transform: translate(-50%, -50%) scale(1);
+  object-fit: cover;
+  will-change: transform;
+}
+
+.ws-img-primary { z-index: 2; }
+.ws-img-primary .ws-img { transform: translate(-50%, -50%) scale(1.55); }
+
+.ws-img-close {
+  z-index: 3;
+  opacity: 0;
+}
+.ws-img-close .ws-img { transform: translate(-50%, -50%) scale(1.05); }
+
+/* ---------- atmosphere ---------- */
+.ws-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at center, rgba(2,6,8,0) 35%, rgba(2,6,8,0.55) 100%),
+    linear-gradient(to bottom, rgba(2,6,8,0.55) 0%, rgba(2,6,8,0) 22%, rgba(2,6,8,0) 78%, rgba(2,6,8,0.65) 100%);
+}
+
+.ws-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+.ws-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  overflow: hidden;
+}
+.ws-particles span {
+  position: absolute;
+  bottom: -10%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(200, 230, 255, 0.35);
+  box-shadow: 0 0 6px rgba(200,230,255,0.4);
+  animation: ws-rise linear infinite;
+}
+.ws-particles span:nth-child(1)  { left: 6%;  width: 4px;  height: 4px;  animation-duration: 14s; animation-delay: -1s; }
+.ws-particles span:nth-child(2)  { left: 14%; width: 7px;  height: 7px;  animation-duration: 19s; animation-delay: -4s; }
+.ws-particles span:nth-child(3)  { left: 23%; width: 3px;  height: 3px;  animation-duration: 12s; animation-delay: -7s; }
+.ws-particles span:nth-child(4)  { left: 34%; width: 6px;  height: 6px;  animation-duration: 17s; animation-delay: -2s; }
+.ws-particles span:nth-child(5)  { left: 45%; width: 4px;  height: 4px;  animation-duration: 15s; animation-delay: -9s; }
+.ws-particles span:nth-child(6)  { left: 55%; width: 8px;  height: 8px;  animation-duration: 21s; animation-delay: -5s; }
+.ws-particles span:nth-child(7)  { left: 64%; width: 3px;  height: 3px;  animation-duration: 13s; animation-delay: -11s; }
+.ws-particles span:nth-child(8)  { left: 73%; width: 5px;  height: 5px;  animation-duration: 18s; animation-delay: -3s; }
+.ws-particles span:nth-child(9)  { left: 82%; width: 6px;  height: 6px;  animation-duration: 16s; animation-delay: -8s; }
+.ws-particles span:nth-child(10) { left: 90%; width: 4px;  height: 4px;  animation-duration: 20s; animation-delay: -6s; }
+.ws-particles span:nth-child(11) { left: 38%; width: 3px;  height: 3px;  animation-duration: 11s; animation-delay: -10s; }
+.ws-particles span:nth-child(12) { left: 96%; width: 5px;  height: 5px;  animation-duration: 22s; animation-delay: -13s; }
+
+@keyframes ws-rise {
+  0%   { transform: translateY(0) translateX(0);    opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.3; }
+  100% { transform: translateY(-110vh) translateX(20px); opacity: 0; }
+}
+
+/* ---------- typography layers ---------- */
+.ws-copy {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ws-copy-1 { align-items: flex-start; padding-left: 8vw; }
+.ws-copy-1 .ws-line {
+  display: block;
+  width: 90px;
+  height: 1px;
+  background: rgba(255,255,255,0.55);
+  margin-bottom: 22px;
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+.ws-copy-1 .ws-eyebrow {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 14px;
+}
+.ws-copy-1 h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2.6rem, 6.5vw, 5.5rem);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.05;
+  margin: 0;
+  text-shadow: 0 4px 40px rgba(0,0,0,0.5);
+}
+
+.ws-copy-2 { align-items: center; text-align: center; }
+.ws-copy-2 .ws-stat {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+  font-size: clamp(6rem, 20vw, 14rem);
+  text-shadow: 0 4px 50px rgba(0,0,0,0.55);
+}
+.ws-copy-2 .ws-stat-unit { font-size: 0.4em; margin-left: 4px; }
+.ws-copy-2 .ws-stat-label {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.7);
+}
+
+.ws-copy-3 { align-items: flex-end; text-align: right; padding-right: 8vw; }
+.ws-copy-3 h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2.8rem, 7vw, 6rem);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.05;
+  margin: 0;
+  text-shadow: 0 4px 40px rgba(0,0,0,0.5);
+}
+
+.ws-copy-4 { align-items: center; text-align: center; }
+.ws-copy-4 .ws-stack {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.08;
+  margin: 0;
+  text-shadow: 0 4px 40px rgba(0,0,0,0.55);
+}
+.ws-copy-4 .ws-stack span {
+  display: block;
+  font-size: clamp(2.4rem, 7vw, 5.5rem);
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+@media (max-width: 780px) {
+  .ws-cinema { height: 400vh; }
+  .ws-copy-1 { padding-left: 6vw; }
+  .ws-copy-3 { padding-right: 6vw; }
+  .ws-img-primary .ws-img { transform: translate(-50%, -50%) scale(2.1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ws-particles span { animation: none; opacity: 0.2; }
+}

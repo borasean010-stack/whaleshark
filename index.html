@@ -37,6 +37,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/cinematic.css">
 
 <!-- JSON-LD Structured Data (Naver / Google) -->
 <script type="application/ld+json">
@@ -136,6 +137,64 @@
     <span class="scroll-text" data-en="SCROLL" data-ko="스크롤">SCROLL</span>
     <div class="scroll-mouse">
       <div class="scroll-wheel"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CINEMATIC WHALE SHARK SEQUENCE ===== -->
+<section class="ws-cinema" id="ws-cinema">
+  <div class="ws-cinema-sticky">
+    <div class="ws-stage">
+
+      <!-- ambient particles -->
+      <div class="ws-particles" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span>
+      </div>
+
+      <!-- primary full-body pan layer -->
+      <div class="ws-img-wrap ws-img-primary" id="ws-img-primary">
+        <img src="assets/cinematic/ws-full.jpg" alt="Whale shark swimming, full body" class="ws-img">
+      </div>
+
+      <!-- close-up crossfade layers -->
+      <div class="ws-img-wrap ws-img-close" id="ws-img-close-1">
+        <img src="assets/cinematic/ws-close-3.jpg" alt="Whale shark swimming toward camera" class="ws-img">
+      </div>
+      <div class="ws-img-wrap ws-img-close" id="ws-img-close-2">
+        <img src="assets/cinematic/ws-close-1.jpg" alt="Whale shark skin detail near the surface" class="ws-img">
+      </div>
+
+      <div class="ws-vignette" aria-hidden="true"></div>
+      <div class="ws-grain" aria-hidden="true"></div>
+
+      <!-- typography choreography -->
+      <div class="ws-copy ws-copy-1" id="ws-copy-1">
+        <span class="ws-line" aria-hidden="true"></span>
+        <span class="ws-eyebrow" data-en="LIBERTAD, ANTIQUE, PHILIPPINES" data-ko="필리핀 안티케주 리버타드">LIBERTAD, ANTIQUE, PHILIPPINES</span>
+        <h2 data-en="The Gentle Giant" data-ko="온순한 거인">The Gentle Giant</h2>
+      </div>
+
+      <div class="ws-copy ws-copy-2" id="ws-copy-2">
+        <div class="ws-stat">
+          <span class="ws-stat-num" data-target="12">0</span><span class="ws-stat-unit">M</span>
+        </div>
+        <span class="ws-stat-label" data-en="Maximum Length" data-ko="최대 길이">Maximum Length</span>
+      </div>
+
+      <div class="ws-copy ws-copy-3" id="ws-copy-3">
+        <h2 data-en="The World's<br>Largest Fish" data-ko="세상에서<br>가장 큰 물고기">The World's<br>Largest Fish</h2>
+      </div>
+
+      <div class="ws-copy ws-copy-4" id="ws-copy-4">
+        <h2 class="ws-stack">
+          <span data-en="Wild." data-ko="야생 그대로.">Wild.</span>
+          <span data-en="Powerful." data-ko="압도적인 존재감.">Powerful.</span>
+          <span data-en="Peaceful." data-ko="온화한 성정.">Peaceful.</span>
+        </h2>
+      </div>
+
     </div>
   </div>
 </section>
@@ -373,6 +432,10 @@
 </div><!-- /.snap-last -->
 
 <script src="js/i18n.js" defer></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="js/cinematic.js"></script>
 <script>
   // ── 1. General Intersection Observer ──
   const io = new IntersectionObserver((entries) => {
