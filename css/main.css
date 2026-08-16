@@ -1351,20 +1351,39 @@ body.lang-ko .lang-en-block { display: none; }
 .fb-video-item {
   flex: 0 0 auto;
   scroll-snap-align: start;
+  width: 220px;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 8px 20px rgba(10,37,64,0.1);
-  line-height: 0;
-}
-.fb-video-item iframe {
+  text-decoration: none;
   display: block;
-  max-width: 80vw;
+  transition: transform 0.25s ease;
+}
+.fb-video-item:hover { transform: translateY(-4px); }
+.fb-video-thumb {
+  width: 220px;
+  height: 390px;
+  position: relative;
+}
+.fb-video-play {
+  font-size: 2.2rem;
+  color: rgba(10,37,64,0.35);
+}
+.fb-video-label {
+  display: block;
+  text-align: center;
+  padding: 12px 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0077C8;
+  background: #fff;
 }
 
 @media (max-width: 760px) {
   .fb-video-section { padding: 56px 16px; }
   .fb-video-title h2 { font-size: 1.6rem; }
-  .fb-video-item iframe { width: 260px; height: 540px; }
+  .fb-video-item, .fb-video-thumb { width: 170px; }
+  .fb-video-thumb { height: 300px; }
 }
 
 /* ── Guest Rules / Safety ── */
