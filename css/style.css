@@ -489,5 +489,5 @@ p { margin: 0 0 16px; color: var(--muted); }
 /* ── Mobile: official banner - avoid extreme crop on tall/narrow screens ── */
 @media (max-width: 640px) {
   .official-section { height: auto; }
-  .official-banner-img { height: auto; aspect-ratio: 1774 / 887; object-fit: contain; background: #060910; }
+  .official-banner-img { height: auto; aspect-ratio: 1774 / 887; object-fit: contain; background: #F8FAFC; }
 }
