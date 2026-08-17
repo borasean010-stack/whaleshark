@@ -80,6 +80,6 @@ form.addEventListener("submit", async (e) => {
     statusEl.classList.add("error");
   } finally {
     submitBtn.disabled = false;
-    submitBtn.textContent = "Pay with PayMongo";
+    submitBtn.textContent = "Pay Now";
   }
 });

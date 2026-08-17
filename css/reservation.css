@@ -424,14 +424,30 @@ body {
   margin-bottom: 14px;
 }
 .payment-badge {
-  background: rgba(255, 255, 255, 0.08);
+  background: #fff;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.85);
+  color: #1A1F71;
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.02em;
-  padding: 7px 16px;
+  padding: 9px 20px;
   border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.payment-badge svg {
+  height: 20px;
+  width: auto;
+}
+.payment-badge--visa svg { fill: #1A1F71; }
+.payment-badge--mastercard svg { fill: #EB001B; }
+.payment-badge--gcash {
+  background: #fff;
+  color: #007DFE;
+  font-weight: 900;
+  font-style: italic;
+  font-size: 0.95rem;
 }
 .payment-methods-note {
   font-size: 0.75rem;
