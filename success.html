@@ -95,16 +95,24 @@
   <div class="icon-wrapper">
     <i data-lucide="check" style="width: 50px; height: 50px; stroke-width: 3px;"></i>
   </div>
-  <h1 class="success-title">Payment & Reservation Confirmed!</h1>
-  <p class="success-desc">
+  <h1 class="success-title" data-en="Payment &amp; Reservation Confirmed!" data-ko="결제 및 예약이 확정되었습니다!">Payment & Reservation Confirmed!</h1>
+  <p class="success-desc" data-en="Your payment has been successfully processed,<br>and your reservation is securely confirmed.<br><br>Our representative will send you the confirmation voucher via email shortly." data-ko="결제가 성공적으로 처리되었으며,<br>예약이 안전하게 확정되었습니다.<br><br>담당자가 곧 이메일로 예약 확정 바우처를 보내드립니다.">
     Your payment has been successfully processed,<br>and your reservation is securely confirmed.<br><br>
     Our representative will send you the confirmation voucher via email shortly.
   </p>
-  <a href="index.html" class="home-btn">Return to Home</a>
+  <a href="index.html" class="home-btn" data-en="Return to Home" data-ko="홈으로 돌아가기">Return to Home</a>
 </div>
 
 <script>
   lucide.createIcons();
+
+  const lang = localStorage.getItem('ws_lang') || 'en';
+  if (lang === 'ko') {
+    document.querySelectorAll('[data-en][data-ko]').forEach(el => {
+      el.innerHTML = el.getAttribute('data-ko');
+    });
+    document.documentElement.lang = 'ko';
+  }
 </script>
 </body>
 </html>
