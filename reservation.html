@@ -27,7 +27,7 @@
 <link rel="canonical" href="https://boracaywhaleshark.com/reservation">
 
 <link rel="stylesheet" href="css/style.css"> <!-- for nav -->
-<link rel="stylesheet" href="css/reservation.css?v=1786944269">
+<link rel="stylesheet" href="css/reservation.css?v=1786944776">
 <!-- Flatpickr (Premium Datepicker) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
@@ -42,10 +42,10 @@
   <div class="container header-inner">
     <a href="index.html" class="logo"><img src="assets/mwlogo.png" alt="Libertad Whale Shark" class="logo-img"><span class="logo-text">BORACAY WHALE SHARK</span></a>
     <nav class="nav">
-      <a href="index.html">Home</a>
-      <a href="index.html#tours">Tours</a>
+      <a href="index.html" data-en="Home" data-ko="홈">Home</a>
+      <a href="index.html#tours" data-en="Tours" data-ko="투어">Tours</a>
       <button id="lang-btn" onclick="toggleLang()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color:#fff; padding: 6px 16px; border-radius:99px; font-size:0.85rem; font-weight:700; cursor:pointer; transition:all 0.2s;">🇰🇷 한국어</button>
-      <a href="reservation.html">Book Now</a>
+      <a href="reservation.html" data-en="Book Now" data-ko="예약하기">Book Now</a>
     </nav>
   </div>
 </header>
@@ -58,7 +58,7 @@
 <div class="wizard-page">
 
   <div class="wizard-hero">
-    <span class="res-badge" id="dyn-badge">RESERVATION EXPERIENCE</span>
+    <span class="res-badge" id="dyn-badge" data-en="RESERVATION EXPERIENCE" data-ko="예약 안내">RESERVATION EXPERIENCE</span>
     <h1 class="wizard-hero-title" id="dyn-title">SECURE YOUR TOUR</h1>
     <p class="wizard-hero-desc" id="dyn-desc">Book your private Boracay Whale Shark tour right now.</p>
   </div>
@@ -165,7 +165,7 @@
           <div class="form-group">
             <label for="pickup" data-en="Pick Up Location *" data-ko="픽업 장소 *">Pick Up Location *</label>
             <select id="pickup" name="pickup" class="input-luxury" required>
-              <option value="Jollibee Boracay" selected data-en="Jollibee Boracay" data-ko="졸리비 보라카이">Jollibee Boracay</option>
+              <option value="Jollibee Main Road" selected data-en="Jollibee Main Road" data-ko="메인로드 졸리비">Jollibee Main Road</option>
             </select>
           </div>
 
@@ -601,6 +601,6 @@
     if (currentLang === 'ko') applyLang('ko');
   });
 </script>
-<script type="module" src="js/reservation.js?v=1786944269"></script>
+<script type="module" src="js/reservation.js?v=1786944776"></script>
 </body>
 </html>
