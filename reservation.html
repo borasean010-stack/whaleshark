@@ -27,7 +27,7 @@
 <link rel="canonical" href="https://boracaywhaleshark.com/reservation">
 
 <link rel="stylesheet" href="css/style.css"> <!-- for nav -->
-<link rel="stylesheet" href="css/reservation.css?v=20260817-1">
+<link rel="stylesheet" href="css/reservation.css?v=1786935512">
 <!-- Flatpickr (Premium Datepicker) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
@@ -92,7 +92,6 @@
     <!-- Main step content -->
     <div class="wizard-main">
       <form id="reservation-form">
-        <input type="hidden" id="nationality" name="nationality">
 
         <!-- Tour Options Selection (Hidden as requested - pre-selected via URL) -->
         <div class="form-group" style="display: none;">
@@ -149,6 +148,21 @@
           </div>
 
           <div class="form-group">
+            <label for="nationality" data-en="Nationality *" data-ko="국적선택 *">Nationality *</label>
+            <select id="nationality" name="nationality" class="input-luxury" required>
+              <option value="" disabled selected data-en="Select nationality" data-ko="국적을 선택하세요">Select nationality</option>
+              <option value="PH" data-en="Philippine" data-ko="필리핀">Philippine</option>
+              <option value="FOREIGN" data-en="Foreigner" data-ko="외국인">Foreigner</option>
+            </select>
+          </div>
+
+          <div class="price-preview" id="price-preview" style="display:none;">
+            <span data-en="Price per Person" data-ko="1인 가격">Price per Person</span>
+            <strong id="pp-price">-</strong>
+            <span class="price-total" id="pp-total"></span>
+          </div>
+
+          <div class="form-group">
             <label for="pickup" data-en="Pick Up Location *" data-ko="픽업 장소 *">Pick Up Location *</label>
             <select id="pickup" name="pickup" class="input-luxury" required>
               <option value="" disabled selected data-en="Select a pick up point" data-ko="픽업 장소를 선택하세요">Select a pick up point</option>
@@ -199,8 +213,10 @@
             <div class="review-row"><span data-en="Travel Date" data-ko="투어 날짜">Travel Date</span><strong id="rv-date">-</strong></div>
             <div class="review-row"><span data-en="Pick Up Location" data-ko="픽업 장소">Pick Up Location</span><strong id="rv-pickup">-</strong></div>
             <div class="review-row"><span data-en="Passengers" data-ko="인원">Passengers</span><strong id="rv-people">-</strong></div>
+            <div class="review-row"><span data-en="Nationality" data-ko="국적">Nationality</span><strong id="rv-nationality">-</strong></div>
             <div class="review-row"><span data-en="Name" data-ko="예약자 성함">Name</span><strong id="rv-name">-</strong></div>
             <div class="review-row"><span data-en="Email" data-ko="이메일">Email</span><strong id="rv-email">-</strong></div>
+            <div class="review-row review-row--total"><span data-en="Total Price" data-ko="총 결제 금액">Total Price</span><strong id="rv-total">-</strong></div>
           </div>
 
           <div class="wizard-actions">
@@ -213,6 +229,8 @@
         <div class="wizard-panel" data-step="4">
           <h2 data-en="Payment" data-ko="결제">Payment</h2>
           <p class="payment-note" data-en="Secure payment via PayMongo. You'll be redirected back here after payment." data-ko="PayMongo를 통한 안전 결제입니다. 결제 후 이 페이지로 다시 돌아옵니다.">Secure payment via PayMongo. You'll be redirected back here after payment.</p>
+
+          <div class="review-row review-row--total" style="margin-bottom:24px;"><span data-en="Total Price" data-ko="총 결제 금액">Total Price</span><strong id="pay-total">-</strong></div>
 
           <button type="submit" class="btn-submit" id="submit-btn">Pay with PayMongo</button>
           <p id="form-status" class="form-status" role="status"></p>
@@ -242,6 +260,7 @@
         <div class="summary-row"><span data-en="Travel Date" data-ko="투어 날짜">Travel Date</span><strong id="sum-date">-</strong></div>
         <div class="summary-row"><span data-en="Pick Up Location" data-ko="픽업 장소">Pick Up Location</span><strong id="sum-pickup">-</strong></div>
         <div class="summary-row"><span data-en="Passengers" data-ko="인원">Passengers</span><strong id="sum-people">-</strong></div>
+        <div class="summary-row summary-row--total"><span data-en="Total Price" data-ko="총 결제 금액">Total Price</span><strong id="sum-total">-</strong></div>
       </div>
     </aside>
 
@@ -360,14 +379,40 @@
       return d.toLocaleDateString(lang === 'ko' ? 'ko-KR' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     }
 
+    // ── Pricing (per person, PHP) — differs by nationality ──
+    const PRICES = {
+      PH:      { VF: 5820, F: 3300, R: 2520, T: 1620 },
+      FOREIGN: { VF: 5820, F: 3800, R: 2820, T: 1920 }
+    };
+    window.PRICES = PRICES;
+    const nationalityNames = {
+      en: { PH: 'Philippine', FOREIGN: 'Foreigner' },
+      ko: { PH: '필리핀', FOREIGN: '외국인' }
+    };
+
+    function currentPricePerPerson() {
+      const tour = document.querySelector('input[name="tourType"]:checked').value;
+      const nationality = document.getElementById('nationality').value;
+      if (!nationality || !PRICES[nationality]) return null;
+      return PRICES[nationality][tour] || null;
+    }
+
+    function fmtPHP(n) {
+      return n.toLocaleString('en-US') + ' PHP';
+    }
+
     function updateSummary() {
       const pkg = selectedPackageName();
       const dateVal = fmtDate(document.getElementById('date').value);
       const pickupSelect = document.getElementById('pickup');
       const pickupVal = pickupSelect.selectedOptions[0] ? pickupSelect.selectedOptions[0].textContent : '-';
       const peopleVal = document.getElementById('people').value || '-';
+      const people = Number(document.getElementById('people').value) || 0;
       const nameVal = document.getElementById('name').value || '-';
       const emailVal = document.getElementById('email').value || '-';
+      const lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
+      const nationalityCode = document.getElementById('nationality').value;
+      const nationalityVal = nationalityCode ? nationalityNames[lang][nationalityCode] : '-';
 
       ['sum-package', 'rv-package'].forEach(id => document.getElementById(id).textContent = pkg);
       ['sum-date', 'rv-date'].forEach(id => document.getElementById(id).textContent = dateVal);
@@ -375,11 +420,28 @@
       ['sum-people', 'rv-people'].forEach(id => document.getElementById(id).textContent = peopleVal);
       document.getElementById('rv-name').textContent = nameVal;
       document.getElementById('rv-email').textContent = emailVal;
+      document.getElementById('rv-nationality').textContent = nationalityVal;
+
+      // Price preview (Step 1)
+      const pricePreview = document.getElementById('price-preview');
+      const perPerson = currentPricePerPerson();
+      if (perPerson) {
+        pricePreview.style.display = 'flex';
+        document.getElementById('pp-price').textContent = fmtPHP(perPerson);
+        const totalLabel = lang === 'ko' ? `(총 ${people}명: ${fmtPHP(perPerson * people)})` : `(Total for ${people}: ${fmtPHP(perPerson * people)})`;
+        document.getElementById('pp-total').textContent = people > 0 ? totalLabel : '';
+      } else {
+        pricePreview.style.display = 'none';
+      }
+
+      // Total price everywhere else
+      const totalText = perPerson && people > 0 ? fmtPHP(perPerson * people) : '-';
+      ['sum-total', 'rv-total', 'pay-total'].forEach(id => document.getElementById(id).textContent = totalText);
 
       if (window.updateRouteMap) window.updateRouteMap(pickupVal);
     }
 
-    ['date', 'people', 'pickup', 'name', 'email'].forEach(id => {
+    ['date', 'people', 'pickup', 'name', 'email', 'nationality'].forEach(id => {
       document.getElementById(id).addEventListener('input', updateSummary);
       document.getElementById(id).addEventListener('change', updateSummary);
     });
@@ -535,6 +597,6 @@
     if (currentLang === 'ko') applyLang('ko');
   });
 </script>
-<script type="module" src="js/reservation.js?v=20260817-1"></script>
+<script type="module" src="js/reservation.js?v=1786935512"></script>
 </body>
 </html>

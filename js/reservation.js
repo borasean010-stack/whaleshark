@@ -15,19 +15,27 @@ form.addEventListener("submit", async (e) => {
   statusEl.className = "form-status";
 
   const formData = new FormData(form);
+  const tourType = formData.get("tourType").trim();
+  const people = Number(formData.get("people"));
+  const nationality = formData.get("nationality");
+  const pricePerPerson = window.PRICES && window.PRICES[nationality] ? window.PRICES[nationality][tourType] : null;
+
   const reservation = {
-    tourType: formData.get("tourType").trim(),
+    tourType,
     date: formData.get("date"),
-    people: Number(formData.get("people")),
+    people,
     pickup: formData.get("pickup"),
-    nationality: formData.get("nationality"),
+    nationality,
+    pricePerPerson,
+    totalPrice: pricePerPerson ? pricePerPerson * people : null,
+    currency: "PHP",
     name: formData.get("name").trim(),
     email: formData.get("email").trim(),
     status: "pending",
     createdAt: serverTimestamp()
   };
 
-  if (!reservation.tourType || !reservation.date || !reservation.pickup || !reservation.name || !reservation.email) {
+  if (!reservation.tourType || !reservation.date || !reservation.pickup || !reservation.nationality || !reservation.name || !reservation.email) {
     statusEl.textContent = "Please fill in all required fields.";
     statusEl.classList.add("error");
     return;

@@ -1069,29 +1069,13 @@ body {
   font-weight: 800;
   flex-shrink: 0;
 }
-.pkg-card-price {
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  gap: 4px;
-  margin-bottom: 16px;
-  padding-top: 14px;
-  border-top: 1px dashed #E5E7EB;
-}
-.pkg-card-price .amount {
-  font-size: 1.41rem;
-  font-weight: 900;
-  color: #0077C8;
-}
-.pkg-card-price .currency {
-  font-size: 0.69rem;
-  font-weight: 700;
-  color: rgba(28,82,158,0.5);
-}
 .pkg-card-actions {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed #E5E7EB;
 }
 .pkg-card-link {
   display: block;
