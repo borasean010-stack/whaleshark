@@ -60,10 +60,37 @@ body {
 }
 .detail-nav-close:hover { color: var(--ink); }
 
+/* Language dropdown (this page doesn't load style.css, so it needs its own copy) */
+.lang-select { position: relative; display: inline-block; }
+.lang-select-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+  min-width: 150px;
+  z-index: 100;
+}
+.lang-select-menu.open { display: block; }
+.lang-select-menu a {
+  display: block;
+  padding: 10px 16px;
+  color: #1C2B3A;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+.lang-select-menu a:hover { background: rgba(0, 0, 0, 0.05); }
+.lang-select-menu a.active { background: rgba(59, 130, 246, 0.08); color: #3b82f6; }
+
 @media (max-width: 640px) {
   .detail-nav { padding: 14px 16px; gap: 10px; flex-wrap: wrap; }
   .detail-nav-title { font-size: 0.95rem; letter-spacing: 1px; }
-  .detail-nav #lang-toggle { padding: 7px 12px !important; font-size: 0.7rem !important; }
+  .detail-nav .lang-select-trigger { padding: 7px 12px !important; font-size: 0.7rem !important; }
   .detail-nav-close { font-size: 0.82rem; white-space: nowrap; }
 }
 
