@@ -442,12 +442,9 @@ body {
 }
 .payment-badge--visa svg { fill: #1A1F71; }
 .payment-badge--mastercard svg { fill: #EB001B; }
-.payment-badge--gcash {
-  background: #fff;
-  color: #007DFE;
-  font-weight: 900;
-  font-style: italic;
-  font-size: 0.95rem;
+.payment-badge--gcash img {
+  height: 18px;
+  width: auto;
 }
 .payment-methods-note {
   font-size: 0.75rem;
