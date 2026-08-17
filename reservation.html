@@ -27,10 +27,12 @@
 <link rel="canonical" href="https://boracaywhaleshark.com/reservation">
 
 <link rel="stylesheet" href="css/style.css"> <!-- for nav -->
-<link rel="stylesheet" href="css/reservation.css">
+<link rel="stylesheet" href="css/reservation.css?v=20260817-1">
 <!-- Flatpickr (Premium Datepicker) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
+<!-- Leaflet (Route Map) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
 <body>
 
@@ -53,94 +55,197 @@
 <!-- Overlay -->
 <div class="res-overlay"></div>
 
-<!-- Split Layout -->
-<div class="res-container">
-  
-  <!-- Left Column: Branding & Text (Dynamic Content) -->
-  <div class="res-text-col">
+<div class="wizard-page">
+
+  <div class="wizard-hero">
     <span class="res-badge" id="dyn-badge">RESERVATION EXPERIENCE</span>
-    <h1 class="res-title" id="dyn-title">SECURE<br>YOUR TOUR</h1>
-    <p class="res-desc" id="dyn-desc">
-      Book your private Boracay Whale Shark tour right now.
-    </p>
+    <h1 class="wizard-hero-title" id="dyn-title">SECURE YOUR TOUR</h1>
+    <p class="wizard-hero-desc" id="dyn-desc">Book your private Boracay Whale Shark tour right now.</p>
   </div>
 
-  <!-- Right Column: Booking Card (Form) -->
-  <div class="booking-card">
-    <form id="reservation-form">
-      <input type="hidden" id="nationality" name="nationality">
-
-      <!-- Tour Options Selection (Hidden as requested) -->
-      <div class="form-group" style="display: none;">
-        <label>Select Tour Option *</label>
-        <div class="tour-options">
-          <label class="tour-option">
-            <input type="radio" name="tourType" value="F" checked required>
-            <div class="tour-card">
-              <h4>Fast Track</h4>
-              <span>3,800PHP<br><small>All-inclusive + Fast Track</small></span>
-            </div>
-          </label>
-          <label class="tour-option">
-            <input type="radio" name="tourType" value="VF" required>
-            <div class="tour-card">
-              <h4>VIPFast Track</h4>
-              <span>5,820PHP<br><small>Private vehicle + Photographer</small></span>
-            </div>
-          </label>
-          <label class="tour-option">
-            <input type="radio" name="tourType" value="R" required>
-            <div class="tour-card">
-              <h4>Regular Tour</h4>
-              <span>2,820PHP<br><small>Basics included</small></span>
-            </div>
-          </label>
-          <label class="tour-option">
-            <input type="radio" name="tourType" value="T" required>
-            <div class="tour-card">
-              <h4>Ticket Only</h4>
-              <span>1,920PHP<br><small>Purchase ticket only</small></span>
-            </div>
-          </label>
-        </div>
-        
-        <!-- Inclusions Info Panel -->
-        <div id="tour-inclusions" style="margin-top: 16px; padding: 16px; background: rgba(37, 99, 235, 0.05); border: 1px solid rgba(37, 99, 235, 0.2); border-radius: 12px; font-size: 0.9rem; line-height: 1.6; color: var(--color-fg); display: none;">
-          <!-- Content filled by JS -->
-        </div>
-      </div>
-
-      <!-- Date Selection -->
-      <div class="form-group">
-        <label for="date">Desired Tour Date *</label>
-        <input type="date" id="date" name="date" class="input-luxury" required>
-      </div>
-
-      <!-- Guests -->
-      <div class="form-group">
-        <label for="people">Number of People *</label>
-        <input type="number" id="people" name="people" class="input-luxury" min="1" max="20" value="2" required>
-      </div>
-
-      <!-- Contact Info -->
-      <div class="form-group">
-        <label for="name">Name (English) *</label>
-        <input type="text" id="name" name="name" class="input-luxury" placeholder="HONG GILDONG" required>
-      </div>
-
-      <div class="form-group">
-        <label for="email">Email *</label>
-        <input type="email" id="email" name="email" class="input-luxury" placeholder="Enter your email address" required>
-      </div>
-
-
-
-      <button type="submit" class="btn-submit" id="submit-btn">Proceed to Payment</button>
-      
-      <p id="form-status" class="form-status" role="status"></p>
-    </form>
+  <!-- Step Progress Bar -->
+  <div class="wizard-steps">
+    <button type="button" class="wizard-step-tab active" data-step-tab="1">
+      <span class="wizard-step-num">1</span>
+      <span data-en="Booking Details" data-ko="예약 정보">Booking Details</span>
+    </button>
+    <button type="button" class="wizard-step-tab" data-step-tab="2">
+      <span class="wizard-step-num">2</span>
+      <span data-en="Guest Info" data-ko="예약자 정보">Guest Info</span>
+    </button>
+    <button type="button" class="wizard-step-tab" data-step-tab="3">
+      <span class="wizard-step-num">3</span>
+      <span data-en="Review Booking" data-ko="예약 확인">Review Booking</span>
+    </button>
+    <button type="button" class="wizard-step-tab" data-step-tab="4">
+      <span class="wizard-step-num">4</span>
+      <span data-en="Payment" data-ko="결제">Payment</span>
+    </button>
+    <button type="button" class="wizard-step-tab" data-step-tab="5">
+      <span class="wizard-step-num">5</span>
+      <span data-en="Confirm" data-ko="확정">Confirm</span>
+    </button>
   </div>
 
+  <div class="wizard-body">
+
+    <!-- Main step content -->
+    <div class="wizard-main">
+      <form id="reservation-form">
+        <input type="hidden" id="nationality" name="nationality">
+
+        <!-- Tour Options Selection (Hidden as requested - pre-selected via URL) -->
+        <div class="form-group" style="display: none;">
+          <label>Select Tour Option *</label>
+          <div class="tour-options">
+            <label class="tour-option">
+              <input type="radio" name="tourType" value="F" checked required>
+              <div class="tour-card">
+                <h4>Fast Track</h4>
+                <span>3,800PHP<br><small>All-inclusive + Fast Track</small></span>
+              </div>
+            </label>
+            <label class="tour-option">
+              <input type="radio" name="tourType" value="VF" required>
+              <div class="tour-card">
+                <h4>VIPFast Track</h4>
+                <span>5,820PHP<br><small>Private vehicle + Photographer</small></span>
+              </div>
+            </label>
+            <label class="tour-option">
+              <input type="radio" name="tourType" value="R" required>
+              <div class="tour-card">
+                <h4>Regular Tour</h4>
+                <span>2,820PHP<br><small>Basics included</small></span>
+              </div>
+            </label>
+            <label class="tour-option">
+              <input type="radio" name="tourType" value="T" required>
+              <div class="tour-card">
+                <h4>Ticket Only</h4>
+                <span>1,920PHP<br><small>Purchase ticket only</small></span>
+              </div>
+            </label>
+          </div>
+
+          <!-- Inclusions Info Panel -->
+          <div id="tour-inclusions" style="margin-top: 16px; padding: 16px; background: rgba(37, 99, 235, 0.05); border: 1px solid rgba(37, 99, 235, 0.2); border-radius: 12px; font-size: 0.9rem; line-height: 1.6; color: var(--color-fg); display: none;">
+            <!-- Content filled by JS -->
+          </div>
+        </div>
+
+        <!-- ===== STEP 1: BOOKING DETAILS ===== -->
+        <div class="wizard-panel active" data-step="1">
+          <h2 data-en="Booking Details" data-ko="예약 정보">Booking Details</h2>
+
+          <div class="form-group">
+            <label for="date" data-en="Desired Tour Date *" data-ko="투어 희망 날짜 *">Desired Tour Date *</label>
+            <input type="date" id="date" name="date" class="input-luxury" required>
+          </div>
+
+          <div class="form-group">
+            <label for="people" data-en="Number of People *" data-ko="참여 인원 *">Number of People *</label>
+            <input type="number" id="people" name="people" class="input-luxury" min="1" max="20" value="2" required>
+          </div>
+
+          <div class="form-group">
+            <label for="pickup" data-en="Pick Up Location *" data-ko="픽업 장소 *">Pick Up Location *</label>
+            <select id="pickup" name="pickup" class="input-luxury" required>
+              <option value="" disabled selected data-en="Select a pick up point" data-ko="픽업 장소를 선택하세요">Select a pick up point</option>
+              <option value="Station 1" data-en="Station 1" data-ko="스테이션 1">Station 1</option>
+              <option value="Station 2" data-en="Station 2" data-ko="스테이션 2">Station 2</option>
+              <option value="Station 3" data-en="Station 3" data-ko="스테이션 3">Station 3</option>
+              <option value="D'Mall" data-en="D'Mall" data-ko="디몰 (D'Mall)">D'Mall</option>
+              <option value="Jollibee Boracay" data-en="Jollibee Boracay" data-ko="졸리비 보라카이">Jollibee Boracay</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label data-en="Route Map" data-ko="경로 지도">Route Map</label>
+            <div id="route-map"></div>
+            <p class="map-caption" data-en="Illustrative route only — actual pickup involves a boat transfer to Libertad, Antique." data-ko="실제 경로는 안티케주 리버타드까지 보트 이동을 포함합니다 (참고용 지도).">Illustrative route only — actual pickup involves a boat transfer to Libertad, Antique.</p>
+          </div>
+
+          <div class="wizard-actions">
+            <button type="button" class="wizard-next" data-goto="2" data-en="Next: Guest Info" data-ko="다음: 예약자 정보">Next: Guest Info</button>
+          </div>
+        </div>
+
+        <!-- ===== STEP 2: GUEST INFO ===== -->
+        <div class="wizard-panel" data-step="2">
+          <h2 data-en="Guest Info" data-ko="예약자 정보">Guest Info</h2>
+
+          <div class="form-group">
+            <label for="name" data-en="Name (English) *" data-ko="예약자 성함 (영문) *">Name (English) *</label>
+            <input type="text" id="name" name="name" class="input-luxury" placeholder="HONG GILDONG" required>
+          </div>
+
+          <div class="form-group">
+            <label for="email" data-en="Email *" data-ko="이메일 *">Email *</label>
+            <input type="email" id="email" name="email" class="input-luxury" placeholder="Enter your email address" required>
+          </div>
+
+          <div class="wizard-actions">
+            <button type="button" class="wizard-back" data-goto="1" data-en="Back" data-ko="이전">Back</button>
+            <button type="button" class="wizard-next" data-goto="3" data-en="Next: Review Booking" data-ko="다음: 예약 확인">Next: Review Booking</button>
+          </div>
+        </div>
+
+        <!-- ===== STEP 3: REVIEW BOOKING ===== -->
+        <div class="wizard-panel" data-step="3">
+          <h2 data-en="Review Booking" data-ko="예약 확인">Review Booking</h2>
+          <div class="review-list">
+            <div class="review-row"><span data-en="Package Type" data-ko="패키지 종류">Package Type</span><strong id="rv-package">-</strong></div>
+            <div class="review-row"><span data-en="Travel Date" data-ko="투어 날짜">Travel Date</span><strong id="rv-date">-</strong></div>
+            <div class="review-row"><span data-en="Pick Up Location" data-ko="픽업 장소">Pick Up Location</span><strong id="rv-pickup">-</strong></div>
+            <div class="review-row"><span data-en="Passengers" data-ko="인원">Passengers</span><strong id="rv-people">-</strong></div>
+            <div class="review-row"><span data-en="Name" data-ko="예약자 성함">Name</span><strong id="rv-name">-</strong></div>
+            <div class="review-row"><span data-en="Email" data-ko="이메일">Email</span><strong id="rv-email">-</strong></div>
+          </div>
+
+          <div class="wizard-actions">
+            <button type="button" class="wizard-back" data-goto="2" data-en="Back" data-ko="이전">Back</button>
+            <button type="button" class="wizard-next" data-goto="4" data-en="Next: Payment" data-ko="다음: 결제">Next: Payment</button>
+          </div>
+        </div>
+
+        <!-- ===== STEP 4: PAYMENT ===== -->
+        <div class="wizard-panel" data-step="4">
+          <h2 data-en="Payment" data-ko="결제">Payment</h2>
+          <p class="payment-note" data-en="Secure payment via PayMongo. You'll be redirected back here after payment." data-ko="PayMongo를 통한 안전 결제입니다. 결제 후 이 페이지로 다시 돌아옵니다.">Secure payment via PayMongo. You'll be redirected back here after payment.</p>
+
+          <button type="submit" class="btn-submit" id="submit-btn">Pay with PayMongo</button>
+          <p id="form-status" class="form-status" role="status"></p>
+
+          <div class="wizard-actions">
+            <button type="button" class="wizard-back" data-goto="3" data-en="Back" data-ko="이전">Back</button>
+          </div>
+        </div>
+
+        <!-- ===== STEP 5: CONFIRM ===== -->
+        <div class="wizard-panel" data-step="5">
+          <h2 data-en="✓ Booking Confirmed" data-ko="✓ 예약이 확정되었습니다">✓ Booking Confirmed</h2>
+          <p data-en="Redirecting to your confirmation page..." data-ko="확인 페이지로 이동합니다...">Redirecting to your confirmation page...</p>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- Sidebar: Booking Summary -->
+    <aside class="wizard-sidebar">
+      <div class="summary-card">
+        <div class="summary-header">
+          <h3 data-en="Your Booking Summary" data-ko="예약 요약">Your Booking Summary</h3>
+          <button type="button" class="summary-edit" data-goto="1" data-en="Edit Your Booking" data-ko="예약 수정">Edit Your Booking</button>
+        </div>
+        <div class="summary-row"><span data-en="Package Type" data-ko="패키지 종류">Package Type</span><strong id="sum-package">-</strong></div>
+        <div class="summary-row"><span data-en="Travel Date" data-ko="투어 날짜">Travel Date</span><strong id="sum-date">-</strong></div>
+        <div class="summary-row"><span data-en="Pick Up Location" data-ko="픽업 장소">Pick Up Location</span><strong id="sum-pickup">-</strong></div>
+        <div class="summary-row"><span data-en="Passengers" data-ko="인원">Passengers</span><strong id="sum-people">-</strong></div>
+      </div>
+    </aside>
+
+  </div>
 </div>
 
 <!-- Dynamic Text and Reservation Script -->
@@ -149,18 +254,18 @@
     const urlParams = new URLSearchParams(window.location.search);
     const requestedTour = urlParams.get('tour');
     const tourParam = urlParams.get('tour'); // for routing logic
-    
+
     // Inclusions data
     const inclusionsData = {
       en: {
-        'F': '<b>[Fast Track Inclusions]</b><br>Admission, viewing, environmental fee, round-trip vehicle all included<br>Free rental of life jacket, luggage storage, fins, and bottled water provided<br>Fast Track (minimal wait for Whale Shark)<br>Hotel drop-off after Whale Shark tour<br>Whale Shark underwater photography included<br>One free shrimp per person when using Jumbo Crab<br>Free Island Tour worth $30 per person',
-        'VF': '<b>[VIP Fast Track Inclusions]</b><br>Admission, viewing, environmental fee, <b>Exclusive private vehicle</b> all included<br>Free rental of life jacket, luggage storage, fins, snorkel mask, and bottled water<br>Fast Track (minimal wait for Whale Shark)<br>Hotel drop-off after Whale Shark tour<br><b>Libertad Professional Underwater Photographer Service</b><br>One free shrimp per person when using Jumbo Crab<br>Free Island Tour worth $30 per person',
+        'F': '<b>[Fast Track Inclusions]</b><br>Admission, viewing, environmental fee, round-trip vehicle all included<br>Free rental of life jacket, luggage storage, fins, and bottled water provided<br>Fast Track (minimal wait for Whale Shark)<br>Drop-off service after Whale Shark tour<br>Whale Shark underwater photography included',
+        'VF': '<b>[VIP Fast Track Inclusions]</b><br>Admission, viewing, environmental fee, <b>Exclusive private vehicle</b> all included<br>Free rental of life jacket, luggage storage, fins, snorkel mask, and bottled water<br>Fast Track (minimal wait for Whale Shark)<br>Drop-off service after Whale Shark tour<br><b>Libertad Professional Underwater Photographer Service</b>',
         'R': '<b>[Regular Tour Inclusions]</b><br>Guide and fins included<br>※ General admission tickets are used',
         'T': '<b>[Ticket Only Info]</b><br>Exclusive sale of admission tickets only (1,920PHP)<br>Ticket pickup: Official Boracay Whale Shark Office<br>Available time: 8:00 AM ~ 6:00 PM'
       },
       ko: {
-        'F': '<b>[Fast Track 포함사항]</b><br>입장료, 관람료, 환경보호세, 왕복 차량 모두 포함<br>구명조끼, 짐 보관, 오리발, 생수 무료 제공<br>Fast Track (고래상어 대기 최소화)<br>고래상어 투어 후 호텔 샌딩<br>고래상어 수중 촬영 포함<br>점보크랩 이용 시 1인당 새우 1마리 무료<br>1인당 $30 상당 무료 아일랜드 투어',
-        'VF': '<b>[VIP Fast Track 포함사항]</b><br>입장료, 관람료, 환경보호세, <b>전용 프라이빗 차량</b> 모두 포함<br>구명조끼, 짐 보관, 오리발, 스노클마스크, 생수 무료 제공<br>Fast Track (고래상어 대기 최소화)<br>고래상어 투어 후 호텔 샌딩<br><b>리버타드 전문 수중 사진작가 서비스</b><br>점보크랩 이용 시 1인당 새우 1마리 무료<br>1인당 $30 상당 무료 아일랜드 투어',
+        'F': '<b>[Fast Track 포함사항]</b><br>입장료, 관람료, 환경보호세, 왕복 차량 모두 포함<br>구명조끼, 짐 보관, 오리발, 생수 무료 제공<br>Fast Track (고래상어 대기 최소화)<br>투어 종료 후 드랍서비스<br>고래상어 수중 촬영 포함',
+        'VF': '<b>[VIP Fast Track 포함사항]</b><br>입장료, 관람료, 환경보호세, <b>전용 프라이빗 차량</b> 모두 포함<br>구명조끼, 짐 보관, 오리발, 스노클마스크, 생수 무료 제공<br>Fast Track (고래상어 대기 최소화)<br>투어 종료 후 드랍서비스<br><b>리버타드 전문 수중 사진작가 서비스</b>',
         'R': '<b>[Regular 투어 포함사항]</b><br>가이드 및 오리발 포함<br>※ 일반 입장권 사용',
         'T': '<b>[티켓 단독 안내]</b><br>입장권만 단독 판매 (1,920PHP)<br>티켓 수령: 보라카이 고래상어 공식 사무소<br>운영 시간: 오전 8:00 ~ 오후 6:00'
       }
@@ -204,11 +309,11 @@
     const title = document.getElementById('dyn-title');
     const desc = document.getElementById('dyn-desc');
     const btn = document.getElementById('submit-btn');
-    
+
     // Dynamically update left panel
     const leftPanelTitle = {
-      en: { VF: 'VIP FAST<br>TRACK', F: 'FAST<br>TRACK', R: 'REGULAR<br>TOUR', T: 'TICKET<br>ONLY' },
-      ko: { VF: 'VIP 패스트<br>트랙', F: '패스트<br>트랙', R: '레귤러<br>투어', T: '티켓<br>단독' }
+      en: { VF: 'VIP FAST TRACK', F: 'FAST TRACK', R: 'REGULAR TOUR', T: 'TICKET ONLY' },
+      ko: { VF: 'VIP 패스트트랙', F: '패스트트랙', R: '레귤러 투어', T: '티켓 단독' }
     };
     const leftPanelDesc = {
       en: {
@@ -225,38 +330,126 @@
       }
     };
 
+    function selectedPackageName() {
+      const val = document.querySelector('input[name="tourType"]:checked').value;
+      const lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
+      return leftPanelTitle[lang][val] || '-';
+    }
+
     function updateLeftPanel() {
       const val = document.querySelector('input[name="tourType"]:checked').value;
       const lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
       const d = leftPanelDesc[lang];
-      const t = leftPanelTitle[lang];
-      if (val === 'VF') {
-        title.innerHTML = t.VF;
-        desc.innerHTML = d.VF;
-        btn.style.background = 'var(--color-primary)';
-      } else if (val === 'F') {
-        title.innerHTML = t.F;
-        desc.innerHTML = d.F;
-        btn.style.background = 'var(--color-accent)';
-      } else if (val === 'R') {
-        title.innerHTML = t.R;
-        desc.innerHTML = d.R;
-        btn.style.background = 'var(--color-fg)';
-      } else if (val === 'T') {
-        title.innerHTML = t.T;
-        desc.innerHTML = d.T;
-        btn.style.background = 'transparent';
-        btn.style.color = 'var(--color-fg)';
-        btn.style.border = '2px solid var(--color-fg)';
-      }
+      title.textContent = selectedPackageName();
+      desc.textContent = d[val];
+      if (val === 'VF') { btn.style.background = 'var(--color-primary)'; }
+      else if (val === 'F') { btn.style.background = 'var(--color-accent)'; }
+      else if (val === 'R') { btn.style.background = 'var(--color-fg)'; }
+      else if (val === 'T') { btn.style.background = 'transparent'; btn.style.color = 'var(--color-fg)'; btn.style.border = '2px solid var(--color-fg)'; }
     }
-    
+
     updateLeftPanel();
     radios.forEach(r => r.addEventListener('change', updateLeftPanel));
+
+    // ── Booking summary sidebar + review step ──
+    function fmtDate(val) {
+      if (!val) return '-';
+      const lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
+      const d = new Date(val + 'T00:00:00');
+      if (isNaN(d)) return val;
+      return d.toLocaleDateString(lang === 'ko' ? 'ko-KR' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    function updateSummary() {
+      const pkg = selectedPackageName();
+      const dateVal = fmtDate(document.getElementById('date').value);
+      const pickupSelect = document.getElementById('pickup');
+      const pickupVal = pickupSelect.selectedOptions[0] ? pickupSelect.selectedOptions[0].textContent : '-';
+      const peopleVal = document.getElementById('people').value || '-';
+      const nameVal = document.getElementById('name').value || '-';
+      const emailVal = document.getElementById('email').value || '-';
+
+      ['sum-package', 'rv-package'].forEach(id => document.getElementById(id).textContent = pkg);
+      ['sum-date', 'rv-date'].forEach(id => document.getElementById(id).textContent = dateVal);
+      ['sum-pickup', 'rv-pickup'].forEach(id => document.getElementById(id).textContent = pickupVal);
+      ['sum-people', 'rv-people'].forEach(id => document.getElementById(id).textContent = peopleVal);
+      document.getElementById('rv-name').textContent = nameVal;
+      document.getElementById('rv-email').textContent = emailVal;
+
+      if (window.updateRouteMap) window.updateRouteMap(pickupVal);
+    }
+
+    ['date', 'people', 'pickup', 'name', 'email'].forEach(id => {
+      document.getElementById(id).addEventListener('input', updateSummary);
+      document.getElementById(id).addEventListener('change', updateSummary);
+    });
+    radios.forEach(r => r.addEventListener('change', updateSummary));
+    updateSummary();
+
+    // ── Step wizard navigation ──
+    function goToStep(n) {
+      document.querySelectorAll('.wizard-panel').forEach(p => p.classList.toggle('active', p.dataset.step === String(n)));
+      document.querySelectorAll('.wizard-step-tab').forEach(t => t.classList.toggle('active', t.dataset.stepTab === String(n)));
+      window.scrollTo({ top: document.querySelector('.wizard-steps').offsetTop - 90, behavior: 'smooth' });
+    }
+    window.goToStep = goToStep;
+
+    function panelIsValid(step) {
+      const panel = document.querySelector(`.wizard-panel[data-step="${step}"]`);
+      const inputs = panel.querySelectorAll('input[required], select[required]');
+      for (const inp of inputs) {
+        if (!inp.checkValidity()) { inp.reportValidity(); return false; }
+      }
+      return true;
+    }
+
+    document.querySelectorAll('.wizard-next').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const current = btn.closest('.wizard-panel').dataset.step;
+        if (!panelIsValid(current)) return;
+        if (current === '2') updateSummary();
+        goToStep(btn.dataset.goto);
+      });
+    });
+    document.querySelectorAll('.wizard-back, .summary-edit').forEach(btn => {
+      btn.addEventListener('click', () => goToStep(btn.dataset.goto));
+    });
+    document.querySelectorAll('.wizard-step-tab').forEach(tab => {
+      tab.addEventListener('click', () => goToStep(tab.dataset.stepTab));
+    });
+
+    window.showConfirmStep = () => goToStep(5);
 
     // Expose so the language toggle (defined in a later, separate script) can re-render on switch
     window.updateInclusions = updateInclusions;
     window.updateLeftPanel = updateLeftPanel;
+    window.updateSummary = updateSummary;
+  });
+</script>
+
+<!-- Route Map (Leaflet) -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const pickupCoords = { lat: 11.9674, lng: 121.9248 }; // Boracay Island
+    const destCoords = { lat: 11.7667, lng: 122.0000 };   // Libertad, Antique (approx.)
+
+    const map = L.map('route-map', { scrollWheelZoom: false }).setView([11.87, 121.96], 10);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    const pickupMarker = L.marker([pickupCoords.lat, pickupCoords.lng]).addTo(map).bindPopup('Boracay');
+    const destMarker = L.marker([destCoords.lat, destCoords.lng]).addTo(map).bindPopup('Libertad Whale Shark Center');
+    const routeLine = L.polyline([[pickupCoords.lat, pickupCoords.lng], [destCoords.lat, destCoords.lng]], {
+      color: '#0078ff', weight: 3, dashArray: '6 8'
+    }).addTo(map);
+    map.fitBounds(routeLine.getBounds(), { padding: [30, 30] });
+
+    window.updateRouteMap = (pickupLabel) => {
+      if (!pickupLabel || pickupLabel === '-') return;
+      pickupMarker.bindPopup(pickupLabel + ' Boracay');
+    };
   });
 </script>
 
@@ -278,20 +471,16 @@
   // ── Language Toggle ──
   const TEXTS = {
     en: {
-      title: 'Book Your Tour',
-      subtitle: 'Book easily and meet the miracle of Boracay.',
       labelDate: 'Desired Tour Date *',
       labelPeople: 'Number of People *',
       labelName: 'Name (English) *',
       labelEmail: 'Email *',
       placeholderName: 'HONG GILDONG',
       placeholderEmail: 'Enter your email address',
-      btnSubmit: 'Proceed to Payment',
+      btnSubmit: 'Pay with PayMongo',
       btnLang: '🇰🇷 한국어',
     },
     ko: {
-      title: '투어 예약하기',
-      subtitle: '간편하게 예약하고 보라카이의 기적을 만나보세요.',
       labelDate: '투어 희망 날짜 *',
       labelPeople: '참여 인원 *',
       labelName: '예약자 성함 (영문) *',
@@ -313,10 +502,12 @@
 
   function applyLang(lang) {
     const t = TEXTS[lang];
-    document.querySelector('.res-hero-title') && (document.querySelector('.res-hero-title').textContent = t.title);
-    document.querySelector('.res-hero-subtitle') && (document.querySelector('.res-hero-subtitle').textContent = t.subtitle);
-    const labels = document.querySelectorAll('label');
-    const inputs = document.querySelectorAll('input');
+
+    // Generic data-en/data-ko elements (step tabs, summary, review, buttons, etc.)
+    document.querySelectorAll('[data-en][data-ko]').forEach(el => {
+      el.textContent = el.getAttribute(`data-${lang}`);
+    });
+
     // Labels
     document.querySelector('label[for="date"]') && (document.querySelector('label[for="date"]').textContent = t.labelDate);
     document.querySelector('label[for="people"]') && (document.querySelector('label[for="people"]').textContent = t.labelPeople);
@@ -334,6 +525,7 @@
     // Re-render tour-dependent dynamic content in the new language
     window.updateInclusions && window.updateInclusions();
     window.updateLeftPanel && window.updateLeftPanel();
+    window.updateSummary && window.updateSummary();
   }
 
   // Apply the saved site-wide language preference on load (static text only -
@@ -343,6 +535,6 @@
     if (currentLang === 'ko') applyLang('ko');
   });
 </script>
-<script type="module" src="js/reservation.js?v=20260813-1"></script>
+<script type="module" src="js/reservation.js?v=20260817-1"></script>
 </body>
 </html>

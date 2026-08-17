@@ -19,13 +19,15 @@ form.addEventListener("submit", async (e) => {
     tourType: formData.get("tourType").trim(),
     date: formData.get("date"),
     people: Number(formData.get("people")),
+    pickup: formData.get("pickup"),
+    nationality: formData.get("nationality"),
     name: formData.get("name").trim(),
     email: formData.get("email").trim(),
     status: "pending",
     createdAt: serverTimestamp()
   };
 
-  if (!reservation.tourType || !reservation.date || !reservation.name || !reservation.email) {
+  if (!reservation.tourType || !reservation.date || !reservation.pickup || !reservation.name || !reservation.email) {
     statusEl.textContent = "Please fill in all required fields.";
     statusEl.classList.add("error");
     return;
@@ -57,10 +59,13 @@ form.addEventListener("submit", async (e) => {
     // 4. Save to Firebase (Temporarily bypassed for UI testing due to dummy config)
     // await addDoc(collection(db, "reservations"), reservation);
     console.log("Mock reservation saved:", reservation);
-    form.reset();
-    
-    // 5. Redirect to success page
-    window.location.href = "success.html";
+
+    // 5. Show the Confirm step, then redirect to the success page
+    window.showConfirmStep && window.showConfirmStep();
+    setTimeout(() => {
+      form.reset();
+      window.location.href = "success.html";
+    }, 1400);
   } catch (err) {
     console.error(err);
     statusEl.textContent = "An error occurred during reservation. Please try again later.";
