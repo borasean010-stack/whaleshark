@@ -611,6 +611,77 @@ body {
   padding: 100px 24px;
 }
 
+/* ── Quick booking search widget (Agoda/Trip.com-style) ── */
+.booking-search {
+  background: #F8FAFC;
+  padding: 32px 24px 8px;
+  display: flex;
+  justify-content: center;
+}
+.booking-search-form {
+  width: 100%;
+  max-width: 1080px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 12px 34px rgba(28,82,158,0.14);
+  border: 1px solid #E5E7EB;
+  padding: 20px;
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.bs-field {
+  flex: 1 1 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.bs-field label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(28,43,58,0.55);
+}
+.bs-field select,
+.bs-field input {
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1C2B3A;
+  border: 1px solid #E5E7EB;
+  background: #F8FAFC;
+  border-radius: 10px;
+  padding: 11px 12px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+.bs-field select:focus,
+.bs-field input:focus {
+  border-color: #1C529E;
+}
+.bs-submit {
+  flex: 1 1 140px;
+  background: #1C529E;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 13px 24px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.bs-submit:hover { background: #163f7a; }
+
+@media (max-width: 760px) {
+  .booking-search { padding: 20px 16px 4px; }
+  .booking-search-form { flex-direction: column; align-items: stretch; padding: 16px; }
+  .bs-field, .bs-submit { flex: 1 1 auto; }
+}
+
 .comparison-title {
   text-align: center;
   color: #1C529E;

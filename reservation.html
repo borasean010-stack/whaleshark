@@ -68,7 +68,8 @@
   <!-- Right Column: Booking Card (Form) -->
   <div class="booking-card">
     <form id="reservation-form">
-      
+      <input type="hidden" id="nationality" name="nationality">
+
       <!-- Tour Options Selection (Hidden as requested) -->
       <div class="form-group" style="display: none;">
         <label>Select Tour Option *</label>
@@ -184,7 +185,15 @@
       const radio = document.querySelector(`input[name="tourType"][value="${requestedTour}"]`);
       if (radio) radio.checked = true;
     }
-    
+
+    // Pre-fill from the main page's quick booking search widget
+    const requestedDate = urlParams.get('date');
+    if (requestedDate) document.getElementById('date').value = requestedDate;
+    const requestedPeople = urlParams.get('people');
+    if (requestedPeople) document.getElementById('people').value = requestedPeople;
+    const requestedNationality = urlParams.get('nationality');
+    if (requestedNationality) document.getElementById('nationality').value = requestedNationality;
+
     // Update inclusions on initial load
     updateInclusions();
 

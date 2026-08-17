@@ -35,8 +35,8 @@
 <meta name="deploy-status" content="20260814-1122">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=1786933214">
-<link rel="stylesheet" href="css/main.css?v=1786933214">
+<link rel="stylesheet" href="css/style.css?v=1786933631">
+<link rel="stylesheet" href="css/main.css?v=1786933631">
 
 <!-- JSON-LD Structured Data (Naver / Google) -->
 <script type="application/ld+json">
@@ -161,6 +161,37 @@
       <img src="assets/dot-k-logo.png" alt="Love the Philippines - Department of Tourism" class="official-logo-img" loading="lazy">
     </div>
   </div>
+</section>
+
+<!-- ===== QUICK BOOKING SEARCH ===== -->
+<section class="booking-search">
+  <form class="booking-search-form" id="quick-search-form">
+    <div class="bs-field">
+      <label for="qs-tour" data-en="Package" data-ko="옵션 선택">Package</label>
+      <select id="qs-tour" required>
+        <option value="VF" data-en="VIP Fast Track" data-ko="VIP 패스트트랙">VIP Fast Track</option>
+        <option value="F" data-en="Fast Track" data-ko="패스트트랙">Fast Track</option>
+        <option value="R" data-en="Regular Tour" data-ko="레귤러 투어">Regular Tour</option>
+        <option value="T" data-en="Ticket Only" data-ko="티켓 단독">Ticket Only</option>
+      </select>
+    </div>
+    <div class="bs-field">
+      <label for="qs-date" data-en="Date" data-ko="날짜 선택">Date</label>
+      <input type="date" id="qs-date" required>
+    </div>
+    <div class="bs-field">
+      <label for="qs-people" data-en="Guests" data-ko="인원">Guests</label>
+      <input type="number" id="qs-people" min="1" max="20" value="2" required>
+    </div>
+    <div class="bs-field">
+      <label for="qs-nationality" data-en="Nationality" data-ko="국적선택">Nationality</label>
+      <select id="qs-nationality" required>
+        <option value="PH" data-en="Philippine" data-ko="필리핀">Philippine</option>
+        <option value="FOREIGN" data-en="Foreigner" data-ko="외국인">Foreigner</option>
+      </select>
+    </div>
+    <button type="submit" class="bs-submit" data-en="Search" data-ko="예약하기">Search</button>
+  </form>
 </section>
 
 <!-- ===== PACKAGES SECTION (VIP / Fast Track / Regular / Ticket, one unified section) ===== -->
@@ -553,7 +584,7 @@
 
 </div><!-- /.snap-last -->
 
-<script src="js/i18n.js?v=1786933214" defer></script>
+<script src="js/i18n.js?v=1786933631" defer></script>
 <script>
   // ── 1. General Intersection Observer ──
   const io = new IntersectionObserver((entries) => {
@@ -568,6 +599,23 @@
 
   document.querySelectorAll('[data-scroll-word],[data-scroll-img],[data-scroll-left],[data-scroll-right],[data-scroll-up]')
     .forEach(el => io.observe(el));
+
+  // ── 2. Quick booking search widget ──
+  const qsDate = document.getElementById('qs-date');
+  if (qsDate) qsDate.min = new Date().toISOString().split('T')[0];
+
+  const quickSearchForm = document.getElementById('quick-search-form');
+  if (quickSearchForm) {
+    quickSearchForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const tour = document.getElementById('qs-tour').value;
+      const date = document.getElementById('qs-date').value;
+      const people = document.getElementById('qs-people').value;
+      const nationality = document.getElementById('qs-nationality').value;
+      const params = new URLSearchParams({ tour, date, people, nationality });
+      window.location.href = `reservation.html?${params.toString()}`;
+    });
+  }
 </script>
 </body>
 </html>
