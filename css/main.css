@@ -1245,6 +1245,17 @@ body.lang-ko .lang-en-block { display: none; }
   .conservation-inner { grid-template-columns: 1fr; gap: 32px; }
 }
 
+/* ── Strip banner (between video gallery and About section) ── */
+.strip-banner {
+  width: 100%;
+  background: #fff;
+}
+.strip-banner-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 /* ── Facebook video gallery ── */
 .fb-video-section {
   background: #fff;
