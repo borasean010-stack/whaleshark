@@ -379,7 +379,7 @@ body {
   font-weight: 700;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: rgba(10,37,64,0.45);
+  color: rgba(28,82,158,0.45);
 }
 
 /* partners grid: 4×2 */
@@ -497,7 +497,7 @@ body {
   font-family: 'Outfit', sans-serif;
   font-size: 1.1rem;
   font-weight: 900;
-  color: #0A2540;
+  color: #1C529E;
   letter-spacing: 1px;
   line-height: 1.3;
 }
@@ -511,7 +511,7 @@ body {
 .footer-brand p {
   margin: 14px 0 0;
   font-size: 0.85rem;
-  color: rgba(10,37,64,0.55);
+  color: rgba(28,82,158,0.55);
   line-height: 1.65;
   max-width: 280px;
 }
@@ -520,7 +520,7 @@ body {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #0A2540;
+  color: #1C529E;
   margin: 0 0 18px;
 }
 .footer-col a,
@@ -528,7 +528,7 @@ body {
   display: block;
   margin-bottom: 11px;
   font-size: 0.85rem;
-  color: rgba(10,37,64,0.6);
+  color: rgba(28,82,158,0.6);
   text-decoration: none;
   transition: color 0.25s ease;
 }
@@ -544,9 +544,9 @@ body {
   gap: 12px;
 }
 .footer-payment-badge {
-  background: rgba(10,37,64,0.06);
-  border: 1px solid rgba(10,37,64,0.12);
-  color: rgba(10,37,64,0.55);
+  background: rgba(28,82,158,0.06);
+  border: 1px solid rgba(28,82,158,0.12);
+  color: rgba(28,82,158,0.55);
   font-size: 0.75rem;
   padding: 4px 12px;
   border-radius: 99px;
@@ -554,7 +554,7 @@ body {
 .footer-bottom p {
   margin: 0;
   font-size: 0.78rem;
-  color: rgba(10,37,64,0.45);
+  color: rgba(28,82,158,0.45);
 }
 
 @media (max-width: 700px) {
@@ -597,7 +597,7 @@ body {
 
 .comparison-title {
   text-align: center;
-  color: #0A2540;
+  color: #1C529E;
   font-family: 'Outfit', 'Noto Sans KR', sans-serif;
   margin-bottom: 60px;
 }
@@ -605,10 +605,10 @@ body {
   font-size: 3rem;
   font-weight: 900;
   margin-bottom: 10px;
-  color: #0A2540;
+  color: #1C529E;
 }
 .comparison-title p {
-  color: rgba(10,37,64,0.6);
+  color: rgba(28,82,158,0.6);
   font-size: 1.1rem;
 }
 
@@ -811,7 +811,7 @@ body {
   background: #fff;
   border-radius: 16px;
   border: 2px solid var(--card-color);
-  box-shadow: 0 8px 20px rgba(10,37,64,0.08);
+  box-shadow: 0 8px 20px rgba(28,82,158,0.08);
   overflow: hidden;
 }
 .price-compare-left {
@@ -858,7 +858,7 @@ body {
   left: 0;
   top: 18px;
   bottom: 18px;
-  border-left: 2px dotted rgba(10,37,64,0.2);
+  border-left: 2px dotted rgba(28,82,158,0.2);
 }
 .price-compare-badge {
   background: var(--card-color);
@@ -873,7 +873,7 @@ body {
 .price-compare-amount {
   font-size: 1.7rem;
   font-weight: 900;
-  color: #0A2540;
+  color: #1C529E;
   letter-spacing: -0.5px;
   white-space: nowrap;
 }
@@ -881,14 +881,14 @@ body {
   font-size: 1rem;
   font-weight: 700;
   margin-left: 3px;
-  color: rgba(10,37,64,0.6);
+  color: rgba(28,82,158,0.6);
 }
 
 @media (max-width: 640px) {
   .price-compare-row { flex-direction: column; min-height: 0; }
   .price-compare-left { flex: 1; padding: 16px 20px; }
   .price-compare-right { flex-direction: row; padding: 14px 20px; }
-  .price-compare-right::before { left: 0; right: 0; top: 0; bottom: auto; border-left: none; border-top: 2px dotted rgba(10,37,64,0.2); }
+  .price-compare-right::before { left: 0; right: 0; top: 0; bottom: auto; border-left: none; border-top: 2px dotted rgba(28,82,158,0.2); }
 }
 
 /* =========================================
@@ -915,7 +915,7 @@ body {
   gap: 8px;
   font-size: 0.85rem;
   font-weight: 700;
-  color: #0A2540;
+  color: #1C529E;
   white-space: nowrap;
 }
 .trust-item .trust-icon { font-size: 1.05rem; }
@@ -933,10 +933,10 @@ body {
   display: flex;
   flex-direction: column;
   background: #FFFFFF;
-  border: 1px solid rgba(10,37,64,0.04);
+  border: 1px solid rgba(28,82,158,0.04);
   border-radius: 25px;
   overflow: hidden;
-  box-shadow: 0 9px 27px rgba(10,37,64,0.07);
+  box-shadow: 0 9px 27px rgba(28,82,158,0.07);
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .pkg-card:hover {
@@ -1025,12 +1025,12 @@ body {
 .pkg-card h3 {
   font-size: 1.15rem;
   font-weight: 800;
-  color: #0A2540;
+  color: #1C529E;
   margin: 0 0 6px;
 }
 .pkg-card p {
   font-size: 0.85rem;
-  color: rgba(10,37,64,0.55);
+  color: rgba(28,82,158,0.55);
   line-height: 1.5;
   margin: 0 0 16px;
 }
@@ -1045,7 +1045,7 @@ body {
   position: relative;
   padding-left: 20px;
   font-size: 0.82rem;
-  color: rgba(10,37,64,0.68);
+  color: rgba(28,82,158,0.68);
   line-height: 1.7;
 }
 .pkg-card-inclusions li::before {
@@ -1072,7 +1072,7 @@ body {
 .pkg-card-price .currency {
   font-size: 0.78rem;
   font-weight: 700;
-  color: rgba(10,37,64,0.5);
+  color: rgba(28,82,158,0.5);
 }
 .pkg-card-actions {
   display: flex;
@@ -1086,7 +1086,7 @@ body {
   border-radius: 99px;
   background: transparent;
   border: 1px solid #E5E7EB;
-  color: #0A2540;
+  color: #1C529E;
   font-size: 0.82rem;
   font-weight: 700;
   text-decoration: none;
@@ -1098,7 +1098,7 @@ body {
   text-align: center;
   padding: 11px 0;
   border-radius: 99px;
-  background: #0A2540;
+  background: #1C529E;
   color: #fff;
   font-size: 0.85rem;
   font-weight: 800;
@@ -1179,14 +1179,14 @@ body.lang-ko .lang-en-block { display: none; }
   text-align: center;
   font-size: clamp(2rem, 4vw, 2.8rem);
   font-weight: 900;
-  color: #0A2540;
+  color: #1C529E;
   margin: 0 0 28px;
 }
 .about-shark-lead {
   font-size: 1.2rem;
   font-weight: 500;
   line-height: 1.75;
-  color: #0A2540;
+  color: #1C529E;
   text-align: center;
   max-width: 640px;
   margin: 0 auto 48px;
@@ -1194,7 +1194,7 @@ body.lang-ko .lang-en-block { display: none; }
 .about-shark-inner p {
   font-size: 1.02rem;
   line-height: 1.85;
-  color: rgba(10,37,64,0.75);
+  color: rgba(28,82,158,0.75);
   margin: 0 0 22px;
 }
 .about-shark-quote {
@@ -1206,13 +1206,13 @@ body.lang-ko .lang-en-block { display: none; }
   font-size: 1.2rem;
   font-weight: 700;
   font-style: italic;
-  color: #0A2540;
+  color: #1C529E;
   line-height: 1.6;
 }
 .about-shark-inner h3 {
   font-size: 1.5rem;
   font-weight: 800;
-  color: #0A2540;
+  color: #1C529E;
   margin: 0 0 16px;
 }
 
@@ -1242,7 +1242,7 @@ body.lang-ko .lang-en-block { display: none; }
   display: block;
   font-size: 0.75rem;
   font-weight: 700;
-  color: rgba(10,37,64,0.6);
+  color: rgba(28,82,158,0.6);
   line-height: 1.4;
 }
 
@@ -1257,7 +1257,7 @@ body.lang-ko .lang-en-block { display: none; }
 .shark-split-media {
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 16px 40px rgba(10,37,64,0.12);
+  box-shadow: 0 16px 40px rgba(28,82,158,0.12);
   aspect-ratio: 3/4;
 }
 .shark-split-media video {
@@ -1270,7 +1270,7 @@ body.lang-ko .lang-en-block { display: none; }
 
 /* Conservation callout band */
 .conservation-block {
-  background: #0A2540;
+  background: #1C529E;
   padding: 90px 24px;
 }
 .conservation-inner {
@@ -1326,7 +1326,7 @@ body.lang-ko .lang-en-block { display: none; }
 }
 .fb-video-title {
   text-align: center;
-  color: #0A2540;
+  color: #1C529E;
   font-family: 'Outfit', 'Noto Sans KR', sans-serif;
   margin-bottom: 40px;
 }
@@ -1336,7 +1336,7 @@ body.lang-ko .lang-en-block { display: none; }
   margin-bottom: 8px;
 }
 .fb-video-title p {
-  color: rgba(10,37,64,0.6);
+  color: rgba(28,82,158,0.6);
   font-size: 1rem;
 }
 .fb-video-row {
@@ -1354,7 +1354,7 @@ body.lang-ko .lang-en-block { display: none; }
   width: 220px;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 8px 20px rgba(10,37,64,0.1);
+  box-shadow: 0 8px 20px rgba(28,82,158,0.1);
   text-decoration: none;
   display: block;
   transition: transform 0.25s ease;
@@ -1378,7 +1378,7 @@ video.fb-video-thumb {
 }
 .fb-video-play {
   font-size: 2.2rem;
-  color: rgba(10,37,64,0.35);
+  color: rgba(28,82,158,0.35);
 }
 .fb-video-label {
   display: block;
@@ -1421,11 +1421,11 @@ video.fb-video-thumb {
 .guest-rules-header h2 {
   font-size: clamp(2rem, 4vw, 2.8rem);
   font-weight: 900;
-  color: #0A2540;
+  color: #1C529E;
   margin: 0 0 10px;
 }
 .guest-rules-header p {
-  color: rgba(10,37,64,0.6);
+  color: rgba(28,82,158,0.6);
   font-size: 1rem;
 }
 .guest-rules-grid {
@@ -1439,7 +1439,7 @@ video.fb-video-thumb {
   border-radius: 20px;
   padding: 32px;
   border-top: 4px solid #10b981;
-  box-shadow: 0 4px 16px rgba(10,37,64,0.06);
+  box-shadow: 0 4px 16px rgba(28,82,158,0.06);
 }
 .guest-rules-card.donts { border-top-color: #dc2626; }
 .guest-rules-card h3 {
@@ -1461,7 +1461,7 @@ video.fb-video-thumb {
   margin-bottom: 14px;
   font-size: 0.92rem;
   line-height: 1.6;
-  color: rgba(10,37,64,0.75);
+  color: rgba(28,82,158,0.75);
 }
 .guest-rules-card li:last-child { margin-bottom: 0; }
 .guest-rules-card:not(.donts) li::before {
@@ -1493,12 +1493,12 @@ video.fb-video-thumb {
 .guest-rules-info ul {
   margin: 0 0 16px;
   padding-left: 20px;
-  color: rgba(10,37,64,0.75);
+  color: rgba(28,82,158,0.75);
   font-size: 0.92rem;
   line-height: 1.7;
 }
 .guest-rules-info p {
-  color: rgba(10,37,64,0.75);
+  color: rgba(28,82,158,0.75);
   font-size: 0.92rem;
   line-height: 1.7;
   margin: 0;
