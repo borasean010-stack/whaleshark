@@ -1,5 +1,15 @@
 /* reservation.css - Premium Split-Screen Layout */
 
+/* The shared .site-header is a near-transparent glass panel designed to sit
+   over a dark hero image. On this page the header is fixed while the wizard
+   content below (white cards) scrolls underneath it, so it needs its own
+   solid-enough background to stay readable at any scroll position. */
+.site-header {
+  background: rgba(4, 16, 24, 0.92) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+}
+
 body {
   background-color: transparent;
   color: var(--color-fg);
