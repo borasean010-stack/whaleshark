@@ -3,7 +3,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!langToggleBtn) return;
 
   const STORAGE_KEY = 'ws_lang';
-  let currentLang = localStorage.getItem(STORAGE_KEY) || 'en';
+  const onEnPath = window.location.pathname.startsWith('/en/') || window.location.pathname === '/en';
+
+  // The URL itself is the source of truth for these pages (root = ko, /en/ = en).
+  // A saved preference only matters for the pages that don't have a language-specific
+  // URL (reservation.html/success.html), so we still keep it updated on toggle.
+  let currentLang = onEnPath ? 'en' : 'ko';
 
   // Elements that have dual languages
   const elements = document.querySelectorAll('[data-en][data-ko]');
@@ -30,13 +35,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Apply the saved language immediately (persists across pages/reloads)
+  // Render this page's own language (matches its URL/meta) immediately
   applyTranslation(currentLang);
 
-  // Toggle button event listener
+  // Toggle button navigates to the language-specific URL instead of swapping in place,
+  // so Google always sees one language per URL.
   langToggleBtn.addEventListener('click', () => {
-    currentLang = currentLang === 'en' ? 'ko' : 'en';
-    localStorage.setItem(STORAGE_KEY, currentLang);
-    applyTranslation(currentLang);
+    const newLang = onEnPath ? 'ko' : 'en';
+    localStorage.setItem(STORAGE_KEY, newLang);
+    const path = window.location.pathname;
+    const target = onEnPath ? path.replace(/^\/en\/?/, '/') : '/en' + path;
+    window.location.href = target + window.location.search;
   });
 });
