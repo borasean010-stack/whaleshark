@@ -95,7 +95,7 @@ form.addEventListener("submit", async (e) => {
     window.showConfirmStep && window.showConfirmStep();
     setTimeout(() => {
       form.reset();
-      window.location.href = "success.html";
+      window.location.href = "success.html?nationality=" + encodeURIComponent(nationality);
     }, 1400);
   } catch (err) {
     console.error(err);
