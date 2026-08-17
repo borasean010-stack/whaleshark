@@ -74,7 +74,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 70vh;
+  min-height: 52vh;
   overflow: hidden;
   border-bottom: 1px solid var(--glass-border);
 }
@@ -176,14 +176,14 @@ body {
 
 /* Learn Section (Grid) */
 .learn-section {
-  padding: 100px 0;
+  padding: 40px 0;
   text-align: center;
 }
 .learn-title {
   font-size: 2.5rem;
   font-weight: 800;
   letter-spacing: 1px;
-  margin-bottom: 60px;
+  margin-bottom: 24px;
   text-transform: uppercase;
 }
 .learn-title span { font-weight: 300; opacity: 0.8; }
@@ -301,7 +301,7 @@ body {
   gap: 40px;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 80px 24px;
+  padding: 40px 24px;
   align-items: flex-start; /* sticky 작동을 위해 필수 */
 }
 .detail-main {
