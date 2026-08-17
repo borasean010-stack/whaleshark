@@ -1062,6 +1062,15 @@ body.lang-ko .lang-en-block { display: none; }
   min-height: 320px;
   max-height: 520px;
   overflow: hidden;
+  position: relative;
+  background: #fff;
+}
+.about-shark-banner-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 .about-shark-inner {
   max-width: 760px;
@@ -1243,17 +1252,6 @@ body.lang-ko .lang-en-block { display: none; }
   .shark-split { grid-template-columns: 1fr; }
   .shark-split-media img { aspect-ratio: 16/10; }
   .conservation-inner { grid-template-columns: 1fr; gap: 32px; }
-}
-
-/* ── Strip banner (between video gallery and About section) ── */
-.strip-banner {
-  width: 100%;
-  background: #fff;
-}
-.strip-banner-img {
-  display: block;
-  width: 100%;
-  height: auto;
 }
 
 /* ── Facebook video gallery ── */
