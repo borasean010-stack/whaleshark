@@ -43,7 +43,7 @@
   }
 }
 </script>
-<link rel="stylesheet" href="css/details.css">
+<link rel="stylesheet" href="css/details.css?v=1786930396">
 <style>
 .hyper-btn-detail { background: #10b981 !important; box-shadow: 0 0 15px #10b98180 !important; color: #fff !important; }
 .hyper-btn-detail:hover { background: #fff !important; color: #10b981 !important; }
@@ -53,8 +53,8 @@
 .inclusion-item { background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.25); border-radius: 16px; padding: 24px 20px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; transition: transform 0.2s, box-shadow 0.2s; }
 .inclusion-item:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(16,185,129,0.2); }
 .inclusion-icon { font-size: 2rem; }
-.inclusion-label { color: #fff; font-size: 0.95rem; font-weight: 600; line-height: 1.4; }
-.inclusion-sub { color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-top: 4px; }
+.inclusion-label { color: var(--ink); font-size: 0.95rem; font-weight: 600; line-height: 1.4; }
+.inclusion-sub { color: rgba(28,43,58,0.55); font-size: 0.8rem; margin-top: 4px; }
 .info-box { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); border-radius: 20px; padding: 30px; margin-top: 30px; }
 </style>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -64,7 +64,7 @@
 <nav class="detail-nav">
   <div class="detail-nav-title" data-en="TICKET ONLY" data-ko="티켓 단독">TICKET ONLY</div>
   <div style="display:flex; align-items:center; gap:16px;">
-    <button id="lang-toggle" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color:#fff; padding: 6px 16px; border-radius:99px; font-size:0.82rem; font-weight:700; cursor:pointer;">🇰🇷 한국어로 보기</button>
+    <button id="lang-toggle" style="background: rgba(28,43,58,0.06); border: 1px solid rgba(28,43,58,0.15); color:#1C2B3A; padding: 6px 16px; border-radius:99px; font-size:0.82rem; font-weight:700; cursor:pointer;">🇰🇷 한국어로 보기</button>
     <a href="index.html" class="detail-nav-close">✕ Close</a>
   </div>
 </nav>
@@ -99,13 +99,13 @@
       </div>
 
       <!-- NOT INCLUDED -->
-      <h3 style="color: rgba(255,255,255,0.5); font-size: 1rem; font-weight: 600; margin: 40px 0 16px 0; text-transform: uppercase; letter-spacing: 0.1em;" data-en="Not Included — Arrange Independently" data-ko="불포함 — 개별 준비 필요">Not Included — Arrange Independently</h3>
+      <h3 style="color: rgba(28,43,58,0.55); font-size: 1rem; font-weight: 600; margin: 40px 0 16px 0; text-transform: uppercase; letter-spacing: 0.1em;" data-en="Not Included — Arrange Independently" data-ko="불포함 — 개별 준비 필요">Not Included — Arrange Independently</h3>
       <div style="display: flex; flex-wrap: wrap; gap: 12px;">
-        <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); padding: 8px 16px; border-radius: 99px; font-size: 0.9rem;" data-en="❌ Transport to site" data-ko="❌ 현장 이동수단">❌ Transport to site</span>
-        <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); padding: 8px 16px; border-radius: 99px; font-size: 0.9rem;" data-en="❌ Guide" data-ko="❌ 가이드">❌ Guide</span>
-        <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); padding: 8px 16px; border-radius: 99px; font-size: 0.9rem;" data-en="❌ Equipment" data-ko="❌ 장비">❌ Equipment</span>
-        <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); padding: 8px 16px; border-radius: 99px; font-size: 0.9rem;" data-en="❌ Photography" data-ko="❌ 촬영">❌ Photography</span>
-        <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); padding: 8px 16px; border-radius: 99px; font-size: 0.9rem;" data-en="❌ Hotel Drop-off" data-ko="❌ 호텔 샌딩">❌ Hotel Drop-off</span>
+        <span style="background: rgba(28,43,58,0.05); border: 1px solid rgba(28,43,58,0.15); color: rgba(28,43,58,0.55); padding: 8px 16px; border-radius: 99px; font-size: 0.9rem;" data-en="❌ Transport to site" data-ko="❌ 현장 이동수단">❌ Transport to site</span>
+        <span style="background: rgba(28,43,58,0.05); border: 1px solid rgba(28,43,58,0.15); color: rgba(28,43,58,0.55); padding: 8px 16px; border-radius: 99px; font-size: 0.9rem;" data-en="❌ Guide" data-ko="❌ 가이드">❌ Guide</span>
+        <span style="background: rgba(28,43,58,0.05); border: 1px solid rgba(28,43,58,0.15); color: rgba(28,43,58,0.55); padding: 8px 16px; border-radius: 99px; font-size: 0.9rem;" data-en="❌ Equipment" data-ko="❌ 장비">❌ Equipment</span>
+        <span style="background: rgba(28,43,58,0.05); border: 1px solid rgba(28,43,58,0.15); color: rgba(28,43,58,0.55); padding: 8px 16px; border-radius: 99px; font-size: 0.9rem;" data-en="❌ Photography" data-ko="❌ 촬영">❌ Photography</span>
+        <span style="background: rgba(28,43,58,0.05); border: 1px solid rgba(28,43,58,0.15); color: rgba(28,43,58,0.55); padding: 8px 16px; border-radius: 99px; font-size: 0.9rem;" data-en="❌ Hotel Drop-off" data-ko="❌ 호텔 샌딩">❌ Hotel Drop-off</span>
       </div>
 
       <!-- PICKUP INFO -->
@@ -113,16 +113,16 @@
         <h3 style="color: #10b981; font-size: 1.3rem; margin: 0 0 20px 0;" data-en="📍 Ticket Pickup Information" data-ko="📍 티켓 수령 안내">📍 Ticket Pickup Information</h3>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
           <div>
-            <div style="color: rgba(255,255,255,0.5); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;" data-en="Location" data-ko="위치">Location</div>
-            <div style="color: #fff; font-weight: 600; font-size: 1rem;" data-en="Official Boracay Whale Shark Office" data-ko="보라카이 고래상어 공식 사무소">Official Boracay Whale Shark Office</div>
+            <div style="color: rgba(28,43,58,0.5); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;" data-en="Location" data-ko="위치">Location</div>
+            <div style="color: var(--ink); font-weight: 600; font-size: 1rem;" data-en="Official Boracay Whale Shark Office" data-ko="보라카이 고래상어 공식 사무소">Official Boracay Whale Shark Office</div>
           </div>
           <div>
-            <div style="color: rgba(255,255,255,0.5); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;" data-en="Operating Hours" data-ko="운영 시간">Operating Hours</div>
-            <div style="color: #fff; font-weight: 600; font-size: 1rem;" data-en="8:00 AM – 6:00 PM" data-ko="오전 8:00 ~ 오후 6:00">8:00 AM – 6:00 PM</div>
+            <div style="color: rgba(28,43,58,0.5); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;" data-en="Operating Hours" data-ko="운영 시간">Operating Hours</div>
+            <div style="color: var(--ink); font-weight: 600; font-size: 1rem;" data-en="8:00 AM – 6:00 PM" data-ko="오전 8:00 ~ 오후 6:00">8:00 AM – 6:00 PM</div>
           </div>
           <div>
-            <div style="color: rgba(255,255,255,0.5); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;" data-en="Required" data-ko="필수 지참">Required</div>
-            <div style="color: #fff; font-weight: 600; font-size: 1rem;" data-en="Show your booking voucher" data-ko="예약 바우처 제시">Show your booking voucher</div>
+            <div style="color: rgba(28,43,58,0.5); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;" data-en="Required" data-ko="필수 지참">Required</div>
+            <div style="color: var(--ink); font-weight: 600; font-size: 1rem;" data-en="Show your booking voucher" data-ko="예약 바우처 제시">Show your booking voucher</div>
           </div>
         </div>
       </div>
@@ -132,19 +132,19 @@
     <section class="learn-section">
       <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #10b981;"><span data-en="Recommendations" data-ko="추천 대상">Recommendations</span> <span data-en="BEST FOR" data-ko="이런 분께 추천">BEST FOR</span></h2>
       <ul style="list-style: none; padding: 0;">
-        <li style="color: rgba(255,255,255,0.85); font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 15px;">
+        <li style="color: rgba(28,43,58,0.8); font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 15px;">
           <span style="display:inline-block; min-width:24px; height:24px; background:#10b981; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
           <span data-en="Travelers who prefer to arrange their own transport and schedule" data-ko="이동수단과 일정을 직접 계획하고 싶은 여행자">Travelers who prefer to arrange their own transport and schedule</span>
         </li>
-        <li style="color: rgba(255,255,255,0.85); font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 15px;">
+        <li style="color: rgba(28,43,58,0.8); font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 15px;">
           <span style="display:inline-block; min-width:24px; height:24px; background:#10b981; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
           <span data-en="Those who already have their own gear or guide" data-ko="이미 개인 장비나 가이드가 있는 분">Those who already have their own gear or guide</span>
         </li>
-        <li style="color: rgba(255,255,255,0.85); font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 15px;">
+        <li style="color: rgba(28,43,58,0.8); font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 15px;">
           <span style="display:inline-block; min-width:24px; height:24px; background:#10b981; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
           <span data-en="Budget travelers who want the lowest possible price just to get in" data-ko="최저가로 입장만 원하는 예산 여행자">Budget travelers who want the lowest possible price just to get in</span>
         </li>
-        <li style="color: rgba(255,255,255,0.85); font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 15px;">
+        <li style="color: rgba(28,43,58,0.8); font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 15px;">
           <span style="display:inline-block; min-width:24px; height:24px; background:#10b981; border-radius:50%; text-align:center; line-height:24px; color:#fff; font-weight:bold;">✓</span>
           <span data-en="Experienced divers or repeat visitors who know the site well" data-ko="현장을 잘 아는 숙련된 다이버나 재방문객">Experienced divers or repeat visitors who know the site well</span>
         </li>
@@ -155,25 +155,25 @@
     <section class="learn-section">
       <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #10b981;"><span data-en="Process" data-ko="예약 절차">Process</span> <span data-en="HOW IT WORKS" data-ko="진행 방식">HOW IT WORKS</span></h2>
       <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-        <div style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.03); padding: 30px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
+        <div style="flex: 1; min-width: 150px; background: #F8FAFC; padding: 30px 20px; border-radius: 20px; border: 1px solid #E5E7EB; text-align: center;">
           <div style="font-size: 3rem; font-weight: 900; color: #10b981; margin-bottom: 15px; opacity: 0.5;">01</div>
-          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;" data-en="Booking &amp; Payment" data-ko="예약 및 결제">Booking & Payment</h3>
-          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;" data-en="Book online and pay securely" data-ko="온라인으로 안전하게 예약 및 결제">Book online and pay securely</p>
+          <h3 style="color: var(--ink); font-size: 1.2rem; margin-bottom: 10px;" data-en="Booking &amp; Payment" data-ko="예약 및 결제">Booking & Payment</h3>
+          <p style="color: rgba(28,43,58,0.6); font-size: 0.95rem;" data-en="Book online and pay securely" data-ko="온라인으로 안전하게 예약 및 결제">Book online and pay securely</p>
         </div>
-        <div style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.03); padding: 30px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
+        <div style="flex: 1; min-width: 150px; background: #F8FAFC; padding: 30px 20px; border-radius: 20px; border: 1px solid #E5E7EB; text-align: center;">
           <div style="font-size: 3rem; font-weight: 900; color: #10b981; margin-bottom: 15px; opacity: 0.5;">02</div>
-          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;" data-en="Receive Voucher" data-ko="바우처 수령">Receive Voucher</h3>
-          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;" data-en="Confirmation voucher sent to your email" data-ko="이메일로 예약 확정 바우처 발송">Confirmation voucher sent to your email</p>
+          <h3 style="color: var(--ink); font-size: 1.2rem; margin-bottom: 10px;" data-en="Receive Voucher" data-ko="바우처 수령">Receive Voucher</h3>
+          <p style="color: rgba(28,43,58,0.6); font-size: 0.95rem;" data-en="Confirmation voucher sent to your email" data-ko="이메일로 예약 확정 바우처 발송">Confirmation voucher sent to your email</p>
         </div>
-        <div style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.03); padding: 30px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
+        <div style="flex: 1; min-width: 150px; background: #F8FAFC; padding: 30px 20px; border-radius: 20px; border: 1px solid #E5E7EB; text-align: center;">
           <div style="font-size: 3rem; font-weight: 900; color: #10b981; margin-bottom: 15px; opacity: 0.5;">03</div>
-          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;" data-en="Visit Our Office" data-ko="사무소 방문">Visit Our Office</h3>
-          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;" data-en="Official Whale Shark Office — 8AM to 6PM" data-ko="공식 고래상어 사무소 — 오전 8시~오후 6시">Official Whale Shark Office — 8AM to 6PM</p>
+          <h3 style="color: var(--ink); font-size: 1.2rem; margin-bottom: 10px;" data-en="Visit Our Office" data-ko="사무소 방문">Visit Our Office</h3>
+          <p style="color: rgba(28,43,58,0.6); font-size: 0.95rem;" data-en="Official Whale Shark Office — 8AM to 6PM" data-ko="공식 고래상어 사무소 — 오전 8시~오후 6시">Official Whale Shark Office — 8AM to 6PM</p>
         </div>
-        <div style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.03); padding: 30px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
+        <div style="flex: 1; min-width: 150px; background: #F8FAFC; padding: 30px 20px; border-radius: 20px; border: 1px solid #E5E7EB; text-align: center;">
           <div style="font-size: 3rem; font-weight: 900; color: #10b981; margin-bottom: 15px; opacity: 0.5;">04</div>
-          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 10px;" data-en="Pick Up Ticket &amp; Enter!" data-ko="티켓 수령 후 입장!">Pick Up Ticket & Enter!</h3>
-          <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;" data-en="Show voucher → receive ticket → enjoy freely!" data-ko="바우처 제시 → 티켓 수령 → 자유롭게 즐기기!">Show voucher → receive ticket → enjoy freely!</p>
+          <h3 style="color: var(--ink); font-size: 1.2rem; margin-bottom: 10px;" data-en="Pick Up Ticket &amp; Enter!" data-ko="티켓 수령 후 입장!">Pick Up Ticket & Enter!</h3>
+          <p style="color: rgba(28,43,58,0.6); font-size: 0.95rem;" data-en="Show voucher → receive ticket → enjoy freely!" data-ko="바우처 제시 → 티켓 수령 → 자유롭게 즐기기!">Show voucher → receive ticket → enjoy freely!</p>
         </div>
       </div>
     </section>
@@ -182,21 +182,21 @@
     <section class="learn-section">
       <h2 class="learn-title" style="margin-bottom:40px; text-align:left; color: #10b981;"><span data-en="Notices &amp; Rules" data-ko="유의사항 및 규정">Notices &amp; Rules</span> <span data-en="NOTICES" data-ko="안내">NOTICES</span></h2>
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-        <div style="background: rgba(15,23,42,0.8); padding: 25px; border-radius: 16px; border-left: 4px solid #10b981;">
-          <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;" data-en="Operating Hours" data-ko="운영 시간">Operating Hours</h4>
-          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;" data-en="Must pick up your ticket between 8:00 AM and 6:00 PM." data-ko="오전 8시~오후 6시 사이에 티켓을 수령해야 합니다.">Must pick up your ticket between 8:00 AM and 6:00 PM.</p>
+        <div style="background: #F8FAFC; padding: 25px; border-radius: 16px; border-left: 4px solid #10b981;">
+          <h4 style="color: var(--ink); font-size: 1.1rem; margin: 0 0 10px 0;" data-en="Operating Hours" data-ko="운영 시간">Operating Hours</h4>
+          <p style="color: rgba(28,43,58,0.55); font-size: 0.95rem; margin: 0; line-height: 1.5;" data-en="Must pick up your ticket between 8:00 AM and 6:00 PM." data-ko="오전 8시~오후 6시 사이에 티켓을 수령해야 합니다.">Must pick up your ticket between 8:00 AM and 6:00 PM.</p>
         </div>
-        <div style="background: rgba(15,23,42,0.8); padding: 25px; border-radius: 16px; border-left: 4px solid #10b981;">
-          <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;" data-en="Do Not Lose Your Ticket" data-ko="티켓 분실 주의">Do Not Lose Your Ticket</h4>
-          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;" data-en="Lost tickets may not be reissued or refunded." data-ko="분실된 티켓은 재발급 또는 환불되지 않을 수 있습니다.">Lost tickets may not be reissued or refunded.</p>
+        <div style="background: #F8FAFC; padding: 25px; border-radius: 16px; border-left: 4px solid #10b981;">
+          <h4 style="color: var(--ink); font-size: 1.1rem; margin: 0 0 10px 0;" data-en="Do Not Lose Your Ticket" data-ko="티켓 분실 주의">Do Not Lose Your Ticket</h4>
+          <p style="color: rgba(28,43,58,0.55); font-size: 0.95rem; margin: 0; line-height: 1.5;" data-en="Lost tickets may not be reissued or refunded." data-ko="분실된 티켓은 재발급 또는 환불되지 않을 수 있습니다.">Lost tickets may not be reissued or refunded.</p>
         </div>
-        <div style="background: rgba(15,23,42,0.8); padding: 25px; border-radius: 16px; border-left: 4px solid #10b981;">
-          <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;" data-en="Personal Responsibility" data-ko="개인 책임">Personal Responsibility</h4>
-          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;" data-en="You are fully responsible for your own schedule and safety." data-ko="본인의 일정과 안전에 대한 책임은 본인에게 있습니다.">You are fully responsible for your own schedule and safety.</p>
+        <div style="background: #F8FAFC; padding: 25px; border-radius: 16px; border-left: 4px solid #10b981;">
+          <h4 style="color: var(--ink); font-size: 1.1rem; margin: 0 0 10px 0;" data-en="Personal Responsibility" data-ko="개인 책임">Personal Responsibility</h4>
+          <p style="color: rgba(28,43,58,0.55); font-size: 0.95rem; margin: 0; line-height: 1.5;" data-en="You are fully responsible for your own schedule and safety." data-ko="본인의 일정과 안전에 대한 책임은 본인에게 있습니다.">You are fully responsible for your own schedule and safety.</p>
         </div>
-        <div style="background: rgba(15,23,42,0.8); padding: 25px; border-radius: 16px; border-left: 4px solid #10b981;">
-          <h4 style="color: #fff; font-size: 1.1rem; margin: 0 0 10px 0;" data-en="Follow Site Rules" data-ko="현장 규칙 준수">Follow Site Rules</h4>
-          <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0; line-height: 1.5;" data-en="Please follow local environmental protection and safety guidelines on site." data-ko="현장의 환경보호 및 안전 수칙을 준수해 주세요.">Please follow local environmental protection and safety guidelines on site.</p>
+        <div style="background: #F8FAFC; padding: 25px; border-radius: 16px; border-left: 4px solid #10b981;">
+          <h4 style="color: var(--ink); font-size: 1.1rem; margin: 0 0 10px 0;" data-en="Follow Site Rules" data-ko="현장 규칙 준수">Follow Site Rules</h4>
+          <p style="color: rgba(28,43,58,0.55); font-size: 0.95rem; margin: 0; line-height: 1.5;" data-en="Please follow local environmental protection and safety guidelines on site." data-ko="현장의 환경보호 및 안전 수칙을 준수해 주세요.">Please follow local environmental protection and safety guidelines on site.</p>
         </div>
       </div>
     </section>

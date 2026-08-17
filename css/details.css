@@ -1,21 +1,23 @@
-/* details.css - Premium Glassmorphism Theme (Immersive Dark) */
+/* details.css - Light landing-page-matched theme */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
 
 :root {
-  --ocean-900: #050a0e;  /* HYPER main background color */
+  --ocean-900: #050a0e;  /* kept for hero overlay only */
   --ocean-700: #08121a;
   --ocean-500: #1a4a6b;
   --accent: #ff2828;     /* Fast track red */
   --accent-blue: #0078ff; /* Basic tour blue */
   --white: #ffffff;
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.15);
+  --ink: #1C2B3A;
+  --ink-soft: rgba(28, 43, 58, 0.65);
+  --glass-bg: #ffffff;
+  --glass-border: #E5E7EB;
 }
 
 body {
-  background-color: var(--ocean-900);
-  background-image: none; /* Removed radial gradient to match HYPER solid dark */
-  color: var(--white);
+  background-color: #F8FAFC;
+  background-image: none;
+  color: var(--ink);
   font-family: 'Outfit', 'Noto Sans KR', sans-serif;
   margin: 0;
   padding: 0;
@@ -35,7 +37,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 20px 32px;
-  background: rgba(4, 16, 24, 0.6);
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   position: sticky;
@@ -47,17 +49,17 @@ body {
   font-size: 1.2rem;
   font-weight: 800;
   letter-spacing: 2px;
-  color: var(--white);
+  color: var(--ink);
 }
 .theme-red .detail-nav-title { color: var(--accent); }
 .detail-nav-close {
   font-size: 0.9rem;
-  color: rgba(255,255,255,0.7);
+  color: var(--ink-soft);
   text-decoration: none;
   font-weight: 600;
   transition: color 0.3s;
 }
-.detail-nav-close:hover { color: var(--white); }
+.detail-nav-close:hover { color: var(--ink); }
 
 @media (max-width: 640px) {
   .detail-nav { padding: 14px 16px; gap: 10px; flex-wrap: wrap; }
@@ -311,18 +313,17 @@ body {
   position: sticky;
   top: 100px;
   background: var(--glass-bg);
-  backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
   border-radius: 20px;
   padding: 30px;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  box-shadow: 0 10px 30px rgba(28,43,58,0.12);
 }
 .detail-sidebar-price {
   font-size: 2rem;
   font-weight: 800;
   margin-bottom: 20px;
-  color: var(--white);
+  color: var(--ink);
 }
 .detail-sidebar .hyper-btn-detail {
   width: 100%;
