@@ -51,7 +51,6 @@ body {
   letter-spacing: 2px;
   color: var(--ink);
 }
-.theme-red .detail-nav-title { color: var(--accent); }
 .detail-nav-close {
   font-size: 0.9rem;
   color: var(--ink-soft);
@@ -187,8 +186,6 @@ body {
   text-transform: uppercase;
 }
 .learn-title span { font-weight: 300; opacity: 0.8; }
-.theme-red .learn-title { color: var(--accent); }
-.theme-red .learn-title span { color: var(--white); }
 
 .learn-grid {
   display: grid;
