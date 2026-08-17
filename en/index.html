@@ -34,6 +34,8 @@
 <!-- hreflang -->
 <link rel="alternate" hreflang="ko" href="https://boracaywhaleshark.com/">
 <link rel="alternate" hreflang="en" href="https://boracaywhaleshark.com/en/">
+<link rel="alternate" hreflang="zh" href="https://boracaywhaleshark.com/zh/">
+<link rel="alternate" hreflang="ja" href="https://boracaywhaleshark.com/ja/">
 <link rel="alternate" hreflang="x-default" href="https://boracaywhaleshark.com/">
 
 <!-- robots -->
@@ -41,7 +43,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/style.css?v=1786946613">
+<link rel="stylesheet" href="../css/style.css?v=1786959161">
 <link rel="stylesheet" href="../css/main.css?v=1786946613">
 
 <!-- JSON-LD Structured Data -->
@@ -148,7 +150,15 @@
       <a href="index.html" data-en="Home" data-ko="홈">Home</a>
       <a href="index.html#comparison-section" data-en="Tours" data-ko="투어">Tours</a>
       <a href="../reservation.html" data-en="Book Now" data-ko="예약하기">Book Now</a>
-      <button id="lang-toggle" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color:#fff; padding: 5px 14px; border-radius:99px; font-size:0.82rem; font-weight:700; cursor:pointer;">🇰🇷 한국어로 보기</button>
+      <div class="lang-select" id="lang-select">
+        <button class="lang-select-trigger" type="button" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color:#fff; padding: 5px 14px; border-radius:99px; font-size:0.82rem; font-weight:700; cursor:pointer;">🌐 <span class="lang-select-current">한국어</span></button>
+        <div class="lang-select-menu">
+          <a href="#" data-lang="ko">🇰🇷 한국어</a>
+          <a href="#" data-lang="en">🇺🇸 English</a>
+          <a href="#" data-lang="zh">🇨🇳 中文</a>
+          <a href="#" data-lang="ja">🇯🇵 日本語</a>
+        </div>
+      </div>
     </nav>
     
   </div>
@@ -618,7 +628,7 @@
 
 </div><!-- /.snap-last -->
 
-<script src="../js/i18n.js?v=1786946613" defer></script>
+<script src="../js/i18n.js?v=1786959161" defer></script>
 <script>
   // ── 1. General Intersection Observer ──
   const io = new IntersectionObserver((entries) => {

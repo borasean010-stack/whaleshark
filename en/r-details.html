@@ -35,6 +35,8 @@
 <!-- hreflang -->
 <link rel="alternate" hreflang="ko" href="https://boracaywhaleshark.com/r-details">
 <link rel="alternate" hreflang="en" href="https://boracaywhaleshark.com/en/r-details">
+<link rel="alternate" hreflang="zh" href="https://boracaywhaleshark.com/zh/r-details">
+<link rel="alternate" hreflang="ja" href="https://boracaywhaleshark.com/ja/r-details">
 <link rel="alternate" hreflang="x-default" href="https://boracaywhaleshark.com/r-details">
 
 <!-- JSON-LD -->
@@ -95,7 +97,15 @@
 <nav class="detail-nav">
   <div class="detail-nav-title" data-en="REGULAR TOUR" data-ko="레귤러 투어">REGULAR TOUR</div>
   <div style="display:flex; align-items:center; gap:16px;">
-    <button id="lang-toggle" style="background: rgba(28,43,58,0.06); border: 1px solid rgba(28,43,58,0.15); color:#1C2B3A; padding: 6px 16px; border-radius:99px; font-size:0.82rem; font-weight:700; cursor:pointer;">🇰🇷 한국어로 보기</button>
+    <div class="lang-select" id="lang-select">
+      <button class="lang-select-trigger" type="button" style="background: rgba(28,43,58,0.06); border: 1px solid rgba(28,43,58,0.15); color:#1C2B3A; padding: 6px 16px; border-radius:99px; font-size:0.82rem; font-weight:700; cursor:pointer;">🌐 <span class="lang-select-current">한국어</span></button>
+      <div class="lang-select-menu">
+        <a href="#" data-lang="ko">🇰🇷 한국어</a>
+        <a href="#" data-lang="en">🇺🇸 English</a>
+        <a href="#" data-lang="zh">🇨🇳 中文</a>
+        <a href="#" data-lang="ja">🇯🇵 日本語</a>
+      </div>
+    </div>
     <a href="index.html" class="detail-nav-close">✕ Close</a>
   </div>
 </nav>
@@ -268,6 +278,6 @@
   <script>
     lucide.createIcons();
   </script>
-  <script src="../js/i18n.js?v=1786946613" defer></script>
+  <script src="../js/i18n.js?v=1786959161" defer></script>
 </body>
 </html>

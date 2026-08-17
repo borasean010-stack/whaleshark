@@ -1,50 +1,64 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const langToggleBtn = document.getElementById('lang-toggle');
-  if (!langToggleBtn) return;
+  const langSelect = document.getElementById('lang-select');
+  if (!langSelect) return;
+
+  const trigger = langSelect.querySelector('.lang-select-trigger');
+  const menu = langSelect.querySelector('.lang-select-menu');
+  const currentLabel = langSelect.querySelector('.lang-select-current');
 
   const STORAGE_KEY = 'ws_lang';
-  const onEnPath = window.location.pathname.startsWith('/en/') || window.location.pathname === '/en';
+  const LANG_NAMES = { ko: '한국어', en: 'English', zh: '中文', ja: '日本語' };
+  const LANG_PREFIX = { ko: '', en: '/en', zh: '/zh', ja: '/ja' };
 
-  // The URL itself is the source of truth for these pages (root = ko, /en/ = en).
-  // A saved preference only matters for the pages that don't have a language-specific
-  // URL (reservation.html/success.html), so we still keep it updated on toggle.
-  let currentLang = onEnPath ? 'en' : 'ko';
+  const path = window.location.pathname;
+  let currentLang = 'ko';
+  if (path.startsWith('/en/') || path === '/en') currentLang = 'en';
+  else if (path.startsWith('/zh/') || path === '/zh') currentLang = 'zh';
+  else if (path.startsWith('/ja/') || path === '/ja') currentLang = 'ja';
 
-  // Elements that have dual languages
-  const elements = document.querySelectorAll('[data-en][data-ko]');
+  currentLabel.textContent = LANG_NAMES[currentLang];
 
-  // Function to apply translation
-  const applyTranslation = (lang) => {
+  // Highlight the active language and wire up navigation to each language's
+  // equivalent URL for the current page.
+  menu.querySelectorAll('a').forEach(a => {
+    const lang = a.getAttribute('data-lang');
+    if (lang === currentLang) a.classList.add('active');
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      menu.classList.remove('open');
+      if (lang === currentLang) return;
+
+      // reservation.html/success.html only understand ko/en, so zh/ja map to en.
+      localStorage.setItem(STORAGE_KEY, lang === 'ko' ? 'ko' : 'en');
+
+      let bare = path;
+      if (currentLang !== 'ko') {
+        bare = path.replace(new RegExp('^/' + currentLang + '/?'), '/');
+      }
+      const target = (lang === 'ko') ? bare : (LANG_PREFIX[lang] + bare);
+      window.location.href = target + window.location.search;
+    });
+  });
+
+  trigger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    menu.classList.toggle('open');
+  });
+  document.addEventListener('click', () => menu.classList.remove('open'));
+
+  // The ko/en pages carry both languages as data-en/data-ko attributes and
+  // swap between them here. zh/ja pages ship their translated text as the
+  // actual static content, so no attribute lookup/swap runs for them.
+  if (currentLang === 'ko' || currentLang === 'en') {
+    const elements = document.querySelectorAll('[data-en][data-ko]');
     elements.forEach(el => {
-      // Check if it's an input/textarea placeholder or innerHTML
       if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-        el.placeholder = el.getAttribute(`data-${lang}`);
+        el.placeholder = el.getAttribute(`data-${currentLang}`);
       } else {
-        el.innerHTML = el.getAttribute(`data-${lang}`);
+        el.innerHTML = el.getAttribute(`data-${currentLang}`);
       }
     });
-
-    document.documentElement.lang = lang;
-    document.body.classList.toggle('lang-ko', lang === 'ko');
-
-    // Update button text
-    if (lang === 'ko') {
-      langToggleBtn.innerHTML = '🇺🇸 View in English';
-    } else {
-      langToggleBtn.innerHTML = '🇰🇷 한국어로 보기';
-    }
-  };
-
-  // Render this page's own language (matches its URL/meta) immediately
-  applyTranslation(currentLang);
-
-  // Toggle button navigates to the language-specific URL instead of swapping in place,
-  // so Google always sees one language per URL.
-  langToggleBtn.addEventListener('click', () => {
-    const newLang = onEnPath ? 'ko' : 'en';
-    localStorage.setItem(STORAGE_KEY, newLang);
-    const path = window.location.pathname;
-    const target = onEnPath ? path.replace(/^\/en\/?/, '/') : '/en' + path;
-    window.location.href = target + window.location.search;
-  });
+    document.documentElement.lang = currentLang;
+    document.body.classList.toggle('lang-ko', currentLang === 'ko');
+  }
 });
