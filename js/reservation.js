@@ -9,6 +9,33 @@ const form = document.getElementById("reservation-form");
 const submitBtn = document.getElementById("submit-btn");
 const statusEl = document.getElementById("form-status");
 
+// 예약 확정 바우처 이메일 발송용 Google Apps Script 웹 앱.
+const VOUCHER_ENDPOINT = "https://script.google.com/macros/s/AKfycbwkaT0m8W5Q0HEAH6aNGZqibNgfXkJzUGzp28Txo2RyOPEenGtmujWaS2EEgJu7dhz3/exec";
+const VOUCHER_SECRET = "lA6grkC0pujbOn5B5ooSip3z9N-Wvwre";
+
+// 바우처 이메일 발송 실패는 예약 자체를 막지 않아야 하므로 별도로 감쌉니다.
+async function sendVoucherEmail(reservation) {
+  try {
+    await fetch(VOUCHER_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        secret: VOUCHER_SECRET,
+        tourType: reservation.tourType,
+        date: reservation.date,
+        people: reservation.people,
+        pickup: reservation.pickup,
+        totalPrice: reservation.totalPrice,
+        currency: reservation.currency,
+        name: reservation.name,
+        email: reservation.email
+      })
+    });
+  } catch (err) {
+    console.error("Voucher email failed:", err);
+  }
+}
+
 const MSG = {
   en: {
     fillFields: "Please fill in all required fields.",
@@ -89,6 +116,9 @@ form.addEventListener("submit", async (e) => {
 
     // 4. Save to Firebase
     await addDoc(collection(db, "reservations"), reservation);
+
+    // 4b. Send the confirmation voucher email (best-effort, doesn't block the flow)
+    sendVoucherEmail(reservation);
 
     // 5. Show the Confirm step, then redirect to the success page
     window.showConfirmStep && window.showConfirmStep();
