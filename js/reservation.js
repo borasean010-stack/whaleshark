@@ -27,6 +27,9 @@ async function sendVoucherEmail(reservation) {
         pickup: reservation.pickup,
         meetingTime: reservation.meetingTime,
         totalPrice: reservation.totalPrice,
+        paymentType: reservation.paymentType,
+        amountPaid: reservation.amountPaid,
+        balanceDue: reservation.balanceDue,
         currency: reservation.currency,
         name: reservation.name,
         email: reservation.email,
@@ -71,6 +74,12 @@ form.addEventListener("submit", async (e) => {
   const people = Number(formData.get("people"));
   const nationality = formData.get("nationality");
   const pricePerPerson = window.PRICES && window.PRICES[nationality] ? window.PRICES[nationality][tourType] : null;
+  const totalPrice = pricePerPerson ? pricePerPerson * people : null;
+
+  // 50% down payment: customer pays half online now, half in cash on-site.
+  const paymentType = formData.get("paymentType") || "full";
+  const amountPaid = totalPrice ? (paymentType === "deposit" ? Math.round(totalPrice / 2) : totalPrice) : null;
+  const balanceDue = totalPrice ? totalPrice - amountPaid : null;
 
   const reservation = {
     tourType,
@@ -81,7 +90,10 @@ form.addEventListener("submit", async (e) => {
     meetingTime: tourType === "R" ? formData.get("meetingTime") : "",
     nationality,
     pricePerPerson,
-    totalPrice: pricePerPerson ? pricePerPerson * people : null,
+    totalPrice,
+    paymentType,
+    amountPaid,
+    balanceDue,
     currency: "PHP",
     name: formData.get("name").trim(),
     email: formData.get("email").trim(),

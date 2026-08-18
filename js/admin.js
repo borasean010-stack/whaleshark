@@ -129,6 +129,7 @@ async function loadReservations() {
             ${data.paymentStatus === 'paid' ? '결제완료' : '미결제'}
           </div>
           ${data.paymentMethod ? `<div style="font-size:0.75rem; color:#10b981; margin-top:4px;">${data.paymentMethod}</div>` : ''}
+          ${data.balanceDue ? `<div style="font-size:0.75rem; color:var(--admin-warning); margin-top:4px; font-weight:700;">잔금 ${data.balanceDue.toLocaleString()} 현장결제</div>` : ''}
         </td>
         <td>${data.people}명</td>
         <td>${data.nationality === "PH" ? "필리핀" : data.nationality === "FOREIGN" ? "외국인" : "-"}</td>
