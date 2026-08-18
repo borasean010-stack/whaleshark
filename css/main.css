@@ -587,20 +587,18 @@ body {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: rgba(28,82,158,0.06);
-  border: 1px solid rgba(28,82,158,0.12);
-  transition: transform 0.25s ease, background 0.25s ease;
+  transition: transform 0.25s ease, filter 0.25s ease;
 }
-.footer-msg-icon svg { width: 20px; height: 20px; }
-a.footer-msg-icon:hover { transform: translateY(-3px); }
-.footer-msg-icon--whatsapp svg { fill: #25D366; }
-.footer-msg-icon--wechat svg { fill: #07C160; }
+.footer-msg-icon svg { width: 22px; height: 22px; }
+a.footer-msg-icon:hover { transform: translateY(-3px); filter: brightness(1.08); }
+.footer-msg-icon--whatsapp { background: #25D366; }
+.footer-msg-icon--whatsapp svg { fill: #fff; }
+.footer-msg-icon--wechat { background: #07C160; }
+.footer-msg-icon--wechat svg { fill: #fff; }
+.footer-msg-icon--kakao { background: #FEE500; }
 .footer-msg-icon--kakao svg { fill: #3C1E1E; }
-.footer-msg-icon--telegram svg { fill: #26A5E4; }
-a.footer-msg-icon--whatsapp:hover { background: rgba(37,211,102,0.14); }
-a.footer-msg-icon--wechat:hover { background: rgba(7,193,96,0.14); }
-a.footer-msg-icon--kakao:hover { background: rgba(255,224,0,0.3); }
-a.footer-msg-icon--telegram:hover { background: rgba(38,165,228,0.14); }
+.footer-msg-icon--telegram { background: #229ED9; }
+.footer-msg-icon--telegram svg { fill: #fff; }
 .footer-msg-icon--placeholder { cursor: default; }
 
 /* Bottom row: legal notice (left) + policy links (right) */
