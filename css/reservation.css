@@ -294,6 +294,28 @@ body {
   margin-bottom: 24px;
 }
 
+.gcash-qr-box {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.gcash-qr-img {
+  width: 100%;
+  max-width: 260px;
+  border-radius: 12px;
+  display: block;
+  margin: 0 auto;
+}
+.gcash-qr-caption {
+  margin: 12px 0 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0057B8;
+  letter-spacing: 0.3px;
+}
+
 /* ── Route map ── */
 #route-map {
   height: 220px;

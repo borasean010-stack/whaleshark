@@ -47,14 +47,14 @@ const MSG = {
     processing: "Processing Payment...",
     approving: "Approving payment...",
     error: "An error occurred during reservation. Please try again later.",
-    payNow: "Pay Now"
+    payNow: "I've Sent the Payment"
   },
   ko: {
     fillFields: "필수 항목을 모두 입력해주세요.",
     processing: "결제 처리 중...",
     approving: "결제 승인 중...",
     error: "예약 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
-    payNow: "결제하기"
+    payNow: "입금 완료 (예약 확정)"
   }
 };
 
@@ -116,7 +116,7 @@ form.addEventListener("submit", async (e) => {
 
     // 2. Add payment info
     reservation.paymentStatus = 'paid';
-    reservation.paymentMethod = 'PayMongo';
+    reservation.paymentMethod = 'GCash';
 
     // 3. Save to Firebase
     await addDoc(collection(db, "reservations"), reservation);
