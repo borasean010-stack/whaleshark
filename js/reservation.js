@@ -87,9 +87,8 @@ form.addEventListener("submit", async (e) => {
     reservation.paymentStatus = 'paid';
     reservation.paymentMethod = 'PayMongo';
 
-    // 4. Save to Firebase (Temporarily bypassed for UI testing due to dummy config)
-    // await addDoc(collection(db, "reservations"), reservation);
-    console.log("Mock reservation saved:", reservation);
+    // 4. Save to Firebase
+    await addDoc(collection(db, "reservations"), reservation);
 
     // 5. Show the Confirm step, then redirect to the success page
     window.showConfirmStep && window.showConfirmStep();

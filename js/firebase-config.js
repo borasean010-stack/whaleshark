@@ -19,12 +19,12 @@ const firebaseConfig = IS_LOCAL
       projectId: "demo-whale-shark",
     }
   : {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
+      apiKey: "AIzaSyB5HjvqxyKucPIx2tMQpmlFM0A2h_DtzBk",
+      authDomain: "boracaysean-6217a.firebaseapp.com",
+      projectId: "boracaysean-6217a",
+      storageBucket: "boracaysean-6217a.firebasestorage.app",
+      messagingSenderId: "390619286668",
+      appId: "1:390619286668:web:5f03efd80dbba93fedbfa9"
     };
 
 const app = initializeApp(firebaseConfig);
