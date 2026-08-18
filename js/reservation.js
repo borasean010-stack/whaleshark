@@ -28,7 +28,8 @@ async function sendVoucherEmail(reservation) {
         totalPrice: reservation.totalPrice,
         currency: reservation.currency,
         name: reservation.name,
-        email: reservation.email
+        email: reservation.email,
+        lang: localStorage.getItem('ws_lang') || 'en'
       })
     });
   } catch (err) {
