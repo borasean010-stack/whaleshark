@@ -295,24 +295,25 @@ body {
 }
 
 .gcash-qr-box {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 20px;
+  background: #0057E5;
+  border-radius: 20px;
+  padding: 22px;
   text-align: center;
   margin-bottom: 20px;
 }
 .gcash-qr-img {
   width: 100%;
   max-width: 260px;
-  border-radius: 12px;
+  border-radius: 14px;
   display: block;
   margin: 0 auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 .gcash-qr-caption {
-  margin: 12px 0 0;
+  margin: 14px 0 0;
   font-size: 0.85rem;
   font-weight: 700;
-  color: #0057B8;
+  color: #ffffff;
   letter-spacing: 0.3px;
 }
 
