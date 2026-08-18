@@ -573,8 +573,77 @@ body {
   color: rgba(28,82,158,0.45);
 }
 
+/* Messenger icon row */
+.footer-messengers {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  padding-bottom: 32px;
+}
+.footer-msg-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(28,82,158,0.06);
+  border: 1px solid rgba(28,82,158,0.12);
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+.footer-msg-icon svg { width: 20px; height: 20px; }
+a.footer-msg-icon:hover { transform: translateY(-3px); }
+.footer-msg-icon--whatsapp svg { fill: #25D366; }
+.footer-msg-icon--wechat svg { fill: #07C160; }
+.footer-msg-icon--kakao svg { fill: #3C1E1E; }
+.footer-msg-icon--telegram svg { fill: #26A5E4; }
+a.footer-msg-icon--whatsapp:hover { background: rgba(37,211,102,0.14); }
+a.footer-msg-icon--wechat:hover { background: rgba(7,193,96,0.14); }
+a.footer-msg-icon--kakao:hover { background: rgba(255,224,0,0.3); }
+a.footer-msg-icon--telegram:hover { background: rgba(38,165,228,0.14); }
+.footer-msg-icon--placeholder { opacity: 0.4; cursor: default; }
+
+/* Bottom row: legal notice (left) + policy links (right) */
+.footer-bottom-row {
+  border-top: 1px solid #E5E7EB;
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.footer-legal-text {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 560px;
+}
+.footer-legal-text p {
+  margin: 0;
+  font-size: 0.68rem;
+  color: rgba(28,82,158,0.45);
+  line-height: 1.7;
+}
+.footer-legal-links {
+  display: flex;
+  gap: 20px;
+  flex-shrink: 0;
+  padding-top: 4px;
+}
+.footer-legal-links a {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(28,82,158,0.6);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.footer-legal-links a:hover { color: #0077C8; text-decoration: underline; }
+
 @media (max-width: 700px) {
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+  .footer-bottom-row { flex-direction: column; align-items: flex-start; }
+  .footer-legal-links { gap: 16px; }
 }
 
 /* ── 반응형 ── */
@@ -599,6 +668,93 @@ body {
 @media (max-width: 480px) {
   .partners-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; }
   .hyper-bg-word { font-size: clamp(3.52rem, 20vw, 7.04rem); letter-spacing: -2px; }
+}
+
+/* ── LEGAL PAGES (Privacy Policy / Terms) ── */
+.legal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #E5E7EB;
+}
+.legal-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.legal-header .logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.legal-header .logo-img { height: 36px; width: auto; }
+.legal-header .logo-text {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  font-size: 0.9rem;
+  color: #1C529E;
+  letter-spacing: 0.5px;
+}
+.legal-back {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1C529E;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.legal-back:hover { text-decoration: underline; }
+
+.legal-main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 64px 24px 100px;
+}
+.legal-main h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  font-weight: 900;
+  color: #1C529E;
+  margin: 0 0 8px;
+}
+.legal-updated {
+  font-size: 0.78rem;
+  color: rgba(28,82,158,0.5);
+  margin: 0 0 40px;
+}
+.legal-intro {
+  font-size: 0.95rem;
+  color: #334155;
+  line-height: 1.8;
+  margin: 0 0 40px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid #E5E7EB;
+}
+.legal-section { margin-bottom: 32px; }
+.legal-section h2 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 10px;
+}
+.legal-section p {
+  font-size: 0.92rem;
+  color: #475569;
+  line-height: 1.85;
+  margin: 0 0 10px;
+}
+.legal-section ul {
+  margin: 0 0 10px;
+  padding-left: 20px;
+}
+.legal-section li {
+  font-size: 0.92rem;
+  color: #475569;
+  line-height: 1.85;
+  margin-bottom: 4px;
+}
+
+@media (max-width: 600px) {
+  .legal-main { padding: 40px 20px 80px; }
 }
 
 /* ── COMPARISON SECTION (쿠폰 비교표) ── */
