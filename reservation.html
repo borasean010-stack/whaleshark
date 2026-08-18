@@ -194,6 +194,11 @@
             <input type="email" id="email" name="email" class="input-luxury" placeholder="Enter your email address" required>
           </div>
 
+          <div class="form-group">
+            <label for="emergencyContact" data-en="Emergency Contact (optional)" data-ko="비상 연락처 (선택)">Emergency Contact (optional)</label>
+            <input type="tel" id="emergencyContact" name="emergencyContact" class="input-luxury" placeholder="+63 9XX XXX XXXX">
+          </div>
+
           <div class="wizard-actions">
             <button type="button" class="wizard-back" data-goto="1" data-en="Back" data-ko="이전">Back</button>
             <button type="button" class="wizard-next" data-goto="3" data-en="Next: Review Booking" data-ko="다음: 예약 확인">Next: Review Booking</button>
@@ -211,6 +216,7 @@
             <div class="review-row"><span data-en="Nationality" data-ko="국적">Nationality</span><strong id="rv-nationality">-</strong></div>
             <div class="review-row"><span data-en="Name" data-ko="예약자 성함">Name</span><strong id="rv-name">-</strong></div>
             <div class="review-row"><span data-en="Email" data-ko="이메일">Email</span><strong id="rv-email">-</strong></div>
+            <div class="review-row"><span data-en="Emergency Contact" data-ko="비상 연락처">Emergency Contact</span><strong id="rv-emergency">-</strong></div>
             <div class="review-row review-row--total"><span data-en="Total Price" data-ko="총 결제 금액">Total Price</span><strong id="rv-total">-</strong></div>
           </div>
 
@@ -414,6 +420,7 @@
       const people = Number(document.getElementById('people').value) || 0;
       const nameVal = document.getElementById('name').value || '-';
       const emailVal = document.getElementById('email').value || '-';
+      const emergencyVal = document.getElementById('emergencyContact').value || '-';
       const lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
       const nationalityCode = document.getElementById('nationality').value;
       const nationalityVal = nationalityCode ? nationalityNames[lang][nationalityCode] : '-';
@@ -424,6 +431,7 @@
       ['sum-people', 'rv-people'].forEach(id => document.getElementById(id).textContent = peopleVal);
       document.getElementById('rv-name').textContent = nameVal;
       document.getElementById('rv-email').textContent = emailVal;
+      document.getElementById('rv-emergency').textContent = emergencyVal;
       document.getElementById('rv-nationality').textContent = nationalityVal;
 
       // Price preview (Step 1)
@@ -601,6 +609,6 @@
     if (currentLang === 'ko') applyLang('ko');
   });
 </script>
-<script type="module" src="js/reservation.js?v=1787020434"></script>
+<script type="module" src="js/reservation.js?v=1787025311"></script>
 </body>
 </html>

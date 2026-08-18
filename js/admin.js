@@ -71,7 +71,7 @@ refreshBtn.addEventListener("click", () => {
 
 // Load Data from Firestore
 async function loadReservations() {
-  tbody.innerHTML = "<tr><td colspan='9' style='text-align:center;'>로딩 중...</td></tr>";
+  tbody.innerHTML = "<tr><td colspan='10' style='text-align:center;'>로딩 중...</td></tr>";
   try {
     const q = query(collection(db, "reservations"), orderBy("createdAt", "desc"));
     const querySnapshot = await getDocs(q);
@@ -135,6 +135,7 @@ async function loadReservations() {
         <td>
           <div>${data.email}</div>
         </td>
+        <td>${data.emergencyContact || "-"}</td>
         <td>${selectHtml}</td>
         <td>
           <button class="action-btn delete-btn" data-id="${id}">삭제</button>
@@ -144,7 +145,7 @@ async function loadReservations() {
     });
 
     if (total === 0) {
-      tbody.innerHTML = "<tr><td colspan='9' style='text-align:center;'>예약 내역이 없습니다.</td></tr>";
+      tbody.innerHTML = "<tr><td colspan='10' style='text-align:center;'>예약 내역이 없습니다.</td></tr>";
     }
 
     statTotal.textContent = total;
@@ -155,7 +156,7 @@ async function loadReservations() {
 
   } catch (error) {
     console.error("Error loading reservations: ", error);
-    tbody.innerHTML = "<tr><td colspan='9' style='text-align:center; color: red;'>데이터를 불러오는 중 오류가 발생했습니다.</td></tr>";
+    tbody.innerHTML = "<tr><td colspan='10' style='text-align:center; color: red;'>데이터를 불러오는 중 오류가 발생했습니다.</td></tr>";
   }
 }
 

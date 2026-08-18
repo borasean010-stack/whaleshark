@@ -82,6 +82,7 @@ form.addEventListener("submit", async (e) => {
     currency: "PHP",
     name: formData.get("name").trim(),
     email: formData.get("email").trim(),
+    emergencyContact: (formData.get("emergencyContact") || "").trim(),
     status: "pending",
     createdAt: serverTimestamp()
   };

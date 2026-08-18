@@ -593,9 +593,12 @@ body {
 a.footer-msg-icon:hover { transform: translateY(-3px); filter: brightness(1.08); }
 .footer-msg-icon--whatsapp { background: #25D366; }
 .footer-msg-icon--whatsapp svg { fill: #fff; }
+.footer-msg-icon--viber { background: #7360F2; }
+.footer-msg-icon--viber svg { fill: #fff; }
 .footer-msg-icon--wechat { background: #07C160; }
 .footer-msg-icon--wechat svg { fill: #fff; }
-.footer-msg-icon--kakao svg { width: 34px; height: 34px; }
+.footer-msg-icon--kakao { background: #FEE500; }
+.footer-msg-icon--kakao svg { width: 30px; height: 30px; }
 .footer-msg-icon--telegram { background: #229ED9; }
 .footer-msg-icon--telegram svg { fill: #fff; }
 .footer-msg-icon--placeholder { cursor: default; }
