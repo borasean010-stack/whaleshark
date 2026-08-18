@@ -264,6 +264,22 @@ body {
   margin: 8px 0 0;
   line-height: 1.5;
 }
+.map-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 8px 16px;
+  background: rgba(37, 99, 235, 0.12);
+  border: 1px solid rgba(37, 99, 235, 0.35);
+  border-radius: 99px;
+  color: #60a5fa;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+.map-link-btn:hover { background: rgba(37, 99, 235, 0.22); }
 
 /* ── Sidebar: booking summary ── */
 .wizard-sidebar { position: sticky; top: 100px; }

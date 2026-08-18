@@ -25,6 +25,7 @@ async function sendVoucherEmail(reservation) {
         date: reservation.date,
         people: reservation.people,
         pickup: reservation.pickup,
+        meetingTime: reservation.meetingTime,
         totalPrice: reservation.totalPrice,
         currency: reservation.currency,
         name: reservation.name,
@@ -76,6 +77,8 @@ form.addEventListener("submit", async (e) => {
     date: formData.get("date"),
     people,
     pickup: formData.get("pickup"),
+    // Regular tour only: shared meeting point, one of two departure times.
+    meetingTime: tourType === "R" ? formData.get("meetingTime") : "",
     nationality,
     pricePerPerson,
     totalPrice: pricePerPerson ? pricePerPerson * people : null,
