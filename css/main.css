@@ -1113,20 +1113,22 @@ body {
 }
 .pkg-card-cta:hover { background: #0077C8; }
 
-/* Always horizontal - on narrow screens the row scrolls sideways
-   instead of stacking the cards into a vertical list */
+/* 2-column grid on narrow screens instead of a horizontal slider */
 @media (max-width: 900px) {
   .pkg-grid {
-    display: flex;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x mandatory;
-    padding-bottom: 8px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
-  .pkg-card {
-    flex: 0 0 260px;
-    scroll-snap-align: start;
-  }
+  .pkg-card-body { padding: 16px 12px 18px; }
+  .pkg-card h3 { font-size: 0.9rem; }
+  .pkg-card p { font-size: 0.68rem; margin-bottom: 12px; }
+  .pkg-card-inclusions li { font-size: 0.66rem; line-height: 1.5; }
+  .pkg-card-tag { font-size: 0.6rem; }
+}
+@media (max-width: 480px) {
+  .pkg-grid { gap: 8px; }
+  .pkg-card-body { padding: 12px 10px 14px; }
 }
 
 /* ── Language block toggle (for long-form content where per-attribute
@@ -1400,8 +1402,15 @@ iframe.fb-video-thumb {
 @media (max-width: 760px) {
   .fb-video-section { padding: 56px 16px; }
   .fb-video-title h2 { font-size: 1.41rem; }
-  .fb-video-item, .fb-video-thumb { width: 170px; }
-  .fb-video-thumb { height: 300px; }
+  /* 2-column grid instead of a horizontal slider */
+  .fb-video-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    overflow-x: visible;
+    gap: 12px;
+  }
+  .fb-video-item, .fb-video-thumb { width: 100%; }
+  .fb-video-thumb { height: auto; aspect-ratio: 9 / 16; }
 }
 
 /* ── Guest Rules / Safety ── */
