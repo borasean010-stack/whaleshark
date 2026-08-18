@@ -26,6 +26,7 @@ async function sendVoucherEmail(reservation) {
         people: reservation.people,
         pickup: reservation.pickup,
         meetingTime: reservation.meetingTime,
+        nationality: reservation.nationality,
         totalPrice: reservation.totalPrice,
         paymentType: reservation.paymentType,
         amountPaid: reservation.amountPaid,
@@ -82,8 +83,9 @@ form.addEventListener("submit", async (e) => {
     date: formData.get("date"),
     people,
     pickup: formData.get("pickup"),
-    // Regular tour only: shared meeting point, one of two departure times.
-    meetingTime: tourType === "R" ? formData.get("meetingTime") : "",
+    // Regular: shared meeting point, one of two departure times (customer's choice).
+    // Fast Track / VIP Fast Track: also meet at 07:30, but it's fixed, not a choice.
+    meetingTime: (tourType === "R" || tourType === "F" || tourType === "VF") ? formData.get("meetingTime") : "",
     nationality,
     pricePerPerson,
     totalPrice,
