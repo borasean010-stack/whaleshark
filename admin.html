@@ -11,18 +11,19 @@
   <title>Admin Dashboard | BORACAY WHALE SHARK</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/admin.css?v=1787021000">
 </head>
 <body>
 
-  <!-- PIN Login Overlay -->
+  <!-- Admin Login Overlay -->
   <div id="login-overlay">
     <div class="login-box">
       <h2>관리자 인증</h2>
-      <p style="color: var(--admin-text-muted); margin-bottom: 30px;">어드민 페이지에 접근하려면 핀 번호를 입력하세요.</p>
-      <input type="password" id="pin-input" class="login-input" placeholder="PIN CODE" maxlength="4">
-      <button id="login-btn" class="login-btn">접속하기</button>
-      <div id="login-error">핀 번호가 올바르지 않습니다.</div>
+      <p style="color: var(--admin-text-muted); margin-bottom: 30px;">관리자 계정으로 로그인하세요.</p>
+      <input type="email" id="email-input" class="login-input login-input--text" placeholder="이메일" autocomplete="username">
+      <input type="password" id="password-input" class="login-input login-input--text" placeholder="비밀번호" autocomplete="current-password">
+      <button id="login-btn" class="login-btn">로그인</button>
+      <div id="login-error">이메일 또는 비밀번호가 올바르지 않습니다.</div>
     </div>
   </div>
 
@@ -101,6 +102,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/admin.js"></script>
+  <script type="module" src="js/admin.js?v=1787021000"></script>
 </body>
 </html>

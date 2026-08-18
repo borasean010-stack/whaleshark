@@ -81,16 +81,9 @@ service cloud.firestore {
         request.resource.data.people is number &&
         request.resource.data.status == 'pending';
 
-      // 기본값: 읽기/수정/삭제는 전면 차단 (admin.html 은 이 상태에서는 동작하지 않습니다).
-      allow read, update, delete: if false;
-
-      // --- 관리자 페이지(admin.html)를 실제로 쓰려면 ---
-      // 1) Firebase Authentication(이메일/비밀번호 등)을 활성화하고 관리자 계정을 만드세요.
-      // 2) 위의 "allow read, update, delete: if false;" 줄을 지우고 아래 주석을 해제하세요.
-      //    (관리자만 로그인 가능하도록 이메일을 지정하는 예시입니다. 실제 관리자 이메일로 바꿔서 사용하세요.)
-      //
-      // allow read, update, delete: if request.auth != null &&
-      //   request.auth.token.email == 'admin@example.com';
+      // 관리자(admin.html, 진짜 Firebase 로그인)만 조회/수정/삭제 가능.
+      allow read, update, delete: if request.auth != null &&
+        request.auth.token.email == 'luca@boracaywhaleshark.com';
     }
   }
 }

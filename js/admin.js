@@ -1,4 +1,4 @@
-import { db } from "./firebase-config.js";
+import { db, auth } from "./firebase-config.js";
 import {
   collection,
   query,
@@ -8,11 +8,17 @@ import {
   updateDoc,
   deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 // DOM Elements
 const loginOverlay = document.getElementById("login-overlay");
 const dashboard = document.getElementById("dashboard");
-const pinInput = document.getElementById("pin-input");
+const emailInput = document.getElementById("email-input");
+const passwordInput = document.getElementById("password-input");
 const loginBtn = document.getElementById("login-btn");
 const loginError = document.getElementById("login-error");
 const logoutBtn = document.getElementById("logout-btn");
@@ -23,11 +29,10 @@ const statTotal = document.getElementById("stat-total");
 const statPending = document.getElementById("stat-pending");
 const statConfirmed = document.getElementById("stat-confirmed");
 
-// Simple PIN Auth (For demonstration purposes)
-const ADMIN_PIN = "1234";
-
-function checkAuth() {
-  if (sessionStorage.getItem("adminAuth") === "true") {
+// Real Firebase Authentication — replaces the old client-side-only PIN check,
+// which never satisfied Firestore's `request.auth != null` rule anyway.
+onAuthStateChanged(auth, (user) => {
+  if (user) {
     loginOverlay.style.display = "none";
     dashboard.style.display = "block";
     loadReservations();
@@ -35,27 +40,29 @@ function checkAuth() {
     loginOverlay.style.display = "flex";
     dashboard.style.display = "none";
   }
-}
+});
 
-loginBtn.addEventListener("click", () => {
-  if (pinInput.value === ADMIN_PIN) {
-    sessionStorage.setItem("adminAuth", "true");
-    loginError.style.display = "none";
-    checkAuth();
-  } else {
+loginBtn.addEventListener("click", async () => {
+  loginError.style.display = "none";
+  try {
+    await signInWithEmailAndPassword(auth, emailInput.value.trim(), passwordInput.value);
+  } catch (err) {
+    console.error("Login failed:", err);
     loginError.style.display = "block";
-    pinInput.value = "";
+    passwordInput.value = "";
   }
 });
 
-pinInput.addEventListener("keyup", (e) => {
-  if (e.key === "Enter") loginBtn.click();
+[emailInput, passwordInput].forEach(el => {
+  el.addEventListener("keyup", (e) => {
+    if (e.key === "Enter") loginBtn.click();
+  });
 });
 
 logoutBtn.addEventListener("click", () => {
-  sessionStorage.removeItem("adminAuth");
-  pinInput.value = "";
-  checkAuth();
+  signOut(auth);
+  emailInput.value = "";
+  passwordInput.value = "";
 });
 
 refreshBtn.addEventListener("click", () => {
@@ -194,6 +201,3 @@ function attachEventListeners() {
     });
   });
 }
-
-// Initialize
-checkAuth();
