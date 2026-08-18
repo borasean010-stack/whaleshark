@@ -601,7 +601,7 @@ a.footer-msg-icon--whatsapp:hover { background: rgba(37,211,102,0.14); }
 a.footer-msg-icon--wechat:hover { background: rgba(7,193,96,0.14); }
 a.footer-msg-icon--kakao:hover { background: rgba(255,224,0,0.3); }
 a.footer-msg-icon--telegram:hover { background: rgba(38,165,228,0.14); }
-.footer-msg-icon--placeholder { opacity: 0.4; cursor: default; }
+.footer-msg-icon--placeholder { cursor: default; }
 
 /* Bottom row: legal notice (left) + policy links (right) */
 .footer-bottom-row {
