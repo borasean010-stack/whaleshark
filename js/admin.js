@@ -71,7 +71,7 @@ refreshBtn.addEventListener("click", () => {
 
 // Load Data from Firestore
 async function loadReservations() {
-  tbody.innerHTML = "<tr><td colspan='8' style='text-align:center;'>로딩 중...</td></tr>";
+  tbody.innerHTML = "<tr><td colspan='9' style='text-align:center;'>로딩 중...</td></tr>";
   try {
     const q = query(collection(db, "reservations"), orderBy("createdAt", "desc"));
     const querySnapshot = await getDocs(q);
@@ -131,6 +131,7 @@ async function loadReservations() {
           ${data.paymentMethod ? `<div style="font-size:0.75rem; color:#10b981; margin-top:4px;">${data.paymentMethod}</div>` : ''}
         </td>
         <td>${data.people}명</td>
+        <td>${data.nationality === "PH" ? "필리핀" : data.nationality === "FOREIGN" ? "외국인" : "-"}</td>
         <td>
           <div>${data.email}</div>
         </td>
@@ -143,7 +144,7 @@ async function loadReservations() {
     });
 
     if (total === 0) {
-      tbody.innerHTML = "<tr><td colspan='8' style='text-align:center;'>예약 내역이 없습니다.</td></tr>";
+      tbody.innerHTML = "<tr><td colspan='9' style='text-align:center;'>예약 내역이 없습니다.</td></tr>";
     }
 
     statTotal.textContent = total;
@@ -154,7 +155,7 @@ async function loadReservations() {
 
   } catch (error) {
     console.error("Error loading reservations: ", error);
-    tbody.innerHTML = "<tr><td colspan='8' style='text-align:center; color: red;'>데이터를 불러오는 중 오류가 발생했습니다.</td></tr>";
+    tbody.innerHTML = "<tr><td colspan='9' style='text-align:center; color: red;'>데이터를 불러오는 중 오류가 발생했습니다.</td></tr>";
   }
 }
 
