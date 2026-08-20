@@ -163,27 +163,6 @@
           </div>
 
           <div class="form-group">
-            <label data-en="Payment Option *" data-ko="결제 방식 *">Payment Option *</label>
-            <div class="payment-type-options">
-              <label class="payment-type-option">
-                <input type="radio" name="paymentType" value="full" checked required>
-                <div class="payment-type-card">
-                  <span class="pt-title" data-en="Pay in Full" data-ko="전액 결제">Pay in Full</span>
-                  <span class="pt-desc" data-en="Pay 100% online now" data-ko="온라인으로 100% 결제">Pay 100% online now</span>
-                </div>
-              </label>
-              <label class="payment-type-option">
-                <input type="radio" name="paymentType" value="deposit" required>
-                <div class="payment-type-card">
-                  <span class="pt-title" data-en="50% Down Payment" data-ko="50% 다운페이먼트">50% Down Payment</span>
-                  <span class="pt-desc" data-en="Pay 50% now, balance on-site" data-ko="50% 선결제, 잔금은 현장 결제">Pay 50% now, balance on-site</span>
-                </div>
-              </label>
-            </div>
-            <p class="map-caption" data-en="Balance is paid in cash (PHP) at the meeting point on the day of the tour." data-ko="잔금은 투어 당일 미팅 장소에서 현금(PHP)으로 결제합니다.">Balance is paid in cash (PHP) at the meeting point on the day of the tour.</p>
-          </div>
-
-          <div class="form-group">
             <label for="pickup" data-en="Pick Up Location *" data-ko="픽업 장소 *">Pick Up Location *</label>
             <select id="pickup" name="pickup" class="input-luxury" required>
               <option value="Jollibee Main Road" selected data-en="Jollibee Main Road" data-ko="메인로드 졸리비">Jollibee Main Road</option>
@@ -254,9 +233,7 @@
             <div class="review-row"><span data-en="Name" data-ko="예약자 성함">Name</span><strong id="rv-name">-</strong></div>
             <div class="review-row"><span data-en="Email" data-ko="이메일">Email</span><strong id="rv-email">-</strong></div>
             <div class="review-row"><span data-en="Emergency Contact" data-ko="비상 연락처">Emergency Contact</span><strong id="rv-emergency">-</strong></div>
-            <div class="review-row" id="rv-total-row" style="display:none;"><span data-en="Total Price" data-ko="총 요금">Total Price</span><strong id="rv-total">-</strong></div>
-            <div class="review-row" id="rv-balance-row" style="display:none;"><span data-en="Balance On-Site" data-ko="현장 잔금">Balance On-Site</span><strong id="rv-balance">-</strong></div>
-            <div class="review-row review-row--total" id="rv-paynow-row"><span data-en="Pay Now" data-ko="지금 결제">Pay Now</span><strong id="rv-paynow">-</strong></div>
+            <div class="review-row review-row--total"><span data-en="Total Price" data-ko="총 금액">Total Price</span><strong id="rv-total">-</strong></div>
           </div>
 
           <div class="wizard-actions">
@@ -268,17 +245,38 @@
         <!-- ===== STEP 4: PAYMENT ===== -->
         <div class="wizard-panel" data-step="4">
           <h2 data-en="Payment" data-ko="결제">Payment</h2>
-          <p class="payment-note" id="payment-note" data-en="Scan the GCash QR code below to send your payment. Once you've sent it, press the button below to confirm your reservation." data-ko="예약을 확정하시면 투어 당일 현장에서 결제하시면 됩니다. 아래 버튼을 눌러 예약을 확정해 주세요.">Scan the GCash QR code below to send your payment. Once you've sent it, press the button below to confirm your reservation.</p>
 
-          <div class="review-row review-row--total" style="margin-bottom:4px;"><span data-en="Pay Now" data-ko="지금 결제">Pay Now</span><strong id="pay-total">-</strong></div>
-          <p class="map-caption" id="pay-balance-note" style="display:none; margin-bottom:20px;"></p>
+          <!-- English only: choose how to pay. Korean checkout is on-site only. -->
+          <div class="form-group" id="payment-choice-group" style="display:none;">
+            <label data-en="How would you like to pay? *" data-ko="결제 방법을 선택해 주세요 *">How would you like to pay? *</label>
+            <div class="payment-type-options">
+              <label class="payment-type-option">
+                <input type="radio" name="paymentChoice" value="gcash" checked>
+                <div class="payment-type-card">
+                  <span class="pt-title" data-en="GCash" data-ko="GCash">GCash</span>
+                  <span class="pt-desc" data-en="Pay online now" data-ko="지금 온라인 결제">Pay online now</span>
+                </div>
+              </label>
+              <label class="payment-type-option">
+                <input type="radio" name="paymentChoice" value="onsite">
+                <div class="payment-type-card">
+                  <span class="pt-title" data-en="Pay On-Site" data-ko="현장 결제">Pay On-Site</span>
+                  <span class="pt-desc" data-en="Pay when you arrive" data-ko="도착 시 결제">Pay when you arrive</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <p class="payment-note" id="payment-note" data-en="Choose GCash to pay online now, or Pay On-Site to pay when you arrive." data-ko="예약을 확정하시면 투어 당일 현장에서 결제하시면 됩니다.">Choose GCash to pay online now, or Pay On-Site to pay when you arrive.</p>
+
+          <div class="review-row review-row--total" style="margin-bottom:20px;"><span data-en="Total" data-ko="총 금액">Total</span><strong id="pay-total">-</strong></div>
 
           <div class="gcash-qr-box" id="gcash-box">
             <img src="assets/gcash-qr.jpg" alt="GCash QR" class="gcash-qr-img">
             <p class="gcash-qr-caption">GCash: +63 967 466 7943</p>
           </div>
 
-          <button type="submit" class="btn-submit" id="submit-btn" data-en="I've Sent the Payment" data-ko="예약 확정하기 (현장지불)">I've Sent the Payment</button>
+          <button type="submit" class="btn-submit" id="submit-btn" data-en="Confirm Reservation" data-ko="예약 확정하기 (현장지불)">Confirm Reservation</button>
           <p id="form-status" class="form-status" role="status"></p>
 
           <div class="wizard-actions">
@@ -289,7 +287,6 @@
             <div class="payment-methods-badges" id="payment-badges">
               <span class="payment-badge payment-badge--gcash"><img src="assets/gcash-logo.svg" alt="GCash" loading="lazy"></span>
             </div>
-            <p class="payment-methods-note" id="payment-methods-note" data-en="We're currently accepting payment via GCash transfer while our automated payment system is being set up. Your reservation will be verified once payment is received." data-ko="자동 결제 시스템을 준비 중입니다. 예약을 확정하시면 투어 당일 현장에서 결제하시면 됩니다.">We're currently accepting payment via GCash transfer while our automated payment system is being set up. Your reservation will be verified once payment is received.</p>
           </div>
         </div>
 
@@ -313,9 +310,7 @@
         <div class="summary-row"><span data-en="Travel Date" data-ko="투어 날짜">Travel Date</span><strong id="sum-date">-</strong></div>
         <div class="summary-row"><span data-en="Pick Up Location" data-ko="픽업 장소">Pick Up Location</span><strong id="sum-pickup">-</strong></div>
         <div class="summary-row"><span data-en="Passengers" data-ko="인원">Passengers</span><strong id="sum-people">-</strong></div>
-        <div class="summary-row" id="sum-total-row" style="display:none;"><span data-en="Total Price" data-ko="총 요금">Total Price</span><strong id="sum-total">-</strong></div>
-        <div class="summary-row" id="sum-balance-row" style="display:none;"><span data-en="Balance On-Site" data-ko="현장 잔금">Balance On-Site</span><strong id="sum-balance">-</strong></div>
-        <div class="summary-row summary-row--total" id="sum-paynow-row"><span data-en="Pay Now" data-ko="지금 결제">Pay Now</span><strong id="sum-paynow">-</strong></div>
+        <div class="summary-row summary-row--total"><span data-en="Total Price" data-ko="총 금액">Total Price</span><strong id="sum-total">-</strong></div>
       </div>
     </aside>
 
@@ -536,34 +531,10 @@
         pricePreview.style.display = 'none';
       }
 
-      // Total price / down payment split
-      const paymentType = document.querySelector('input[name="paymentType"]:checked').value;
+      // Total price
       const total = perPerson && people > 0 ? perPerson * people : 0;
-      const payNow = paymentType === 'deposit' ? Math.round(total / 2) : total;
-      const balance = total - payNow;
       const totalText = total ? fmtPHP(total) : '-';
-      const payNowText = total ? fmtPHP(payNow) : '-';
-      const balanceText = total ? fmtPHP(balance) : '-';
-
-      ['sum-total', 'rv-total'].forEach(id => document.getElementById(id).textContent = totalText);
-      ['sum-paynow', 'rv-paynow', 'pay-total'].forEach(id => document.getElementById(id).textContent = payNowText);
-      ['sum-balance', 'rv-balance'].forEach(id => document.getElementById(id).textContent = balanceText);
-
-      const isDeposit = paymentType === 'deposit' && total > 0;
-      document.getElementById('sum-total-row').style.display = isDeposit ? 'flex' : 'none';
-      document.getElementById('sum-balance-row').style.display = isDeposit ? 'flex' : 'none';
-      document.getElementById('rv-total-row').style.display = isDeposit ? 'flex' : 'none';
-      document.getElementById('rv-balance-row').style.display = isDeposit ? 'flex' : 'none';
-
-      const balanceNote = document.getElementById('pay-balance-note');
-      if (isDeposit) {
-        balanceNote.style.display = 'block';
-        balanceNote.setAttribute('data-en', `Balance of ${balanceText} is paid in cash at the meeting point on the day of the tour.`);
-        balanceNote.setAttribute('data-ko', `잔금 ${balanceText}은 투어 당일 미팅 장소에서 현금으로 결제합니다.`);
-        balanceNote.textContent = lang === 'ko' ? balanceNote.getAttribute('data-ko') : balanceNote.getAttribute('data-en');
-      } else {
-        balanceNote.style.display = 'none';
-      }
+      ['sum-total', 'rv-total', 'pay-total'].forEach(id => document.getElementById(id).textContent = totalText);
 
       if (window.updateRouteMap) window.updateRouteMap(pickupVal);
     }
@@ -573,7 +544,6 @@
       document.getElementById(id).addEventListener('change', updateSummary);
     });
     radios.forEach(r => r.addEventListener('change', updateSummary));
-    document.querySelectorAll('input[name="paymentType"]').forEach(r => r.addEventListener('change', updateSummary));
     updateSummary();
 
     // ── Step wizard navigation ──
@@ -667,7 +637,7 @@
       labelEmail: 'Email *',
       placeholderName: 'HONG GILDONG',
       placeholderEmail: 'Enter your email address',
-      btnSubmit: 'I've Sent the Payment',
+      btnSubmit: 'Confirm Reservation',
       btnLang: '🇰🇷 한국어',
     },
     ko: {
@@ -682,12 +652,13 @@
     }
   };
   const LANG_STORAGE_KEY = 'ws_lang';
-  // Reservation.html lives on the ko root domain (like index.html), so default
-  // to Korean when the visitor has no saved language preference yet.
-  // Note: the `nationality` URL param (PH/FOREIGN) is a pricing tier, not a
-  // language signal — a Korean tourist is priced as FOREIGN but still reads
-  // Korean — so it must NOT affect this default.
-  let currentLang = localStorage.getItem(LANG_STORAGE_KEY) || 'ko';
+  // Same detection as the main site (js/i18n.js): respect a saved choice,
+  // otherwise follow the visitor's browser language. Keeps the reservation
+  // page in whatever language the visitor already landed in on the main page.
+  const savedLang = localStorage.getItem(LANG_STORAGE_KEY);
+  let currentLang = (savedLang === 'ko' || savedLang === 'en')
+    ? savedLang
+    : ((navigator.language || '').toLowerCase().startsWith('ko') ? 'ko' : 'en');
   localStorage.setItem(LANG_STORAGE_KEY, currentLang);
 
   function toggleLang() {
@@ -695,6 +666,21 @@
     localStorage.setItem(LANG_STORAGE_KEY, currentLang);
     applyLang(currentLang);
   }
+
+  // GCash QR only shows for English checkout when "GCash" is the chosen
+  // payment method. Korean is always on-site; English "Pay On-Site" also
+  // hides it.
+  function updateGcashVisibility() {
+    const gcashBox = document.getElementById('gcash-box');
+    const paymentBadges = document.getElementById('payment-badges');
+    const choice = document.querySelector('input[name="paymentChoice"]:checked');
+    const showGcash = currentLang === 'en' && (!choice || choice.value === 'gcash');
+    if (gcashBox) gcashBox.style.display = showGcash ? 'block' : 'none';
+    if (paymentBadges) paymentBadges.style.display = showGcash ? 'flex' : 'none';
+  }
+  document.querySelectorAll('input[name="paymentChoice"]').forEach(r => {
+    r.addEventListener('change', updateGcashVisibility);
+  });
 
   function applyLang(lang) {
     const t = TEXTS[lang];
@@ -716,11 +702,11 @@
     document.getElementById('submit-btn') && (document.getElementById('submit-btn').textContent = t.btnSubmit);
     // Lang button
     document.getElementById('lang-btn') && (document.getElementById('lang-btn').textContent = t.btnLang);
-    // GCash isn't used in Korea — hide the QR box and GCash badge for ko.
-    const gcashBox = document.getElementById('gcash-box');
-    const paymentBadges = document.getElementById('payment-badges');
-    if (gcashBox) gcashBox.style.display = (lang === 'ko') ? 'none' : 'block';
-    if (paymentBadges) paymentBadges.style.display = (lang === 'ko') ? 'none' : 'flex';
+    // Korean checkout is on-site payment only (no choice needed, no GCash).
+    // English checkout lets the guest choose GCash (pay now) or Pay On-Site.
+    const paymentChoiceGroup = document.getElementById('payment-choice-group');
+    if (paymentChoiceGroup) paymentChoiceGroup.style.display = (lang === 'en') ? 'block' : 'none';
+    updateGcashVisibility();
     // html lang
     document.documentElement.lang = lang;
     // Re-render tour-dependent dynamic content in the new language
@@ -729,13 +715,12 @@
     window.updateSummary && window.updateSummary();
   }
 
-  // Apply the saved site-wide language preference on load (static text only -
-  // updateInclusions/updateLeftPanel already render correctly on first paint
-  // since currentLang above is read from localStorage before they run)
+  // Apply the detected/saved language on load — always, not just for ko,
+  // since applyLang() also drives payment-choice-group/GCash visibility.
   document.addEventListener('DOMContentLoaded', () => {
-    if (currentLang === 'ko') applyLang('ko');
+    applyLang(currentLang);
   });
 </script>
-<script type="module" src="js/reservation.js?v=1787192050"></script>
+<script type="module" src="js/reservation.js?v=1787193344"></script>
 </body>
 </html>

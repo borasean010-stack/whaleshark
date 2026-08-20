@@ -28,9 +28,8 @@ async function sendVoucherEmail(reservation) {
         meetingTime: reservation.meetingTime,
         nationality: reservation.nationality,
         totalPrice: reservation.totalPrice,
-        paymentType: reservation.paymentType,
-        amountPaid: reservation.amountPaid,
-        balanceDue: reservation.balanceDue,
+        paymentStatus: reservation.paymentStatus,
+        paymentMethod: reservation.paymentMethod,
         currency: reservation.currency,
         name: reservation.name,
         email: reservation.email,
@@ -48,7 +47,7 @@ const MSG = {
     processing: "Processing Payment...",
     approving: "Approving payment...",
     error: "An error occurred during reservation. Please try again later.",
-    payNow: "I've Sent the Payment"
+    payNow: "Confirm Reservation"
   },
   ko: {
     fillFields: "필수 항목을 모두 입력해주세요.",
@@ -73,11 +72,6 @@ form.addEventListener("submit", async (e) => {
   const pricePerPerson = window.PRICES && window.PRICES[nationality] ? window.PRICES[nationality][tourType] : null;
   const totalPrice = pricePerPerson ? pricePerPerson * people : null;
 
-  // 50% down payment: customer pays half online now, half in cash on-site.
-  const paymentType = formData.get("paymentType") || "full";
-  const amountPaid = totalPrice ? (paymentType === "deposit" ? Math.round(totalPrice / 2) : totalPrice) : null;
-  const balanceDue = totalPrice ? totalPrice - amountPaid : null;
-
   const reservation = {
     tourType,
     date: formData.get("date"),
@@ -89,9 +83,6 @@ form.addEventListener("submit", async (e) => {
     nationality,
     pricePerPerson,
     totalPrice,
-    paymentType,
-    amountPaid,
-    balanceDue,
     currency: "PHP",
     name: formData.get("name").trim(),
     email: formData.get("email").trim(),
@@ -117,14 +108,20 @@ form.addEventListener("submit", async (e) => {
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     // 2. Add payment info
-    // ko: reserve now, pay on-site (GCash QR shown as an optional early-payment
-    // method, but not required to confirm the booking). en: unchanged GCash flow.
+    // ko: on-site payment only, no choice shown. en: guest picks GCash (paid
+    // now) or Pay On-Site when they submit.
     if (lang === 'ko') {
       reservation.paymentStatus = 'unpaid';
-      reservation.paymentMethod = '현장결제 (GCash/현금)';
+      reservation.paymentMethod = '현장결제';
     } else {
-      reservation.paymentStatus = 'paid';
-      reservation.paymentMethod = 'GCash';
+      const paymentChoice = formData.get("paymentChoice") || "gcash";
+      if (paymentChoice === "gcash") {
+        reservation.paymentStatus = 'paid';
+        reservation.paymentMethod = 'GCash';
+      } else {
+        reservation.paymentStatus = 'unpaid';
+        reservation.paymentMethod = 'On-Site';
+      }
     }
 
     // 3. Save to Firebase
