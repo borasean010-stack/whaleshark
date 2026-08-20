@@ -55,7 +55,7 @@ const MSG = {
     processing: "결제 처리 중...",
     approving: "결제 승인 중...",
     error: "예약 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
-    payNow: "입금 완료 (예약 확정)"
+    payNow: "예약 확정하기"
   }
 };
 
@@ -117,8 +117,15 @@ form.addEventListener("submit", async (e) => {
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     // 2. Add payment info
-    reservation.paymentStatus = 'paid';
-    reservation.paymentMethod = 'GCash';
+    // ko: reserve now, pay on-site (GCash QR shown as an optional early-payment
+    // method, but not required to confirm the booking). en: unchanged GCash flow.
+    if (lang === 'ko') {
+      reservation.paymentStatus = 'unpaid';
+      reservation.paymentMethod = '현장결제 (GCash/현금)';
+    } else {
+      reservation.paymentStatus = 'paid';
+      reservation.paymentMethod = 'GCash';
+    }
 
     // 3. Save to Firebase
     await addDoc(collection(db, "reservations"), reservation);

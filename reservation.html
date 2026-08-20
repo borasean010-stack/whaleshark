@@ -268,7 +268,7 @@
         <!-- ===== STEP 4: PAYMENT ===== -->
         <div class="wizard-panel" data-step="4">
           <h2 data-en="Payment" data-ko="결제">Payment</h2>
-          <p class="payment-note" data-en="Scan the GCash QR code below to send your payment. Once you've sent it, press the button below to confirm your reservation." data-ko="아래 GCash QR코드를 스캔해서 결제해 주세요. 결제 완료 후 아래 버튼을 눌러 예약을 확정해 주세요.">Scan the GCash QR code below to send your payment. Once you've sent it, press the button below to confirm your reservation.</p>
+          <p class="payment-note" data-en="Scan the GCash QR code below to send your payment. Once you've sent it, press the button below to confirm your reservation." data-ko="아래 GCash QR로 미리 결제하셔도 되고, 투어 당일 현장에서 결제하셔도 됩니다. 아래 버튼을 눌러 예약을 확정해 주세요.">Scan the GCash QR code below to send your payment. Once you've sent it, press the button below to confirm your reservation.</p>
 
           <div class="review-row review-row--total" style="margin-bottom:4px;"><span data-en="Pay Now" data-ko="지금 결제">Pay Now</span><strong id="pay-total">-</strong></div>
           <p class="map-caption" id="pay-balance-note" style="display:none; margin-bottom:20px;"></p>
@@ -278,7 +278,7 @@
             <p class="gcash-qr-caption">GCash: +63 967 466 7943</p>
           </div>
 
-          <button type="submit" class="btn-submit" id="submit-btn" data-en="I've Sent the Payment" data-ko="입금 완료 (예약 확정)">I've Sent the Payment</button>
+          <button type="submit" class="btn-submit" id="submit-btn" data-en="I've Sent the Payment" data-ko="예약 확정하기">I've Sent the Payment</button>
           <p id="form-status" class="form-status" role="status"></p>
 
           <div class="wizard-actions">
@@ -289,7 +289,7 @@
             <div class="payment-methods-badges">
               <span class="payment-badge payment-badge--gcash"><img src="assets/gcash-logo.svg" alt="GCash" loading="lazy"></span>
             </div>
-            <p class="payment-methods-note" data-en="We're currently accepting payment via GCash transfer while our automated payment system is being set up. Your reservation will be verified once payment is received." data-ko="자동 결제 시스템을 준비하는 동안에는 GCash 송금으로 결제를 받고 있습니다. 입금 확인 후 예약이 최종 확정됩니다.">We're currently accepting payment via GCash transfer while our automated payment system is being set up. Your reservation will be verified once payment is received.</p>
+            <p class="payment-methods-note" data-en="We're currently accepting payment via GCash transfer while our automated payment system is being set up. Your reservation will be verified once payment is received." data-ko="자동 결제 시스템을 준비 중이라, GCash 선입금 또는 투어 당일 현장 결제 중 편하신 방법을 선택하시면 됩니다.">We're currently accepting payment via GCash transfer while our automated payment system is being set up. Your reservation will be verified once payment is received.</p>
           </div>
         </div>
 
@@ -677,7 +677,7 @@
       labelEmail: '이메일 *',
       placeholderName: '홍길동',
       placeholderEmail: '이메일 주소를 입력해주세요',
-      btnSubmit: '입금 완료 (예약 확정)',
+      btnSubmit: '예약 확정하기',
       btnLang: '🇺🇸 English',
     }
   };
@@ -725,6 +725,6 @@
     if (currentLang === 'ko') applyLang('ko');
   });
 </script>
-<script type="module" src="js/reservation.js?v=1787047355"></script>
+<script type="module" src="js/reservation.js?v=1787191350"></script>
 </body>
 </html>
