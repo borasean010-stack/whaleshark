@@ -134,7 +134,7 @@ physicalForm.addEventListener("submit", async (e) => {
   }
 });
 
-requireAccess("C")
+requireAccess("A", "C")
   .then(() => {
     document.getElementById("counter-app").style.display = "block";
     document.getElementById("btn-signout").style.display = "inline-flex";

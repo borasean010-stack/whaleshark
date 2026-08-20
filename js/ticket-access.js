@@ -28,10 +28,12 @@ async function consumeUrlToken() {
 
 /**
  * 접근 링크(또는 기존 세션)를 확인하고 role/sellerId를 반환합니다.
- * expectedRole과 실제 role이 다르면 WRONG_ROLE 에러로 reject됩니다.
+ * expectedRoles와 실제 role이 다르면 WRONG_ROLE 에러로 reject됩니다.
+ * expectedRoles를 여러 개(배열 또는 여러 인자)로 넘기면 그중 하나만 맞아도 통과합니다.
  * 유효한 링크도 세션도 없으면 NO_SESSION 에러로 reject됩니다.
  */
-export function requireAccess(expectedRole) {
+export function requireAccess(...expectedRoles) {
+  const allowedRoles = expectedRoles.flat().filter(Boolean);
   return new Promise((resolve, reject) => {
     consumeUrlToken()
       .catch((err) => {
@@ -50,7 +52,7 @@ export function requireAccess(expectedRole) {
             try {
               const idTokenResult = await user.getIdTokenResult(true);
               const { role, sellerId } = idTokenResult.claims;
-              if (expectedRole && role !== expectedRole) {
+              if (allowedRoles.length > 0 && !allowedRoles.includes(role)) {
                 reject(new Error("WRONG_ROLE"));
                 return;
               }
