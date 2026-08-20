@@ -34,7 +34,7 @@ async function sendVoucherEmail(reservation) {
         currency: reservation.currency,
         name: reservation.name,
         email: reservation.email,
-        lang: localStorage.getItem('ws_lang') || 'en'
+        lang: localStorage.getItem('ws_lang') || 'ko'
       })
     });
   } catch (err) {
@@ -61,7 +61,7 @@ const MSG = {
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const lang = localStorage.getItem('ws_lang') || 'en';
+  const lang = localStorage.getItem('ws_lang') || 'ko';
   const t = MSG[lang] || MSG.en;
   statusEl.textContent = "";
   statusEl.className = "form-status";

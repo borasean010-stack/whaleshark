@@ -268,28 +268,28 @@
         <!-- ===== STEP 4: PAYMENT ===== -->
         <div class="wizard-panel" data-step="4">
           <h2 data-en="Payment" data-ko="결제">Payment</h2>
-          <p class="payment-note" data-en="Scan the GCash QR code below to send your payment. Once you've sent it, press the button below to confirm your reservation." data-ko="아래 GCash QR로 미리 결제하셔도 되고, 투어 당일 현장에서 결제하셔도 됩니다. 아래 버튼을 눌러 예약을 확정해 주세요.">Scan the GCash QR code below to send your payment. Once you've sent it, press the button below to confirm your reservation.</p>
+          <p class="payment-note" id="payment-note" data-en="Scan the GCash QR code below to send your payment. Once you've sent it, press the button below to confirm your reservation." data-ko="예약을 확정하시면 투어 당일 현장에서 결제하시면 됩니다. 아래 버튼을 눌러 예약을 확정해 주세요.">Scan the GCash QR code below to send your payment. Once you've sent it, press the button below to confirm your reservation.</p>
 
           <div class="review-row review-row--total" style="margin-bottom:4px;"><span data-en="Pay Now" data-ko="지금 결제">Pay Now</span><strong id="pay-total">-</strong></div>
           <p class="map-caption" id="pay-balance-note" style="display:none; margin-bottom:20px;"></p>
 
-          <div class="gcash-qr-box">
+          <div class="gcash-qr-box" id="gcash-box">
             <img src="assets/gcash-qr.jpg" alt="GCash QR" class="gcash-qr-img">
             <p class="gcash-qr-caption">GCash: +63 967 466 7943</p>
           </div>
 
-          <button type="submit" class="btn-submit" id="submit-btn" data-en="I've Sent the Payment" data-ko="예약 확정하기">I've Sent the Payment</button>
+          <button type="submit" class="btn-submit" id="submit-btn" data-en="I've Sent the Payment" data-ko="예약 확정하기 (현장지불)">I've Sent the Payment</button>
           <p id="form-status" class="form-status" role="status"></p>
 
           <div class="wizard-actions">
             <button type="button" class="wizard-back" data-goto="3" data-en="Back" data-ko="이전">Back</button>
           </div>
 
-          <div class="payment-methods">
-            <div class="payment-methods-badges">
+          <div class="payment-methods" id="payment-methods-block">
+            <div class="payment-methods-badges" id="payment-badges">
               <span class="payment-badge payment-badge--gcash"><img src="assets/gcash-logo.svg" alt="GCash" loading="lazy"></span>
             </div>
-            <p class="payment-methods-note" data-en="We're currently accepting payment via GCash transfer while our automated payment system is being set up. Your reservation will be verified once payment is received." data-ko="자동 결제 시스템을 준비 중이라, GCash 선입금 또는 투어 당일 현장 결제 중 편하신 방법을 선택하시면 됩니다.">We're currently accepting payment via GCash transfer while our automated payment system is being set up. Your reservation will be verified once payment is received.</p>
+            <p class="payment-methods-note" id="payment-methods-note" data-en="We're currently accepting payment via GCash transfer while our automated payment system is being set up. Your reservation will be verified once payment is received." data-ko="자동 결제 시스템을 준비 중입니다. 예약을 확정하시면 투어 당일 현장에서 결제하시면 됩니다.">We're currently accepting payment via GCash transfer while our automated payment system is being set up. Your reservation will be verified once payment is received.</p>
           </div>
         </div>
 
@@ -682,7 +682,12 @@
     }
   };
   const LANG_STORAGE_KEY = 'ws_lang';
-  let currentLang = localStorage.getItem(LANG_STORAGE_KEY) || 'en';
+  // Reservation.html lives on the ko root domain (like index.html), so default
+  // to Korean when the visitor has no saved language preference yet. Persist it
+  // immediately so js/reservation.js's own localStorage read (used at submit
+  // time to decide the ko/en payment flow) stays in sync with what's on screen.
+  let currentLang = localStorage.getItem(LANG_STORAGE_KEY) || 'ko';
+  localStorage.setItem(LANG_STORAGE_KEY, currentLang);
 
   function toggleLang() {
     currentLang = currentLang === 'en' ? 'ko' : 'en';
@@ -710,6 +715,11 @@
     document.getElementById('submit-btn') && (document.getElementById('submit-btn').textContent = t.btnSubmit);
     // Lang button
     document.getElementById('lang-btn') && (document.getElementById('lang-btn').textContent = t.btnLang);
+    // GCash isn't used in Korea — hide the QR box and GCash badge for ko.
+    const gcashBox = document.getElementById('gcash-box');
+    const paymentBadges = document.getElementById('payment-badges');
+    if (gcashBox) gcashBox.style.display = (lang === 'ko') ? 'none' : 'block';
+    if (paymentBadges) paymentBadges.style.display = (lang === 'ko') ? 'none' : 'flex';
     // html lang
     document.documentElement.lang = lang;
     // Re-render tour-dependent dynamic content in the new language
@@ -725,6 +735,6 @@
     if (currentLang === 'ko') applyLang('ko');
   });
 </script>
-<script type="module" src="js/reservation.js?v=1787191350"></script>
+<script type="module" src="js/reservation.js?v=1787191737"></script>
 </body>
 </html>
