@@ -683,15 +683,11 @@
   };
   const LANG_STORAGE_KEY = 'ws_lang';
   // Reservation.html lives on the ko root domain (like index.html), so default
-  // to Korean when the visitor has no saved language preference yet — unless
-  // the URL itself already says this is a foreign booking (?nationality=FOREIGN,
-  // e.g. a link shared with a non-Korean customer), in which case default to
-  // English instead. Persist it immediately so js/reservation.js's own
-  // localStorage read (used at submit time to decide the ko/en payment flow)
-  // stays in sync with what's on screen.
-  const urlNationalityForLang = new URLSearchParams(window.location.search).get('nationality');
-  const defaultLang = urlNationalityForLang === 'FOREIGN' ? 'en' : 'ko';
-  let currentLang = localStorage.getItem(LANG_STORAGE_KEY) || defaultLang;
+  // to Korean when the visitor has no saved language preference yet.
+  // Note: the `nationality` URL param (PH/FOREIGN) is a pricing tier, not a
+  // language signal — a Korean tourist is priced as FOREIGN but still reads
+  // Korean — so it must NOT affect this default.
+  let currentLang = localStorage.getItem(LANG_STORAGE_KEY) || 'ko';
   localStorage.setItem(LANG_STORAGE_KEY, currentLang);
 
   function toggleLang() {
@@ -740,6 +736,6 @@
     if (currentLang === 'ko') applyLang('ko');
   });
 </script>
-<script type="module" src="js/reservation.js?v=1787191915"></script>
+<script type="module" src="js/reservation.js?v=1787192050"></script>
 </body>
 </html>
