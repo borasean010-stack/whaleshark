@@ -289,3 +289,53 @@ tr:hover {
 .action-btn:hover {
   background: rgba(255,255,255,0.2);
 }
+.action-btn--voucher {
+  background: rgba(59,130,246,0.2);
+  color: #93c5fd;
+  margin-right: 6px;
+}
+.action-btn--voucher:hover {
+  background: rgba(59,130,246,0.35);
+}
+
+/* Voucher Preview Modal */
+.voucher-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.voucher-modal.open { display: flex; }
+.voucher-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15,23,42,0.72);
+}
+.voucher-modal-panel {
+  position: relative;
+  max-width: 480px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 20px;
+}
+.voucher-modal-close {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #fff;
+  color: #0f172a;
+  border: none;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  z-index: 1;
+}
+.voucher-modal-close:hover { background: #f1f5f9; }
