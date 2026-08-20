@@ -50,9 +50,9 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    // 판매처 정보가 없는 일별 집계이므로 C(리버타드)도 열람 가능.
+    // 판매처 정보가 없는 일별 집계(개인정보 없음)이므로 공개 열람 허용.
     match /dailyCounts/{date} {
-      allow read: if isA() || isC();
+      allow read: if true;
       allow write: if false;
     }
 

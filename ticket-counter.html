@@ -70,7 +70,7 @@
 </div>
 
 <script type="module">
-import { requireAccess, signOutAccess } from "./js/ticket-access.js";
+import { signOutAccess } from "./js/ticket-access.js";
 import { db, functions } from "./js/firebase-config.js";
 import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-functions.js";
@@ -134,16 +134,9 @@ physicalForm.addEventListener("submit", async (e) => {
   }
 });
 
-requireAccess("A", "C")
-  .then(() => {
-    document.getElementById("counter-app").style.display = "block";
-    document.getElementById("btn-signout").style.display = "inline-flex";
-    dateInput.value = todayKey();
-    watchDate(dateInput.value);
-  })
-  .catch(() => {
-    document.getElementById("access-denied").style.display = "block";
-  });
+document.getElementById("counter-app").style.display = "block";
+dateInput.value = todayKey();
+watchDate(dateInput.value);
 
 document.getElementById("btn-signout").addEventListener("click", () => {
   signOutAccess().then(() => window.location.reload());
