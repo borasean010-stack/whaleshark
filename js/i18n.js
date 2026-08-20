@@ -11,10 +11,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const LANG_PREFIX = { ko: '', en: '/en', zh: '/zh', ja: '/ja' };
 
   const path = window.location.pathname;
-  let currentLang = 'ko';
+  let currentLang;
   if (path.startsWith('/en/') || path === '/en') currentLang = 'en';
   else if (path.startsWith('/zh/') || path === '/zh') currentLang = 'zh';
   else if (path.startsWith('/ja/') || path === '/ja') currentLang = 'ja';
+  else {
+    // Root path (ko URL — index.html, tour detail pages). Many first-time
+    // visitors here are local Filipino staff/customers or foreign tourists
+    // who can't read Korean, while Korean visitors generally read English
+    // too, so default the *displayed* text to English unless the visitor
+    // already chose a language before, or their browser is set to Korean.
+    // The URL/hreflang/JSON-LD still declare this page as Korean — only the
+    // on-page text swap target follows this.
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved === 'ko' || saved === 'en') {
+      currentLang = saved;
+    } else {
+      currentLang = (navigator.language || '').toLowerCase().startsWith('ko') ? 'ko' : 'en';
+    }
+  }
 
   currentLabel.textContent = LANG_NAMES[currentLang];
 
