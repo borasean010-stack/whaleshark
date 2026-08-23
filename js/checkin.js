@@ -77,10 +77,12 @@ function startScanner() {
 async function handleToken(token) {
   titleEl.textContent = "티켓 확인 중...";
   try {
+    // bookedBy로 더 이상 거르지 않습니다 — 여행사(B2B) 예약과, 결제 완료된
+    // "티켓만" 직접 예약(reservation.js가 발급) 모두 qrToken만 있으면 여기서
+    // 조회됩니다. qrToken이 없는 일반 예약은 규칙상 애초에 조회되지 않습니다.
     const q = query(
       collection(db, "reservations"),
       where("qrToken", "==", token),
-      where("bookedBy", "==", "agency"),
       limit(1)
     );
     const snap = await getDocs(q);

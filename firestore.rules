@@ -120,10 +120,12 @@ service cloud.firestore {
       // 여행사 파트너는 자기 예약만 조회 가능.
       allow read: if isSignedIn() && resource.data.get('agencyId', '') == request.auth.uid;
 
-      // 리버타드 체크인 담당은 여행사(B2B) 예약만 조회 가능 — 직접 고객
-      // 예약(reservation.html)의 이름/이메일 등 개인정보는 볼 수 없습니다.
-      // 체크인 화면은 반드시 qrToken == 값 조건의 좁은 쿼리로만 조회합니다.
-      allow read: if isLibertadStaff() && resource.data.get('bookedBy', '') == 'agency';
+      // 리버타드 체크인 담당은 qrToken이 발급된 예약만 조회 가능 — 여행사(B2B)
+      // 예약뿐 아니라, 결제 완료된 "티켓만" 직접 예약도 QR 체크인 대상이라
+      // 여기 포함됩니다. qrToken이 없는 일반 예약(R/F/VF)의 이름/이메일 등
+      // 개인정보는 볼 수 없습니다. 체크인 화면은 반드시 qrToken == 값 조건의
+      // 좁은 쿼리로만 조회합니다.
+      allow read: if isLibertadStaff() && resource.data.get('qrToken', '') != '';
     }
   }
 }
