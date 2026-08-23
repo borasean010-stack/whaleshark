@@ -1,4 +1,5 @@
-import { db, auth } from "./firebase-config.js";
+import { db, auth, firebaseConfig } from "./firebase-config.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
   collection,
   query,
@@ -6,12 +7,19 @@ import {
   getDocs,
   doc,
   updateDoc,
-  deleteDoc
+  deleteDoc,
+  setDoc,
+  addDoc,
+  increment,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import {
   signInWithEmailAndPassword,
   signOut,
-  onAuthStateChanged
+  onAuthStateChanged,
+  getAuth,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 // DOM Elements
@@ -72,6 +80,19 @@ logoutBtn.addEventListener("click", () => {
 
 refreshBtn.addEventListener("click", () => {
   loadReservations();
+});
+
+// Sidebar view switch (예약 관리 / 에이전시 관리)
+document.querySelectorAll(".nav-item[data-view]").forEach(navEl => {
+  navEl.addEventListener("click", (e) => {
+    e.preventDefault();
+    document.querySelectorAll(".nav-item[data-view]").forEach(el => el.classList.remove("active"));
+    navEl.classList.add("active");
+    const view = navEl.dataset.view;
+    document.getElementById("view-reservations").style.display = view === "reservations" ? "block" : "none";
+    document.getElementById("view-agencies").style.display = view === "agencies" ? "block" : "none";
+    if (view === "agencies") loadAgencies();
+  });
 });
 
 // Load Data from Firestore
@@ -317,3 +338,138 @@ function attachEventListeners() {
     });
   });
 }
+
+// =====================================================================
+// 에이전시 관리 (B2B) — Cloud Functions 없이, 관리자 브라우저 세션에서
+// 직접 처리합니다. 새 에이전시 계정 생성은 "보조 Firebase 앱 인스턴스"를
+// 써서 관리자 자신의 로그인 세션이 끊기지 않게 합니다 — 기본 auth 객체로
+// createUserWithEmailAndPassword를 호출하면 그 즉시 새로 만든 계정으로
+// 로그인되어버려 관리자가 로그아웃되기 때문입니다.
+// =====================================================================
+function fmtPeso(amount) {
+  return `₱${(Number(amount) || 0).toLocaleString('en-US')}`;
+}
+
+function randomTempPassword() {
+  const bytes = new Uint8Array(18);
+  crypto.getRandomValues(bytes);
+  return btoa(String.fromCharCode(...bytes)).replace(/[^A-Za-z0-9]/g, "").slice(0, 20) + "!1";
+}
+
+async function loadAgencies() {
+  const tbody = document.getElementById("agency-tbody");
+  tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>로딩 중...</td></tr>";
+  try {
+    const [agenciesSnap, reservationsSnap] = await Promise.all([
+      getDocs(collection(db, "agencies")),
+      getDocs(query(collection(db, "reservations"), orderBy("createdAt", "desc")))
+    ]);
+
+    // agencyId -> 정산 필요(depositApplied === false) 건수
+    const pendingSettlement = {};
+    reservationsSnap.forEach(docSnap => {
+      const d = docSnap.data();
+      if (d.bookedBy === "agency" && d.depositApplied === false) {
+        pendingSettlement[d.agencyId] = (pendingSettlement[d.agencyId] || 0) + 1;
+      }
+    });
+
+    let totalBalance = 0;
+    let totalPending = 0;
+    const rows = [];
+    agenciesSnap.forEach(docSnap => {
+      const a = docSnap.data();
+      const uid = docSnap.id;
+      const pending = pendingSettlement[uid] || 0;
+      totalBalance += a.depositBalance || 0;
+      totalPending += pending;
+      rows.push(`
+        <tr>
+          <td style="font-weight:600;">${a.name}</td>
+          <td>${a.email}</td>
+          <td>${fmtPeso(a.depositBalance)}</td>
+          <td>${pending > 0 ? `<span class="badge cancelled">${pending}건</span>` : '-'}</td>
+          <td><button class="action-btn topup-btn" data-uid="${uid}" data-name="${a.name}">입금 반영</button></td>
+        </tr>
+      `);
+    });
+
+    tbody.innerHTML = rows.length
+      ? rows.join("")
+      : "<tr><td colspan='5' style='text-align:center;'>등록된 에이전시가 없습니다.</td></tr>";
+
+    document.getElementById("agency-stat-count").textContent = agenciesSnap.size;
+    document.getElementById("agency-stat-balance").textContent = fmtPeso(totalBalance);
+    document.getElementById("agency-stat-pending").textContent = totalPending;
+
+    document.querySelectorAll(".topup-btn").forEach(btn => {
+      btn.addEventListener("click", () => handleTopup(btn.dataset.uid, btn.dataset.name));
+    });
+  } catch (err) {
+    console.error("Error loading agencies:", err);
+    tbody.innerHTML = "<tr><td colspan='5' style='text-align:center; color:red;'>불러오는 중 오류가 발생했습니다.</td></tr>";
+  }
+}
+
+async function handleTopup(uid, name) {
+  const input = prompt(`${name} 에 반영할 입금액을 입력하세요 (PHP):`);
+  if (input === null) return;
+  const amount = Number(input);
+  if (!Number.isFinite(amount) || amount <= 0) {
+    alert("올바른 금액을 입력해주세요.");
+    return;
+  }
+  try {
+    await updateDoc(doc(db, "agencies", uid), { depositBalance: increment(amount) });
+    await addDoc(collection(db, "agencyTransactions"), {
+      agencyId: uid,
+      type: "topup",
+      amount,
+      note: "관리자 입금 반영",
+      createdAt: serverTimestamp(),
+      createdBy: auth.currentUser.uid
+    });
+    loadAgencies();
+  } catch (err) {
+    console.error("Error recording top-up:", err);
+    alert("입금 반영에 실패했습니다.");
+  }
+}
+
+document.getElementById("agency-create-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const name = document.getElementById("agency-name-input").value.trim();
+  const email = document.getElementById("agency-email-input").value.trim();
+  const msgEl = document.getElementById("agency-create-message");
+  msgEl.textContent = "";
+
+  // 보조 앱 인스턴스 — 매번 새로 만들고 끝나면 정리합니다 (관리자 세션 보호).
+  const secondaryApp = initializeApp(firebaseConfig, `AgencyCreate-${Date.now()}`);
+  const secondaryAuth = getAuth(secondaryApp);
+
+  try {
+    const cred = await createUserWithEmailAndPassword(secondaryAuth, email, randomTempPassword());
+    const uid = cred.user.uid;
+    await sendPasswordResetEmail(secondaryAuth, email);
+    await signOut(secondaryAuth);
+
+    await setDoc(doc(db, "agencies", uid), {
+      name,
+      email,
+      depositBalance: 0,
+      active: true,
+      createdAt: serverTimestamp()
+    });
+
+    msgEl.style.color = "var(--admin-success)";
+    msgEl.textContent = `등록 완료 — ${email} 로 비밀번호 설정 메일을 보냈습니다.`;
+    e.target.reset();
+    loadAgencies();
+  } catch (err) {
+    console.error("Error creating agency:", err);
+    msgEl.style.color = "var(--admin-danger)";
+    msgEl.textContent = err.code === "auth/email-already-in-use"
+      ? "이미 사용 중인 이메일입니다."
+      : "등록에 실패했습니다.";
+  }
+});

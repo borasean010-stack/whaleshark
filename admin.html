@@ -37,7 +37,8 @@
           <h1>🐋 ADMIN PANEL</h1>
         </div>
         <nav class="sidebar-nav">
-          <a href="#" class="nav-item active">예약 관리 (Reservations)</a>
+          <a href="#" class="nav-item active" data-view="reservations">예약 관리 (Reservations)</a>
+          <a href="#" class="nav-item" data-view="agencies">에이전시 관리 (B2B)</a>
           <a href="index.html" class="nav-item">메인 사이트로 돌아가기</a>
         </nav>
       </aside>
@@ -53,7 +54,10 @@
         </header>
 
         <div class="content-body">
-          
+
+          <!-- View: 예약 관리 -->
+          <div id="view-reservations" class="admin-view">
+
           <!-- Stats -->
           <div class="stats-grid">
             <div class="stat-card">
@@ -98,7 +102,69 @@
               </table>
             </div>
           </div>
-          
+
+          </div>
+
+          <!-- View: 에이전시 관리 (B2B) -->
+          <div id="view-agencies" class="admin-view" style="display:none;">
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <h3>에이전시 수</h3>
+              <div class="value" id="agency-stat-count">0</div>
+            </div>
+            <div class="stat-card">
+              <h3>예치금 합계</h3>
+              <div class="value" id="agency-stat-balance" style="color: var(--admin-success);">₱0</div>
+            </div>
+            <div class="stat-card">
+              <h3>정산 필요</h3>
+              <div class="value" id="agency-stat-pending" style="color: var(--admin-danger);">0</div>
+            </div>
+          </div>
+
+          <div class="table-container" style="margin-bottom: 24px;">
+            <div class="table-header">
+              <h2>신규 에이전시 등록</h2>
+            </div>
+            <form id="agency-create-form" style="padding: 24px; display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end;">
+              <div>
+                <label style="display:block; font-size:0.8rem; color:var(--admin-text-muted); margin-bottom:6px;">에이전시명</label>
+                <input type="text" id="agency-name-input" required style="padding:10px 12px; border-radius:8px; border:1px solid var(--admin-border); background:rgba(255,255,255,0.05); color:#fff;">
+              </div>
+              <div>
+                <label style="display:block; font-size:0.8rem; color:var(--admin-text-muted); margin-bottom:6px;">로그인 이메일</label>
+                <input type="email" id="agency-email-input" required style="padding:10px 12px; border-radius:8px; border:1px solid var(--admin-border); background:rgba(255,255,255,0.05); color:#fff;">
+              </div>
+              <button type="submit" class="action-btn" style="background: var(--admin-primary);">등록 + 비밀번호 설정 메일 발송</button>
+              <span id="agency-create-message" style="font-size:0.85rem;"></span>
+            </form>
+          </div>
+
+          <div class="table-container">
+            <div class="table-header">
+              <h2>에이전시 목록</h2>
+            </div>
+            <div style="overflow-x: auto;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>에이전시명</th>
+                    <th>로그인 이메일</th>
+                    <th>예치금 잔액</th>
+                    <th>정산 필요 건수</th>
+                    <th>관리(Action)</th>
+                  </tr>
+                </thead>
+                <tbody id="agency-tbody">
+                  <!-- JS로 데이터 삽입 -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          </div>
+
         </div>
       </main>
 
