@@ -60,7 +60,8 @@ service cloud.firestore {
         reservationRef(request.resource.data.lastPurchaseRef).depositApplied == false &&
         request.resource.data.depositBalance == resource.data.depositBalance - reservationRef(request.resource.data.lastPurchaseRef).totalPrice;
 
-      allow create: if false;
+      // 관리자가 신규 에이전시를 등록할 때 (admin.html) 생성.
+      allow create: if isAdmin();
     }
 
     // 파트너 예치금 입출금 원장. 관리자가 입금을 반영할 때, 그리고 파트너가
