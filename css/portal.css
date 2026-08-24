@@ -148,6 +148,18 @@ body.pt-body {
   display: flex; justify-content: space-between; align-items: center;
   background: var(--pt-bg); border-radius: 12px; padding: 14px 16px;
 }
+
+/* ── GCash 입금 안내 (reservation.html의 GCash 박스와 같은 톤) ── */
+.pt-gcash-box {
+  background: #0057E5;
+  border-radius: 20px;
+  padding: 22px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.pt-gcash-logo { height: 22px; display: block; margin: 0 auto 14px; filter: brightness(0) invert(1); }
+.pt-gcash-qr { width: 100%; max-width: 220px; border-radius: 14px; display: block; margin: 0 auto; box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
+.pt-gcash-caption { margin: 14px 0 0; font-size: 0.85rem; font-weight: 700; color: #fff; letter-spacing: 0.3px; }
 .pt-total-label { font-size: 0.8rem; color: var(--pt-muted); font-weight: 700; }
 .pt-total-value { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.4rem; }
 

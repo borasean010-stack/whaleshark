@@ -11,7 +11,7 @@
 <title>에이전시 포털 — Boracay Whale Shark</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/portal.css?v=3" />
+<link rel="stylesheet" href="css/portal.css?v=4" />
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
 </head>
 <body class="pt-body">
@@ -61,7 +61,10 @@
           <div class="pt-stat-card"><span class="value" id="stat-today">-</span><span class="label">Today</span></div>
           <div class="pt-stat-card"><span class="value" id="stat-upcoming">-</span><span class="label">Upcoming</span></div>
         </div>
-        <button class="pt-btn" id="btn-goto-reservation">+ NEW RESERVATION</button>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="pt-btn" id="btn-goto-reservation">+ NEW RESERVATION</button>
+          <button class="pt-btn pt-btn-secondary" id="btn-goto-deposit">+ DEPOSIT</button>
+        </div>
         <h2 class="pt-section-title">Recent Reservations</h2>
         <div id="recent-list"><p class="pt-empty">예약 내역이 없습니다.</p></div>
       </section>
@@ -127,12 +130,20 @@
         </div>
 
         <div class="pt-card">
-          <h2 style="margin-top:0;">입금 신청</h2>
-          <p style="margin-bottom:16px;">계좌이체 등으로 실제 입금을 완료한 후, 아래에 금액을 신청해주세요. 관리자가 입금 확인 후 잔액에 반영합니다.</p>
+          <h2 style="margin-top:0;">입금 신청 (GCash)</h2>
+          <p style="margin-bottom:16px;">아래 GCash로 입금 후, 입금하신 날짜와 입금자명을 정확히 기입해 신청해주세요. 관리자가 확인하고 잔액에 반영합니다.</p>
+
+          <div class="pt-gcash-box">
+            <img src="assets/gcash-logo.svg" alt="GCash" class="pt-gcash-logo" loading="lazy">
+            <img src="assets/gcash-qr.jpg" alt="GCash QR" class="pt-gcash-qr">
+            <p class="pt-gcash-caption">GCash: +63 967 466 7943</p>
+          </div>
+
           <form id="deposit-request-form" class="pt-form">
+            <div class="pt-field"><label>입금액 (PHP)</label><input class="pt-input" type="number" id="dr-amount" min="1" step="1" required /></div>
             <div class="pt-row">
-              <div class="pt-field"><label>입금액 (PHP)</label><input class="pt-input" type="number" id="dr-amount" min="1" step="1" required /></div>
-              <div class="pt-field"><label>메모 (선택)</label><input class="pt-input" type="text" id="dr-note" placeholder="예: 8/24 은행이체" /></div>
+              <div class="pt-field"><label>입금 날짜 *</label><input class="pt-input" type="date" id="dr-date" required /></div>
+              <div class="pt-field"><label>입금자 이름 *</label><input class="pt-input" type="text" id="dr-name" placeholder="GCash에 뜨는 이름" required /></div>
             </div>
             <div id="deposit-request-message"></div>
             <button type="submit" class="pt-btn" style="justify-self:start;">입금 신청하기</button>
@@ -166,6 +177,6 @@
 
 <div id="modal-root"></div>
 
-<script type="module" src="js/agency-portal.js?v=6"></script>
+<script type="module" src="js/agency-portal.js?v=7"></script>
 </body>
 </html>

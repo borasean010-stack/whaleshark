@@ -133,6 +133,7 @@ document.getElementById("pt-nav").addEventListener("click", (e) => {
   switchView(btn.dataset.view);
 });
 document.getElementById("btn-goto-reservation").addEventListener("click", () => switchView("reservation"));
+document.getElementById("btn-goto-deposit").addEventListener("click", () => switchView("deposit"));
 
 function switchView(view) {
   document.querySelectorAll(".pt-nav-item").forEach(el => el.classList.toggle("active", el.dataset.view === view));
@@ -424,10 +425,15 @@ document.getElementById("deposit-request-form").addEventListener("submit", async
   const msgEl = document.getElementById("deposit-request-message");
   msgEl.innerHTML = "";
   const amount = Number(document.getElementById("dr-amount").value);
-  const note = document.getElementById("dr-note").value.trim();
+  const depositDate = document.getElementById("dr-date").value;
+  const depositorName = document.getElementById("dr-name").value.trim();
 
   if (!amount || amount <= 0) {
     msgEl.innerHTML = `<p class="pt-msg error">올바른 금액을 입력해주세요.</p>`;
+    return;
+  }
+  if (!depositDate || !depositorName) {
+    msgEl.innerHTML = `<p class="pt-msg error">입금 날짜와 입금자 이름을 입력해주세요.</p>`;
     return;
   }
 
@@ -436,7 +442,10 @@ document.getElementById("deposit-request-form").addEventListener("submit", async
       agencyId: currentUid,
       agencyName: currentAgency?.name || "",
       amount,
-      note,
+      method: "gcash",
+      depositDate,
+      depositorName,
+      note: `GCash · ${depositDate} · ${depositorName}`,
       status: "pending",
       requestedAt: serverTimestamp(),
       resolvedAt: null,
