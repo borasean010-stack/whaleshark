@@ -71,31 +71,45 @@
         <h1 class="pt-greeting">New Reservation</h1>
         <div class="pt-card">
           <form id="booking-form" class="pt-form">
-            <div class="pt-field">
+            <div class="pt-field" id="tour-type-field">
               <label>투어 종류</label>
               <div class="pt-pill-row" id="tour-pills">
                 <button type="button" class="pt-pill" data-tour="VF">VIP 패스트트랙</button>
                 <button type="button" class="pt-pill" data-tour="F">패스트트랙</button>
                 <button type="button" class="pt-pill active" data-tour="R">레귤러 고래상어투어</button>
                 <button type="button" class="pt-pill" data-tour="T">고래상어 티켓만</button>
-                <button type="button" class="pt-pill" data-tour="HG">단독 호핑투어</button>
               </div>
               <input type="hidden" id="b-tour" value="R" />
+              <p id="ticket-only-note" style="display:none; color:#dc2626; font-size:0.8rem; font-weight:700; margin:8px 0 0;">Entrance fee / Environmental Fee / Transportation 포함</p>
             </div>
             <div class="pt-field" id="addon-field">
               <label>추가 옵션</label>
               <div class="pt-pill-row" id="addon-pills">
-                <button type="button" class="pt-pill pt-pill-checkbox" data-addon="H">☐ 호핑투어</button>
+                <button type="button" class="pt-pill pt-pill-checkbox" data-addon="H">☐ 조인 호핑투어</button>
+                <button type="button" class="pt-pill pt-pill-checkbox" data-addon="HG">☐ 단독 호핑투어</button>
                 <button type="button" class="pt-pill pt-pill-checkbox" data-addon="L">☐ 랜드투어</button>
               </div>
               <div class="pt-row" id="addon-date-row" style="margin-top:12px; display:none;">
                 <div class="pt-field" id="addon-date-field-H" style="display:none;">
-                  <label>호핑투어 날짜</label>
+                  <label>조인 호핑투어 날짜</label>
                   <input class="pt-input" type="date" id="addon-date-H" />
                 </div>
                 <div class="pt-field" id="addon-date-field-L" style="display:none;">
                   <label>랜드투어 날짜</label>
                   <input class="pt-input" type="date" id="addon-date-L" />
+                </div>
+              </div>
+              <div class="pt-field" id="group-guests-field" style="display:none; margin-top:12px;">
+                <label>GUESTS (단독 호핑투어 그룹 인원 — 티켓 할인 포함가)</label>
+                <div class="pt-pill-row" id="group-size-pills">
+                  <button type="button" class="pt-pill" data-size="10">10 pax · ₱25,000</button>
+                  <button type="button" class="pt-pill" data-size="20">20 pax · ₱30,000</button>
+                  <button type="button" class="pt-pill" data-size="30">30 pax · ₱40,000</button>
+                  <button type="button" class="pt-pill" data-size="40">40 pax · ₱45,000</button>
+                </div>
+                <div class="pt-field" style="margin-top:12px;">
+                  <label>단독 호핑투어 날짜</label>
+                  <input class="pt-input" type="date" id="addon-date-HG" />
                 </div>
               </div>
             </div>
@@ -126,15 +140,6 @@
                   <span class="pt-stepper-value" id="b-children-display">0</span>
                   <button type="button" class="pt-stepper-btn" data-step="child" data-delta="1">+</button>
                 </div>
-              </div>
-            </div>
-            <div class="pt-field" id="group-guests-field" style="display:none;">
-              <label>GUESTS (단독 호핑투어 그룹 인원 — 티켓 할인 포함가)</label>
-              <div class="pt-pill-row" id="group-size-pills">
-                <button type="button" class="pt-pill" data-size="10">10 pax · ₱25,000</button>
-                <button type="button" class="pt-pill" data-size="20">20 pax · ₱30,000</button>
-                <button type="button" class="pt-pill" data-size="30">30 pax · ₱40,000</button>
-                <button type="button" class="pt-pill" data-size="40">40 pax · ₱45,000</button>
               </div>
             </div>
             <div class="pt-field">
@@ -206,6 +211,6 @@
 
 <div id="modal-root"></div>
 
-<script type="module" src="js/agency-portal.js?v=13"></script>
+<script type="module" src="js/agency-portal.js?v=14"></script>
 </body>
 </html>

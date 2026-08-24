@@ -198,18 +198,22 @@ function pricePerPersonFor(tour, addons, nationality) {
   return base + addonSum;
 }
 
-const ADDON_LABEL = { H: "호핑투어", L: "랜드투어" };
+const ADDON_LABEL = { H: "조인 호핑투어", HG: "단독 호핑투어", L: "랜드투어" };
 
 // 정가(published) 대비 순가(net)가 얼마나 싼지 눈에 보이게, 정가는 빨간
 // 취소선으로 보여주고 그 옆에 실제 net 가격을 보여줍니다.
 function renderBreakdown() {
   const el = document.getElementById("price-breakdown");
-  if (selectedTour === "HG") {
-    el.innerHTML = "";
+  const isGroup = selectedAddons.has("HG");
+  if (isGroup) {
+    el.innerHTML = selectedGroupSize
+      ? `<div class="pt-breakdown-row"><span class="pt-breakdown-label">단독 호핑투어 (${selectedGroupSize}명, 티켓 할인 포함가)</span><span class="pt-breakdown-value pt-breakdown-now">${fmtPeso(GROUP_PRICES[selectedGroupSize])}</span></div>`
+      : "";
     return;
   }
+  const perAddons = new Set([...selectedAddons].filter(a => a !== "HG"));
   const tier = priceTierFor(selectedNationality);
-  const hasAddon = selectedAddons.size > 0;
+  const hasAddon = perAddons.size > 0;
   const isBundledTicket = selectedTour === "T" && hasAddon;
   const netBase = isBundledTicket ? BUNDLE_TICKET_PRICE[tier] : (NET_PRICES[selectedTour]?.[tier] || 0);
   const publishedBase = isBundledTicket ? PUBLISHED_PRICES.T[tier] : (PUBLISHED_PRICES[selectedTour]?.[tier] || 0);
@@ -224,7 +228,7 @@ function renderBreakdown() {
       </span>
     </div>
   `);
-  selectedAddons.forEach(a => {
+  perAddons.forEach(a => {
     rows.push(`
       <div class="pt-breakdown-row pt-breakdown-sub">
         <span>+ ${ADDON_LABEL[a]} 추가</span>
@@ -236,7 +240,7 @@ function renderBreakdown() {
   rows.push(`
     <div class="pt-breakdown-row" style="border-top:1px dashed ${'#cbd5e1'}; padding-top:8px; margin-top:2px;">
       <span class="pt-breakdown-label">인당 합계 × ${people}명</span>
-      <span class="pt-breakdown-value">${fmtPeso(netBase + [...selectedAddons].reduce((s, a) => s + (ADDON_PRICE[a] || 0), 0))}</span>
+      <span class="pt-breakdown-value">${fmtPeso(netBase + [...perAddons].reduce((s, a) => s + (ADDON_PRICE[a] || 0), 0))}</span>
     </div>
   `);
   el.innerHTML = rows.join("");
@@ -244,7 +248,7 @@ function renderBreakdown() {
 
 function updateEstimate() {
   let total;
-  if (selectedTour === "HG") {
+  if (selectedAddons.has("HG")) {
     total = selectedGroupSize ? GROUP_PRICES[selectedGroupSize] : 0;
   } else {
     const people = adultCount + childCount;
@@ -255,14 +259,16 @@ function updateEstimate() {
   return total;
 }
 
-// "단독 호핑투어(HG)"를 고르면 인당 입력(성인/아동/추가옵션/고객유형) 대신
-// 그룹 인원 구간 선택으로 화면이 바뀝니다 — 이미 국적/추가상품 구분 없는
-// 올인클루시브 총액이라 그 필드들은 의미가 없어서 숨깁니다.
-function toggleTourFields() {
-  const isGroup = selectedTour === "HG";
+// "단독 호핑투어(HG)"는 이제 추가옵션 체크박스입니다 — 체크하면 그룹
+// 인원 구간(GUESTS) 선택으로 바뀌고, 이미 국적/성인아동 구분 없는
+// 올인클루시브 총액이라 투어 종류/고객 유형/성인·아동 입력이 의미가 없어서
+// 숨깁니다. "조인 호핑투어(H)"와는 같이 선택할 수 없습니다(같은 호핑투어의
+// 다른 방식이라 동시에 둘 다 예약하는 게 아니라서).
+function toggleGroupFields() {
+  const isGroup = selectedAddons.has("HG");
+  document.getElementById("tour-type-field").style.display = isGroup ? "none" : "block";
   document.getElementById("individual-guests-field").style.display = isGroup ? "none" : "flex";
   document.getElementById("group-guests-field").style.display = isGroup ? "block" : "none";
-  document.getElementById("addon-field").style.display = isGroup ? "none" : "block";
   document.getElementById("nationality-field").style.display = isGroup ? "none" : "block";
 }
 
@@ -272,7 +278,7 @@ document.getElementById("tour-pills").addEventListener("click", (e) => {
   selectedTour = btn.dataset.tour;
   document.getElementById("b-tour").value = selectedTour;
   document.querySelectorAll("#tour-pills .pt-pill").forEach(p => p.classList.toggle("active", p === btn));
-  toggleTourFields();
+  document.getElementById("ticket-only-note").style.display = selectedTour === "T" ? "block" : "none";
   updateEstimate();
 });
 
@@ -284,21 +290,33 @@ document.getElementById("group-size-pills").addEventListener("click", (e) => {
   updateEstimate();
 });
 
+function setAddonPillState(addon, isOn) {
+  const btn = document.querySelector(`#addon-pills .pt-pill[data-addon="${addon}"]`);
+  btn.classList.toggle("active", isOn);
+  btn.textContent = (isOn ? "☑ " : "☐ ") + ADDON_LABEL[addon];
+  if (isOn) selectedAddons.add(addon); else selectedAddons.delete(addon);
+  const dateField = document.getElementById(`addon-date-field-${addon}`);
+  if (dateField) {
+    dateField.style.display = isOn ? "flex" : "none";
+    if (!isOn) document.getElementById(`addon-date-${addon}`).value = "";
+  }
+}
+
 document.getElementById("addon-pills").addEventListener("click", (e) => {
   const btn = e.target.closest(".pt-pill");
   if (!btn) return;
   const addon = btn.dataset.addon;
   const isOn = !btn.classList.contains("active");
-  btn.classList.toggle("active", isOn);
-  btn.textContent = (isOn ? "☑ " : "☐ ") + (addon === "H" ? "호핑투어" : "랜드투어");
-  if (isOn) selectedAddons.add(addon); else selectedAddons.delete(addon);
 
-  // 추가상품마다 본 투어일과 별도로 그 상품을 진행할 날짜를 입력받습니다
-  // (호핑/랜드가 본 투어와 다른 날 진행되는 경우가 많아서).
-  document.getElementById(`addon-date-field-${addon}`).style.display = isOn ? "flex" : "none";
-  if (!isOn) document.getElementById(`addon-date-${addon}`).value = "";
-  document.getElementById("addon-date-row").style.display = selectedAddons.size > 0 ? "flex" : "none";
+  // 조인(H) ↔ 단독(HG)은 서로 배타적 — 하나를 켜면 다른 하나는 꺼집니다.
+  if (isOn && addon === "H" && selectedAddons.has("HG")) setAddonPillState("HG", false);
+  if (isOn && addon === "HG" && selectedAddons.has("H")) setAddonPillState("H", false);
 
+  setAddonPillState(addon, isOn);
+  document.getElementById("addon-date-row").style.display =
+    (selectedAddons.has("H") || selectedAddons.has("L")) ? "flex" : "none";
+
+  toggleGroupFields();
   updateEstimate();
 });
 
@@ -341,7 +359,7 @@ document.getElementById("booking-form").addEventListener("submit", async (e) => 
   msgEl.innerHTML = "";
 
   const tourType = selectedTour;
-  const isGroup = tourType === "HG";
+  const isGroup = selectedAddons.has("HG");
   const paymentMethod = selectedPay;
   const date = document.getElementById("b-date").value;
   const people = isGroup ? (selectedGroupSize || 0) : (adultCount + childCount);
@@ -355,7 +373,7 @@ document.getElementById("booking-form").addEventListener("submit", async (e) => 
   for (const a of selectedAddons) {
     const v = document.getElementById(`addon-date-${a}`).value;
     if (!v) {
-      msgEl.innerHTML = `<p class="pt-msg error">${a === "H" ? "호핑투어" : "랜드투어"} 날짜를 선택해주세요.</p>`;
+      msgEl.innerHTML = `<p class="pt-msg error">${ADDON_LABEL[a]} 날짜를 선택해주세요.</p>`;
       return;
     }
     addonDates[a] = v;
@@ -372,9 +390,9 @@ document.getElementById("booking-form").addEventListener("submit", async (e) => 
 
   try {
     const reservationRef = await addDoc(collection(db, "reservations"), {
-      tourType,
-      addons: isGroup ? [] : [...selectedAddons],
-      addonDates: isGroup ? {} : addonDates,
+      tourType: isGroup ? "HG" : tourType,
+      addons: [...selectedAddons],
+      addonDates,
       date,
       people,
       adults: isGroup ? people : adultCount,
@@ -419,14 +437,19 @@ document.getElementById("booking-form").addEventListener("submit", async (e) => 
     selectedAddons.clear();
     document.querySelectorAll("#addon-pills .pt-pill").forEach(btn => {
       btn.classList.remove("active");
-      btn.textContent = "☐ " + (btn.dataset.addon === "H" ? "호핑투어" : "랜드투어");
+      btn.textContent = "☐ " + ADDON_LABEL[btn.dataset.addon];
     });
+    document.getElementById("addon-date-row").style.display = "none";
+    document.getElementById("addon-date-H").value = "";
+    document.getElementById("addon-date-L").value = "";
+    document.getElementById("addon-date-HG").value = "";
     adultCount = 2;
     childCount = 0;
     document.getElementById("b-adults-display").textContent = adultCount;
     document.getElementById("b-children-display").textContent = childCount;
     selectedGroupSize = null;
     document.querySelectorAll("#group-size-pills .pt-pill").forEach(p => p.classList.remove("active"));
+    toggleGroupFields();
     updateEstimate();
     setTimeout(() => switchView("dashboard"), 900);
   } catch (err) {
@@ -455,9 +478,12 @@ function badgeFor(b) {
   return `<span class="pt-badge pt-badge-confirmed">${STATUS_LABEL[b.status] || b.status}</span>`;
 }
 
+const ADDON_SHORT = { H: "조인호핑", L: "랜드" };
 function addonLabel(addons) {
-  if (!addons || !addons.length) return "";
-  return " + " + addons.map(a => (a === "H" ? "호핑" : "랜드")).join("/");
+  // HG(단독 호핑투어)는 이미 메인 투어 라벨에 나오니 여기선 나머지만 붙입니다.
+  const shown = (addons || []).filter(a => a !== "HG");
+  if (!shown.length) return "";
+  return " + " + shown.map(a => ADDON_SHORT[a] || a).join("/");
 }
 
 function bookingRowHtml(id, b) {
