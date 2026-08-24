@@ -66,6 +66,7 @@ function priceTierFor(nationality) {
 let currentUid = null;
 let currentAgency = null;
 let selectedTour = "R";
+let selectedMeetingTime = "07:30";
 let selectedAddons = new Set();
 let selectedNationality = "PH";
 let selectedPay = "deposit";
@@ -270,7 +271,42 @@ function toggleGroupFields() {
   document.getElementById("individual-guests-field").style.display = isGroup ? "none" : "flex";
   document.getElementById("group-guests-field").style.display = isGroup ? "block" : "none";
   document.getElementById("nationality-field").style.display = isGroup ? "none" : "block";
+  updateMeetingTime();
 }
+
+// 레귤러(R)는 고객이 오전 07:30/09:00 중 미팅 시간을 직접 고르고, 패스트트랙/
+// VIP는 같은 07:30에 미팅하지만 선택지 없이 고정입니다. 티켓만(T)과 단독
+// 호핑투어(HG)는 미팅 시간 자체가 없습니다 — reservation.html의 손님용 예약
+// 폼과 동일한 규칙입니다.
+function updateMeetingTime() {
+  const group = document.getElementById("meeting-time-field");
+  const pillsBlock = document.getElementById("meeting-time-pills");
+  const fixedNote = document.getElementById("meeting-fixed-note");
+  const isGroup = selectedAddons.has("HG");
+  if (isGroup || selectedTour === "T") {
+    group.style.display = "none";
+    return;
+  }
+  group.style.display = "block";
+  if (selectedTour === "R") {
+    pillsBlock.style.display = "flex";
+    fixedNote.style.display = "none";
+  } else {
+    pillsBlock.style.display = "none";
+    fixedNote.style.display = "block";
+    selectedMeetingTime = "07:30";
+    document.getElementById("b-meeting-time").value = "07:30";
+    document.querySelectorAll("#meeting-time-pills .pt-pill").forEach(p => p.classList.toggle("active", p.dataset.time === "07:30"));
+  }
+}
+
+document.getElementById("meeting-time-pills").addEventListener("click", (e) => {
+  const btn = e.target.closest(".pt-pill");
+  if (!btn) return;
+  selectedMeetingTime = btn.dataset.time;
+  document.getElementById("b-meeting-time").value = selectedMeetingTime;
+  document.querySelectorAll("#meeting-time-pills .pt-pill").forEach(p => p.classList.toggle("active", p === btn));
+});
 
 document.getElementById("tour-pills").addEventListener("click", (e) => {
   const btn = e.target.closest(".pt-pill");
@@ -279,8 +315,12 @@ document.getElementById("tour-pills").addEventListener("click", (e) => {
   document.getElementById("b-tour").value = selectedTour;
   document.querySelectorAll("#tour-pills .pt-pill").forEach(p => p.classList.toggle("active", p === btn));
   document.getElementById("ticket-only-note").style.display = selectedTour === "T" ? "block" : "none";
+  updateMeetingTime();
   updateEstimate();
 });
+
+// 페이지 로드 시 기본 선택값(레귤러)에 맞춰 미팅 시간 필드를 바로 보여줍니다.
+updateMeetingTime();
 
 document.getElementById("group-size-pills").addEventListener("click", (e) => {
   const btn = e.target.closest(".pt-pill");
@@ -394,6 +434,7 @@ document.getElementById("booking-form").addEventListener("submit", async (e) => 
       addons: [...selectedAddons],
       addonDates,
       date,
+      meetingTime: (!isGroup && (tourType === "R" || tourType === "F" || tourType === "VF")) ? selectedMeetingTime : "",
       people,
       adults: isGroup ? people : adultCount,
       children: isGroup ? 0 : childCount,

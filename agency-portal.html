@@ -82,6 +82,15 @@
               <input type="hidden" id="b-tour" value="R" />
               <p id="ticket-only-note" style="display:none; color:#dc2626; font-size:0.8rem; font-weight:700; margin:8px 0 0;">Entrance fee / Environmental Fee / Transportation 포함</p>
             </div>
+            <div class="pt-field" id="meeting-time-field" style="display:none;">
+              <label>미팅 시간</label>
+              <div class="pt-pill-row" id="meeting-time-pills">
+                <button type="button" class="pt-pill active" data-time="07:30">오전 07:30</button>
+                <button type="button" class="pt-pill" data-time="09:00">오전 09:00</button>
+              </div>
+              <p id="meeting-fixed-note" style="display:none; color:var(--pt-muted); font-size:0.8rem; margin:8px 0 0;">미팅 시간: 오전 07:30 (고정)</p>
+              <input type="hidden" id="b-meeting-time" value="07:30" />
+            </div>
             <div class="pt-field" id="addon-field">
               <label>추가 옵션</label>
               <div class="pt-pill-row" id="addon-pills">
@@ -211,6 +220,6 @@
 
 <div id="modal-root"></div>
 
-<script type="module" src="js/agency-portal.js?v=17"></script>
+<script type="module" src="js/agency-portal.js?v=18"></script>
 </body>
 </html>
