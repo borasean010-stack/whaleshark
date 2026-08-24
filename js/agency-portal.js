@@ -435,6 +435,7 @@ document.getElementById("booking-form").addEventListener("submit", async (e) => 
       addonDates,
       date,
       meetingTime: (!isGroup && (tourType === "R" || tourType === "F" || tourType === "VF")) ? selectedMeetingTime : "",
+      pickup: "Jollibee Main Road",
       people,
       adults: isGroup ? people : adultCount,
       children: isGroup ? 0 : childCount,
