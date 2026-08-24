@@ -42,6 +42,41 @@ const voucherModalBody = document.getElementById("voucher-modal-body");
 const voucherModalClose = document.getElementById("voucher-modal-close");
 const reservationsById = {}; // id -> Firestore data, populated by loadReservations()
 
+// =====================================================================
+// 푸시 알림 — Cloud Functions 없이, 관리자 브라우저가 직접 Expo Push API를
+// 호출합니다(관리자가 확정 버튼을 누르는 순간이 곧 "이벤트 발생 시점"이라
+// 서버 트리거가 따로 필요 없습니다). 예약에 저장된 pushToken(앱에서 예약할
+// 때 자동으로 붙음)이 있을 때만 보내고, 없으면 조용히 무시합니다.
+// =====================================================================
+async function sendExpoPush(messages) {
+  const list = messages.filter((m) => m && m.to);
+  if (!list.length) return;
+  // Expo의 푸시 API는 한 번 요청에 최대 100건까지만 받아줘서, 그보다 많으면
+  // 100개씩 잘라 나눠 보냅니다.
+  for (let i = 0; i < list.length; i += 100) {
+    const chunk = list.slice(i, i + 100);
+    try {
+      await fetch("https://exp.host/--/api/v2/push/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(chunk),
+      });
+    } catch (err) {
+      console.error("Push send failed:", err);
+    }
+  }
+}
+
+function notifyReservationConfirmed({ pushToken, date, tourType }) {
+  if (!pushToken) return;
+  const tourName = TOUR_NAMES_FOR_SETTLEMENT[tourType] || tourType || "";
+  sendExpoPush([{
+    to: pushToken,
+    title: "🐋 예약이 확정되었습니다",
+    body: `${date || ""} ${tourName} 예약이 확정됐어요!`.trim(),
+  }]);
+}
+
 // Real Firebase Authentication — replaces the old client-side-only PIN check,
 // which never satisfied Firestore's `request.auth != null` rule anyway.
 onAuthStateChanged(auth, (user) => {
@@ -342,6 +377,9 @@ function attachEventListeners() {
         await updateDoc(doc(db, "reservations", id), {
           status: newStatus
         });
+        if (newStatus === "confirmed") {
+          notifyReservationConfirmed(reservationsById[id] || {});
+        }
         // Update stats
         loadReservations();
       } catch (err) {
@@ -512,6 +550,38 @@ document.getElementById("agency-create-form").addEventListener("submit", async (
 });
 
 // =====================================================================
+// 고래상어 출몰 알림 방송 — 예약 여부와 무관하게 앱을 한 번이라도 열어본
+// 사람 전체(pushTokens 컬렉션)에게 보냅니다.
+// =====================================================================
+document.getElementById("sighting-broadcast-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const input = document.getElementById("sighting-message-input");
+  const msgEl = document.getElementById("sighting-broadcast-message");
+  const message = input.value.trim();
+  msgEl.textContent = "";
+  if (!message) return;
+
+  try {
+    const snap = await getDocs(collection(db, "pushTokens"));
+    const tokens = [];
+    snap.forEach((d) => tokens.push(d.data().token));
+    if (!tokens.length) {
+      msgEl.style.color = "var(--admin-warning)";
+      msgEl.textContent = "등록된 기기가 없습니다.";
+      return;
+    }
+    await sendExpoPush(tokens.map((to) => ({ to, title: "🐋 Boracay Whale Shark", body: message })));
+    msgEl.style.color = "var(--admin-success)";
+    msgEl.textContent = `${tokens.length}개 기기로 발송했습니다.`;
+    input.value = "";
+  } catch (err) {
+    console.error("Sighting broadcast failed:", err);
+    msgEl.style.color = "var(--admin-danger)";
+    msgEl.textContent = "발송에 실패했습니다.";
+  }
+});
+
+// =====================================================================
 // 입금 신청 승인/거절 — 파트너(에이전시)가 agency-portal.html에서 신청하면
 // 여기서 확인하고 승인 시 잔액에 반영합니다.
 // =====================================================================
@@ -638,7 +708,7 @@ async function loadSettlement() {
             <td>${agencyName}</td>
             <td>${d.name}</td>
             <td>${fmtPeso(d.totalPrice)}</td>
-            <td><button class="action-btn" style="background: var(--admin-success);" data-action="mark-collected" data-id="${docSnap.id}">현금 수령 확인</button></td>
+            <td><button class="action-btn" style="background: var(--admin-success);" data-action="mark-collected" data-id="${docSnap.id}" data-date="${d.date}" data-tourtype="${d.tourType}" data-pushtoken="${d.pushToken || ""}">현금 수령 확인</button></td>
           </tr>
         `);
       }
@@ -652,6 +722,11 @@ async function loadSettlement() {
         if (!confirm("현금을 수령하셨나요? 예약 상태를 확정으로 바꿉니다.")) return;
         try {
           await updateDoc(doc(db, "reservations", btn.dataset.id), { status: "confirmed" });
+          notifyReservationConfirmed({
+            pushToken: btn.dataset.pushtoken,
+            date: btn.dataset.date,
+            tourType: btn.dataset.tourtype,
+          });
           loadSettlement();
         } catch (err) {
           console.error("Error confirming cash collection:", err);

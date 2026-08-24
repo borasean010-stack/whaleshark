@@ -86,6 +86,20 @@
             </div>
           </div>
 
+          <div class="table-container" style="margin-bottom: 24px;">
+            <div class="table-header">
+              <h2>🐋 고래상어 출몰 알림 방송</h2>
+            </div>
+            <form id="sighting-broadcast-form" style="padding: 24px; display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end;">
+              <div style="flex:1; min-width:260px;">
+                <label style="display:block; font-size:0.8rem; color:var(--admin-text-muted); margin-bottom:6px;">알림 내용</label>
+                <input type="text" id="sighting-message-input" required placeholder="예: 오늘 고래상어 나타났어요! 🦈" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid var(--admin-border); background:rgba(255,255,255,0.05); color:#fff;">
+              </div>
+              <button type="submit" class="action-btn" style="background: var(--admin-primary);">앱 열어본 사람 전체에게 보내기</button>
+              <span id="sighting-broadcast-message" style="font-size:0.85rem;"></span>
+            </form>
+          </div>
+
           <div class="table-container">
             <div class="table-header">
               <h2>최신 예약 (최근 10건)</h2>
@@ -288,6 +302,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/admin.js?v=1787539949"></script>
+  <script type="module" src="js/admin.js?v=1787552289"></script>
 </body>
 </html>
