@@ -43,6 +43,14 @@ const TOUR_NAMES = { VF: "VIP 패스트트랙", F: "패스트트랙", R: "레귤
 const TOUR_SHORT = { VF: "VIP FT", F: "FAST", R: "REGULAR", T: "TICKET", H: "HOPPING", L: "LAND" };
 const STATUS_LABEL = { confirmed: "CONFIRMED", pending: "PENDING" };
 
+// 고객 유형은 4개(현지인/중국인/한국인/외국인)로 보여주지만, 실제 가격은
+// NET_PRICES가 PH/FOREIGN 두 단계만 갖고 있으므로 현지인만 PH, 나머지
+// 셋(중국인/한국인/외국인)은 전부 FOREIGN 요금으로 계산합니다. 중국인/
+// 한국인만의 별도 요금이 정해지면 이 매핑과 NET_PRICES를 함께 확장하면 됩니다.
+function priceTierFor(nationality) {
+  return nationality === "PH" ? "PH" : "FOREIGN";
+}
+
 let currentUid = null;
 let currentAgency = null;
 let selectedTour = "R";
@@ -162,7 +170,7 @@ function listenAgency() {
 // ── New reservation form ────────────────────────────────────────
 function updateEstimate() {
   const people = Number(document.getElementById("b-people").value) || 0;
-  const total = (NET_PRICES[selectedTour]?.[selectedNationality] || 0) * people;
+  const total = (NET_PRICES[selectedTour]?.[priceTierFor(selectedNationality)] || 0) * people;
   document.getElementById("b-total").textContent = fmtPeso(total);
   return total;
 }
@@ -226,7 +234,7 @@ document.getElementById("booking-form").addEventListener("submit", async (e) => 
       name: label,
       email: auth.currentUser.email,
       nationality: selectedNationality,
-      pricePerPerson: NET_PRICES[tourType]?.[selectedNationality],
+      pricePerPerson: NET_PRICES[tourType]?.[priceTierFor(selectedNationality)],
       totalPrice,
       currency: "PHP",
       status: paymentMethod === "deposit" ? "confirmed" : "pending",

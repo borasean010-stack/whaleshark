@@ -170,7 +170,7 @@ async function loadReservations() {
           ${data.balanceDue ? `<div style="font-size:0.75rem; color:var(--admin-warning); margin-top:4px; font-weight:700;">잔금 ${data.balanceDue.toLocaleString()} 현장결제</div>` : ''}
         </td>
         <td>${data.people}명</td>
-        <td>${data.nationality === "PH" ? "필리핀" : data.nationality === "FOREIGN" ? "외국인" : "-"}</td>
+        <td>${{ PH: "필리핀", CN: "중국인", KR: "한국인", FOREIGN: "외국인" }[data.nationality] || "-"}</td>
         <td>
           <div>${data.email}</div>
         </td>
