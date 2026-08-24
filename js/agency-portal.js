@@ -29,6 +29,15 @@ import {
 // VIP 패스트트랙과 (번들이 아닌) 고래상어 티켓만 단독 판매는 아직 net
 // rate를 안 주셔서 임시로 published rate(reservation.html과 동일)를 그대로
 // 쓰고 있습니다 — 확정되면 꼭 알려주세요.
+// 손님용 웹사이트(reservation.html)의 published/selling rate — 예약 폼에
+// "정가 대비 이만큼 싸다"는 걸 보여주기 위한 비교용 기준값입니다. 실제
+// 손님용 가격이 바뀌면 이것도 같이 맞춰야 합니다.
+const PUBLISHED_PRICES = {
+  VF: { PH: 5820, FOREIGN: 5820 },
+  F: { PH: 3300, FOREIGN: 3600 },
+  R: { PH: 2520, FOREIGN: 2820 },
+  T: { PH: 1620, FOREIGN: 1920 },
+};
 const BUNDLE_TICKET_PRICE = { PH: 1500, FOREIGN: 1800 };
 const ADDON_PRICE = { H: 1500, L: 500 };
 const NET_PRICES = {
@@ -189,6 +198,50 @@ function pricePerPersonFor(tour, addons, nationality) {
   return base + addonSum;
 }
 
+const ADDON_LABEL = { H: "호핑투어", L: "랜드투어" };
+
+// 정가(published) 대비 순가(net)가 얼마나 싼지 눈에 보이게, 정가는 빨간
+// 취소선으로 보여주고 그 옆에 실제 net 가격을 보여줍니다.
+function renderBreakdown() {
+  const el = document.getElementById("price-breakdown");
+  if (selectedTour === "HG") {
+    el.innerHTML = "";
+    return;
+  }
+  const tier = priceTierFor(selectedNationality);
+  const hasAddon = selectedAddons.size > 0;
+  const isBundledTicket = selectedTour === "T" && hasAddon;
+  const netBase = isBundledTicket ? BUNDLE_TICKET_PRICE[tier] : (NET_PRICES[selectedTour]?.[tier] || 0);
+  const publishedBase = isBundledTicket ? PUBLISHED_PRICES.T[tier] : (PUBLISHED_PRICES[selectedTour]?.[tier] || 0);
+
+  const rows = [];
+  rows.push(`
+    <div class="pt-breakdown-row">
+      <span class="pt-breakdown-label">${TOUR_NAMES[selectedTour]} (1인)</span>
+      <span class="pt-breakdown-value">
+        ${publishedBase > netBase ? `<span class="pt-breakdown-was">${fmtPeso(publishedBase)}</span>` : ""}
+        <span class="pt-breakdown-now">${fmtPeso(netBase)}</span>
+      </span>
+    </div>
+  `);
+  selectedAddons.forEach(a => {
+    rows.push(`
+      <div class="pt-breakdown-row pt-breakdown-sub">
+        <span>+ ${ADDON_LABEL[a]} 추가</span>
+        <span>${fmtPeso(ADDON_PRICE[a])}</span>
+      </div>
+    `);
+  });
+  const people = adultCount + childCount;
+  rows.push(`
+    <div class="pt-breakdown-row" style="border-top:1px dashed ${'#cbd5e1'}; padding-top:8px; margin-top:2px;">
+      <span class="pt-breakdown-label">인당 합계 × ${people}명</span>
+      <span class="pt-breakdown-value">${fmtPeso(netBase + [...selectedAddons].reduce((s, a) => s + (ADDON_PRICE[a] || 0), 0))}</span>
+    </div>
+  `);
+  el.innerHTML = rows.join("");
+}
+
 function updateEstimate() {
   let total;
   if (selectedTour === "HG") {
@@ -197,6 +250,7 @@ function updateEstimate() {
     const people = adultCount + childCount;
     total = pricePerPersonFor(selectedTour, selectedAddons, selectedNationality) * people;
   }
+  renderBreakdown();
   document.getElementById("b-total").textContent = fmtPeso(total);
   return total;
 }
@@ -238,6 +292,13 @@ document.getElementById("addon-pills").addEventListener("click", (e) => {
   btn.classList.toggle("active", isOn);
   btn.textContent = (isOn ? "☑ " : "☐ ") + (addon === "H" ? "호핑투어" : "랜드투어");
   if (isOn) selectedAddons.add(addon); else selectedAddons.delete(addon);
+
+  // 추가상품마다 본 투어일과 별도로 그 상품을 진행할 날짜를 입력받습니다
+  // (호핑/랜드가 본 투어와 다른 날 진행되는 경우가 많아서).
+  document.getElementById(`addon-date-field-${addon}`).style.display = isOn ? "flex" : "none";
+  if (!isOn) document.getElementById(`addon-date-${addon}`).value = "";
+  document.getElementById("addon-date-row").style.display = selectedAddons.size > 0 ? "flex" : "none";
+
   updateEstimate();
 });
 
@@ -289,6 +350,17 @@ document.getElementById("booking-form").addEventListener("submit", async (e) => 
   const label = `${currentAgency?.name || "Agency"} ${date}`;
   const totalPrice = updateEstimate();
 
+  // 체크된 추가상품마다 그 상품의 날짜도 반드시 입력해야 합니다.
+  const addonDates = {};
+  for (const a of selectedAddons) {
+    const v = document.getElementById(`addon-date-${a}`).value;
+    if (!v) {
+      msgEl.innerHTML = `<p class="pt-msg error">${a === "H" ? "호핑투어" : "랜드투어"} 날짜를 선택해주세요.</p>`;
+      return;
+    }
+    addonDates[a] = v;
+  }
+
   if (!date || people < 1 || (isGroup && !selectedGroupSize)) {
     msgEl.innerHTML = `<p class="pt-msg error">모든 항목을 입력해주세요.</p>`;
     return;
@@ -302,6 +374,7 @@ document.getElementById("booking-form").addEventListener("submit", async (e) => 
     const reservationRef = await addDoc(collection(db, "reservations"), {
       tourType,
       addons: isGroup ? [] : [...selectedAddons],
+      addonDates: isGroup ? {} : addonDates,
       date,
       people,
       adults: isGroup ? people : adultCount,

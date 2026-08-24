@@ -157,6 +157,19 @@ body.pt-body {
 .pt-stepper-btn:hover { background: rgba(28,82,158,0.12); }
 .pt-stepper-value { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1rem; min-width: 20px; text-align: center; }
 
+.pt-breakdown {
+  display: flex; flex-direction: column; gap: 8px;
+  background: var(--pt-bg); border-radius: 12px; padding: 14px 16px;
+  margin-bottom: -4px;
+}
+.pt-breakdown:empty { display: none; margin-bottom: 0; }
+.pt-breakdown-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.85rem; }
+.pt-breakdown-label { color: var(--pt-ink); font-weight: 600; }
+.pt-breakdown-value { font-family: 'Outfit', sans-serif; font-weight: 700; }
+.pt-breakdown-was { color: var(--pt-muted); text-decoration: line-through; font-size: 0.78rem; margin-right: 6px; }
+.pt-breakdown-now { color: var(--pt-green); }
+.pt-breakdown-row.pt-breakdown-sub { color: var(--pt-muted); font-size: 0.78rem; padding-left: 10px; }
+
 .pt-total-row {
   display: flex; justify-content: space-between; align-items: center;
   background: var(--pt-bg); border-radius: 12px; padding: 14px 16px;

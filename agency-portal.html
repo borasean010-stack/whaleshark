@@ -11,7 +11,7 @@
 <title>에이전시 포털 — Boracay Whale Shark</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/portal.css?v=5" />
+<link rel="stylesheet" href="css/portal.css?v=6" />
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
 </head>
 <body class="pt-body">
@@ -88,6 +88,16 @@
                 <button type="button" class="pt-pill pt-pill-checkbox" data-addon="H">☐ 호핑투어</button>
                 <button type="button" class="pt-pill pt-pill-checkbox" data-addon="L">☐ 랜드투어</button>
               </div>
+              <div class="pt-row" id="addon-date-row" style="margin-top:12px; display:none;">
+                <div class="pt-field" id="addon-date-field-H" style="display:none;">
+                  <label>호핑투어 날짜</label>
+                  <input class="pt-input" type="date" id="addon-date-H" />
+                </div>
+                <div class="pt-field" id="addon-date-field-L" style="display:none;">
+                  <label>랜드투어 날짜</label>
+                  <input class="pt-input" type="date" id="addon-date-L" />
+                </div>
+              </div>
             </div>
             <div class="pt-field" id="nationality-field">
               <label>고객 유형</label>
@@ -135,6 +145,7 @@
               </div>
               <input type="hidden" id="b-pay" value="deposit" />
             </div>
+            <div id="price-breakdown" class="pt-breakdown"></div>
             <div class="pt-total-row">
               <span class="pt-total-label">예상 금액</span>
               <span class="pt-total-value" id="b-total">-</span>
@@ -195,6 +206,6 @@
 
 <div id="modal-root"></div>
 
-<script type="module" src="js/agency-portal.js?v=12"></script>
+<script type="module" src="js/agency-portal.js?v=13"></script>
 </body>
 </html>
