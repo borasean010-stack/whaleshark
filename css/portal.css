@@ -1,0 +1,161 @@
+/* css/portal.css — 에이전시/파트너 포털 전용 스타일.
+   웹사이트 본 브랜드(css/style.css, css/main.css)의 색/폰트를 그대로 가져와
+   씁니다 — 예전 ticket-portal.css의 어두운 "ocean" 테마 대신, 사이트 본편과
+   같은 밝은 톤 + Outfit 폰트 + 브랜드 블루(#1C529E)/오렌지(#F97316). */
+
+:root {
+  --pt-bg: #F8FAFC;
+  --pt-ink: #1C2B3A;
+  --pt-blue: #1C529E;
+  --pt-blue-hover: #0077C8;
+  --pt-orange: #F97316;
+  --pt-border: #E5E7EB;
+  --pt-muted: rgba(28,43,58,0.55);
+  --pt-white: #ffffff;
+  --pt-green: #10b981;
+  --pt-vip: #a855f7;
+  --pt-fast: #f97316;
+  --pt-reg: #3b82f6;
+}
+
+* { box-sizing: border-box; }
+
+body.pt-body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--pt-bg);
+  font-family: 'Inter', sans-serif;
+  color: var(--pt-ink);
+}
+
+.pt-shell { max-width: 720px; margin: 0 auto; padding: 32px 20px 80px; }
+
+/* ── Top bar ── */
+.pt-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 28px;
+}
+.pt-brand { display: flex; align-items: center; gap: 10px; }
+.pt-brand-name { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.05rem; color: var(--pt-ink); }
+.pt-agency-name { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.5rem; margin: 4px 0 2px; }
+.pt-subtitle { color: var(--pt-muted); font-size: 0.85rem; margin: 0; }
+.pt-signout {
+  background: transparent; border: 1px solid var(--pt-border); color: var(--pt-muted);
+  padding: 8px 16px; border-radius: 99px; font-size: 0.8rem; font-weight: 600; cursor: pointer;
+  font-family: inherit;
+}
+.pt-signout:hover { border-color: var(--pt-blue); color: var(--pt-blue); }
+
+/* ── Login card ── */
+.pt-login-wrap { max-width: 420px; margin: 80px auto; }
+.pt-card {
+  background: var(--pt-white);
+  border-radius: 20px;
+  padding: 28px 24px;
+  box-shadow: 0 9px 27px rgba(28,82,158,0.08);
+  border: 1px solid rgba(28,82,158,0.04);
+  margin-bottom: 20px;
+}
+.pt-card h2 {
+  font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.3rem; margin: 0 0 8px;
+}
+.pt-card > p { color: var(--pt-muted); font-size: 0.85rem; margin: 0 0 20px; }
+
+/* ── Balance ── */
+.pt-balance-card {
+  background: linear-gradient(135deg, var(--pt-blue) 0%, var(--pt-blue-hover) 100%);
+  border-radius: 20px;
+  padding: 24px 26px;
+  margin-bottom: 24px;
+  box-shadow: 0 12px 30px rgba(28,82,158,0.25);
+}
+.pt-balance-label {
+  color: rgba(255,255,255,0.75); font-size: 0.72rem; font-weight: 800;
+  letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; display: block;
+}
+.pt-balance-value { color: #fff; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 2.1rem; }
+
+/* ── Form ── */
+.pt-form { display: grid; gap: 16px; }
+.pt-field { display: flex; flex-direction: column; gap: 8px; }
+.pt-field label {
+  font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pt-blue);
+}
+.pt-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; }
+.pt-input {
+  border: 1px solid var(--pt-border); border-radius: 12px; padding: 12px 14px;
+  font-size: 0.95rem; font-family: inherit; color: var(--pt-ink); background: var(--pt-white);
+}
+.pt-input:focus { outline: none; border-color: var(--pt-blue); }
+
+/* Tour type pills */
+.pt-pill-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.pt-pill {
+  border: 1px solid var(--pt-border); border-radius: 99px; padding: 9px 14px;
+  font-size: 0.82rem; font-weight: 700; color: var(--pt-ink); background: var(--pt-white);
+  cursor: pointer; font-family: inherit;
+}
+.pt-pill.active { color: #fff; border-color: transparent; }
+.pt-pill[data-tour="VF"].active { background: var(--pt-vip); }
+.pt-pill[data-tour="F"].active { background: var(--pt-fast); }
+.pt-pill[data-tour="R"].active { background: var(--pt-reg); }
+.pt-pill[data-tour="T"].active { background: var(--pt-green); }
+
+.pt-total-row {
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--pt-bg); border-radius: 12px; padding: 14px 16px;
+}
+.pt-total-label { font-size: 0.8rem; color: var(--pt-muted); font-weight: 700; }
+.pt-total-value { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.4rem; }
+
+.pt-btn {
+  display: inline-block; text-align: center; border: none; border-radius: 99px;
+  padding: 14px 24px; font-weight: 800; font-size: 0.9rem; letter-spacing: 0.02em;
+  cursor: pointer; font-family: inherit; color: #fff;
+  background: var(--pt-orange); box-shadow: 0 4px 15px rgba(249,115,22,0.35);
+}
+.pt-btn:hover { background: #ea580c; }
+.pt-btn-secondary { background: var(--pt-blue); box-shadow: 0 4px 15px rgba(28,82,158,0.3); }
+.pt-btn-secondary:hover { background: var(--pt-blue-hover); }
+.pt-btn-ghost {
+  background: transparent; color: var(--pt-blue); border: 1px solid var(--pt-border);
+  box-shadow: none; padding: 9px 16px; font-size: 0.78rem;
+}
+.pt-btn-ghost:hover { border-color: var(--pt-blue); background: rgba(28,82,158,0.04); }
+
+.pt-msg { font-size: 0.82rem; font-weight: 600; padding: 10px 14px; border-radius: 10px; margin: 0; }
+.pt-msg.error { background: rgba(239,68,68,0.08); color: #dc2626; }
+.pt-msg.success { background: rgba(16,185,129,0.08); color: #059669; }
+
+/* ── Bookings list ── */
+.pt-booking-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  background: var(--pt-white); border-radius: 14px; padding: 14px 16px; margin-bottom: 10px;
+  box-shadow: 0 4px 14px rgba(28,82,158,0.06);
+}
+.pt-booking-main { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
+.pt-booking-sub { color: var(--pt-muted); font-size: 0.78rem; margin-bottom: 6px; }
+.pt-badge {
+  display: inline-block; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.03em;
+  padding: 4px 10px; border-radius: 99px; text-transform: uppercase;
+}
+.pt-badge-issued { background: rgba(28,82,158,0.1); color: var(--pt-blue); }
+.pt-badge-used { background: rgba(16,185,129,0.1); color: #059669; }
+.pt-empty { color: var(--pt-muted); font-size: 0.85rem; text-align: center; padding: 20px 0; }
+
+/* ── Modal ── */
+.pt-modal-overlay {
+  position: fixed; inset: 0; background: rgba(15,23,42,0.55);
+  display: flex; align-items: center; justify-content: center; z-index: 999; padding: 20px;
+}
+.pt-modal-box {
+  background: #fff; border-radius: 20px; padding: 28px; text-align: center;
+  max-width: 320px; width: 100%; box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+}
+.pt-modal-box h3 { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.05rem; margin: 0 0 18px; }
+.pt-qr-frame { background: #fff; border: 1px solid var(--pt-border); border-radius: 14px; padding: 16px; display: inline-block; margin-bottom: 18px; }
+
+@media (max-width: 520px) {
+  .pt-topbar { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .pt-booking-row { flex-direction: column; align-items: stretch; }
+}

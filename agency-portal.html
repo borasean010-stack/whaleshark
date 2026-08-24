@@ -9,78 +9,83 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>에이전시 포털 — Boracay Whale Shark</title>
-<link rel="stylesheet" href="css/ticket-portal.css?v=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/portal.css?v=1" />
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
 </head>
-<body>
-<div class="portal-body">
-  <div class="portal-shell" style="max-width:640px;">
+<body class="pt-body">
 
-    <div id="login-view" class="portal-card">
-      <h2 style="margin-top:0;">에이전시 로그인</h2>
-      <p class="portal-subtitle" style="margin-bottom:20px;">보라카이션 관리자가 등록해준 이메일/비밀번호로 로그인하세요.</p>
-      <form id="login-form" class="portal-form">
-        <div class="field"><label>이메일</label><input type="email" id="login-email" required /></div>
-        <div class="field"><label>비밀번호</label><input type="password" id="login-password" required /></div>
+<div class="pt-shell">
+
+  <div id="login-view" class="pt-login-wrap">
+    <div class="pt-card">
+      <h2>에이전시 로그인</h2>
+      <p>보라카이션 관리자가 등록해준 이메일/비밀번호로 로그인하세요.</p>
+      <form id="login-form" class="pt-form">
+        <div class="pt-field"><label>이메일</label><input class="pt-input" type="email" id="login-email" required /></div>
+        <div class="pt-field"><label>비밀번호</label><input class="pt-input" type="password" id="login-password" required /></div>
         <div id="login-message"></div>
-        <button type="submit" class="btn" style="justify-self:start;">로그인</button>
+        <button type="submit" class="pt-btn pt-btn-secondary" style="justify-self:start;">로그인</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="portal-view" style="display:none;">
+
+    <div class="pt-topbar">
+      <div>
+        <span class="pt-brand-name">🐋 BORACAY WHALE SHARK</span>
+        <h1 class="pt-agency-name" id="agency-name-title">에이전시 포털</h1>
+        <p class="pt-subtitle">예치금으로 투어를 바로 예약하고 QR 티켓을 발급받으세요</p>
+      </div>
+      <button class="pt-signout" id="btn-signout">로그아웃</button>
+    </div>
+
+    <div class="pt-balance-card">
+      <span class="pt-balance-label">예치금 잔액</span>
+      <span class="pt-balance-value" id="stat-balance">-</span>
+    </div>
+
+    <div class="pt-card">
+      <h2>새 예약</h2>
+      <form id="booking-form" class="pt-form">
+        <div class="pt-field">
+          <label>투어 종류</label>
+          <div class="pt-pill-row" id="tour-pills">
+            <button type="button" class="pt-pill" data-tour="VF">VIP 패스트트랙</button>
+            <button type="button" class="pt-pill" data-tour="F">패스트트랙</button>
+            <button type="button" class="pt-pill active" data-tour="R">레귤러 고래상어투어</button>
+            <button type="button" class="pt-pill" data-tour="T">고래상어 티켓만</button>
+          </div>
+          <input type="hidden" id="b-tour" value="R" />
+        </div>
+        <div class="pt-row">
+          <div class="pt-field"><label>투어일</label><input class="pt-input" type="date" id="b-date" required /></div>
+          <div class="pt-field"><label>인원</label><input class="pt-input" type="number" id="b-people" min="1" step="1" value="1" required /></div>
+        </div>
+        <div class="pt-field">
+          <label>그룹명 (고객 개인정보 불필요)</label>
+          <input class="pt-input" type="text" id="b-label" placeholder="예: OO여행사 8/25 오전팀" required />
+        </div>
+        <div class="pt-total-row">
+          <span class="pt-total-label">예상 금액</span>
+          <span class="pt-total-value" id="b-total">-</span>
+        </div>
+        <div id="booking-message"></div>
+        <button type="submit" class="pt-btn" style="justify-self:start;">예약 확정 (잔액에서 차감)</button>
       </form>
     </div>
 
-    <div id="portal-view" style="display:none;">
-      <div class="portal-header">
-        <div>
-          <h1 class="portal-title" id="agency-name-title">에이전시 포털</h1>
-          <p class="portal-subtitle">예치금으로 투어를 바로 예약하고 QR 티켓을 발급받으세요</p>
-        </div>
-        <button class="portal-signout" id="btn-signout">로그아웃</button>
-      </div>
-
-      <div class="portal-card">
-        <div class="stat-grid">
-          <div class="stat-tile accent"><span class="stat-label">예치금 잔액</span><span class="stat-value" id="stat-balance">-</span></div>
-        </div>
-      </div>
-
-      <div class="portal-card">
-        <h2>새 예약</h2>
-        <form id="booking-form" class="portal-form">
-          <div class="form-row">
-            <div class="field">
-              <label for="b-tour">투어 종류</label>
-              <select id="b-tour" required>
-                <option value="VF">VIP 패스트트랙</option>
-                <option value="F">패스트트랙</option>
-                <option value="R" selected>레귤러 고래상어투어</option>
-                <option value="T">고래상어 티켓만</option>
-              </select>
-            </div>
-            <div class="field"><label for="b-date">투어일</label><input type="date" id="b-date" required /></div>
-            <div class="field"><label for="b-people">인원</label><input type="number" id="b-people" min="1" step="1" value="1" required /></div>
-          </div>
-          <div class="field"><label for="b-label">그룹명 (고객 개인정보 불필요)</label><input type="text" id="b-label" placeholder="예: OO여행사 8/25 오전팀" required /></div>
-          <div class="field"><label>예상 금액</label><div class="stat-value" id="b-total" style="font-size:1.4rem;">-</div></div>
-          <div id="booking-message"></div>
-          <button type="submit" class="btn" style="justify-self:start;">예약 확정 (잔액에서 차감)</button>
-        </form>
-      </div>
-
-      <div class="portal-card">
-        <h2>내 예약 목록</h2>
-        <div class="portal-table-wrap">
-          <table class="portal-table">
-            <thead><tr><th>투어일</th><th>투어</th><th>인원</th><th>그룹명</th><th>금액</th><th>상태</th><th>액션</th></tr></thead>
-            <tbody id="booking-list"><tr><td colspan="7" class="portal-empty">예약 내역이 없습니다.</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+    <h2 style="font-family:'Outfit',sans-serif; font-weight:800; font-size:1.1rem; margin: 28px 0 14px;">내 예약 목록</h2>
+    <div id="booking-list"><p class="pt-empty">예약 내역이 없습니다.</p></div>
 
   </div>
+
 </div>
 
 <div id="modal-root"></div>
 
-<script type="module" src="js/agency-portal.js?v=2"></script>
+<script type="module" src="js/agency-portal.js?v=3"></script>
 </body>
 </html>

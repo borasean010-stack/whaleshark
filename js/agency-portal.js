@@ -24,6 +24,7 @@ const STATUS_LABEL = { confirmed: "예약확정" };
 
 let currentUid = null;
 let currentAgency = null;
+let selectedTour = "R";
 
 function fmtPeso(n) {
   return `₱${(Number(n) || 0).toLocaleString("en-US")}`;
@@ -62,7 +63,7 @@ onAuthStateChanged(auth, async (user) => {
   const snap = await getDoc(doc(db, "agencies", currentUid));
   if (!snap.exists()) {
     document.getElementById("login-message").innerHTML =
-      `<p class="portal-message error">이 계정은 에이전시로 등록되어 있지 않습니다.</p>`;
+      `<p class="pt-msg error">이 계정은 에이전시로 등록되어 있지 않습니다.</p>`;
     await signOut(auth);
     return;
   }
@@ -82,7 +83,7 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
   try {
     await signInWithEmailAndPassword(auth, email, password);
   } catch (err) {
-    msgEl.innerHTML = `<p class="portal-message error">로그인에 실패했습니다. 이메일/비밀번호를 확인해주세요.</p>`;
+    msgEl.innerHTML = `<p class="pt-msg error">로그인에 실패했습니다. 이메일/비밀번호를 확인해주세요.</p>`;
   }
 });
 
@@ -98,40 +99,47 @@ function listenAgency() {
 }
 
 function updateEstimate() {
-  const tour = document.getElementById("b-tour").value;
   const people = Number(document.getElementById("b-people").value) || 0;
-  const total = (PRICES_PH[tour] || 0) * people;
+  const total = (PRICES_PH[selectedTour] || 0) * people;
   document.getElementById("b-total").textContent = fmtPeso(total);
   return total;
 }
 
-["b-tour", "b-people"].forEach(id => {
-  document.getElementById(id).addEventListener("input", updateEstimate);
+document.getElementById("tour-pills").addEventListener("click", (e) => {
+  const btn = e.target.closest(".pt-pill");
+  if (!btn) return;
+  selectedTour = btn.dataset.tour;
+  document.getElementById("b-tour").value = selectedTour;
+  document.querySelectorAll("#tour-pills .pt-pill").forEach(p => p.classList.toggle("active", p === btn));
+  updateEstimate();
 });
+
+document.getElementById("b-people").addEventListener("input", updateEstimate);
 
 let bookingsCache = new Map();
 
 function renderBookings() {
   const listEl = document.getElementById("booking-list");
   if (bookingsCache.size === 0) {
-    listEl.innerHTML = `<tr><td colspan="7" class="portal-empty">예약 내역이 없습니다.</td></tr>`;
+    listEl.innerHTML = `<p class="pt-empty">예약 내역이 없습니다.</p>`;
     return;
   }
   const rows = [...bookingsCache.entries()]
     .sort((a, b) => (a[1].date < b[1].date ? 1 : -1))
     .map(([id, b]) => {
       const badge = b.checkedIn
-        ? `<span class="badge badge-used">체크인완료</span>`
-        : `<span class="badge badge-issued">${STATUS_LABEL[b.status] || b.status}</span>`;
-      return `<tr>
-        <td>${b.date}</td>
-        <td>${TOUR_NAMES[b.tourType] || b.tourType}</td>
-        <td>${b.people}명</td>
-        <td>${b.name}</td>
-        <td>${fmtPeso(b.totalPrice)}</td>
-        <td>${badge}</td>
-        <td><button class="btn btn-ghost btn-small" data-action="qr" data-id="${id}">QR 보기</button></td>
-      </tr>`;
+        ? `<span class="pt-badge pt-badge-used">체크인완료</span>`
+        : `<span class="pt-badge pt-badge-issued">${STATUS_LABEL[b.status] || b.status}</span>`;
+      return `
+        <div class="pt-booking-row">
+          <div>
+            <div class="pt-booking-main">${b.date} · ${TOUR_NAMES[b.tourType] || b.tourType}</div>
+            <div class="pt-booking-sub">${b.name} · ${b.people}명 · ${fmtPeso(b.totalPrice)}</div>
+            ${badge}
+          </div>
+          <button class="pt-btn pt-btn-ghost" data-action="qr" data-id="${id}">QR 보기</button>
+        </div>
+      `;
     });
   listEl.innerHTML = rows.join("");
 }
@@ -146,15 +154,15 @@ document.getElementById("booking-list").addEventListener("click", (e) => {
 function openQrModal(booking) {
   const root = document.getElementById("modal-root");
   root.innerHTML = `
-    <div class="modal-overlay" id="modal-overlay">
-      <div class="modal-box">
-        <h2>QR 티켓 (${booking.date} · ${booking.people}명)</h2>
-        <div class="qr-preview"><canvas id="qr-canvas"></canvas></div>
-        <div class="modal-close-row"><button class="btn btn-small" id="btn-close">닫기</button></div>
+    <div class="pt-modal-overlay" id="modal-overlay">
+      <div class="pt-modal-box">
+        <h3>QR 티켓 (${booking.date} · ${booking.people}명)</h3>
+        <div class="pt-qr-frame"><canvas id="qr-canvas"></canvas></div>
+        <button class="pt-btn pt-btn-secondary" id="btn-close">닫기</button>
       </div>
     </div>
   `;
-  QRCode.toCanvas(document.getElementById("qr-canvas"), booking.qrToken, { width: 220 });
+  QRCode.toCanvas(document.getElementById("qr-canvas"), booking.qrToken, { width: 200 });
   document.getElementById("btn-close").addEventListener("click", () => { root.innerHTML = ""; });
   document.getElementById("modal-overlay").addEventListener("click", (e) => {
     if (e.target.id === "modal-overlay") root.innerHTML = "";
@@ -177,18 +185,18 @@ document.getElementById("booking-form").addEventListener("submit", async (e) => 
   const msgEl = document.getElementById("booking-message");
   msgEl.innerHTML = "";
 
-  const tourType = document.getElementById("b-tour").value;
+  const tourType = selectedTour;
   const date = document.getElementById("b-date").value;
   const people = Number(document.getElementById("b-people").value);
   const label = document.getElementById("b-label").value.trim();
   const totalPrice = updateEstimate();
 
   if (!date || !people || people < 1 || !label) {
-    msgEl.innerHTML = `<p class="portal-message error">모든 항목을 입력해주세요.</p>`;
+    msgEl.innerHTML = `<p class="pt-msg error">모든 항목을 입력해주세요.</p>`;
     return;
   }
   if (!currentAgency || currentAgency.depositBalance < totalPrice) {
-    msgEl.innerHTML = `<p class="portal-message error">예치금 잔액이 부족합니다 (필요: ${fmtPeso(totalPrice)}).</p>`;
+    msgEl.innerHTML = `<p class="pt-msg error">예치금 잔액이 부족합니다 (필요: ${fmtPeso(totalPrice)}).</p>`;
     return;
   }
 
@@ -230,12 +238,12 @@ document.getElementById("booking-form").addEventListener("submit", async (e) => 
       createdBy: currentUid
     });
 
-    msgEl.innerHTML = `<p class="portal-message success">예약이 확정되었습니다.</p>`;
+    msgEl.innerHTML = `<p class="pt-msg success">예약이 확정되었습니다.</p>`;
     e.target.reset();
     document.getElementById("b-people").value = 1;
     updateEstimate();
   } catch (err) {
     console.error("Booking failed:", err);
-    msgEl.innerHTML = `<p class="portal-message error">예약에 실패했습니다. 잔액을 다시 확인해주세요.</p>`;
+    msgEl.innerHTML = `<p class="pt-msg error">예약에 실패했습니다. 잔액을 다시 확인해주세요.</p>`;
   }
 });
