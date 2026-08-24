@@ -78,17 +78,18 @@
                 <button type="button" class="pt-pill" data-tour="F">패스트트랙</button>
                 <button type="button" class="pt-pill active" data-tour="R">레귤러 고래상어투어</button>
                 <button type="button" class="pt-pill" data-tour="T">고래상어 티켓만</button>
+                <button type="button" class="pt-pill" data-tour="HG">단독 호핑투어</button>
               </div>
               <input type="hidden" id="b-tour" value="R" />
             </div>
-            <div class="pt-field">
+            <div class="pt-field" id="addon-field">
               <label>추가 옵션</label>
               <div class="pt-pill-row" id="addon-pills">
                 <button type="button" class="pt-pill pt-pill-checkbox" data-addon="H">☐ 호핑투어</button>
                 <button type="button" class="pt-pill pt-pill-checkbox" data-addon="L">☐ 랜드투어</button>
               </div>
             </div>
-            <div class="pt-field">
+            <div class="pt-field" id="nationality-field">
               <label>고객 유형</label>
               <div class="pt-pill-row" id="nationality-pills">
                 <button type="button" class="pt-pill active" data-nationality="PH">현지인</button>
@@ -99,7 +100,7 @@
               <input type="hidden" id="b-nationality" value="PH" />
             </div>
             <div class="pt-field"><label>투어일</label><input class="pt-input" type="date" id="b-date" required /></div>
-            <div class="pt-row">
+            <div class="pt-row" id="individual-guests-field">
               <div class="pt-field">
                 <label>성인</label>
                 <div class="pt-stepper">
@@ -115,6 +116,15 @@
                   <span class="pt-stepper-value" id="b-children-display">0</span>
                   <button type="button" class="pt-stepper-btn" data-step="child" data-delta="1">+</button>
                 </div>
+              </div>
+            </div>
+            <div class="pt-field" id="group-guests-field" style="display:none;">
+              <label>GUESTS (단독 호핑투어 그룹 인원 — 티켓 할인 포함가)</label>
+              <div class="pt-pill-row" id="group-size-pills">
+                <button type="button" class="pt-pill" data-size="10">10 pax · ₱25,000</button>
+                <button type="button" class="pt-pill" data-size="20">20 pax · ₱30,000</button>
+                <button type="button" class="pt-pill" data-size="30">30 pax · ₱40,000</button>
+                <button type="button" class="pt-pill" data-size="40">40 pax · ₱45,000</button>
               </div>
             </div>
             <div class="pt-field">
@@ -185,6 +195,6 @@
 
 <div id="modal-root"></div>
 
-<script type="module" src="js/agency-portal.js?v=11"></script>
+<script type="module" src="js/agency-portal.js?v=12"></script>
 </body>
 </html>

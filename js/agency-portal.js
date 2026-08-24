@@ -36,11 +36,14 @@ const NET_PRICES = {
   F: { PH: 3000, FOREIGN: 3150 },
   R: { PH: 2300, FOREIGN: 2600 },
   T: { PH: 1620, FOREIGN: 1920 }, // TODO: 확정 net rate 필요 (임시로 published rate, 번들 아닐 때)
-  H: { PH: BUNDLE_TICKET_PRICE.PH + ADDON_PRICE.H, FOREIGN: BUNDLE_TICKET_PRICE.FOREIGN + ADDON_PRICE.H },
-  L: { PH: BUNDLE_TICKET_PRICE.PH + ADDON_PRICE.L, FOREIGN: BUNDLE_TICKET_PRICE.FOREIGN + ADDON_PRICE.L },
 };
-const TOUR_NAMES = { VF: "VIP 패스트트랙", F: "패스트트랙", R: "레귤러 고래상어투어", T: "고래상어 티켓만", H: "호핑투어", L: "랜드투어" };
-const TOUR_SHORT = { VF: "VIP FT", F: "FAST", R: "REGULAR", T: "TICKET", H: "HOPPING", L: "LAND" };
+// "단독 호핑투어(HG)"는 인당 단가가 아니라 그룹 인원 구간별 고정 총액입니다
+// (2026-08-24 전달받은 값) — 이미 할인 티켓이 포함된 올인클루시브 가격이라
+// 국적/추가상품 구분 없이 이 표에 있는 4개 구간(10/20/30/40명) 중에서만
+// 선택합니다.
+const GROUP_PRICES = { 10: 25000, 20: 30000, 30: 40000, 40: 45000 };
+const TOUR_NAMES = { VF: "VIP 패스트트랙", F: "패스트트랙", R: "레귤러 고래상어투어", T: "고래상어 티켓만", H: "호핑투어", L: "랜드투어", HG: "단독 호핑투어" };
+const TOUR_SHORT = { VF: "VIP FT", F: "FAST", R: "REGULAR", T: "TICKET", H: "HOPPING", L: "LAND", HG: "HOPPING(단독)" };
 const STATUS_LABEL = { confirmed: "CONFIRMED", pending: "PENDING" };
 
 // 고객 유형은 4개(현지인/중국인/한국인/외국인)로 보여주지만, 실제 가격은
@@ -59,6 +62,7 @@ let selectedNationality = "PH";
 let selectedPay = "deposit";
 let adultCount = 2;
 let childCount = 0;
+let selectedGroupSize = null;
 let reservationsCache = new Map();
 let txCache = new Map();
 
@@ -186,10 +190,26 @@ function pricePerPersonFor(tour, addons, nationality) {
 }
 
 function updateEstimate() {
-  const people = adultCount + childCount;
-  const total = pricePerPersonFor(selectedTour, selectedAddons, selectedNationality) * people;
+  let total;
+  if (selectedTour === "HG") {
+    total = selectedGroupSize ? GROUP_PRICES[selectedGroupSize] : 0;
+  } else {
+    const people = adultCount + childCount;
+    total = pricePerPersonFor(selectedTour, selectedAddons, selectedNationality) * people;
+  }
   document.getElementById("b-total").textContent = fmtPeso(total);
   return total;
+}
+
+// "단독 호핑투어(HG)"를 고르면 인당 입력(성인/아동/추가옵션/고객유형) 대신
+// 그룹 인원 구간 선택으로 화면이 바뀝니다 — 이미 국적/추가상품 구분 없는
+// 올인클루시브 총액이라 그 필드들은 의미가 없어서 숨깁니다.
+function toggleTourFields() {
+  const isGroup = selectedTour === "HG";
+  document.getElementById("individual-guests-field").style.display = isGroup ? "none" : "flex";
+  document.getElementById("group-guests-field").style.display = isGroup ? "block" : "none";
+  document.getElementById("addon-field").style.display = isGroup ? "none" : "block";
+  document.getElementById("nationality-field").style.display = isGroup ? "none" : "block";
 }
 
 document.getElementById("tour-pills").addEventListener("click", (e) => {
@@ -198,6 +218,15 @@ document.getElementById("tour-pills").addEventListener("click", (e) => {
   selectedTour = btn.dataset.tour;
   document.getElementById("b-tour").value = selectedTour;
   document.querySelectorAll("#tour-pills .pt-pill").forEach(p => p.classList.toggle("active", p === btn));
+  toggleTourFields();
+  updateEstimate();
+});
+
+document.getElementById("group-size-pills").addEventListener("click", (e) => {
+  const btn = e.target.closest(".pt-pill");
+  if (!btn) return;
+  selectedGroupSize = Number(btn.dataset.size);
+  document.querySelectorAll("#group-size-pills .pt-pill").forEach(p => p.classList.toggle("active", p === btn));
   updateEstimate();
 });
 
@@ -251,15 +280,16 @@ document.getElementById("booking-form").addEventListener("submit", async (e) => 
   msgEl.innerHTML = "";
 
   const tourType = selectedTour;
+  const isGroup = tourType === "HG";
   const paymentMethod = selectedPay;
   const date = document.getElementById("b-date").value;
-  const people = adultCount + childCount;
+  const people = isGroup ? (selectedGroupSize || 0) : (adultCount + childCount);
   // 그룹명을 직접 입력받지 않고, 에이전시명 + 날짜로 자동으로 채웁니다
   // (개별 고객 정보 없이 "이 에이전시가 이 날짜에 몇 명" 만 있으면 충분).
   const label = `${currentAgency?.name || "Agency"} ${date}`;
   const totalPrice = updateEstimate();
 
-  if (!date || people < 1) {
+  if (!date || people < 1 || (isGroup && !selectedGroupSize)) {
     msgEl.innerHTML = `<p class="pt-msg error">모든 항목을 입력해주세요.</p>`;
     return;
   }
@@ -271,15 +301,15 @@ document.getElementById("booking-form").addEventListener("submit", async (e) => 
   try {
     const reservationRef = await addDoc(collection(db, "reservations"), {
       tourType,
-      addons: [...selectedAddons],
+      addons: isGroup ? [] : [...selectedAddons],
       date,
       people,
-      adults: adultCount,
-      children: childCount,
+      adults: isGroup ? people : adultCount,
+      children: isGroup ? 0 : childCount,
       name: label,
       email: auth.currentUser.email,
-      nationality: selectedNationality,
-      pricePerPerson: pricePerPersonFor(tourType, selectedAddons, selectedNationality),
+      nationality: isGroup ? "ALL" : selectedNationality,
+      pricePerPerson: isGroup ? Math.round(totalPrice / people) : pricePerPersonFor(tourType, selectedAddons, selectedNationality),
       totalPrice,
       currency: "PHP",
       status: paymentMethod === "deposit" ? "confirmed" : "pending",
@@ -322,6 +352,8 @@ document.getElementById("booking-form").addEventListener("submit", async (e) => 
     childCount = 0;
     document.getElementById("b-adults-display").textContent = adultCount;
     document.getElementById("b-children-display").textContent = childCount;
+    selectedGroupSize = null;
+    document.querySelectorAll("#group-size-pills .pt-pill").forEach(p => p.classList.remove("active"));
     updateEstimate();
     setTimeout(() => switchView("dashboard"), 900);
   } catch (err) {
@@ -361,7 +393,7 @@ function bookingRowHtml(id, b) {
       <div>
         <div class="pt-booking-code">${bookingCode(id)}</div>
         <div class="pt-booking-main">${b.date} · ${TOUR_SHORT[b.tourType] || b.tourType}${addonLabel(b.addons)}</div>
-        <div class="pt-booking-sub">${b.name} · 성인${b.adults ?? b.people}${b.children ? ` · 아동${b.children}` : ""} · ${fmtPeso(b.totalPrice)} · ${b.paymentMethod === "cash_office" ? "Cash @ Office" : "Deposit"}</div>
+        <div class="pt-booking-sub">${b.name} · ${b.tourType === "HG" ? `${b.people}명 그룹` : `성인${b.adults ?? b.people}${b.children ? ` · 아동${b.children}` : ""}`} · ${fmtPeso(b.totalPrice)} · ${b.paymentMethod === "cash_office" ? "Cash @ Office" : "Deposit"}</div>
         ${badgeFor(b)}
       </div>
       <button class="pt-btn pt-btn-ghost" data-action="qr" data-id="${id}">QR 보기</button>
