@@ -10,13 +10,13 @@ import { sendVoucherEmail } from "../voucherEmail";
 const TOUR_LABEL = { PH: "Local (Philippine)", FOREIGN: "Foreigner" };
 
 // reservation.html과 동일한 3가지 결제 방법: GCash(온라인 선결제) /
-// On-Site(투어 당일 미팅 장소에서 현금) / Boracation OfficePay(투어 전
+// On-Site(투어 당일 미팅 장소에서 현금) / Boracaysean OfficePay(투어 전
 // 사무실 방문 결제) — 뒤 둘은 둘 다 "미결제 상태로 예약"이지만 장소/시점이
 // 달라서 별도 옵션으로 구분합니다.
 const PAYMENT_OPTIONS = [
   { key: "gcash", title: "GCash", desc: "Pay online now" },
   { key: "onsite", title: "Pay On-Site", desc: "Cash at the meeting point on tour day" },
-  { key: "office", title: "Boracation OfficePay", desc: "Visit our office to pay before the tour" },
+  { key: "office", title: "Boracaysean OfficePay", desc: "Visit our office to pay before the tour" },
 ];
 
 // Step 2/2 — 앞 화면(BookingScreen)에서 받은 정보를 리뷰하고, 결제 방법을
