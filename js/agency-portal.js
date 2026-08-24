@@ -118,6 +118,7 @@ onAuthStateChanged(auth, async (user) => {
   loginView.style.display = "none";
   portalView.style.display = "flex";
   const name = snap.data().name;
+  document.getElementById("header-brand").textContent = `🐋 ${name}`;
   document.getElementById("agency-name-title").textContent = name;
   document.getElementById("greeting-name").textContent = name;
   listenAgency();
