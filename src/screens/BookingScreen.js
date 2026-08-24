@@ -1,16 +1,19 @@
 import { useState, useMemo } from "react";
 import {
-  View, Text, StyleSheet, ScrollView, TextInput, Pressable, ActivityIndicator, Alert, Platform, Modal,
+  View, Text, StyleSheet, ScrollView, TextInput, Pressable, Platform, Modal,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "../firebaseConfig";
-import { PRICES, TOURS } from "../prices";
+import { TOURS } from "../prices";
 import { colors, fonts } from "../theme";
-import { getExpoPushToken } from "../notifications";
 
 const MEETING_TIMES = ["07:30", "09:00"];
 
+// 웹 reservation.html과 동일하게, 픽업/미팅 장소는 선택지 없이 고정입니다.
+const PICKUP_LOCATION = "Jollibee Main Road";
+
+// Step 1/2 — 투어 정보/예약자 정보 입력. 다음 단계(Payment 화면)에서
+// 리뷰 + 결제 확인 + 실제 예약 생성을 처리합니다 (reservation.html의
+// 위저드처럼 정보 입력과 결제 확인을 분리).
 export default function BookingScreen({ route, navigation }) {
   const { tourType, initialDate, initialPeople, initialNationality } = route.params;
   const tour = TOURS.find((t) => t.code === tourType);
@@ -22,11 +25,7 @@ export default function BookingScreen({ route, navigation }) {
   const [email, setEmail] = useState("");
   const [emergencyContact, setEmergencyContact] = useState("");
   const [meetingTime, setMeetingTime] = useState(tourType === "F" || tourType === "VF" ? "07:30" : MEETING_TIMES[0]);
-  const [submitting, setSubmitting] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
-
-  // 웹 reservation.html과 동일하게, 픽업/미팅 장소는 선택지 없이 고정입니다.
-  const PICKUP_LOCATION = "Jollibee Main Road";
 
   function onPickDateAndroid(event, selectedDate) {
     setShowDatePicker(false);
@@ -43,53 +42,24 @@ export default function BookingScreen({ route, navigation }) {
   const showMeeting = tourType === "R" || tourType === "F" || tourType === "VF";
 
   const peopleNum = Number(people) || 0;
-  const pricePerPerson = PRICES[nationality]?.[tourType] || 0;
-  const totalPrice = pricePerPerson * peopleNum;
 
-  const canSubmit = useMemo(
-    () => date.trim() && peopleNum > 0 && name.trim() && email.trim() && !submitting,
-    [date, peopleNum, name, email, submitting]
+  const canContinue = useMemo(
+    () => date.trim() && peopleNum > 0 && name.trim() && email.trim(),
+    [date, peopleNum, name, email]
   );
 
-  async function handleSubmit() {
-    if (!canSubmit) {
-      Alert.alert("Missing info", "Please fill in all required fields.");
-      return;
-    }
-    setSubmitting(true);
-    try {
-      // 관리자가 예약을 확정할 때 이 기기로 바로 알림을 보낼 수 있게, 지금
-      // 이 기기의 푸시 토큰을 예약 문서에 같이 저장해둡니다. Expo Go거나
-      // 권한이 없으면 null이라 그냥 필드가 빠집니다.
-      const pushToken = await getExpoPushToken();
-
-      const reservation = {
-        tourType,
-        date: date.trim(),
-        people: peopleNum,
-        pickup: PICKUP_LOCATION,
-        meetingTime: showMeeting ? meetingTime : "",
-        nationality,
-        pricePerPerson,
-        totalPrice,
-        currency: "PHP",
-        name: name.trim(),
-        email: email.trim(),
-        emergencyContact: emergencyContact.trim(),
-        status: "pending",
-        paymentStatus: "unpaid",
-        paymentMethod: "보라카이션 오피스페이",
-        createdAt: serverTimestamp(),
-        ...(pushToken ? { pushToken } : {}),
-      };
-      await addDoc(collection(db, "reservations"), reservation);
-      navigation.replace("Confirmation", { name: name.trim(), date: date.trim(), qrToken: null });
-    } catch (err) {
-      console.error(err);
-      Alert.alert("Error", "Something went wrong creating your reservation. Please try again.");
-    } finally {
-      setSubmitting(false);
-    }
+  function handleNext() {
+    navigation.navigate("Payment", {
+      tourType,
+      date: date.trim(),
+      people: peopleNum,
+      nationality,
+      meetingTime: showMeeting ? meetingTime : "",
+      pickup: PICKUP_LOCATION,
+      name: name.trim(),
+      email: email.trim(),
+      emergencyContact: emergencyContact.trim(),
+    });
   }
 
   return (
@@ -170,17 +140,8 @@ export default function BookingScreen({ route, navigation }) {
       <Field label="Email *"><TextInput style={styles.input} keyboardType="email-address" autoCapitalize="none" value={email} onChangeText={setEmail} /></Field>
       <Field label="Emergency Contact"><TextInput style={styles.input} value={emergencyContact} onChangeText={setEmergencyContact} /></Field>
 
-      <Field label="Payment">
-        <Text style={styles.fixedNote}>Pay on-site (Boracation OfficePay) when you arrive on the tour day.</Text>
-      </Field>
-
-      <View style={styles.totalBox}>
-        <Text style={styles.totalLabel}>TOTAL</Text>
-        <Text style={styles.totalValue}>₱{totalPrice.toLocaleString()}</Text>
-      </View>
-
-      <Pressable style={[styles.submitBtn, !canSubmit && styles.submitBtnDisabled]} onPress={handleSubmit} disabled={!canSubmit}>
-        {submitting ? <ActivityIndicator color="#fff" /> : <Text style={styles.submitBtnText}>CONFIRM RESERVATION</Text>}
+      <Pressable style={[styles.submitBtn, !canContinue && styles.submitBtnDisabled]} onPress={handleNext} disabled={!canContinue}>
+        <Text style={styles.submitBtnText}>NEXT: REVIEW & PAY</Text>
       </Pressable>
     </ScrollView>
   );
@@ -218,13 +179,6 @@ const styles = StyleSheet.create({
   pillText: { fontSize: 13, fontFamily: fonts.bodyMedium, color: colors.heading },
   pillTextActive: { color: colors.white },
   fixedNote: { fontSize: 14, fontFamily: fonts.body, color: colors.muted },
-  totalBox: {
-    flexDirection: "row", justifyContent: "space-between", alignItems: "center",
-    backgroundColor: colors.white, borderRadius: 16, borderWidth: 1, borderColor: colors.border,
-    padding: 18, marginBottom: 20, marginTop: 6,
-  },
-  totalLabel: { fontSize: 12, fontFamily: fonts.heading, color: colors.brandBlue, letterSpacing: 1 },
-  totalValue: { fontSize: 22, fontFamily: fonts.headingBlack, color: colors.heading },
   submitBtn: { backgroundColor: colors.brandBlue, borderRadius: 999, paddingVertical: 16, alignItems: "center" },
   submitBtnDisabled: { opacity: 0.5 },
   submitBtnText: { color: colors.white, fontSize: 14, fontFamily: fonts.heading, letterSpacing: 0.5 },
