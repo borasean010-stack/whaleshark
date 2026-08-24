@@ -85,19 +85,30 @@ service cloud.firestore {
         request.resource.data.status == 'pending' &&
         !request.resource.data.keys().hasAny(['bookedBy', 'agencyId']);
 
-      // 여행사 파트너(B2B) 예약 — 본인 agencyId로만, 그 순간 잔액이 충분할
-      // 때만 생성 가능 (동시에 여러 건을 매우 빠르게 연달아 만드는 극단적인
+      // 여행사 파트너(B2B) 예약 — 본인 agencyId로만 생성 가능.
+      // paymentMethod가 'deposit'이면 그 순간 잔액이 충분해야 하고 상태는
+      // 바로 'confirmed' (동시에 여러 건을 매우 빠르게 연달아 만드는 극단적인
       // 경쟁 상태까지는 막지 못하지만, 실수/단순 위조는 막습니다).
+      // 'cash_office'면 잔액 확인 없이 만들 수 있고 상태는 'pending'(리버타드
+      // 현장에서 현금 결제 예정 — depositApplied는 애초에 차감할 일이 없으니
+      // 항상 true로 시작합니다).
       allow create: if isSignedIn() &&
         request.resource.data.bookedBy == 'agency' &&
         request.resource.data.agencyId == request.auth.uid &&
-        request.resource.data.keys().hasAll(['tourType', 'date', 'people', 'name', 'email', 'status', 'totalPrice', 'qrToken', 'checkedIn', 'depositApplied']) &&
+        request.resource.data.keys().hasAll(['tourType', 'date', 'people', 'name', 'email', 'status', 'totalPrice', 'qrToken', 'checkedIn', 'depositApplied', 'paymentMethod']) &&
         request.resource.data.totalPrice is number &&
         request.resource.data.totalPrice > 0 &&
-        request.resource.data.status == 'confirmed' &&
         request.resource.data.checkedIn == false &&
-        request.resource.data.depositApplied == false &&
-        agencyRef(request.auth.uid).depositBalance >= request.resource.data.totalPrice;
+        (
+          (request.resource.data.paymentMethod == 'deposit' &&
+           request.resource.data.status == 'confirmed' &&
+           request.resource.data.depositApplied == false &&
+           agencyRef(request.auth.uid).depositBalance >= request.resource.data.totalPrice)
+          ||
+          (request.resource.data.paymentMethod == 'cash_office' &&
+           request.resource.data.status == 'pending' &&
+           request.resource.data.depositApplied == true)
+        );
 
       // 파트너가 잔액 차감(위 agencies 업데이트)과 한 트랜잭션으로 자기
       // 예약의 depositApplied를 true로 확정 — 같은 예약이 두 번 차감되는 것을

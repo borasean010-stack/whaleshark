@@ -1,7 +1,6 @@
 /* css/portal.css — 에이전시/파트너 포털 전용 스타일.
    웹사이트 본 브랜드(css/style.css, css/main.css)의 색/폰트를 그대로 가져와
-   씁니다 — 예전 ticket-portal.css의 어두운 "ocean" 테마 대신, 사이트 본편과
-   같은 밝은 톤 + Outfit 폰트 + 브랜드 블루(#1C529E)/오렌지(#F97316). */
+   씁니다 — 사이드바가 있는 실제 B2B 대시보드 레이아웃. */
 
 :root {
   --pt-bg: #F8FAFC;
@@ -16,6 +15,7 @@
   --pt-vip: #a855f7;
   --pt-fast: #f97316;
   --pt-reg: #3b82f6;
+  --pt-amber: #f59e0b;
 }
 
 * { box-sizing: border-box; }
@@ -28,86 +28,25 @@ body.pt-body {
   color: var(--pt-ink);
 }
 
-.pt-shell { max-width: 720px; margin: 0 auto; padding: 32px 20px 80px; }
-
-/* ── Top bar ── */
-.pt-topbar {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 28px;
-}
-.pt-brand { display: flex; align-items: center; gap: 10px; }
-.pt-brand-name { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.05rem; color: var(--pt-ink); }
-.pt-agency-name { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.5rem; margin: 4px 0 2px; }
-.pt-subtitle { color: var(--pt-muted); font-size: 0.85rem; margin: 0; }
-.pt-signout {
-  background: transparent; border: 1px solid var(--pt-border); color: var(--pt-muted);
-  padding: 8px 16px; border-radius: 99px; font-size: 0.8rem; font-weight: 600; cursor: pointer;
-  font-family: inherit;
-}
-.pt-signout:hover { border-color: var(--pt-blue); color: var(--pt-blue); }
-
-/* ── Login card ── */
-.pt-login-wrap { max-width: 420px; margin: 80px auto; }
+/* ── Login ── */
+.pt-login-wrap { max-width: 420px; margin: 80px auto; padding: 0 20px; }
 .pt-card {
   background: var(--pt-white);
   border-radius: 20px;
   padding: 28px 24px;
   box-shadow: 0 9px 27px rgba(28,82,158,0.08);
   border: 1px solid rgba(28,82,158,0.04);
-  margin-bottom: 20px;
 }
-.pt-card h2 {
-  font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.3rem; margin: 0 0 8px;
-}
+.pt-card h2 { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.3rem; margin: 0 0 8px; }
 .pt-card > p { color: var(--pt-muted); font-size: 0.85rem; margin: 0 0 20px; }
-
-/* ── Balance ── */
-.pt-balance-card {
-  background: linear-gradient(135deg, var(--pt-blue) 0%, var(--pt-blue-hover) 100%);
-  border-radius: 20px;
-  padding: 24px 26px;
-  margin-bottom: 24px;
-  box-shadow: 0 12px 30px rgba(28,82,158,0.25);
-}
-.pt-balance-label {
-  color: rgba(255,255,255,0.75); font-size: 0.72rem; font-weight: 800;
-  letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; display: block;
-}
-.pt-balance-value { color: #fff; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 2.1rem; }
-
-/* ── Form ── */
 .pt-form { display: grid; gap: 16px; }
 .pt-field { display: flex; flex-direction: column; gap: 8px; }
-.pt-field label {
-  font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pt-blue);
-}
-.pt-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; }
+.pt-field label { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pt-blue); }
 .pt-input {
   border: 1px solid var(--pt-border); border-radius: 12px; padding: 12px 14px;
   font-size: 0.95rem; font-family: inherit; color: var(--pt-ink); background: var(--pt-white);
 }
 .pt-input:focus { outline: none; border-color: var(--pt-blue); }
-
-/* Tour type pills */
-.pt-pill-row { display: flex; flex-wrap: wrap; gap: 8px; }
-.pt-pill {
-  border: 1px solid var(--pt-border); border-radius: 99px; padding: 9px 14px;
-  font-size: 0.82rem; font-weight: 700; color: var(--pt-ink); background: var(--pt-white);
-  cursor: pointer; font-family: inherit;
-}
-.pt-pill.active { color: #fff; border-color: transparent; }
-.pt-pill[data-tour="VF"].active { background: var(--pt-vip); }
-.pt-pill[data-tour="F"].active { background: var(--pt-fast); }
-.pt-pill[data-tour="R"].active { background: var(--pt-reg); }
-.pt-pill[data-tour="T"].active { background: var(--pt-green); }
-
-.pt-total-row {
-  display: flex; justify-content: space-between; align-items: center;
-  background: var(--pt-bg); border-radius: 12px; padding: 14px 16px;
-}
-.pt-total-label { font-size: 0.8rem; color: var(--pt-muted); font-weight: 700; }
-.pt-total-value { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.4rem; }
-
 .pt-btn {
   display: inline-block; text-align: center; border: none; border-radius: 99px;
   padding: 14px 24px; font-weight: 800; font-size: 0.9rem; letter-spacing: 0.02em;
@@ -122,26 +61,126 @@ body.pt-body {
   box-shadow: none; padding: 9px 16px; font-size: 0.78rem;
 }
 .pt-btn-ghost:hover { border-color: var(--pt-blue); background: rgba(28,82,158,0.04); }
-
 .pt-msg { font-size: 0.82rem; font-weight: 600; padding: 10px 14px; border-radius: 10px; margin: 0; }
 .pt-msg.error { background: rgba(239,68,68,0.08); color: #dc2626; }
 .pt-msg.success { background: rgba(16,185,129,0.08); color: #059669; }
 
-/* ── Bookings list ── */
+/* ── App shell ── */
+.pt-app { min-height: 100vh; display: flex; flex-direction: column; }
+
+.pt-header {
+  height: 64px; background: var(--pt-white); border-bottom: 1px solid var(--pt-border);
+  display: flex; align-items: center; justify-content: space-between; padding: 0 24px;
+  position: sticky; top: 0; z-index: 10;
+}
+.pt-header-brand { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 1rem; letter-spacing: 0.02em; color: var(--pt-ink); }
+.pt-header-account {
+  display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.9rem;
+  color: var(--pt-ink); background: var(--pt-bg); padding: 8px 14px; border-radius: 99px;
+}
+.pt-header-account .caret { color: var(--pt-muted); font-size: 0.7rem; }
+
+.pt-layout { flex: 1; display: flex; }
+
+.pt-sidebar {
+  width: 220px; flex-shrink: 0; background: var(--pt-white); border-right: 1px solid var(--pt-border);
+  display: flex; flex-direction: column; justify-content: space-between; padding: 20px 12px;
+  position: sticky; top: 64px; height: calc(100vh - 64px);
+}
+.pt-nav { display: flex; flex-direction: column; gap: 2px; }
+.pt-nav-item {
+  display: block; padding: 11px 14px; border-radius: 10px; font-size: 0.88rem; font-weight: 600;
+  color: var(--pt-muted); cursor: pointer; border: none; background: none; text-align: left; width: 100%;
+  font-family: inherit;
+}
+.pt-nav-item:hover { background: var(--pt-bg); color: var(--pt-ink); }
+.pt-nav-item.active { background: rgba(28,82,158,0.08); color: var(--pt-blue); font-weight: 800; }
+.pt-nav-item.pt-nav-cta { color: var(--pt-orange); }
+.pt-nav-divider { height: 1px; background: var(--pt-border); margin: 10px 4px; }
+.pt-sidebar-signout {
+  background: transparent; border: 1px solid var(--pt-border); color: var(--pt-muted);
+  padding: 10px 14px; border-radius: 10px; font-size: 0.82rem; font-weight: 700; cursor: pointer;
+  font-family: inherit; width: 100%;
+}
+.pt-sidebar-signout:hover { border-color: var(--pt-blue); color: var(--pt-blue); }
+
+.pt-main { flex: 1; padding: 32px; max-width: 920px; }
+.pt-view { display: none; }
+.pt-view.active { display: block; }
+
+.pt-greeting { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 1.6rem; margin: 0 0 24px; }
+
+.pt-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.pt-stat-card {
+  background: var(--pt-white); border-radius: 16px; padding: 20px; text-align: left;
+  box-shadow: 0 4px 14px rgba(28,82,158,0.06);
+}
+.pt-stat-card.accent { background: linear-gradient(135deg, var(--pt-blue) 0%, var(--pt-blue-hover) 100%); }
+.pt-stat-card .value { display: block; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 1.7rem; }
+.pt-stat-card.accent .value { color: #fff; }
+.pt-stat-card .label { display: block; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pt-muted); margin-top: 6px; }
+.pt-stat-card.accent .label { color: rgba(255,255,255,0.75); }
+
+.pt-section-title {
+  font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.05rem; margin: 28px 0 14px;
+}
+.pt-section-title:first-child { margin-top: 0; }
+
+/* ── Reservation form ── */
+.pt-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; }
+.pt-pill-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.pt-pill {
+  border: 1px solid var(--pt-border); border-radius: 99px; padding: 9px 14px;
+  font-size: 0.82rem; font-weight: 700; color: var(--pt-ink); background: var(--pt-white);
+  cursor: pointer; font-family: inherit;
+}
+.pt-pill.active { color: #fff; border-color: transparent; }
+.pt-pill[data-tour="VF"].active { background: var(--pt-vip); }
+.pt-pill[data-tour="F"].active { background: var(--pt-fast); }
+.pt-pill[data-tour="R"].active { background: var(--pt-reg); }
+.pt-pill[data-tour="T"].active { background: var(--pt-green); }
+.pt-pill[data-pay].active { background: var(--pt-blue); }
+
+.pt-total-row {
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--pt-bg); border-radius: 12px; padding: 14px 16px;
+}
+.pt-total-label { font-size: 0.8rem; color: var(--pt-muted); font-weight: 700; }
+.pt-total-value { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.4rem; }
+
+/* ── Lists / tables ── */
 .pt-booking-row {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
   background: var(--pt-white); border-radius: 14px; padding: 14px 16px; margin-bottom: 10px;
   box-shadow: 0 4px 14px rgba(28,82,158,0.06);
 }
-.pt-booking-main { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
+.pt-booking-code { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.78rem; color: var(--pt-muted); }
+.pt-booking-main { font-weight: 700; font-size: 0.9rem; margin: 3px 0 4px; }
 .pt-booking-sub { color: var(--pt-muted); font-size: 0.78rem; margin-bottom: 6px; }
 .pt-badge {
-  display: inline-block; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.03em;
+  display: inline-block; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.03em;
   padding: 4px 10px; border-radius: 99px; text-transform: uppercase;
 }
-.pt-badge-issued { background: rgba(28,82,158,0.1); color: var(--pt-blue); }
+.pt-badge-confirmed { background: rgba(28,82,158,0.1); color: var(--pt-blue); }
+.pt-badge-pending { background: rgba(245,158,11,0.12); color: var(--pt-amber); }
 .pt-badge-used { background: rgba(16,185,129,0.1); color: #059669; }
 .pt-empty { color: var(--pt-muted); font-size: 0.85rem; text-align: center; padding: 20px 0; }
+
+.pt-tx-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  background: var(--pt-white); border-radius: 14px; padding: 14px 16px; margin-bottom: 10px;
+  box-shadow: 0 4px 14px rgba(28,82,158,0.06);
+}
+.pt-tx-note { font-weight: 700; font-size: 0.85rem; margin-bottom: 3px; }
+.pt-tx-date { color: var(--pt-muted); font-size: 0.75rem; }
+.pt-tx-amount { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1rem; }
+.pt-tx-amount.positive { color: #059669; }
+.pt-tx-amount.negative { color: var(--pt-ink); }
+
+.pt-placeholder {
+  background: var(--pt-white); border-radius: 16px; padding: 48px 24px; text-align: center;
+  color: var(--pt-muted); font-size: 0.9rem;
+}
 
 /* ── Modal ── */
 .pt-modal-overlay {
@@ -155,7 +194,14 @@ body.pt-body {
 .pt-modal-box h3 { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.05rem; margin: 0 0 18px; }
 .pt-qr-frame { background: #fff; border: 1px solid var(--pt-border); border-radius: 14px; padding: 16px; display: inline-block; margin-bottom: 18px; }
 
-@media (max-width: 520px) {
-  .pt-topbar { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .pt-booking-row { flex-direction: column; align-items: stretch; }
+@media (max-width: 760px) {
+  .pt-layout { flex-direction: column; }
+  .pt-sidebar {
+    width: 100%; height: auto; position: static; flex-direction: row; overflow-x: auto;
+    padding: 10px 12px; border-right: none; border-bottom: 1px solid var(--pt-border);
+  }
+  .pt-nav { flex-direction: row; }
+  .pt-nav-divider { display: none; }
+  .pt-sidebar-signout { width: auto; white-space: nowrap; }
+  .pt-main { padding: 20px; }
 }
