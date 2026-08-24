@@ -91,6 +91,19 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // 앱을 열어본 사람 전체가 대상인 방송 알림(고래상어 출몰 소식 등)을 위한
+    // Expo 푸시 토큰 저장소. 문서 ID를 토큰 값 자체로 써서, 로그인 여부와
+    // 상관없이(직접 고객은 로그인 안 함) 누구나 자기 토큰만 등록/갱신할 수
+    // 있게 하고, 읽기(=실제 발송)는 admin.html에서만 하도록 막습니다.
+    match /pushTokens/{token} {
+      allow read: if isAdmin();
+      allow create, update: if
+        request.resource.data.token == token &&
+        request.resource.data.token is string &&
+        request.resource.data.keys().hasOnly(['token', 'platform', 'updatedAt']);
+      allow delete: if false;
+    }
+
     match /reservations/{reservationId} {
       // 직접 고객 예약(reservation.html) — 기존 그대로.
       allow create: if

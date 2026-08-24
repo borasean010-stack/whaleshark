@@ -107,22 +107,9 @@ form.addEventListener("submit", async (e) => {
     submitBtn.textContent = t.approving;
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // 2. Add payment info
-    // ko: on-site payment only, no choice shown. en: guest picks GCash (paid
-    // now) or Pay On-Site when they submit.
-    if (lang === 'ko') {
-      reservation.paymentStatus = 'unpaid';
-      reservation.paymentMethod = '현장결제';
-    } else {
-      const paymentChoice = formData.get("paymentChoice") || "gcash";
-      if (paymentChoice === "gcash") {
-        reservation.paymentStatus = 'paid';
-        reservation.paymentMethod = 'GCash';
-      } else {
-        reservation.paymentStatus = 'unpaid';
-        reservation.paymentMethod = 'On-Site';
-      }
-    }
+    // 2. Add payment info — on-site payment only, no online prepay choice.
+    reservation.paymentStatus = 'unpaid';
+    reservation.paymentMethod = lang === 'ko' ? '현장결제' : 'On-Site';
 
     // 3. Save to Firebase
     await addDoc(collection(db, "reservations"), reservation);

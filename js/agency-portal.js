@@ -303,6 +303,7 @@ document.getElementById("tour-pills").addEventListener("click", (e) => {
   document.getElementById("b-tour").value = selectedTour;
   document.querySelectorAll("#tour-pills .pt-pill").forEach(p => p.classList.toggle("active", p === btn));
   document.getElementById("ticket-only-note").style.display = selectedTour === "T" ? "block" : "none";
+  document.getElementById("pickup-note").style.display = selectedTour === "T" ? "none" : "block";
   updateMeetingTime();
   updateEstimate();
 });
