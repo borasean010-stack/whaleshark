@@ -54,8 +54,11 @@ function priceTierFor(nationality) {
 let currentUid = null;
 let currentAgency = null;
 let selectedTour = "R";
+let selectedAddons = new Set();
 let selectedNationality = "PH";
 let selectedPay = "deposit";
+let adultCount = 2;
+let childCount = 0;
 let reservationsCache = new Map();
 let txCache = new Map();
 
@@ -169,9 +172,22 @@ function listenAgency() {
 }
 
 // ── New reservation form ────────────────────────────────────────
+// 추가 옵션(호핑/랜드)이 하나라도 체크된 상태로 "고래상어 티켓만"을 고르면,
+// 티켓 자체가 번들 할인가(BUNDLE_TICKET_PRICE)로 바뀌고 거기에 체크된
+// 추가상품 금액이 더해집니다. 다른 투어(VIP/패스트트랙/레귤러)에 추가상품을
+// 붙이면 그 투어의 정가 위에 추가상품 금액만 그대로 더해집니다.
+function pricePerPersonFor(tour, addons, nationality) {
+  const tier = priceTierFor(nationality);
+  const hasAddon = addons.size > 0;
+  const base = (tour === "T" && hasAddon) ? BUNDLE_TICKET_PRICE[tier] : (NET_PRICES[tour]?.[tier] || 0);
+  let addonSum = 0;
+  addons.forEach(a => { addonSum += ADDON_PRICE[a] || 0; });
+  return base + addonSum;
+}
+
 function updateEstimate() {
-  const people = Number(document.getElementById("b-people").value) || 0;
-  const total = (NET_PRICES[selectedTour]?.[priceTierFor(selectedNationality)] || 0) * people;
+  const people = adultCount + childCount;
+  const total = pricePerPersonFor(selectedTour, selectedAddons, selectedNationality) * people;
   document.getElementById("b-total").textContent = fmtPeso(total);
   return total;
 }
@@ -182,6 +198,17 @@ document.getElementById("tour-pills").addEventListener("click", (e) => {
   selectedTour = btn.dataset.tour;
   document.getElementById("b-tour").value = selectedTour;
   document.querySelectorAll("#tour-pills .pt-pill").forEach(p => p.classList.toggle("active", p === btn));
+  updateEstimate();
+});
+
+document.getElementById("addon-pills").addEventListener("click", (e) => {
+  const btn = e.target.closest(".pt-pill");
+  if (!btn) return;
+  const addon = btn.dataset.addon;
+  const isOn = !btn.classList.contains("active");
+  btn.classList.toggle("active", isOn);
+  btn.textContent = (isOn ? "☑ " : "☐ ") + (addon === "H" ? "호핑투어" : "랜드투어");
+  if (isOn) selectedAddons.add(addon); else selectedAddons.delete(addon);
   updateEstimate();
 });
 
@@ -202,7 +229,21 @@ document.getElementById("pay-pills").addEventListener("click", (e) => {
   document.querySelectorAll("#pay-pills .pt-pill").forEach(p => p.classList.toggle("active", p === btn));
 });
 
-document.getElementById("b-people").addEventListener("input", updateEstimate);
+// 성인/아동 인원 스테퍼. 아동 전용 요금은 아직 안 주셔서 일단 성인과 같은
+// 단가로 계산합니다 — 확정되면 pricePerPersonFor에 아동 분기를 추가하면 됩니다.
+document.querySelectorAll(".pt-stepper-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const delta = Number(btn.dataset.delta);
+    if (btn.dataset.step === "adult") {
+      adultCount = Math.max(1, adultCount + delta);
+      document.getElementById("b-adults-display").textContent = adultCount;
+    } else {
+      childCount = Math.max(0, childCount + delta);
+      document.getElementById("b-children-display").textContent = childCount;
+    }
+    updateEstimate();
+  });
+});
 
 document.getElementById("booking-form").addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -212,13 +253,13 @@ document.getElementById("booking-form").addEventListener("submit", async (e) => 
   const tourType = selectedTour;
   const paymentMethod = selectedPay;
   const date = document.getElementById("b-date").value;
-  const people = Number(document.getElementById("b-people").value);
+  const people = adultCount + childCount;
   // 그룹명을 직접 입력받지 않고, 에이전시명 + 날짜로 자동으로 채웁니다
   // (개별 고객 정보 없이 "이 에이전시가 이 날짜에 몇 명" 만 있으면 충분).
   const label = `${currentAgency?.name || "Agency"} ${date}`;
   const totalPrice = updateEstimate();
 
-  if (!date || !people || people < 1) {
+  if (!date || people < 1) {
     msgEl.innerHTML = `<p class="pt-msg error">모든 항목을 입력해주세요.</p>`;
     return;
   }
@@ -230,12 +271,15 @@ document.getElementById("booking-form").addEventListener("submit", async (e) => 
   try {
     const reservationRef = await addDoc(collection(db, "reservations"), {
       tourType,
+      addons: [...selectedAddons],
       date,
       people,
+      adults: adultCount,
+      children: childCount,
       name: label,
       email: auth.currentUser.email,
       nationality: selectedNationality,
-      pricePerPerson: NET_PRICES[tourType]?.[priceTierFor(selectedNationality)],
+      pricePerPerson: pricePerPersonFor(tourType, selectedAddons, selectedNationality),
       totalPrice,
       currency: "PHP",
       status: paymentMethod === "deposit" ? "confirmed" : "pending",
@@ -269,7 +313,15 @@ document.getElementById("booking-form").addEventListener("submit", async (e) => 
 
     msgEl.innerHTML = `<p class="pt-msg success">예약이 ${paymentMethod === "deposit" ? "확정" : "등록(현장결제 예정)"}되었습니다.</p>`;
     e.target.reset();
-    document.getElementById("b-people").value = 1;
+    selectedAddons.clear();
+    document.querySelectorAll("#addon-pills .pt-pill").forEach(btn => {
+      btn.classList.remove("active");
+      btn.textContent = "☐ " + (btn.dataset.addon === "H" ? "호핑투어" : "랜드투어");
+    });
+    adultCount = 2;
+    childCount = 0;
+    document.getElementById("b-adults-display").textContent = adultCount;
+    document.getElementById("b-children-display").textContent = childCount;
     updateEstimate();
     setTimeout(() => switchView("dashboard"), 900);
   } catch (err) {
@@ -298,13 +350,18 @@ function badgeFor(b) {
   return `<span class="pt-badge pt-badge-confirmed">${STATUS_LABEL[b.status] || b.status}</span>`;
 }
 
+function addonLabel(addons) {
+  if (!addons || !addons.length) return "";
+  return " + " + addons.map(a => (a === "H" ? "호핑" : "랜드")).join("/");
+}
+
 function bookingRowHtml(id, b) {
   return `
     <div class="pt-booking-row">
       <div>
         <div class="pt-booking-code">${bookingCode(id)}</div>
-        <div class="pt-booking-main">${b.date} · ${TOUR_SHORT[b.tourType] || b.tourType}</div>
-        <div class="pt-booking-sub">${b.name} · ${b.people}명 · ${fmtPeso(b.totalPrice)} · ${b.paymentMethod === "cash_office" ? "Cash @ Office" : "Deposit"}</div>
+        <div class="pt-booking-main">${b.date} · ${TOUR_SHORT[b.tourType] || b.tourType}${addonLabel(b.addons)}</div>
+        <div class="pt-booking-sub">${b.name} · 성인${b.adults ?? b.people}${b.children ? ` · 아동${b.children}` : ""} · ${fmtPeso(b.totalPrice)} · ${b.paymentMethod === "cash_office" ? "Cash @ Office" : "Deposit"}</div>
         ${badgeFor(b)}
       </div>
       <button class="pt-btn pt-btn-ghost" data-action="qr" data-id="${id}">QR 보기</button>

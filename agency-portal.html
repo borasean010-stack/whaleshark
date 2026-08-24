@@ -11,7 +11,7 @@
 <title>에이전시 포털 — Boracay Whale Shark</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/portal.css?v=4" />
+<link rel="stylesheet" href="css/portal.css?v=5" />
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
 </head>
 <body class="pt-body">
@@ -78,10 +78,15 @@
                 <button type="button" class="pt-pill" data-tour="F">패스트트랙</button>
                 <button type="button" class="pt-pill active" data-tour="R">레귤러 고래상어투어</button>
                 <button type="button" class="pt-pill" data-tour="T">고래상어 티켓만</button>
-                <button type="button" class="pt-pill" data-tour="H">호핑투어</button>
-                <button type="button" class="pt-pill" data-tour="L">랜드투어</button>
               </div>
               <input type="hidden" id="b-tour" value="R" />
+            </div>
+            <div class="pt-field">
+              <label>추가 옵션</label>
+              <div class="pt-pill-row" id="addon-pills">
+                <button type="button" class="pt-pill pt-pill-checkbox" data-addon="H">☐ 호핑투어</button>
+                <button type="button" class="pt-pill pt-pill-checkbox" data-addon="L">☐ 랜드투어</button>
+              </div>
             </div>
             <div class="pt-field">
               <label>고객 유형</label>
@@ -93,9 +98,24 @@
               </div>
               <input type="hidden" id="b-nationality" value="PH" />
             </div>
+            <div class="pt-field"><label>투어일</label><input class="pt-input" type="date" id="b-date" required /></div>
             <div class="pt-row">
-              <div class="pt-field"><label>투어일</label><input class="pt-input" type="date" id="b-date" required /></div>
-              <div class="pt-field"><label>인원</label><input class="pt-input" type="number" id="b-people" min="1" step="1" value="1" required /></div>
+              <div class="pt-field">
+                <label>성인</label>
+                <div class="pt-stepper">
+                  <button type="button" class="pt-stepper-btn" data-step="adult" data-delta="-1">−</button>
+                  <span class="pt-stepper-value" id="b-adults-display">2</span>
+                  <button type="button" class="pt-stepper-btn" data-step="adult" data-delta="1">+</button>
+                </div>
+              </div>
+              <div class="pt-field">
+                <label>아동</label>
+                <div class="pt-stepper">
+                  <button type="button" class="pt-stepper-btn" data-step="child" data-delta="-1">−</button>
+                  <span class="pt-stepper-value" id="b-children-display">0</span>
+                  <button type="button" class="pt-stepper-btn" data-step="child" data-delta="1">+</button>
+                </div>
+              </div>
             </div>
             <div class="pt-field">
               <label>Payment Method</label>
@@ -165,6 +185,6 @@
 
 <div id="modal-root"></div>
 
-<script type="module" src="js/agency-portal.js?v=10"></script>
+<script type="module" src="js/agency-portal.js?v=11"></script>
 </body>
 </html>

@@ -143,6 +143,19 @@ body.pt-body {
 .pt-pill[data-tour="L"].active { background: #64748b; }
 .pt-pill[data-pay].active { background: var(--pt-blue); }
 .pt-pill[data-nationality].active { background: var(--pt-blue); }
+.pt-pill-checkbox.active { background: var(--pt-amber); }
+
+.pt-stepper {
+  display: inline-flex; align-items: center; gap: 14px;
+  border: 1px solid var(--pt-border); border-radius: 999px; padding: 6px 8px; width: fit-content;
+}
+.pt-stepper-btn {
+  width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--pt-bg);
+  color: var(--pt-blue); font-size: 1.1rem; font-weight: 800; cursor: pointer; font-family: inherit;
+  display: flex; align-items: center; justify-content: center; line-height: 1;
+}
+.pt-stepper-btn:hover { background: rgba(28,82,158,0.12); }
+.pt-stepper-value { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1rem; min-width: 20px; text-align: center; }
 
 .pt-total-row {
   display: flex; justify-content: space-between; align-items: center;
