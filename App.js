@@ -16,6 +16,7 @@ import DetailScreen from "./src/screens/DetailScreen";
 import BookingScreen from "./src/screens/BookingScreen";
 import ConfirmationScreen from "./src/screens/ConfirmationScreen";
 import PartnerScreen from "./src/screens/PartnerScreen";
+import AdminScreen from "./src/screens/AdminScreen";
 import { colors, fonts } from "./src/theme";
 import { registerPushToken } from "./src/notifications";
 import { db } from "./src/firebaseConfig";
@@ -64,6 +65,7 @@ export default function App() {
         <Stack.Screen name="Booking" component={BookingScreen} options={{ title: "Book Your Tour" }} />
         <Stack.Screen name="Confirmation" component={ConfirmationScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Partner" component={PartnerScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Admin" component={AdminScreen} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

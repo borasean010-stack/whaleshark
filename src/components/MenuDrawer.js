@@ -35,6 +35,7 @@ export default function MenuDrawer({ navigation, onNavigateTours }) {
             />
             <MenuItem label="Book Now" onPress={() => go(() => navigation.navigate("Booking", { tourType: "F" }))} />
             <MenuItem label="Partner" onPress={() => go(() => navigation.navigate("Partner"))} />
+            <MenuItem label="Admin" onPress={() => go(() => navigation.navigate("Admin"))} />
 
             <Pressable style={styles.closeBtn} onPress={() => setOpen(false)}>
               <Text style={styles.closeBtnText}>CLOSE</Text>
