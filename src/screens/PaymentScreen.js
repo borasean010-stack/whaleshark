@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Pressable, ActivityIndicator, Alert } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable, ActivityIndicator, Alert, Image } from "react-native";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { PRICES, TOURS } from "../prices";
@@ -9,16 +9,25 @@ import { sendVoucherEmail } from "../voucherEmail";
 
 const TOUR_LABEL = { PH: "Local (Philippine)", FOREIGN: "Foreigner" };
 
-// Step 2/2 — 앞 화면(BookingScreen)에서 받은 정보를 리뷰하고, 여기서 실제
-// 예약 문서를 생성합니다. 지금은 결제수단이 현장지불(보라카이션 오피스페이)
-// 하나뿐이라 선택지는 없지만, 리뷰 + 확정을 별도 화면으로 분리해 웹
-// 위저드의 "Payment" 단계와 같은 흐름을 유지합니다.
+// reservation.html과 동일한 3가지 결제 방법: GCash(온라인 선결제) /
+// On-Site(투어 당일 미팅 장소에서 현금) / Boracation OfficePay(투어 전
+// 사무실 방문 결제) — 뒤 둘은 둘 다 "미결제 상태로 예약"이지만 장소/시점이
+// 달라서 별도 옵션으로 구분합니다.
+const PAYMENT_OPTIONS = [
+  { key: "gcash", title: "GCash", desc: "Pay online now" },
+  { key: "onsite", title: "Pay On-Site", desc: "Cash at the meeting point on tour day" },
+  { key: "office", title: "Boracation OfficePay", desc: "Visit our office to pay before the tour" },
+];
+
+// Step 2/2 — 앞 화면(BookingScreen)에서 받은 정보를 리뷰하고, 결제 방법을
+// 고른 뒤 여기서 실제 예약 문서를 생성합니다.
 export default function PaymentScreen({ route, navigation }) {
   const {
     tourType, date, people, nationality, meetingTime, pickup, name, email, emergencyContact,
   } = route.params;
   const tour = TOURS.find((t) => t.code === tourType);
 
+  const [paymentChoice, setPaymentChoice] = useState("gcash");
   const [submitting, setSubmitting] = useState(false);
 
   const pricePerPerson = PRICES[nationality]?.[tourType] || 0;
@@ -31,6 +40,15 @@ export default function PaymentScreen({ route, navigation }) {
       // 이 기기의 푸시 토큰을 예약 문서에 같이 저장해둡니다. Expo Go거나
       // 권한이 없으면 null이라 그냥 필드가 빠집니다.
       const pushToken = await getExpoPushToken();
+
+      let paymentStatus = "unpaid";
+      let paymentMethod = "On-Site";
+      if (paymentChoice === "gcash") {
+        paymentStatus = "paid";
+        paymentMethod = "GCash";
+      } else if (paymentChoice === "office") {
+        paymentMethod = "보라카이션 오피스페이";
+      }
 
       const reservation = {
         tourType,
@@ -46,8 +64,8 @@ export default function PaymentScreen({ route, navigation }) {
         email,
         emergencyContact,
         status: "pending",
-        paymentStatus: "unpaid",
-        paymentMethod: "보라카이션 오피스페이",
+        paymentStatus,
+        paymentMethod,
         createdAt: serverTimestamp(),
         ...(pushToken ? { pushToken } : {}),
       };
@@ -81,9 +99,27 @@ export default function PaymentScreen({ route, navigation }) {
         {emergencyContact ? <ReviewRow label="Emergency Contact" value={emergencyContact} /> : null}
       </View>
 
-      <Field label="Payment">
-        <Text style={styles.fixedNote}>Pay on-site (Boracation OfficePay) when you arrive on the tour day.</Text>
+      <Field label="How would you like to pay? *">
+        <View style={{ gap: 8 }}>
+          {PAYMENT_OPTIONS.map((opt) => (
+            <Pressable
+              key={opt.key}
+              style={[styles.payOption, paymentChoice === opt.key && styles.payOptionActive]}
+              onPress={() => setPaymentChoice(opt.key)}
+            >
+              <Text style={[styles.payOptionTitle, paymentChoice === opt.key && styles.payOptionTitleActive]}>{opt.title}</Text>
+              <Text style={styles.payOptionDesc}>{opt.desc}</Text>
+            </Pressable>
+          ))}
+        </View>
       </Field>
+
+      {paymentChoice === "gcash" && (
+        <View style={styles.gcashBox}>
+          <Image source={require("../../assets/images/gcash-qr.jpg")} style={styles.gcashQr} resizeMode="contain" />
+          <Text style={styles.gcashCaption}>GCash: +63 967 466 7943</Text>
+        </View>
+      )}
 
       <View style={styles.totalBox}>
         <Text style={styles.totalLabel}>TOTAL</Text>
@@ -135,11 +171,21 @@ const styles = StyleSheet.create({
   reviewRow: { flexDirection: "row", justifyContent: "space-between", gap: 12 },
   reviewLabel: { fontSize: 12, fontFamily: fonts.body, color: colors.muted, flexShrink: 0 },
   reviewValue: { fontSize: 13, fontFamily: fonts.bodyMedium, color: colors.heading, flexShrink: 1, textAlign: "right" },
-  fixedNote: { fontSize: 14, fontFamily: fonts.body, color: colors.muted },
+  payOption: {
+    borderWidth: 1, borderColor: colors.border, backgroundColor: colors.white,
+    borderRadius: 12, paddingHorizontal: 14, paddingVertical: 12,
+  },
+  payOptionActive: { borderColor: colors.brandBlue, backgroundColor: "rgba(28,82,158,0.06)" },
+  payOptionTitle: { fontSize: 14, fontFamily: fonts.bodyMedium, color: colors.heading, marginBottom: 2 },
+  payOptionTitleActive: { color: colors.brandBlue },
+  payOptionDesc: { fontSize: 12, fontFamily: fonts.body, color: colors.muted },
+  gcashBox: { alignItems: "center", backgroundColor: colors.white, borderRadius: 16, borderWidth: 1, borderColor: colors.border, padding: 18, marginTop: 14 },
+  gcashQr: { width: 180, height: 180, marginBottom: 10 },
+  gcashCaption: { fontFamily: fonts.bodyMedium, fontSize: 12, color: colors.heading },
   totalBox: {
     flexDirection: "row", justifyContent: "space-between", alignItems: "center",
     backgroundColor: colors.white, borderRadius: 16, borderWidth: 1, borderColor: colors.border,
-    padding: 18, marginBottom: 20, marginTop: 6,
+    padding: 18, marginBottom: 20, marginTop: 14,
   },
   totalLabel: { fontSize: 12, fontFamily: fonts.heading, color: colors.brandBlue, letterSpacing: 1 },
   totalValue: { fontSize: 22, fontFamily: fonts.headingBlack, color: colors.heading },
