@@ -105,23 +105,11 @@ function fmtDate(ts) {
 const loginView = document.getElementById("login-view");
 const portalView = document.getElementById("portal-view");
 
-// ── TEMPORARY: 테스트용 자동 로그인 ──────────────────────────────
-// 실제 파트너 계정 없이 로그인 화면 없이 바로 대시보드부터 테스트할 수
-// 있도록, 로그인 폼을 건너뛰고 테스트 에이전시 계정으로 자동 로그인합니다.
-// 실제 파트너에게 링크를 공유하기 전에 이 블록은 반드시 지워야 합니다.
-const TEST_AUTO_LOGIN = { email: "test-agency@boracaywhaleshark.com", password: "TestAgency2026!" };
-
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    loginView.style.display = "none";
+    loginView.style.display = "block";
     portalView.style.display = "none";
     currentUid = null;
-    try {
-      await signInWithEmailAndPassword(auth, TEST_AUTO_LOGIN.email, TEST_AUTO_LOGIN.password);
-    } catch (err) {
-      console.error("Test auto-login failed:", err);
-      loginView.style.display = "block";
-    }
     return;
   }
   currentUid = user.uid;
