@@ -10,6 +10,7 @@ import {
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 import { db, auth } from "../firebaseConfig";
 import { randomToken } from "../qrToken";
+import { getExpoPushToken } from "../notifications";
 import { colors, fonts } from "../theme";
 import {
   PUBLISHED_PRICES, NET_PRICES, BUNDLE_TICKET_PRICE, ADDON_PRICE, GROUP_PRICES,
@@ -291,6 +292,7 @@ export default function PartnerScreen() {
       const label = `${agency?.name || "Agency"} ${date}`;
       const addonDatesUsed = {};
       selectedAddons.forEach((a) => { addonDatesUsed[a] = addonDates[a]; });
+      const pushToken = await getExpoPushToken();
 
       const reservationRef = await addDoc(collection(db, "reservations"), {
         tourType: isGroup ? "HG" : tourType,
@@ -316,6 +318,7 @@ export default function PartnerScreen() {
         depositApplied: paymentMethod === "deposit" ? false : true,
         paymentMethod,
         createdAt: serverTimestamp(),
+        ...(pushToken ? { pushToken } : {}),
       });
 
       if (paymentMethod === "deposit") {
@@ -494,7 +497,9 @@ export default function PartnerScreen() {
             {selectedTour === "T" && !isGroup && (
               <Text style={styles.noteRed}>Entrance fee / Environmental Fee / Transportation 포함</Text>
             )}
-            <Text style={styles.fixedNote}>픽업/미팅 장소: 메인로드 졸리비 (Jollibee Main Road)</Text>
+            {selectedTour !== "T" && (
+              <Text style={styles.fixedNote}>픽업/미팅 장소: 메인로드 졸리비 (Jollibee Main Road)</Text>
+            )}
 
             {showMeeting && (
               <>

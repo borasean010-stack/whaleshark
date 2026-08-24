@@ -17,7 +17,8 @@ import BookingScreen from "./src/screens/BookingScreen";
 import ConfirmationScreen from "./src/screens/ConfirmationScreen";
 import PartnerScreen from "./src/screens/PartnerScreen";
 import { colors, fonts } from "./src/theme";
-import { sendTestLocalNotification } from "./src/notifications";
+import { registerPushToken } from "./src/notifications";
+import { db } from "./src/firebaseConfig";
 
 const Stack = createNativeStackNavigator();
 
@@ -29,10 +30,10 @@ export default function App() {
     Outfit_900Black,
   });
 
-  // TEMPORARY: 푸시 알림 테스트용 — 앱 켜지면 바로 로컬 알림 하나를 띄웁니다.
-  // 확인 끝나면 이 useEffect는 지워도 됩니다.
+  // 앱을 열어본 모든 사람이 고래상어 출몰 알림 등 방송성 푸시를 받을 수
+  // 있도록, 앱 시작 시 (권한이 있으면) 조용히 푸시 토큰을 등록해둡니다.
   useEffect(() => {
-    sendTestLocalNotification();
+    registerPushToken(db);
   }, []);
 
   if (!fontsLoaded) {

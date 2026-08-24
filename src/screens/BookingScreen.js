@@ -7,7 +7,7 @@ import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { PRICES, TOURS } from "../prices";
 import { colors, fonts } from "../theme";
-import { randomToken } from "../qrToken";
+import { getExpoPushToken } from "../notifications";
 
 const MEETING_TIMES = ["07:30", "09:00"];
 
@@ -21,11 +21,12 @@ export default function BookingScreen({ route, navigation }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [emergencyContact, setEmergencyContact] = useState("");
-  const [pickup, setPickup] = useState("");
   const [meetingTime, setMeetingTime] = useState(tourType === "F" || tourType === "VF" ? "07:30" : MEETING_TIMES[0]);
-  const [paymentChoice, setPaymentChoice] = useState("gcash");
   const [submitting, setSubmitting] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
+
+  // 웹 reservation.html과 동일하게, 픽업/미팅 장소는 선택지 없이 고정입니다.
+  const PICKUP_LOCATION = "Jollibee Main Road";
 
   function onPickDateAndroid(event, selectedDate) {
     setShowDatePicker(false);
@@ -46,8 +47,8 @@ export default function BookingScreen({ route, navigation }) {
   const totalPrice = pricePerPerson * peopleNum;
 
   const canSubmit = useMemo(
-    () => date.trim() && peopleNum > 0 && name.trim() && email.trim() && pickup.trim() && !submitting,
-    [date, peopleNum, name, email, pickup, submitting]
+    () => date.trim() && peopleNum > 0 && name.trim() && email.trim() && !submitting,
+    [date, peopleNum, name, email, submitting]
   );
 
   async function handleSubmit() {
@@ -57,16 +58,16 @@ export default function BookingScreen({ route, navigation }) {
     }
     setSubmitting(true);
     try {
-      const isPaid = paymentChoice === "gcash";
-      // "티켓 온니(T)"는 결제가 완료되는 즉시 QR을 발급합니다 — 리버타드에서
-      // checkin.html로 그 자리에서 스캔해 입장을 확인할 수 있습니다.
-      const qrToken = tourType === "T" && isPaid ? randomToken("WHALE") : null;
+      // 관리자가 예약을 확정할 때 이 기기로 바로 알림을 보낼 수 있게, 지금
+      // 이 기기의 푸시 토큰을 예약 문서에 같이 저장해둡니다. Expo Go거나
+      // 권한이 없으면 null이라 그냥 필드가 빠집니다.
+      const pushToken = await getExpoPushToken();
 
       const reservation = {
         tourType,
         date: date.trim(),
         people: peopleNum,
-        pickup: pickup.trim(),
+        pickup: PICKUP_LOCATION,
         meetingTime: showMeeting ? meetingTime : "",
         nationality,
         pricePerPerson,
@@ -76,13 +77,13 @@ export default function BookingScreen({ route, navigation }) {
         email: email.trim(),
         emergencyContact: emergencyContact.trim(),
         status: "pending",
-        paymentStatus: isPaid ? "paid" : "unpaid",
-        paymentMethod: isPaid ? "GCash" : "보라카이션 오피스페이",
+        paymentStatus: "unpaid",
+        paymentMethod: "보라카이션 오피스페이",
         createdAt: serverTimestamp(),
-        ...(qrToken ? { qrToken, checkedIn: false } : {}),
+        ...(pushToken ? { pushToken } : {}),
       };
       await addDoc(collection(db, "reservations"), reservation);
-      navigation.replace("Confirmation", { name: name.trim(), date: date.trim(), qrToken });
+      navigation.replace("Confirmation", { name: name.trim(), date: date.trim(), qrToken: null });
     } catch (err) {
       console.error(err);
       Alert.alert("Error", "Something went wrong creating your reservation. Please try again.");
@@ -158,23 +159,19 @@ export default function BookingScreen({ route, navigation }) {
           ) : (
             <Text style={styles.fixedNote}>07:30 AM (fixed)</Text>
           )}
+          <Text style={[styles.fixedNote, { marginTop: 8 }]}>Meeting Point: {PICKUP_LOCATION}, Boracay</Text>
         </Field>
       )}
 
-      <Field label="Pickup Location *"><TextInput style={styles.input} placeholder="Hotel name / area" placeholderTextColor="#94a3b8" value={pickup} onChangeText={setPickup} /></Field>
+      <Field label="Pickup Location">
+        <View style={styles.input}><Text style={styles.inputText}>{PICKUP_LOCATION}</Text></View>
+      </Field>
       <Field label="Full Name *"><TextInput style={styles.input} value={name} onChangeText={setName} /></Field>
       <Field label="Email *"><TextInput style={styles.input} keyboardType="email-address" autoCapitalize="none" value={email} onChangeText={setEmail} /></Field>
       <Field label="Emergency Contact"><TextInput style={styles.input} value={emergencyContact} onChangeText={setEmergencyContact} /></Field>
 
       <Field label="Payment">
-        <View style={styles.row}>
-          <Pressable style={[styles.pill, paymentChoice === "gcash" && styles.pillActive]} onPress={() => setPaymentChoice("gcash")}>
-            <Text style={[styles.pillText, paymentChoice === "gcash" && styles.pillTextActive]}>GCash (pay now)</Text>
-          </Pressable>
-          <Pressable style={[styles.pill, paymentChoice === "onsite" && styles.pillActive]} onPress={() => setPaymentChoice("onsite")}>
-            <Text style={[styles.pillText, paymentChoice === "onsite" && styles.pillTextActive]}>Boracation OfficePay</Text>
-          </Pressable>
-        </View>
+        <Text style={styles.fixedNote}>Pay on-site (Boracation OfficePay) when you arrive on the tour day.</Text>
       </Field>
 
       <View style={styles.totalBox}>
