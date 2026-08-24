@@ -25,6 +25,12 @@
       "expo-font",
       "@react-native-community/datetimepicker",
       "expo-notifications"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "64150805-a14a-4d44-a6da-ff68e80ab214"
+      }
+    },
+    "owner": "boracaywhalesharkph"
   }
 }

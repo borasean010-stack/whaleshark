@@ -24,8 +24,8 @@ export async function sendTestLocalNotification() {
   if (!granted) return false;
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: "🐋 Boracation",
-      body: "테스트 알림이에요 — 로컬 알림이 정상적으로 뜨는지 확인용입니다.",
+      title: "🐋 Boracay Whale Shark",
+      body: "Boracay Whale Shark meron! 🦈",
     },
     trigger: null,
   });
