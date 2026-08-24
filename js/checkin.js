@@ -131,7 +131,7 @@ function renderAlreadyUsed(id, data) {
 function renderNotPaid(data) {
   titleEl.textContent = "결제 확인 필요";
   bodyEl.innerHTML = `
-    <p class="check-status-line warn">아직 현장 결제(Cash @ Office)가 확인되지 않았습니다.</p>
+    <p class="check-status-line warn">아직 현장 결제(보라카이션 오피스페이)가 확인되지 않았습니다.</p>
     ${field("투어", TOUR_NAMES[data.tourType] || data.tourType)}
     ${field("투어일", data.date)}
     ${field("인원", data.people + "명")}

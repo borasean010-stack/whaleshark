@@ -384,7 +384,7 @@ document.getElementById("booking-form").addEventListener("submit", async (e) => 
     return;
   }
   if (paymentMethod === "deposit" && (!currentAgency || currentAgency.depositBalance < totalPrice)) {
-    msgEl.innerHTML = `<p class="pt-msg error">예치금 잔액이 부족합니다 (필요: ${fmtPeso(totalPrice)}). Cash @ Office를 선택하거나 입금을 요청하세요.</p>`;
+    msgEl.innerHTML = `<p class="pt-msg error">예치금 잔액이 부족합니다 (필요: ${fmtPeso(totalPrice)}). 보라카이션 오피스페이를 선택하거나 입금을 요청하세요.</p>`;
     return;
   }
 
@@ -499,7 +499,7 @@ function bookingRowHtml(id, b) {
       <div>
         <div class="pt-booking-code">${bookingCode(id)}</div>
         <div class="pt-booking-main">${b.date} · ${TOUR_SHORT[b.tourType] || b.tourType}${addonLabel(b.addons)}</div>
-        <div class="pt-booking-sub">${b.name} · ${b.tourType === "HG" ? `${b.people}명 그룹` : `성인${b.adults ?? b.people}${b.children ? ` · 아동${b.children}` : ""}`} · ${fmtPeso(b.totalPrice)} · ${b.paymentMethod === "cash_office" ? "Cash @ Office" : "Deposit"}</div>
+        <div class="pt-booking-sub">${b.name} · ${b.tourType === "HG" ? `${b.people}명 그룹` : `성인${b.adults ?? b.people}${b.children ? ` · 아동${b.children}` : ""}`} · ${fmtPeso(b.totalPrice)} · ${b.paymentMethod === "cash_office" ? "보라카이션 오피스페이" : "Deposit"}</div>
         ${badgeFor(b)}
       </div>
       ${qrAction}

@@ -166,7 +166,7 @@ async function loadReservations() {
           <div class="badge ${data.paymentStatus === 'paid' ? 'confirmed' : 'pending'}">
             ${data.paymentStatus === 'paid' ? '결제완료' : '미결제'}
           </div>
-          ${data.paymentMethod ? `<div style="font-size:0.75rem; color:#10b981; margin-top:4px;">${data.paymentMethod}</div>` : ''}
+          ${data.paymentMethod ? `<div style="font-size:0.75rem; color:#10b981; margin-top:4px;">${paymentMethodLabel(data.paymentMethod)}</div>` : ''}
           ${data.balanceDue ? `<div style="font-size:0.75rem; color:var(--admin-warning); margin-top:4px; font-weight:700;">잔금 ${data.balanceDue.toLocaleString()} 현장결제</div>` : ''}
         </td>
         <td>${data.people}명</td>
@@ -230,13 +230,17 @@ function fmtVoucherMoney(amount, currency) {
   return `${currency || 'PHP'} ${n.toLocaleString('en-US')}`;
 }
 
+function paymentMethodLabel(method) {
+  return method === 'cash_office' ? '보라카이션 오피스페이' : method;
+}
+
 function buildVoucherPreviewHtml(data) {
   const tour = VOUCHER_TOURS[data.tourType] || VOUCHER_TOURS.F;
   const isPaid = data.paymentStatus === 'paid';
 
   const confirmBox = isPaid
-    ? `<div style="margin-top:20px;padding:14px 16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;font-size:13px;color:#166534;font-weight:700;">✓ 결제 완료 (${data.paymentMethod || '-'})</div>`
-    : `<div style="margin-top:20px;padding:14px 16px;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;font-size:13px;color:#92400e;font-weight:700;">현장결제 예정 (${data.paymentMethod || '현장결제'})</div>`;
+    ? `<div style="margin-top:20px;padding:14px 16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;font-size:13px;color:#166534;font-weight:700;">✓ 결제 완료 (${paymentMethodLabel(data.paymentMethod) || '-'})</div>`
+    : `<div style="margin-top:20px;padding:14px 16px;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;font-size:13px;color:#92400e;font-weight:700;">현장결제 예정 (${paymentMethodLabel(data.paymentMethod) || '현장결제'})</div>`;
 
   const meetingBlock = data.meetingTime
     ? `<div style="margin-top:20px;padding:14px 16px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;">
