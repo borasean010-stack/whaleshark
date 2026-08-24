@@ -74,6 +74,23 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    // 파트너가 예치금 입금을 신청하면(실제 송금은 별도로, 계좌이체 등)
+    // 관리자가 admin.html에서 확인하고 승인/거절합니다. 승인 시 admin.html이
+    // agencies의 depositBalance를 직접 올리고 agencyTransactions에
+    // type:'topup' 기록을 남깁니다 (이미 admin.html이 하던 방식 그대로).
+    match /depositRequests/{reqId} {
+      allow read: if isAdmin() || (isSignedIn() && resource.data.agencyId == request.auth.uid);
+      allow create: if isSignedIn() &&
+        request.resource.data.agencyId == request.auth.uid &&
+        request.resource.data.status == 'pending' &&
+        request.resource.data.amount is number &&
+        request.resource.data.amount > 0;
+      allow update: if isAdmin() &&
+        resource.data.status == 'pending' &&
+        request.resource.data.status in ['approved', 'rejected'];
+      allow delete: if false;
+    }
+
     match /reservations/{reservationId} {
       // 직접 고객 예약(reservation.html) — 기존 그대로.
       allow create: if

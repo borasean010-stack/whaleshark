@@ -91,7 +91,7 @@ document.querySelectorAll(".nav-item[data-view]").forEach(navEl => {
     const view = navEl.dataset.view;
     document.getElementById("view-reservations").style.display = view === "reservations" ? "block" : "none";
     document.getElementById("view-agencies").style.display = view === "agencies" ? "block" : "none";
-    if (view === "agencies") loadAgencies();
+    if (view === "agencies") { loadAgencies(); loadDepositRequests(); }
   });
 });
 
@@ -473,3 +473,74 @@ document.getElementById("agency-create-form").addEventListener("submit", async (
       : "등록에 실패했습니다.";
   }
 });
+
+// =====================================================================
+// 입금 신청 승인/거절 — 파트너(에이전시)가 agency-portal.html에서 신청하면
+// 여기서 확인하고 승인 시 잔액에 반영합니다.
+// =====================================================================
+async function loadDepositRequests() {
+  const tbody = document.getElementById("deposit-request-tbody");
+  tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>로딩 중...</td></tr>";
+  try {
+    const snap = await getDocs(query(collection(db, "depositRequests"), orderBy("requestedAt", "desc")));
+    const rows = [];
+    snap.forEach(docSnap => {
+      const r = docSnap.data();
+      if (r.status !== "pending") return;
+      const requestedDate = r.requestedAt ? r.requestedAt.toDate().toLocaleDateString("ko-KR") : "-";
+      rows.push(`
+        <tr>
+          <td>${requestedDate}</td>
+          <td style="font-weight:600;">${r.agencyName || r.agencyId}</td>
+          <td>${fmtPeso(r.amount)}</td>
+          <td>${r.note || "-"}</td>
+          <td>
+            <button class="action-btn" style="background: var(--admin-success);" data-action="approve" data-id="${docSnap.id}" data-uid="${r.agencyId}" data-amount="${r.amount}">승인</button>
+            <button class="action-btn delete-btn" data-action="reject" data-id="${docSnap.id}">거절</button>
+          </td>
+        </tr>
+      `);
+    });
+    tbody.innerHTML = rows.length
+      ? rows.join("")
+      : "<tr><td colspan='5' style='text-align:center;'>대기 중인 신청이 없습니다.</td></tr>";
+
+    tbody.querySelectorAll("button[data-action='approve']").forEach(btn => {
+      btn.addEventListener("click", () => handleDepositRequest(btn.dataset.id, btn.dataset.uid, Number(btn.dataset.amount), "approved"));
+    });
+    tbody.querySelectorAll("button[data-action='reject']").forEach(btn => {
+      btn.addEventListener("click", () => handleDepositRequest(btn.dataset.id, null, 0, "rejected"));
+    });
+  } catch (err) {
+    console.error("Error loading deposit requests:", err);
+    tbody.innerHTML = "<tr><td colspan='5' style='text-align:center; color:red;'>불러오는 중 오류가 발생했습니다.</td></tr>";
+  }
+}
+
+async function handleDepositRequest(requestId, agencyUid, amount, decision) {
+  if (decision === "approved" && !confirm(`${fmtPeso(amount)} 입금을 승인하고 잔액에 반영할까요?`)) return;
+  if (decision === "rejected" && !confirm("이 입금 신청을 거절할까요?")) return;
+  try {
+    if (decision === "approved") {
+      await updateDoc(doc(db, "agencies", agencyUid), { depositBalance: increment(amount) });
+      await addDoc(collection(db, "agencyTransactions"), {
+        agencyId: agencyUid,
+        type: "topup",
+        amount,
+        note: "관리자 입금 승인",
+        createdAt: serverTimestamp(),
+        createdBy: auth.currentUser.uid
+      });
+    }
+    await updateDoc(doc(db, "depositRequests", requestId), {
+      status: decision,
+      resolvedAt: serverTimestamp(),
+      resolvedBy: auth.currentUser.uid
+    });
+    loadDepositRequests();
+    loadAgencies();
+  } catch (err) {
+    console.error("Error resolving deposit request:", err);
+    alert("처리에 실패했습니다.");
+  }
+}

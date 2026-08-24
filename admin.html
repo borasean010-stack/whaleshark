@@ -141,6 +141,28 @@
             </form>
           </div>
 
+          <div class="table-container" style="margin-bottom: 24px;">
+            <div class="table-header">
+              <h2>입금 신청 대기</h2>
+            </div>
+            <div style="overflow-x: auto;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>신청일</th>
+                    <th>에이전시</th>
+                    <th>금액</th>
+                    <th>메모</th>
+                    <th>관리(Action)</th>
+                  </tr>
+                </thead>
+                <tbody id="deposit-request-tbody">
+                  <!-- JS로 데이터 삽입 -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
           <div class="table-container">
             <div class="table-header">
               <h2>에이전시 목록</h2>
@@ -180,6 +202,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/admin.js?v=1787193926"></script>
+  <script type="module" src="js/admin.js?v=1787193930"></script>
 </body>
 </html>

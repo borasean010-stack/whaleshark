@@ -86,10 +86,6 @@
               <div class="pt-field"><label>인원</label><input class="pt-input" type="number" id="b-people" min="1" step="1" value="1" required /></div>
             </div>
             <div class="pt-field">
-              <label>그룹명 (고객 개인정보 불필요)</label>
-              <input class="pt-input" type="text" id="b-label" placeholder="예: OO여행사 8/25 오전팀" required />
-            </div>
-            <div class="pt-field">
               <label>Payment Method</label>
               <div class="pt-pill-row" id="pay-pills">
                 <button type="button" class="pt-pill active" data-pay="deposit">Deposit</button>
@@ -119,6 +115,23 @@
         <div class="pt-stats-grid">
           <div class="pt-stat-card accent"><span class="value" id="stat-balance-2">-</span><span class="label">Current Balance</span></div>
         </div>
+
+        <div class="pt-card">
+          <h2 style="margin-top:0;">입금 신청</h2>
+          <p style="margin-bottom:16px;">계좌이체 등으로 실제 입금을 완료한 후, 아래에 금액을 신청해주세요. 관리자가 입금 확인 후 잔액에 반영합니다.</p>
+          <form id="deposit-request-form" class="pt-form">
+            <div class="pt-row">
+              <div class="pt-field"><label>입금액 (PHP)</label><input class="pt-input" type="number" id="dr-amount" min="1" step="1" required /></div>
+              <div class="pt-field"><label>메모 (선택)</label><input class="pt-input" type="text" id="dr-note" placeholder="예: 8/24 은행이체" /></div>
+            </div>
+            <div id="deposit-request-message"></div>
+            <button type="submit" class="pt-btn" style="justify-self:start;">입금 신청하기</button>
+          </form>
+        </div>
+
+        <h2 class="pt-section-title">신청 내역</h2>
+        <div id="deposit-request-list"><p class="pt-empty">신청 내역이 없습니다.</p></div>
+
         <h2 class="pt-section-title">Transaction History</h2>
         <div id="tx-list"><p class="pt-empty">거래 내역이 없습니다.</p></div>
       </section>
@@ -143,6 +156,6 @@
 
 <div id="modal-root"></div>
 
-<script type="module" src="js/agency-portal.js?v=4"></script>
+<script type="module" src="js/agency-portal.js?v=5"></script>
 </body>
 </html>

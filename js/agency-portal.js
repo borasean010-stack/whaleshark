@@ -94,6 +94,7 @@ onAuthStateChanged(auth, async (user) => {
   listenAgency();
   listenReservations();
   listenTransactions();
+  listenDepositRequests();
 });
 
 document.getElementById("login-form").addEventListener("submit", async (e) => {
@@ -172,10 +173,12 @@ document.getElementById("booking-form").addEventListener("submit", async (e) => 
   const paymentMethod = selectedPay;
   const date = document.getElementById("b-date").value;
   const people = Number(document.getElementById("b-people").value);
-  const label = document.getElementById("b-label").value.trim();
+  // 그룹명을 직접 입력받지 않고, 에이전시명 + 날짜로 자동으로 채웁니다
+  // (개별 고객 정보 없이 "이 에이전시가 이 날짜에 몇 명" 만 있으면 충분).
+  const label = `${currentAgency?.name || "Agency"} ${date}`;
   const totalPrice = updateEstimate();
 
-  if (!date || !people || people < 1 || !label) {
+  if (!date || !people || people < 1) {
     msgEl.innerHTML = `<p class="pt-msg error">모든 항목을 입력해주세요.</p>`;
     return;
   }
@@ -352,3 +355,74 @@ function renderTxList() {
     </div>
   `).join("");
 }
+
+// ── Deposit top-up requests ─────────────────────────────────────
+// 실제 송금(계좌이체 등)은 이 시스템 밖에서 이루어지고, 여기서는 "이만큼
+// 넣었으니 확인해달라"는 신청만 남깁니다. 관리자가 admin.html에서 승인하면
+// 그때 잔액이 실제로 올라갑니다.
+let depositRequestsCache = new Map();
+const DR_STATUS_LABEL = { pending: "확인중", approved: "승인됨", rejected: "거절됨" };
+const DR_STATUS_CLASS = { pending: "pt-badge-pending", approved: "pt-badge-used", rejected: "pt-badge-confirmed" };
+
+function listenDepositRequests() {
+  onSnapshot(
+    query(collection(db, "depositRequests"), where("agencyId", "==", currentUid)),
+    (snapshot) => {
+      depositRequestsCache = new Map();
+      snapshot.forEach(d => depositRequestsCache.set(d.id, d.data()));
+      renderDepositRequestList();
+    }
+  );
+}
+
+function renderDepositRequestList() {
+  const el = document.getElementById("deposit-request-list");
+  const rows = [...depositRequestsCache.values()].sort((a, b) => (b.requestedAt?.toMillis?.() || 0) - (a.requestedAt?.toMillis?.() || 0));
+  if (!rows.length) {
+    el.innerHTML = `<p class="pt-empty">신청 내역이 없습니다.</p>`;
+    return;
+  }
+  el.innerHTML = rows.map(r => `
+    <div class="pt-tx-row">
+      <div>
+        <div class="pt-tx-note">${r.note || "입금 신청"}</div>
+        <div class="pt-tx-date">${fmtDate(r.requestedAt)}</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span class="pt-tx-amount positive">+${fmtPeso(r.amount)}</span>
+        <span class="pt-badge ${DR_STATUS_CLASS[r.status] || ""}">${DR_STATUS_LABEL[r.status] || r.status}</span>
+      </div>
+    </div>
+  `).join("");
+}
+
+document.getElementById("deposit-request-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const msgEl = document.getElementById("deposit-request-message");
+  msgEl.innerHTML = "";
+  const amount = Number(document.getElementById("dr-amount").value);
+  const note = document.getElementById("dr-note").value.trim();
+
+  if (!amount || amount <= 0) {
+    msgEl.innerHTML = `<p class="pt-msg error">올바른 금액을 입력해주세요.</p>`;
+    return;
+  }
+
+  try {
+    await addDoc(collection(db, "depositRequests"), {
+      agencyId: currentUid,
+      agencyName: currentAgency?.name || "",
+      amount,
+      note,
+      status: "pending",
+      requestedAt: serverTimestamp(),
+      resolvedAt: null,
+      resolvedBy: null
+    });
+    msgEl.innerHTML = `<p class="pt-msg success">입금 신청이 접수되었습니다. 관리자 확인 후 잔액에 반영됩니다.</p>`;
+    e.target.reset();
+  } catch (err) {
+    console.error("Deposit request failed:", err);
+    msgEl.innerHTML = `<p class="pt-msg error">신청에 실패했습니다. 다시 시도해주세요.</p>`;
+  }
+});
