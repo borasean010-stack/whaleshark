@@ -107,9 +107,19 @@ form.addEventListener("submit", async (e) => {
     submitBtn.textContent = t.approving;
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // 2. Add payment info — on-site payment only, no online prepay choice.
-    reservation.paymentStatus = 'unpaid';
-    reservation.paymentMethod = lang === 'ko' ? '현장결제' : 'On-Site';
+    // 2. Add payment info — GCash(온라인 선결제) / 현장결제(투어 당일 미팅
+    // 장소에서 현금) / 보라카이션 오피스페이(투어 전 사무실 방문 결제).
+    const paymentChoice = formData.get("paymentChoice") || "gcash";
+    if (paymentChoice === "gcash") {
+      reservation.paymentStatus = 'paid';
+      reservation.paymentMethod = 'GCash';
+    } else if (paymentChoice === "office") {
+      reservation.paymentStatus = 'unpaid';
+      reservation.paymentMethod = '보라카이션 오피스페이';
+    } else {
+      reservation.paymentStatus = 'unpaid';
+      reservation.paymentMethod = lang === 'ko' ? '현장결제' : 'On-Site';
+    }
 
     // 3. Save to Firebase
     await addDoc(collection(db, "reservations"), reservation);

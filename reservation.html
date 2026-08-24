@@ -247,11 +247,43 @@
         <div class="wizard-panel" data-step="4">
           <h2 data-en="Payment" data-ko="결제">Payment</h2>
 
-          <p class="payment-note" id="payment-note" data-en="Pay on-site when you arrive on the tour day." data-ko="예약을 확정하시면 투어 당일 현장에서 결제하시면 됩니다.">Pay on-site when you arrive on the tour day.</p>
+          <div class="form-group" id="payment-choice-group">
+            <label data-en="How would you like to pay? *" data-ko="결제 방법을 선택해 주세요 *">How would you like to pay? *</label>
+            <div class="payment-type-options">
+              <label class="payment-type-option">
+                <input type="radio" name="paymentChoice" value="gcash" checked>
+                <div class="payment-type-card">
+                  <span class="pt-title" data-en="GCash" data-ko="GCash">GCash</span>
+                  <span class="pt-desc" data-en="Pay online now" data-ko="지금 온라인 결제">Pay online now</span>
+                </div>
+              </label>
+              <label class="payment-type-option">
+                <input type="radio" name="paymentChoice" value="onsite">
+                <div class="payment-type-card">
+                  <span class="pt-title" data-en="Pay On-Site" data-ko="현장결제">Pay On-Site</span>
+                  <span class="pt-desc" data-en="Cash at the meeting point on tour day" data-ko="투어 당일 미팅 장소에서 현금 결제">Cash at the meeting point on tour day</span>
+                </div>
+              </label>
+              <label class="payment-type-option">
+                <input type="radio" name="paymentChoice" value="office">
+                <div class="payment-type-card">
+                  <span class="pt-title" data-en="Boracation OfficePay" data-ko="보라카이션 오피스페이">Boracation OfficePay</span>
+                  <span class="pt-desc" data-en="Visit our office to pay before the tour" data-ko="투어 전 보라카이션 사무실 방문 결제">Visit our office to pay before the tour</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <p class="payment-note" id="payment-note" data-en="Choose GCash to pay online now, or pay in person on-site / at our office." data-ko="GCash로 지금 결제하시거나, 현장 또는 사무실 방문으로 결제하실 수 있습니다.">Choose GCash to pay online now, or pay in person on-site / at our office.</p>
 
           <div class="review-row review-row--total" style="margin-bottom:20px;"><span data-en="Total" data-ko="총 금액">Total</span><strong id="pay-total">-</strong></div>
 
-          <button type="submit" class="btn-submit" id="submit-btn" data-en="Confirm Reservation" data-ko="예약 확정하기 (현장지불)">Confirm Reservation</button>
+          <div class="gcash-qr-box" id="gcash-box">
+            <img src="assets/gcash-qr.jpg" alt="GCash QR" class="gcash-qr-img">
+            <p class="gcash-qr-caption">GCash: +63 967 466 7943</p>
+          </div>
+
+          <button type="submit" class="btn-submit" id="submit-btn" data-en="Confirm Reservation" data-ko="예약 확정하기">Confirm Reservation</button>
           <p id="form-status" class="form-status" role="status"></p>
 
           <div class="wizard-actions">
@@ -631,6 +663,18 @@
     applyLang(currentLang);
   }
 
+  // GCash QR는 결제방법으로 GCash를 선택했을 때만 보여줍니다 (언어와 무관).
+  function updateGcashVisibility() {
+    const gcashBox = document.getElementById('gcash-box');
+    const choice = document.querySelector('input[name="paymentChoice"]:checked');
+    const showGcash = !choice || choice.value === 'gcash';
+    if (gcashBox) gcashBox.style.display = showGcash ? 'block' : 'none';
+  }
+  document.querySelectorAll('input[name="paymentChoice"]').forEach(r => {
+    r.addEventListener('change', updateGcashVisibility);
+  });
+  document.addEventListener('DOMContentLoaded', updateGcashVisibility);
+
   function applyLang(lang) {
     const t = TEXTS[lang];
 
@@ -663,6 +707,6 @@
     applyLang(currentLang);
   });
 </script>
-<script type="module" src="js/reservation.js?v=1787551959"></script>
+<script type="module" src="js/reservation.js?v=1787559056"></script>
 </body>
 </html>
