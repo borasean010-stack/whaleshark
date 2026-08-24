@@ -139,7 +139,10 @@ body.pt-body {
 .pt-pill[data-tour="F"].active { background: var(--pt-fast); }
 .pt-pill[data-tour="R"].active { background: var(--pt-reg); }
 .pt-pill[data-tour="T"].active { background: var(--pt-green); }
+.pt-pill[data-tour="H"].active { background: var(--pt-amber); }
+.pt-pill[data-tour="L"].active { background: #64748b; }
 .pt-pill[data-pay].active { background: var(--pt-blue); }
+.pt-pill[data-nationality].active { background: var(--pt-blue); }
 
 .pt-total-row {
   display: flex; justify-content: space-between; align-items: center;

@@ -16,16 +16,30 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-// reservation.html의 PRICES.PH와 반드시 같은 값으로 유지해야 합니다 — 두
-// 파일이 공유 모듈을 쓰지 않아 수동 동기화가 필요합니다 (가격 변경 시 함께 수정).
-const PRICES_PH = { VF: 5820, F: 3300, R: 2520, T: 1620 };
-const TOUR_NAMES = { VF: "VIP 패스트트랙", F: "패스트트랙", R: "레귤러 고래상어투어", T: "고래상어 티켓만" };
-const TOUR_SHORT = { VF: "VIP FT", F: "FAST", R: "REGULAR", T: "TICKET" };
+// B2B 파트너 가격은 손님용 published/selling rate(reservation.html의
+// PRICES)가 아니라 별도의 net rate(도매가)입니다 — 2026-08-24 전달받은 값:
+//   Regular: 현지인 2,300 / 외국인 2,600
+//   Fast Track: 현지인 3,000 / 외국인 3,150
+//   호핑투어/랜드투어: 국적 구분 없이 각각 1,500 / 500
+// VIP 패스트트랙과 고래상어 티켓만은 아직 net rate를 안 주셔서 임시로
+// published rate(reservation.html과 동일)를 그대로 쓰고 있습니다 — 확정되면
+// 꼭 알려주세요.
+const NET_PRICES = {
+  VF: { PH: 5820, FOREIGN: 5820 }, // TODO: 확정 net rate 필요 (임시로 published rate)
+  F: { PH: 3000, FOREIGN: 3150 },
+  R: { PH: 2300, FOREIGN: 2600 },
+  T: { PH: 1620, FOREIGN: 1920 }, // TODO: 확정 net rate 필요 (임시로 published rate)
+  H: { PH: 1500, FOREIGN: 1500 },
+  L: { PH: 500, FOREIGN: 500 },
+};
+const TOUR_NAMES = { VF: "VIP 패스트트랙", F: "패스트트랙", R: "레귤러 고래상어투어", T: "고래상어 티켓만", H: "호핑투어", L: "랜드투어" };
+const TOUR_SHORT = { VF: "VIP FT", F: "FAST", R: "REGULAR", T: "TICKET", H: "HOPPING", L: "LAND" };
 const STATUS_LABEL = { confirmed: "CONFIRMED", pending: "PENDING" };
 
 let currentUid = null;
 let currentAgency = null;
 let selectedTour = "R";
+let selectedNationality = "PH";
 let selectedPay = "deposit";
 let reservationsCache = new Map();
 let txCache = new Map();
@@ -140,7 +154,7 @@ function listenAgency() {
 // ── New reservation form ────────────────────────────────────────
 function updateEstimate() {
   const people = Number(document.getElementById("b-people").value) || 0;
-  const total = (PRICES_PH[selectedTour] || 0) * people;
+  const total = (NET_PRICES[selectedTour]?.[selectedNationality] || 0) * people;
   document.getElementById("b-total").textContent = fmtPeso(total);
   return total;
 }
@@ -151,6 +165,15 @@ document.getElementById("tour-pills").addEventListener("click", (e) => {
   selectedTour = btn.dataset.tour;
   document.getElementById("b-tour").value = selectedTour;
   document.querySelectorAll("#tour-pills .pt-pill").forEach(p => p.classList.toggle("active", p === btn));
+  updateEstimate();
+});
+
+document.getElementById("nationality-pills").addEventListener("click", (e) => {
+  const btn = e.target.closest(".pt-pill");
+  if (!btn) return;
+  selectedNationality = btn.dataset.nationality;
+  document.getElementById("b-nationality").value = selectedNationality;
+  document.querySelectorAll("#nationality-pills .pt-pill").forEach(p => p.classList.toggle("active", p === btn));
   updateEstimate();
 });
 
@@ -194,8 +217,8 @@ document.getElementById("booking-form").addEventListener("submit", async (e) => 
       people,
       name: label,
       email: auth.currentUser.email,
-      nationality: "PH",
-      pricePerPerson: PRICES_PH[tourType],
+      nationality: selectedNationality,
+      pricePerPerson: NET_PRICES[tourType]?.[selectedNationality],
       totalPrice,
       currency: "PHP",
       status: paymentMethod === "deposit" ? "confirmed" : "pending",
