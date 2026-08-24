@@ -20,17 +20,24 @@ import {
 // PRICES)가 아니라 별도의 net rate(도매가)입니다 — 2026-08-24 전달받은 값:
 //   Regular: 현지인 2,300 / 외국인 2,600
 //   Fast Track: 현지인 3,000 / 외국인 3,150
-//   호핑투어/랜드투어: 국적 구분 없이 각각 1,500 / 500
-// VIP 패스트트랙과 고래상어 티켓만은 아직 net rate를 안 주셔서 임시로
-// published rate(reservation.html과 동일)를 그대로 쓰고 있습니다 — 확정되면
-// 꼭 알려주세요.
+// 호핑투어/랜드투어는 "티켓 + 추가상품" 번들입니다 — 이 두 상품을 사면 티켓
+// 가격 자체가 할인돼서 현지인 1,500 / 외국인 1,800으로 내려가고, 거기에
+// 추가상품 금액(호핑 1,500 / 랜드 500, 국적 구분 없음)이 더해집니다.
+// 그래서 최종 금액은:
+//   호핑투어 = 할인티켓(1,500/1,800) + 호핑 추가금(1,500) = 3,000 / 3,300
+//   랜드투어 = 할인티켓(1,500/1,800) + 랜드 추가금(500)   = 2,000 / 2,300
+// VIP 패스트트랙과 (번들이 아닌) 고래상어 티켓만 단독 판매는 아직 net
+// rate를 안 주셔서 임시로 published rate(reservation.html과 동일)를 그대로
+// 쓰고 있습니다 — 확정되면 꼭 알려주세요.
+const BUNDLE_TICKET_PRICE = { PH: 1500, FOREIGN: 1800 };
+const ADDON_PRICE = { H: 1500, L: 500 };
 const NET_PRICES = {
   VF: { PH: 5820, FOREIGN: 5820 }, // TODO: 확정 net rate 필요 (임시로 published rate)
   F: { PH: 3000, FOREIGN: 3150 },
   R: { PH: 2300, FOREIGN: 2600 },
-  T: { PH: 1620, FOREIGN: 1920 }, // TODO: 확정 net rate 필요 (임시로 published rate)
-  H: { PH: 1500, FOREIGN: 1500 },
-  L: { PH: 500, FOREIGN: 500 },
+  T: { PH: 1620, FOREIGN: 1920 }, // TODO: 확정 net rate 필요 (임시로 published rate, 번들 아닐 때)
+  H: { PH: BUNDLE_TICKET_PRICE.PH + ADDON_PRICE.H, FOREIGN: BUNDLE_TICKET_PRICE.FOREIGN + ADDON_PRICE.H },
+  L: { PH: BUNDLE_TICKET_PRICE.PH + ADDON_PRICE.L, FOREIGN: BUNDLE_TICKET_PRICE.FOREIGN + ADDON_PRICE.L },
 };
 const TOUR_NAMES = { VF: "VIP 패스트트랙", F: "패스트트랙", R: "레귤러 고래상어투어", T: "고래상어 티켓만", H: "호핑투어", L: "랜드투어" };
 const TOUR_SHORT = { VF: "VIP FT", F: "FAST", R: "REGULAR", T: "TICKET", H: "HOPPING", L: "LAND" };
