@@ -94,6 +94,10 @@ async function handleToken(token) {
     const data = docSnap.data();
     if (data.checkedIn) {
       renderAlreadyUsed(docSnap.id, data);
+    } else if (data.paymentMethod === "cash_office" && data.status !== "confirmed") {
+      // Cash @ Office는 관리자가 admin.html Settlement에서 실제 현금 수령을
+      // 확인(status: pending → confirmed)하기 전까지 체크인시켜주지 않습니다.
+      renderNotPaid(data);
     } else {
       renderReady(docSnap.id, data);
     }
@@ -120,6 +124,19 @@ function renderAlreadyUsed(id, data) {
     ${field("인원", data.people + "명")}
     ${field("그룹명", data.name)}
     ${field("체크인 시간", usedAt)}
+  `;
+  renderRescanButton();
+}
+
+function renderNotPaid(data) {
+  titleEl.textContent = "결제 확인 필요";
+  bodyEl.innerHTML = `
+    <p class="check-status-line warn">아직 현장 결제(Cash @ Office)가 확인되지 않았습니다.</p>
+    ${field("투어", TOUR_NAMES[data.tourType] || data.tourType)}
+    ${field("투어일", data.date)}
+    ${field("인원", data.people + "명")}
+    ${field("그룹명", data.name)}
+    <p style="color:var(--muted); font-size:0.85rem; margin-top:12px;">관리자에게 현금 수령 확인을 요청한 후 다시 스캔해주세요.</p>
   `;
   renderRescanButton();
 }

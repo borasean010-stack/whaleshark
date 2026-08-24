@@ -487,6 +487,13 @@ function addonLabel(addons) {
 }
 
 function bookingRowHtml(id, b) {
+  // Cash @ Office는 관리자가 실제 현금 수령을 확인(status: pending → confirmed)
+  // 하기 전까지는 QR을 보여주지 않습니다 — 결제 전에 입장 가능한 티켓처럼
+  // 보이면 안 되니까요. Deposit은 예약과 동시에 이미 잔액이 차감되니 바로 보여줍니다.
+  const qrReady = b.paymentMethod !== "cash_office" || b.status === "confirmed";
+  const qrAction = qrReady
+    ? `<button class="pt-btn pt-btn-ghost" data-action="qr" data-id="${id}">QR 보기</button>`
+    : `<span class="pt-badge pt-badge-pending" style="align-self:center;">결제 확인 후 QR 발급</span>`;
   return `
     <div class="pt-booking-row">
       <div>
@@ -495,7 +502,7 @@ function bookingRowHtml(id, b) {
         <div class="pt-booking-sub">${b.name} · ${b.tourType === "HG" ? `${b.people}명 그룹` : `성인${b.adults ?? b.people}${b.children ? ` · 아동${b.children}` : ""}`} · ${fmtPeso(b.totalPrice)} · ${b.paymentMethod === "cash_office" ? "Cash @ Office" : "Deposit"}</div>
         ${badgeFor(b)}
       </div>
-      <button class="pt-btn pt-btn-ghost" data-action="qr" data-id="${id}">QR 보기</button>
+      ${qrAction}
     </div>
   `;
 }
