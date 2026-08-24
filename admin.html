@@ -37,8 +37,13 @@
           <h1>🐋 ADMIN PANEL</h1>
         </div>
         <nav class="sidebar-nav">
-          <a href="#" class="nav-item active" data-view="reservations">예약 관리 (Reservations)</a>
-          <a href="#" class="nav-item" data-view="agencies">에이전시 관리 (B2B)</a>
+          <a href="#" class="nav-item active" data-view="dashboard">Dashboard</a>
+          <a href="#" class="nav-item" data-view="agencies">B2B Partners</a>
+          <a href="#" class="nav-item" data-view="reservations">Reservations</a>
+          <a href="#" class="nav-item" data-view="products">Products &amp; Pricing</a>
+          <a href="#" class="nav-item" data-view="depositcash">Deposit / Cash</a>
+          <a href="#" class="nav-item" data-view="settlement">Settlement</a>
+          <a href="#" class="nav-item" data-view="reports">Reports</a>
           <a href="index.html" class="nav-item">메인 사이트로 돌아가기</a>
         </nav>
       </aside>
@@ -55,8 +60,48 @@
 
         <div class="content-body">
 
-          <!-- View: 예약 관리 -->
-          <div id="view-reservations" class="admin-view">
+          <!-- View: Dashboard -->
+          <div id="view-dashboard" class="admin-view">
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <h3>전체 예약건수</h3>
+              <div class="value" id="dash-stat-total">0</div>
+            </div>
+            <div class="stat-card">
+              <h3>대기중 (Pending)</h3>
+              <div class="value" id="dash-stat-pending" style="color: var(--admin-warning);">0</div>
+            </div>
+            <div class="stat-card">
+              <h3>B2B 파트너 수</h3>
+              <div class="value" id="dash-stat-agencies">0</div>
+            </div>
+            <div class="stat-card">
+              <h3>B2B 예치금 합계</h3>
+              <div class="value" id="dash-stat-balance" style="color: var(--admin-success);">₱0</div>
+            </div>
+            <div class="stat-card">
+              <h3>정산 필요</h3>
+              <div class="value" id="dash-stat-settlement" style="color: var(--admin-danger);">0</div>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <div class="table-header">
+              <h2>최신 예약 (최근 10건)</h2>
+            </div>
+            <div style="overflow-x: auto;">
+              <table>
+                <thead><tr><th>날짜</th><th>예약자명</th><th>투어</th><th>상태</th></tr></thead>
+                <tbody id="dashboard-recent-tbody"><!-- JS로 데이터 삽입 --></tbody>
+              </table>
+            </div>
+          </div>
+
+          </div>
+
+          <!-- View: Reservations -->
+          <div id="view-reservations" class="admin-view" style="display:none;">
 
           <!-- Stats -->
           <div class="stats-grid">
@@ -105,7 +150,7 @@
 
           </div>
 
-          <!-- View: 에이전시 관리 (B2B) -->
+          <!-- View: B2B Partners -->
           <div id="view-agencies" class="admin-view" style="display:none;">
 
           <div class="stats-grid">
@@ -141,28 +186,6 @@
             </form>
           </div>
 
-          <div class="table-container" style="margin-bottom: 24px;">
-            <div class="table-header">
-              <h2>입금 신청 대기</h2>
-            </div>
-            <div style="overflow-x: auto;">
-              <table>
-                <thead>
-                  <tr>
-                    <th>신청일</th>
-                    <th>에이전시</th>
-                    <th>금액</th>
-                    <th>메모</th>
-                    <th>관리(Action)</th>
-                  </tr>
-                </thead>
-                <tbody id="deposit-request-tbody">
-                  <!-- JS로 데이터 삽입 -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-
           <div class="table-container">
             <div class="table-header">
               <h2>에이전시 목록</h2>
@@ -187,6 +210,69 @@
 
           </div>
 
+          <!-- View: Products & Pricing -->
+          <div id="view-products" class="admin-view" style="display:none;">
+            <div class="table-container">
+              <div class="table-header"><h2>Products &amp; Pricing</h2></div>
+              <div style="padding: 40px 24px; text-align:center; color: var(--admin-text-muted);">준비 중입니다.</div>
+            </div>
+          </div>
+
+          <!-- View: Deposit / Cash -->
+          <div id="view-depositcash" class="admin-view" style="display:none;">
+            <div class="table-container">
+              <div class="table-header">
+                <h2>입금 신청 대기 (GCash)</h2>
+              </div>
+              <div style="overflow-x: auto;">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>신청일</th>
+                      <th>에이전시</th>
+                      <th>금액</th>
+                      <th>메모</th>
+                      <th>관리(Action)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="deposit-request-tbody">
+                    <!-- JS로 데이터 삽입 -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- View: Settlement -->
+          <div id="view-settlement" class="admin-view" style="display:none;">
+            <div class="table-container" style="margin-bottom: 24px;">
+              <div class="table-header"><h2>정산 필요 (예치금 차감 미확정)</h2></div>
+              <div style="overflow-x: auto;">
+                <table>
+                  <thead><tr><th>날짜</th><th>에이전시</th><th>그룹명</th><th>금액</th><th>관리(Action)</th></tr></thead>
+                  <tbody id="settlement-deposit-tbody"><!-- JS로 데이터 삽입 --></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="table-container">
+              <div class="table-header"><h2>Cash @ Office 수금 대기</h2></div>
+              <div style="overflow-x: auto;">
+                <table>
+                  <thead><tr><th>날짜</th><th>에이전시</th><th>그룹명</th><th>금액</th><th>관리(Action)</th></tr></thead>
+                  <tbody id="settlement-cash-tbody"><!-- JS로 데이터 삽입 --></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- View: Reports -->
+          <div id="view-reports" class="admin-view" style="display:none;">
+            <div class="table-container">
+              <div class="table-header"><h2>Reports</h2></div>
+              <div style="padding: 40px 24px; text-align:center; color: var(--admin-text-muted);">준비 중입니다.</div>
+            </div>
+          </div>
+
         </div>
       </main>
 
@@ -202,6 +288,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/admin.js?v=1787193930"></script>
+  <script type="module" src="js/admin.js?v=1787193935"></script>
 </body>
 </html>

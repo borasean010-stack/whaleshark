@@ -40,13 +40,10 @@
     <aside class="pt-sidebar">
       <nav class="pt-nav" id="pt-nav">
         <button class="pt-nav-item active" data-view="dashboard">Dashboard</button>
-        <button class="pt-nav-item pt-nav-cta" data-view="reservation">+ Reservation</button>
+        <button class="pt-nav-item pt-nav-cta" data-view="reservation">+ New Reservation</button>
         <button class="pt-nav-item" data-view="reservations">Reservations</button>
         <button class="pt-nav-item" data-view="deposit">Deposit</button>
-        <div class="pt-nav-divider"></div>
-        <button class="pt-nav-item" data-view="products">Products</button>
-        <button class="pt-nav-item" data-view="reports">Reports</button>
-        <button class="pt-nav-item" data-view="account">Account</button>
+        <button class="pt-nav-item" data-view="transactions">Transactions</button>
       </nav>
       <button class="pt-sidebar-signout" id="btn-signout">로그아웃</button>
     </aside>
@@ -152,23 +149,12 @@
 
         <h2 class="pt-section-title">신청 내역</h2>
         <div id="deposit-request-list"><p class="pt-empty">신청 내역이 없습니다.</p></div>
+      </section>
 
-        <h2 class="pt-section-title">Transaction History</h2>
+      <!-- TRANSACTIONS (원장) -->
+      <section id="view-transactions" class="pt-view">
+        <h1 class="pt-greeting">Transactions</h1>
         <div id="tx-list"><p class="pt-empty">거래 내역이 없습니다.</p></div>
-      </section>
-
-      <!-- PLACEHOLDERS -->
-      <section id="view-products" class="pt-view">
-        <h1 class="pt-greeting">Products</h1>
-        <div class="pt-placeholder">준비 중입니다.</div>
-      </section>
-      <section id="view-reports" class="pt-view">
-        <h1 class="pt-greeting">Reports</h1>
-        <div class="pt-placeholder">준비 중입니다.</div>
-      </section>
-      <section id="view-account" class="pt-view">
-        <h1 class="pt-greeting">Account</h1>
-        <div class="pt-placeholder">준비 중입니다.</div>
       </section>
 
     </main>

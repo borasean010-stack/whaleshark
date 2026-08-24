@@ -49,6 +49,7 @@ onAuthStateChanged(auth, (user) => {
     loginOverlay.style.display = "none";
     dashboard.style.display = "block";
     loadReservations();
+    loadDashboard();
   } else {
     loginOverlay.style.display = "flex";
     dashboard.style.display = "none";
@@ -82,16 +83,25 @@ refreshBtn.addEventListener("click", () => {
   loadReservations();
 });
 
-// Sidebar view switch (예약 관리 / 에이전시 관리)
+// Sidebar view switch — Dashboard / B2B Partners / Reservations / Products &
+// Pricing / Deposit·Cash / Settlement / Reports.
+const VIEW_LOADERS = {
+  dashboard: loadDashboard,
+  agencies: () => { loadAgencies(); },
+  depositcash: loadDepositRequests,
+  settlement: loadSettlement,
+};
+
 document.querySelectorAll(".nav-item[data-view]").forEach(navEl => {
   navEl.addEventListener("click", (e) => {
     e.preventDefault();
     document.querySelectorAll(".nav-item[data-view]").forEach(el => el.classList.remove("active"));
     navEl.classList.add("active");
     const view = navEl.dataset.view;
-    document.getElementById("view-reservations").style.display = view === "reservations" ? "block" : "none";
-    document.getElementById("view-agencies").style.display = view === "agencies" ? "block" : "none";
-    if (view === "agencies") { loadAgencies(); loadDepositRequests(); }
+    document.querySelectorAll(".admin-view").forEach(el => {
+      el.style.display = el.id === `view-${view}` ? "block" : "none";
+    });
+    if (VIEW_LOADERS[view]) VIEW_LOADERS[view]();
   });
 });
 
@@ -105,9 +115,10 @@ async function loadReservations() {
     let total = 0;
     let pending = 0;
     let confirmed = 0;
-    
+    const recentRows = [];
+
     tbody.innerHTML = "";
-    
+
     querySnapshot.forEach((docSnap) => {
       const data = docSnap.data();
       const id = docSnap.id;
@@ -172,6 +183,10 @@ async function loadReservations() {
         </td>
       `;
       tbody.appendChild(tr);
+
+      if (recentRows.length < 10) {
+        recentRows.push(`<tr><td>${data.date}</td><td>${data.name}</td><td>${tourName}</td><td><span class="badge ${data.status}" style="display:inline-block;">${data.status}</span></td></tr>`);
+      }
     });
 
     if (total === 0) {
@@ -181,6 +196,17 @@ async function loadReservations() {
     statTotal.textContent = total;
     statPending.textContent = pending;
     statConfirmed.textContent = confirmed;
+
+    const dashTotal = document.getElementById("dash-stat-total");
+    const dashPending = document.getElementById("dash-stat-pending");
+    const dashRecent = document.getElementById("dashboard-recent-tbody");
+    if (dashTotal) dashTotal.textContent = total;
+    if (dashPending) dashPending.textContent = pending;
+    if (dashRecent) {
+      dashRecent.innerHTML = recentRows.length
+        ? recentRows.join("")
+        : "<tr><td colspan='4' style='text-align:center;'>예약 내역이 없습니다.</td></tr>";
+    }
 
     attachEventListeners();
 
@@ -402,6 +428,13 @@ async function loadAgencies() {
     document.getElementById("agency-stat-balance").textContent = fmtPeso(totalBalance);
     document.getElementById("agency-stat-pending").textContent = totalPending;
 
+    const dashAgencies = document.getElementById("dash-stat-agencies");
+    const dashBalance = document.getElementById("dash-stat-balance");
+    const dashSettlement = document.getElementById("dash-stat-settlement");
+    if (dashAgencies) dashAgencies.textContent = agenciesSnap.size;
+    if (dashBalance) dashBalance.textContent = fmtPeso(totalBalance);
+    if (dashSettlement) dashSettlement.textContent = totalPending;
+
     document.querySelectorAll(".topup-btn").forEach(btn => {
       btn.addEventListener("click", () => handleTopup(btn.dataset.uid, btn.dataset.name));
     });
@@ -542,5 +575,89 @@ async function handleDepositRequest(requestId, agencyUid, amount, decision) {
   } catch (err) {
     console.error("Error resolving deposit request:", err);
     alert("처리에 실패했습니다.");
+  }
+}
+
+// =====================================================================
+// Dashboard — 예약/에이전시 데이터는 이미 loadReservations()/loadAgencies()가
+// 불러오면서 dash-stat-* 요소도 같이 채웁니다. 여기서는 그 두 개를 한 번에
+// 트리거만 합니다.
+// =====================================================================
+function loadDashboard() {
+  loadReservations();
+  loadAgencies();
+}
+
+// =====================================================================
+// Settlement — (1) 에이전시 예약인데 잔액 차감이 안 끝난 것(depositApplied
+// === false, 네트워크 끊김 등으로 2단계 트랜잭션이 중간에 멈춘 경우),
+// (2) Cash @ Office로 예약해서 아직 현금을 못 받은 것(status === 'pending').
+// =====================================================================
+const TOUR_NAMES_FOR_SETTLEMENT = { VF: "VIP패스트트랙", F: "패스트트랙", R: "레귤러", T: "티켓", H: "호핑투어", L: "랜드투어" };
+
+async function loadSettlement() {
+  const depositTbody = document.getElementById("settlement-deposit-tbody");
+  const cashTbody = document.getElementById("settlement-cash-tbody");
+  depositTbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>로딩 중...</td></tr>";
+  cashTbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>로딩 중...</td></tr>";
+  try {
+    const [reservationsSnap, agenciesSnap] = await Promise.all([
+      getDocs(query(collection(db, "reservations"), orderBy("createdAt", "desc"))),
+      getDocs(collection(db, "agencies"))
+    ]);
+    const agencyNames = {};
+    agenciesSnap.forEach(d => { agencyNames[d.id] = d.data().name; });
+
+    const depositRows = [];
+    const cashRows = [];
+    reservationsSnap.forEach(docSnap => {
+      const d = docSnap.data();
+      if (d.bookedBy !== "agency") return;
+      const tourName = TOUR_NAMES_FOR_SETTLEMENT[d.tourType] || d.tourType;
+      const agencyName = agencyNames[d.agencyId] || d.agencyId;
+
+      if (d.paymentMethod !== "cash_office" && d.depositApplied === false) {
+        depositRows.push(`
+          <tr>
+            <td>${d.date}</td>
+            <td>${agencyName}</td>
+            <td>${d.name}</td>
+            <td>${fmtPeso(d.totalPrice)}</td>
+            <td><span class="badge pending">잔액 차감 대기</span></td>
+          </tr>
+        `);
+      }
+      if (d.paymentMethod === "cash_office" && d.status === "pending") {
+        cashRows.push(`
+          <tr>
+            <td>${d.date}</td>
+            <td>${agencyName}</td>
+            <td>${d.name}</td>
+            <td>${fmtPeso(d.totalPrice)}</td>
+            <td><button class="action-btn" style="background: var(--admin-success);" data-action="mark-collected" data-id="${docSnap.id}">현금 수령 확인</button></td>
+          </tr>
+        `);
+      }
+    });
+
+    depositTbody.innerHTML = depositRows.length ? depositRows.join("") : "<tr><td colspan='5' style='text-align:center;'>정산 필요 건이 없습니다.</td></tr>";
+    cashTbody.innerHTML = cashRows.length ? cashRows.join("") : "<tr><td colspan='5' style='text-align:center;'>수금 대기 건이 없습니다.</td></tr>";
+
+    cashTbody.querySelectorAll("button[data-action='mark-collected']").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        if (!confirm("현금을 수령하셨나요? 예약 상태를 확정으로 바꿉니다.")) return;
+        try {
+          await updateDoc(doc(db, "reservations", btn.dataset.id), { status: "confirmed" });
+          loadSettlement();
+        } catch (err) {
+          console.error("Error confirming cash collection:", err);
+          alert("처리에 실패했습니다.");
+        }
+      });
+    });
+  } catch (err) {
+    console.error("Error loading settlement data:", err);
+    depositTbody.innerHTML = "<tr><td colspan='5' style='text-align:center; color:red;'>불러오는 중 오류가 발생했습니다.</td></tr>";
+    cashTbody.innerHTML = "";
   }
 }
