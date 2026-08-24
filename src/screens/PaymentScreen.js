@@ -5,6 +5,7 @@ import { db } from "../firebaseConfig";
 import { PRICES, TOURS } from "../prices";
 import { colors, fonts } from "../theme";
 import { getExpoPushToken } from "../notifications";
+import { sendVoucherEmail } from "../voucherEmail";
 
 const TOUR_LABEL = { PH: "Local (Philippine)", FOREIGN: "Foreigner" };
 
@@ -51,6 +52,7 @@ export default function PaymentScreen({ route, navigation }) {
         ...(pushToken ? { pushToken } : {}),
       };
       await addDoc(collection(db, "reservations"), reservation);
+      sendVoucherEmail(reservation, "en");
       navigation.replace("Confirmation", { name, date, qrToken: null });
     } catch (err) {
       console.error(err);
