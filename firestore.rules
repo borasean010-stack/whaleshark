@@ -41,7 +41,9 @@ service cloud.firestore {
 
     // 여행사 파트너(B2B) 계정. uid = 해당 파트너의 Firebase Auth UID.
     match /agencies/{uid} {
-      allow read: if isAdmin() || (isSignedIn() && request.auth.uid == uid);
+      // 리버타드 체크인 담당은 checkin.html의 "오늘 현황" 요약에서 어느
+      // 업체(B2B 파트너) 예약인지 이름을 보여주기 위해 읽기 권한이 필요합니다.
+      allow read: if isAdmin() || (isSignedIn() && request.auth.uid == uid) || isLibertadStaff();
 
       // 관리자: 입금 반영 등 자유롭게 수정 가능.
       allow update: if isAdmin();

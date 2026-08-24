@@ -35,11 +35,24 @@
     <div id="qr-reader" style="margin: 16px 0;"></div>
     <div id="check-body"></div>
     <div class="modal-close-row" style="margin-top:16px;">
+      <button class="btn btn-ghost btn-small" id="btn-today-summary">오늘 현황</button>
       <button class="btn btn-ghost btn-small" id="btn-signout">로그아웃</button>
     </div>
   </div>
 </div>
 
-<script type="module" src="js/checkin.js?v=3"></script>
+<div id="summary-overlay" class="check-screen" style="display:none;">
+  <div class="check-card" id="summary-card">
+    <p class="check-eyebrow">TODAY'S CHECK-INS</p>
+    <h1>오늘 체크인 현황</h1>
+    <div id="summary-total" style="font-size:2.2rem; font-weight:800; margin:12px 0;">-</div>
+    <div id="summary-body"></div>
+    <div class="modal-close-row" style="margin-top:16px;">
+      <button class="btn btn-small" id="btn-summary-close">닫기</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="js/checkin.js?v=4"></script>
 </body>
 </html>

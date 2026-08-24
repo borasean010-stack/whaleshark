@@ -7,7 +7,8 @@ import {
   getDocs,
   doc,
   updateDoc,
-  serverTimestamp
+  serverTimestamp,
+  Timestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import {
   signInWithEmailAndPassword,
@@ -15,12 +16,15 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-const TOUR_NAMES = { VF: "VIP 패스트트랙", F: "패스트트랙", R: "레귤러 고래상어투어", T: "고래상어 티켓만" };
+const TOUR_NAMES = { VF: "VIP 패스트트랙", F: "패스트트랙", R: "레귤러 고래상어투어", T: "고래상어 티켓만", H: "호핑투어", L: "랜드투어", HG: "단독 호핑투어" };
 
 const loginView = document.getElementById("login-view");
 const checkScreen = document.getElementById("check-screen");
 const titleEl = document.querySelector("#check-card h1");
 const bodyEl = document.getElementById("check-body");
+const summaryOverlay = document.getElementById("summary-overlay");
+const summaryTotalEl = document.getElementById("summary-total");
+const summaryBodyEl = document.getElementById("summary-body");
 
 let scanner = null;
 
@@ -50,6 +54,77 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
 });
 
 document.getElementById("btn-signout").addEventListener("click", () => signOut(auth));
+
+document.getElementById("btn-today-summary").addEventListener("click", () => {
+  checkScreen.style.display = "none";
+  summaryOverlay.style.display = "flex";
+  loadTodaySummary();
+});
+document.getElementById("btn-summary-close").addEventListener("click", () => {
+  summaryOverlay.style.display = "none";
+  checkScreen.style.display = "flex";
+});
+
+// 리버타드 현장에서 "오늘 총 몇 팀/몇 명이 체크인했고, 어느 여행사(B2B)를
+// 통해 왔는지" 한눈에 보기 위한 요약입니다. checkedInAt이 오늘 00:00 이후인
+// 예약만 모아서 agencyId 기준으로 묶습니다 — 직접 예약(B2B 아님)은
+// "직접예약"으로 따로 묶습니다.
+async function loadTodaySummary() {
+  summaryTotalEl.textContent = "…";
+  summaryBodyEl.innerHTML = "";
+  try {
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+    const q = query(
+      collection(db, "reservations"),
+      where("checkedInAt", ">=", Timestamp.fromDate(startOfToday))
+    );
+    const snap = await getDocs(q);
+
+    const agencyIds = new Set();
+    const rows = [];
+    snap.forEach((docSnap) => {
+      const d = docSnap.data();
+      rows.push(d);
+      if (d.bookedBy === "agency" && d.agencyId) agencyIds.add(d.agencyId);
+    });
+
+    const agencyNames = {};
+    await Promise.all([...agencyIds].map(async (uid) => {
+      try {
+        const aSnap = await getDocs(query(collection(db, "agencies"), where("__name__", "==", uid)));
+        aSnap.forEach((a) => { agencyNames[uid] = a.data().name; });
+      } catch (err) {
+        console.error("Agency name lookup failed:", err);
+      }
+    }));
+
+    const groups = new Map(); // label -> { count, people }
+    rows.forEach((d) => {
+      const label = (d.bookedBy === "agency" && d.agencyId)
+        ? (agencyNames[d.agencyId] || "이름 미확인 업체")
+        : "직접예약";
+      const g = groups.get(label) || { count: 0, people: 0 };
+      g.count += 1;
+      g.people += Number(d.people) || 0;
+      groups.set(label, g);
+    });
+
+    summaryTotalEl.textContent = `${rows.length}건`;
+    if (!rows.length) {
+      summaryBodyEl.innerHTML = `<p class="check-status-line">아직 오늘 체크인된 티켓이 없습니다.</p>`;
+      return;
+    }
+    summaryBodyEl.innerHTML = [...groups.entries()]
+      .sort((a, b) => b[1].count - a[1].count)
+      .map(([label, g]) => field(label, `${g.count}건 · ${g.people}명`))
+      .join("");
+  } catch (err) {
+    console.error("Today summary load failed:", err);
+    summaryTotalEl.textContent = "-";
+    summaryBodyEl.innerHTML = `<p class="check-status-line error">불러오는 중 오류가 발생했습니다.</p>`;
+  }
+}
 
 function field(label, value) {
   return `<div class="check-field"><span class="check-label">${label}</span><span class="check-value">${value}</span></div>`;
