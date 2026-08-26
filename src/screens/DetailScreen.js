@@ -3,10 +3,11 @@ import { TOURS, PRICES } from "../prices";
 import { DETAILS } from "../details";
 import { colors, fonts } from "../theme";
 
-// tour.image(pkg-*.jpg)는 원본이 정사각형(900x900)이라, 세로로 긴 히어로
-// 프레임에 cover로 채우면 조금이라도 잘려나갑니다. contain으로 바꿔서
-// 사진 전체가 항상 잘림 없이 다 보이게 하고, 남는 여백은 히어로 배경색
-// (navy)으로 자연스럽게 채웁니다.
+// tour.image(pkg-*.jpg)는 제목 텍스트가 이미 디자인에 포함된 정사각형
+// (900x900) 포스터 이미지입니다. 그 위에 어두운 오버레이나 또 다른 제목
+// 텍스트를 겹치면 "원본 그대로"가 아니게 되므로, 히어로에는 사진만 원본
+// 비율(정사각형) 그대로 잘림/변형 없이 보여주고, 태그/이름은 사진 아래
+// 본문 쪽에 별도로 표시합니다.
 const DETAIL_HERO_HEIGHT = Dimensions.get("window").width;
 
 export default function DetailScreen({ route, navigation }) {
@@ -18,17 +19,15 @@ export default function DetailScreen({ route, navigation }) {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.hero}>
-        <Image source={tour.image} style={StyleSheet.absoluteFillObject} resizeMode="contain" />
-        <View style={styles.heroOverlay} />
-        <View style={styles.heroContent}>
-          <View style={[styles.tag, { backgroundColor: accent }]}>
-            <Text style={styles.tagText}>{tour.tag}</Text>
-          </View>
-          <Text style={styles.heroTitle}>{tour.name}</Text>
-        </View>
+        <Image source={tour.image} style={StyleSheet.absoluteFillObject} resizeMode="cover" />
       </View>
 
       <View style={styles.body}>
+        <View style={[styles.tag, { backgroundColor: accent, alignSelf: "flex-start" }]}>
+          <Text style={styles.tagText}>{tour.tag}</Text>
+        </View>
+        <Text style={styles.heroTitle}>{tour.name}</Text>
+
         <Text style={[styles.sectionLabel, { color: accent }]}>BEST FOR</Text>
         <Text style={styles.paragraph}>{detail.bestFor}</Text>
 
@@ -65,19 +64,10 @@ export default function DetailScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.bg },
-  hero: { height: DETAIL_HERO_HEIGHT, backgroundColor: colors.navy, justifyContent: "flex-end", overflow: "hidden" },
-  heroOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "transparent",
-    // 세로 그라디언트 대신 단색 반투명 오버레이 — RN 기본 View는 CSS
-    // linear-gradient를 지원하지 않아 site와 완전히 같은 그라디언트는
-    // expo-linear-gradient가 필요합니다. 우선 톤을 맞추는 단색으로 처리.
-    backgroundColor: "rgba(5,10,14,0.55)",
-  },
-  heroContent: { padding: 24 },
-  tag: { alignSelf: "flex-start", borderRadius: 999, paddingVertical: 4, paddingHorizontal: 10, marginBottom: 12 },
+  hero: { height: DETAIL_HERO_HEIGHT, backgroundColor: colors.navy, overflow: "hidden" },
+  tag: { borderRadius: 999, paddingVertical: 4, paddingHorizontal: 10, marginBottom: 10 },
   tagText: { color: colors.white, fontFamily: fonts.heading, fontSize: 10, letterSpacing: 0.5 },
-  heroTitle: { fontFamily: fonts.headingBlack, fontSize: 30, color: colors.white, lineHeight: 34 },
+  heroTitle: { fontFamily: fonts.headingBlack, fontSize: 24, color: colors.heading, lineHeight: 28, marginBottom: 4 },
   body: { padding: 20 },
   sectionLabel: { fontFamily: fonts.heading, fontSize: 12, letterSpacing: 1.5, marginBottom: 8, marginTop: 8 },
   paragraph: { fontFamily: fonts.body, fontSize: 14, lineHeight: 21, color: colors.heading, opacity: 0.8, marginBottom: 20 },
