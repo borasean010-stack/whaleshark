@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import {
-  View, Text, StyleSheet, ScrollView, TextInput, Pressable, Platform, Modal,
+  View, Text, StyleSheet, ScrollView, TextInput, Pressable, Platform, Modal, KeyboardAvoidingView,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { TOURS } from "../prices";
@@ -63,7 +63,12 @@ export default function BookingScreen({ route, navigation }) {
   }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ padding: 20, paddingBottom: 60 }}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
+    >
+    <ScrollView style={styles.container} contentContainerStyle={{ padding: 20, paddingBottom: 60 }} keyboardShouldPersistTaps="handled">
       <View style={[styles.tourBadge, { backgroundColor: colors.tour[tourType] }]}>
         <Text style={styles.tourBadgeText}>{tour?.name?.toUpperCase()}</Text>
       </View>
@@ -144,6 +149,7 @@ export default function BookingScreen({ route, navigation }) {
         <Text style={styles.submitBtnText}>NEXT: REVIEW & PAY</Text>
       </Pressable>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 

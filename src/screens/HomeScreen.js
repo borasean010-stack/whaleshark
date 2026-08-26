@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView, Pressable, Image, Linking, Dimensions, Platform, TextInput } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable, Image, Linking, Dimensions, Platform, TextInput, KeyboardAvoidingView } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import YoutubePlayer from "react-native-youtube-iframe";
 import { doc, onSnapshot } from "firebase/firestore";
@@ -116,7 +116,8 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
-      <ScrollView ref={scrollRef} style={styles.container} contentContainerStyle={{ paddingBottom: 40 }}>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : "height"}>
+      <ScrollView ref={scrollRef} style={styles.container} contentContainerStyle={{ paddingBottom: 40 }} keyboardShouldPersistTaps="handled">
         <View style={styles.hero}>
           <Image source={require("../../assets/images/hero-bg.jpg")} style={StyleSheet.absoluteFillObject} resizeMode="cover" />
           <View style={[StyleSheet.absoluteFillObject, styles.heroVideoWrap]} pointerEvents="none">
@@ -413,6 +414,7 @@ export default function HomeScreen({ navigation }) {
           <Text style={styles.footerLine}>Libertad, Antique, Philippines</Text>
         </View>
       </ScrollView>
+      </KeyboardAvoidingView>
 
       <MenuDrawer navigation={navigation} onNavigateTours={scrollToTours} />
     </View>

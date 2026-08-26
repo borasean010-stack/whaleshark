@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import {
-  View, Text, StyleSheet, ScrollView, TextInput, Pressable, ActivityIndicator, Modal, Image, Platform,
+  View, Text, StyleSheet, ScrollView, TextInput, Pressable, ActivityIndicator, Modal, Image, Platform, KeyboardAvoidingView,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import QRCode from "react-native-qrcode-svg";
@@ -398,17 +398,19 @@ export default function PartnerScreen() {
 
   if (!uid) {
     return (
-      <ScrollView style={styles.container} contentContainerStyle={{ padding: 24, paddingTop: 80 }}>
-        <Text style={styles.loginTitle}>Partner Login</Text>
-        <Text style={styles.loginSubtitle}>보라카이션 관리자가 등록해준 이메일/비밀번호로 로그인하세요.</Text>
-        {notAnAgency && <Text style={styles.errorText}>이 계정은 에이전시로 등록되어 있지 않습니다.</Text>}
-        <TextInput style={styles.input} placeholder="이메일" placeholderTextColor="#94a3b8" autoCapitalize="none" keyboardType="email-address" value={email} onChangeText={setEmail} />
-        <TextInput style={styles.input} placeholder="비밀번호" placeholderTextColor="#94a3b8" secureTextEntry value={password} onChangeText={setPassword} />
-        {loginError ? <Text style={styles.errorText}>{loginError}</Text> : null}
-        <Pressable style={styles.loginBtn} onPress={handleLogin} disabled={loggingIn}>
-          {loggingIn ? <ActivityIndicator color="#fff" /> : <Text style={styles.loginBtnText}>로그인</Text>}
-        </Pressable>
-      </ScrollView>
+      <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
+        <ScrollView contentContainerStyle={{ padding: 24, paddingTop: 80 }} keyboardShouldPersistTaps="handled">
+          <Text style={styles.loginTitle}>Partner Login</Text>
+          <Text style={styles.loginSubtitle}>보라카이션 관리자가 등록해준 이메일/비밀번호로 로그인하세요.</Text>
+          {notAnAgency && <Text style={styles.errorText}>이 계정은 에이전시로 등록되어 있지 않습니다.</Text>}
+          <TextInput style={styles.input} placeholder="이메일" placeholderTextColor="#94a3b8" autoCapitalize="none" keyboardType="email-address" value={email} onChangeText={setEmail} />
+          <TextInput style={styles.input} placeholder="비밀번호" placeholderTextColor="#94a3b8" secureTextEntry value={password} onChangeText={setPassword} />
+          {loginError ? <Text style={styles.errorText}>{loginError}</Text> : null}
+          <Pressable style={styles.loginBtn} onPress={handleLogin} disabled={loggingIn}>
+            {loggingIn ? <ActivityIndicator color="#fff" /> : <Text style={styles.loginBtnText}>로그인</Text>}
+          </Pressable>
+        </ScrollView>
+      </KeyboardAvoidingView>
     );
   }
 
@@ -756,13 +758,15 @@ export default function PartnerScreen() {
         ))}
       </ScrollView>
 
-      <ScrollView style={styles.container} contentContainerStyle={{ padding: 20, paddingBottom: 60 }}>
-        {view === "dashboard" && renderDashboard()}
-        {view === "reservation" && renderReservation()}
-        {view === "reservations" && renderReservations()}
-        {view === "deposit" && renderDeposit()}
-        {view === "transactions" && renderTransactions()}
-      </ScrollView>
+      <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
+        <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 60 }} keyboardShouldPersistTaps="handled">
+          {view === "dashboard" && renderDashboard()}
+          {view === "reservation" && renderReservation()}
+          {view === "reservations" && renderReservations()}
+          {view === "deposit" && renderDeposit()}
+          {view === "transactions" && renderTransactions()}
+        </ScrollView>
+      </KeyboardAvoidingView>
 
       <Modal visible={!!qrBooking} transparent animationType="fade" onRequestClose={() => setQrBooking(null)}>
         <Pressable style={styles.modalBackdrop} onPress={() => setQrBooking(null)}>

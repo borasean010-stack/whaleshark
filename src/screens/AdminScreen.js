@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { View, Text, StyleSheet, ScrollView, TextInput, Pressable, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, ScrollView, TextInput, Pressable, ActivityIndicator, Platform, KeyboardAvoidingView } from "react-native";
 import {
   collection, query, orderBy, onSnapshot, doc, updateDoc, getDocs, setDoc, serverTimestamp, addDoc, increment,
 } from "firebase/firestore";
@@ -268,17 +268,19 @@ export default function AdminScreen() {
 
   if (!uid) {
     return (
-      <ScrollView style={styles.container} contentContainerStyle={{ padding: 24, paddingTop: 80 }}>
-        <Text style={styles.loginTitle}>Admin Login</Text>
-        <Text style={styles.loginSubtitle}>관리자 계정으로 로그인하세요.</Text>
-        {notAdmin && <Text style={styles.errorText}>이 계정은 관리자 권한이 없습니다.</Text>}
-        <TextInput style={styles.input} placeholder="이메일" placeholderTextColor="#94a3b8" autoCapitalize="none" keyboardType="email-address" value={email} onChangeText={setEmail} />
-        <TextInput style={styles.input} placeholder="비밀번호" placeholderTextColor="#94a3b8" secureTextEntry value={password} onChangeText={setPassword} />
-        {loginError ? <Text style={styles.errorText}>{loginError}</Text> : null}
-        <Pressable style={styles.loginBtn} onPress={handleLogin} disabled={loggingIn}>
-          {loggingIn ? <ActivityIndicator color="#fff" /> : <Text style={styles.loginBtnText}>로그인</Text>}
-        </Pressable>
-      </ScrollView>
+      <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
+        <ScrollView contentContainerStyle={{ padding: 24, paddingTop: 80 }} keyboardShouldPersistTaps="handled">
+          <Text style={styles.loginTitle}>Admin Login</Text>
+          <Text style={styles.loginSubtitle}>관리자 계정으로 로그인하세요.</Text>
+          {notAdmin && <Text style={styles.errorText}>이 계정은 관리자 권한이 없습니다.</Text>}
+          <TextInput style={styles.input} placeholder="이메일" placeholderTextColor="#94a3b8" autoCapitalize="none" keyboardType="email-address" value={email} onChangeText={setEmail} />
+          <TextInput style={styles.input} placeholder="비밀번호" placeholderTextColor="#94a3b8" secureTextEntry value={password} onChangeText={setPassword} />
+          {loginError ? <Text style={styles.errorText}>{loginError}</Text> : null}
+          <Pressable style={styles.loginBtn} onPress={handleLogin} disabled={loggingIn}>
+            {loggingIn ? <ActivityIndicator color="#fff" /> : <Text style={styles.loginBtnText}>로그인</Text>}
+          </Pressable>
+        </ScrollView>
+      </KeyboardAvoidingView>
     );
   }
 
@@ -464,13 +466,15 @@ export default function AdminScreen() {
         ))}
       </ScrollView>
 
-      <ScrollView style={styles.container} contentContainerStyle={{ padding: 20, paddingBottom: 60 }}>
-        {view === "dashboard" && renderDashboard()}
-        {view === "b2b" && renderB2B()}
-        {view === "reservations" && renderReservations()}
-        {view === "settlement" && renderSettlement()}
-        {view === "broadcast" && renderBroadcast()}
-      </ScrollView>
+      <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
+        <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 60 }} keyboardShouldPersistTaps="handled">
+          {view === "dashboard" && renderDashboard()}
+          {view === "b2b" && renderB2B()}
+          {view === "reservations" && renderReservations()}
+          {view === "settlement" && renderSettlement()}
+          {view === "broadcast" && renderBroadcast()}
+        </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 }
