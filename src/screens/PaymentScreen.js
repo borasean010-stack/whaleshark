@@ -10,14 +10,11 @@ import { startQrphPayment, checkQrphStatus } from "../qrph";
 
 const TOUR_LABEL = { PH: "Local (Philippine)", FOREIGN: "Foreigner" };
 
-// reservation.html과 동일한 3가지 결제 방법: QR 결제(PayMongo QRPh, 실제
-// 온라인 결제) / On-Site(투어 당일 미팅 장소에서 현금) / Boracaysean
-// OfficePay(투어 전 사무실 방문 결제) — 뒤 둘은 둘 다 "미결제 상태로 예약"
-// 이지만 장소/시점이 달라서 별도 옵션으로 구분합니다.
+// reservation.html과 동일한 2가지 결제 방법: QR 결제(PayMongo QRPh, 실제
+// 온라인 결제) / On-Site(투어 당일 미팅 장소에서 현금).
 const PAYMENT_OPTIONS = [
   { key: "qrph", title: "Pay via QR", desc: "GCash, Maya, or any bank app" },
   { key: "onsite", title: "Pay On-Site", desc: "Cash at the meeting point on tour day" },
-  { key: "office", title: "Boracaysean OfficePay", desc: "Visit our office to pay before the tour" },
 ];
 
 function sleep(ms) {
@@ -118,8 +115,6 @@ export default function PaymentScreen({ route, navigation }) {
         setQrVisible(false);
         if (!paid) return; // cancelled, failed, or expired — let them retry
         await finalizeReservation("paid", "QRPh");
-      } else if (paymentChoice === "office") {
-        await finalizeReservation("unpaid", "보라카이션 오피스페이");
       } else {
         await finalizeReservation("unpaid", "On-Site");
       }
