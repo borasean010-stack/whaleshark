@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { View, Text, StyleSheet, ScrollView, TextInput, Pressable, ActivityIndicator } from "react-native";
 import {
-  collection, query, orderBy, onSnapshot, doc, updateDoc, getDocs, setDoc, serverTimestamp,
+  collection, query, orderBy, onSnapshot, doc, updateDoc, getDocs, setDoc, serverTimestamp, addDoc, increment,
 } from "firebase/firestore";
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 import { db, auth } from "../firebaseConfig";
@@ -14,6 +14,7 @@ import { colors, fonts } from "../theme";
 // 시도하고 실패(permission-denied)하면 관리자가 아니라고 안내합니다.
 const VIEWS = [
   { key: "dashboard", label: "Dashboard" },
+  { key: "b2b", label: "B2B 관리" },
   { key: "reservations", label: "예약" },
   { key: "settlement", label: "정산" },
   { key: "broadcast", label: "방송 알림" },
@@ -71,6 +72,8 @@ export default function AdminScreen() {
   const [view, setView] = useState("dashboard");
   const [reservations, setReservations] = useState([]);
   const [agencies, setAgencies] = useState([]);
+  const [topupInputs, setTopupInputs] = useState({});
+  const [topupBusyId, setTopupBusyId] = useState(null);
 
   const [broadcastMessage, setBroadcastMessage] = useState("");
   const [broadcastMsg, setBroadcastMsg] = useState(null);
@@ -163,6 +166,30 @@ export default function AdminScreen() {
     }
   }
 
+  // admin.html의 "입금 반영"과 같은 동작 — 에이전시가 GCash 등으로 실제
+  // 입금한 걸 확인한 뒤, 관리자가 그만큼 예치금 잔액에 수동으로 더합니다.
+  async function handleTopup(agencyUid) {
+    const amount = Number(topupInputs[agencyUid]);
+    if (!Number.isFinite(amount) || amount <= 0) return;
+    setTopupBusyId(agencyUid);
+    try {
+      await updateDoc(doc(db, "agencies", agencyUid), { depositBalance: increment(amount) });
+      await addDoc(collection(db, "agencyTransactions"), {
+        agencyId: agencyUid,
+        type: "topup",
+        amount,
+        note: "관리자 입금 반영",
+        createdAt: serverTimestamp(),
+        createdBy: uid,
+      });
+      setTopupInputs((p) => ({ ...p, [agencyUid]: "" }));
+    } catch (err) {
+      console.error("Top-up failed:", err);
+    } finally {
+      setTopupBusyId(null);
+    }
+  }
+
   async function handleBroadcast() {
     setBroadcastMsg(null);
     const message = broadcastMessage.trim();
@@ -219,6 +246,18 @@ export default function AdminScreen() {
     [reservations]
   );
 
+  // 업체별 "정산 필요"(depositApplied === false) 건수 — 예치금 결제인데
+  // 잔액 차감 트랜잭션이 중간에 끊긴 경우를 관리자가 육안으로 잡아내는 용도.
+  const pendingSettlementByAgency = useMemo(() => {
+    const map = {};
+    reservations.forEach((r) => {
+      if (r.bookedBy === "agency" && r.depositApplied === false && r.agencyId) {
+        map[r.agencyId] = (map[r.agencyId] || 0) + 1;
+      }
+    });
+    return map;
+  }, [reservations]);
+
   if (!authChecked) {
     return (
       <View style={styles.center}>
@@ -272,8 +311,8 @@ export default function AdminScreen() {
         <View style={styles.statsGrid}>
           <StatCard label="전체 예약" value={stats.total} />
           <StatCard label="대기중" value={stats.pending} color="#f59e0b" />
-          <StatCard label="B2B 파트너" value={stats.agencyCount} />
-          <StatCard label="B2B 예치금" value={fmtPeso(stats.totalBalance)} color="#16a34a" />
+          <StatCard label="B2B 파트너" value={stats.agencyCount} onPress={() => setView("b2b")} />
+          <StatCard label="B2B 예치금" value={fmtPeso(stats.totalBalance)} color="#16a34a" onPress={() => setView("b2b")} />
           <StatCard label="정산 필요" value={stats.settlementNeeded} color="#dc2626" />
         </View>
         <Text style={styles.sectionLabel}>최신 예약</Text>
@@ -287,6 +326,50 @@ export default function AdminScreen() {
       <>
         <Text style={styles.title}>전체 예약</Text>
         {reservations.length === 0 ? <Text style={styles.emptyText}>예약 내역이 없습니다.</Text> : reservations.map(reservationRow)}
+      </>
+    );
+  }
+
+  function renderB2B() {
+    return (
+      <>
+        <Text style={styles.title}>B2B 관리</Text>
+        {agencies.length === 0 ? (
+          <Text style={styles.emptyText}>등록된 에이전시가 없습니다.</Text>
+        ) : (
+          agencies.map((a) => {
+            const pendingCount = pendingSettlementByAgency[a.id] || 0;
+            return (
+              <View key={a.id} style={styles.card}>
+                <Text style={styles.rowMain}>{a.name}</Text>
+                <Text style={styles.rowSub}>{a.email}</Text>
+                <View style={styles.b2bBalanceRow}>
+                  <Text style={styles.b2bBalanceValue}>{fmtPeso(a.depositBalance)}</Text>
+                  {pendingCount > 0 && (
+                    <Text style={[styles.badge, styles.badgePending]}>정산 필요 {pendingCount}건</Text>
+                  )}
+                </View>
+                <View style={styles.topupRow}>
+                  <TextInput
+                    style={[styles.textInput, { flex: 1 }]}
+                    placeholder="입금 반영할 금액"
+                    placeholderTextColor="#94a3b8"
+                    keyboardType="number-pad"
+                    value={topupInputs[a.id] || ""}
+                    onChangeText={(v) => setTopupInputs((p) => ({ ...p, [a.id]: v }))}
+                  />
+                  <Pressable
+                    style={[styles.confirmBtn, { marginTop: 0, paddingHorizontal: 16 }, topupBusyId === a.id && { opacity: 0.5 }]}
+                    onPress={() => handleTopup(a.id)}
+                    disabled={topupBusyId === a.id}
+                  >
+                    {topupBusyId === a.id ? <ActivityIndicator color="#fff" /> : <Text style={styles.confirmBtnText}>입금 반영</Text>}
+                  </Pressable>
+                </View>
+              </View>
+            );
+          })
+        )}
       </>
     );
   }
@@ -383,6 +466,7 @@ export default function AdminScreen() {
 
       <ScrollView style={styles.container} contentContainerStyle={{ padding: 20, paddingBottom: 60 }}>
         {view === "dashboard" && renderDashboard()}
+        {view === "b2b" && renderB2B()}
         {view === "reservations" && renderReservations()}
         {view === "settlement" && renderSettlement()}
         {view === "broadcast" && renderBroadcast()}
@@ -391,12 +475,13 @@ export default function AdminScreen() {
   );
 }
 
-function StatCard({ label, value, color }) {
+function StatCard({ label, value, color, onPress }) {
+  const Wrapper = onPress ? Pressable : View;
   return (
-    <View style={styles.statCard}>
+    <Wrapper style={styles.statCard} onPress={onPress}>
       <Text style={[styles.statValue, color && { color }]}>{value}</Text>
       <Text style={styles.statLabel}>{label}</Text>
-    </View>
+    </Wrapper>
   );
 }
 
@@ -453,4 +538,10 @@ const styles = StyleSheet.create({
   },
   confirmBtn: { backgroundColor: colors.brandBlue, borderRadius: 999, paddingVertical: 12, alignItems: "center", marginTop: 10 },
   confirmBtnText: { color: colors.white, fontFamily: fonts.heading, fontSize: 12 },
+
+  badge: { fontFamily: fonts.heading, fontSize: 9, letterSpacing: 0.5, paddingVertical: 4, paddingHorizontal: 8, borderRadius: 999, overflow: "hidden" },
+  badgePending: { backgroundColor: "#fef3c7", color: "#b45309" },
+  b2bBalanceRow: { flexDirection: "row", alignItems: "center", gap: 8, marginTop: 6, marginBottom: 10 },
+  b2bBalanceValue: { fontFamily: fonts.headingBlack, fontSize: 18, color: colors.heading },
+  topupRow: { flexDirection: "row", gap: 8, alignItems: "center" },
 });
