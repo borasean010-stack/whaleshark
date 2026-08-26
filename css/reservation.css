@@ -294,27 +294,44 @@ body {
   margin-bottom: 24px;
 }
 
-.gcash-qr-box {
-  background: #0057E5;
+.qrph-box {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 20px;
   padding: 22px;
   text-align: center;
   margin-bottom: 20px;
 }
-.gcash-qr-img {
+.qrph-qr-img {
   width: 100%;
   max-width: 260px;
   border-radius: 14px;
   display: block;
   margin: 0 auto;
+  background: #ffffff;
+  padding: 10px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
-.gcash-qr-caption {
+.qrph-status {
   margin: 14px 0 0;
   font-size: 0.85rem;
   font-weight: 700;
-  color: #ffffff;
+  color: #00e5ff;
   letter-spacing: 0.3px;
+}
+.qrph-cancel {
+  margin-top: 14px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.7);
+  border-radius: 999px;
+  padding: 8px 20px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.qrph-cancel:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+  color: #ffffff;
 }
 
 /* ── Route map ── */

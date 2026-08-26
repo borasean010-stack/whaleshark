@@ -27,7 +27,7 @@
 <link rel="canonical" href="https://boracaywhaleshark.com/reservation">
 
 <link rel="stylesheet" href="css/style.css"> <!-- for nav -->
-<link rel="stylesheet" href="css/reservation.css?v=1787046906">
+<link rel="stylesheet" href="css/reservation.css?v=1787731936">
 <!-- Flatpickr (Premium Datepicker) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
@@ -251,10 +251,10 @@
             <label data-en="How would you like to pay? *" data-ko="결제 방법을 선택해 주세요 *">How would you like to pay? *</label>
             <div class="payment-type-options">
               <label class="payment-type-option">
-                <input type="radio" name="paymentChoice" value="gcash" checked>
+                <input type="radio" name="paymentChoice" value="qrph" checked>
                 <div class="payment-type-card">
-                  <span class="pt-title" data-en="GCash" data-ko="GCash">GCash</span>
-                  <span class="pt-desc" data-en="Pay online now" data-ko="지금 온라인 결제">Pay online now</span>
+                  <span class="pt-title" data-en="Pay via QR" data-ko="QR 결제">Pay via QR</span>
+                  <span class="pt-desc" data-en="GCash, Maya, or any bank app" data-ko="GCash, Maya, 은행 앱 모두 가능">GCash, Maya, or any bank app</span>
                 </div>
               </label>
               <label class="payment-type-option">
@@ -274,13 +274,14 @@
             </div>
           </div>
 
-          <p class="payment-note" id="payment-note" data-en="Choose GCash to pay online now, or pay in person on-site / at our office." data-ko="GCash로 지금 결제하시거나, 현장 또는 사무실 방문으로 결제하실 수 있습니다.">Choose GCash to pay online now, or pay in person on-site / at our office.</p>
+          <p class="payment-note" id="payment-note" data-en="Choose Pay via QR to pay online now, or pay in person on-site / at our office." data-ko="QR 결제로 지금 결제하시거나, 현장 또는 사무실 방문으로 결제하실 수 있습니다.">Choose Pay via QR to pay online now, or pay in person on-site / at our office.</p>
 
           <div class="review-row review-row--total" style="margin-bottom:20px;"><span data-en="Total" data-ko="총 금액">Total</span><strong id="pay-total">-</strong></div>
 
-          <div class="gcash-qr-box" id="gcash-box">
-            <img src="assets/gcash-qr.jpg" alt="GCash QR" class="gcash-qr-img">
-            <p class="gcash-qr-caption">GCash: +63 967 466 7943</p>
+          <div class="qrph-box" id="qrph-box" style="display:none;">
+            <img id="qrph-qr-img" alt="Scan to Pay" class="qrph-qr-img">
+            <p class="qrph-status" id="qrph-status" data-en="Waiting for payment..." data-ko="결제 대기 중...">Waiting for payment...</p>
+            <button type="button" class="qrph-cancel" id="qrph-cancel" data-en="Cancel" data-ko="취소">Cancel</button>
           </div>
 
           <button type="submit" class="btn-submit" id="submit-btn" data-en="Confirm Reservation" data-ko="예약 확정하기">Confirm Reservation</button>
@@ -663,17 +664,15 @@
     applyLang(currentLang);
   }
 
-  // GCash QR는 결제방법으로 GCash를 선택했을 때만 보여줍니다 (언어와 무관).
-  function updateGcashVisibility() {
-    const gcashBox = document.getElementById('gcash-box');
-    const choice = document.querySelector('input[name="paymentChoice"]:checked');
-    const showGcash = !choice || choice.value === 'gcash';
-    if (gcashBox) gcashBox.style.display = showGcash ? 'block' : 'none';
-  }
+  // QR 결제 박스는 실제로 PayMongo 결제 요청이 생성된 뒤에만 보여줍니다
+  // (js/reservation.js의 runQrphFlow가 직접 show/hide 제어) — 결제수단을
+  // 바꾸면 혹시 열려있던 QR 박스는 닫아줍니다.
   document.querySelectorAll('input[name="paymentChoice"]').forEach(r => {
-    r.addEventListener('change', updateGcashVisibility);
+    r.addEventListener('change', () => {
+      const qrphBox = document.getElementById('qrph-box');
+      if (qrphBox) qrphBox.style.display = 'none';
+    });
   });
-  document.addEventListener('DOMContentLoaded', updateGcashVisibility);
 
   function applyLang(lang) {
     const t = TEXTS[lang];
@@ -707,6 +706,6 @@
     applyLang(currentLang);
   });
 </script>
-<script type="module" src="js/reservation.js?v=1787559056"></script>
+<script type="module" src="js/reservation.js?v=1787731936"></script>
 </body>
 </html>
