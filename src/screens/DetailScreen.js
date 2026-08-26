@@ -3,10 +3,10 @@ import { TOURS, PRICES } from "../prices";
 import { DETAILS } from "../details";
 import { colors, fonts } from "../theme";
 
-// tour.image(pkg-*.jpg)는 900x900 정사각형이라, 화면 폭과 같은 높이로
-// 꽉 채우면 히어로가 화면 절반 가까이 차지해버립니다. 16:9 비율의
-// 작은 박스로 줄여서 모바일 화면에 맞는 크기로 보여줍니다.
-const DETAIL_HERO_HEIGHT = Dimensions.get("window").width * (9 / 16);
+// 홈 화면 투어 카드의 썸네일과 정확히 같은 비율(4:3, cover)로 맞춰서,
+// 상세 페이지 히어로가 그 썸네일을 그대로 화면 폭 꽉 차게 확대한
+// 모습으로 보이게 합니다 — 썸네일과 다른 비율로 다시 잘리지 않도록.
+const DETAIL_HERO_HEIGHT = Dimensions.get("window").width * (3 / 4);
 
 export default function DetailScreen({ route, navigation }) {
   const { tourType } = route.params;
