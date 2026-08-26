@@ -213,7 +213,7 @@ form.addEventListener("submit", async (e) => {
   }
 
   // 결제 방법 — QR 결제(PayMongo QRPh, 실제 온라인 결제) / 현장결제(투어
-  // 당일 미팅 장소에서 현금) / 보라카이션 오피스페이(투어 전 사무실 방문 결제).
+  // 당일 미팅 장소에서 현금).
   const paymentChoice = formData.get("paymentChoice") || "qrph";
 
   if (paymentChoice === "qrph") {
@@ -228,9 +228,6 @@ form.addEventListener("submit", async (e) => {
     if (!paid) return; // cancelled, failed, or expired — let them retry
     reservation.paymentStatus = 'paid';
     reservation.paymentMethod = 'QRPh';
-  } else if (paymentChoice === "office") {
-    reservation.paymentStatus = 'unpaid';
-    reservation.paymentMethod = '보라카이션 오피스페이';
   } else {
     reservation.paymentStatus = 'unpaid';
     reservation.paymentMethod = lang === 'ko' ? '현장결제' : 'On-Site';
