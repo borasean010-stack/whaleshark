@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { View, Text, StyleSheet, ScrollView, TextInput, Pressable, ActivityIndicator } from "react-native";
 import {
-  collection, query, orderBy, onSnapshot, doc, updateDoc, getDocs,
+  collection, query, orderBy, onSnapshot, doc, updateDoc, getDocs, setDoc, serverTimestamp,
 } from "firebase/firestore";
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 import { db, auth } from "../firebaseConfig";
@@ -22,6 +22,12 @@ const VIEWS = [
 const STATUS_OPTIONS = [
   { key: "pending", label: "대기중" },
   { key: "confirmed", label: "확정" },
+  { key: "cancelled", label: "취소" },
+];
+
+const TOUR_STATUS_OPTIONS = [
+  { key: "operating", label: "정상 운영" },
+  { key: "delayed", label: "일정 변동 가능" },
   { key: "cancelled", label: "취소" },
 ];
 
@@ -70,6 +76,11 @@ export default function AdminScreen() {
   const [broadcastMsg, setBroadcastMsg] = useState(null);
   const [broadcastSubmitting, setBroadcastSubmitting] = useState(false);
 
+  const [tourStatus, setTourStatus] = useState("operating");
+  const [tourStatusMessage, setTourStatusMessage] = useState("");
+  const [tourStatusMsg, setTourStatusMsg] = useState(null);
+  const [tourStatusSaving, setTourStatusSaving] = useState(false);
+
   useEffect(() => {
     return onAuthStateChanged(auth, (user) => {
       setAuthChecked(true);
@@ -106,6 +117,16 @@ export default function AdminScreen() {
       },
       () => {}
     );
+  }, [uid]);
+
+  useEffect(() => {
+    if (!uid) return;
+    return onSnapshot(doc(db, "settings", "tourStatus"), (snap) => {
+      if (!snap.exists()) return;
+      const d = snap.data();
+      setTourStatus(d.status || "operating");
+      setTourStatusMessage(d.message || "");
+    }, () => {});
   }, [uid]);
 
   async function handleLogin() {
@@ -163,6 +184,24 @@ export default function AdminScreen() {
       setBroadcastMsg({ type: "error", text: "발송에 실패했습니다." });
     } finally {
       setBroadcastSubmitting(false);
+    }
+  }
+
+  async function handleSaveTourStatus() {
+    setTourStatusMsg(null);
+    setTourStatusSaving(true);
+    try {
+      await setDoc(doc(db, "settings", "tourStatus"), {
+        status: tourStatus,
+        message: tourStatusMessage.trim(),
+        updatedAt: serverTimestamp(),
+      });
+      setTourStatusMsg({ type: "success", text: "저장했습니다 — 앱 홈 화면에 바로 반영됩니다." });
+    } catch (err) {
+      console.error("Tour status save failed:", err);
+      setTourStatusMsg({ type: "error", text: "저장에 실패했습니다." });
+    } finally {
+      setTourStatusSaving(false);
     }
   }
 
@@ -276,7 +315,37 @@ export default function AdminScreen() {
   function renderBroadcast() {
     return (
       <>
-        <Text style={styles.title}>🐋 고래상어 출몰 알림 방송</Text>
+        <Text style={styles.title}>오늘 투어 운영 상태</Text>
+        <View style={styles.card}>
+          <Text style={styles.fieldLabel}>상태</Text>
+          <View style={styles.statusRow}>
+            {TOUR_STATUS_OPTIONS.map((s) => (
+              <Pressable
+                key={s.key}
+                style={[styles.statusPill, tourStatus === s.key && styles.statusPillActive]}
+                onPress={() => setTourStatus(s.key)}
+              >
+                <Text style={[styles.statusPillText, tourStatus === s.key && styles.statusPillTextActive]}>{s.label}</Text>
+              </Pressable>
+            ))}
+          </View>
+          <Text style={[styles.fieldLabel, { marginTop: 12 }]}>안내 문구 (비워두면 기본 문구 사용)</Text>
+          <TextInput
+            style={styles.textInput}
+            placeholder="예: 기상 악화로 오늘 투어가 취소되었습니다."
+            placeholderTextColor="#94a3b8"
+            value={tourStatusMessage}
+            onChangeText={setTourStatusMessage}
+          />
+          {tourStatusMsg && (
+            <Text style={tourStatusMsg.type === "error" ? styles.errorText : styles.successText}>{tourStatusMsg.text}</Text>
+          )}
+          <Pressable style={[styles.confirmBtn, { marginTop: 12 }, tourStatusSaving && { opacity: 0.5 }]} onPress={handleSaveTourStatus} disabled={tourStatusSaving}>
+            {tourStatusSaving ? <ActivityIndicator color="#fff" /> : <Text style={styles.confirmBtnText}>저장 (앱 홈 화면에 바로 반영)</Text>}
+          </Pressable>
+        </View>
+
+        <Text style={[styles.title, { marginTop: 8 }]}>🐋 고래상어 출몰 알림 방송</Text>
         <View style={styles.card}>
           <Text style={styles.fieldLabel}>알림 내용</Text>
           <TextInput

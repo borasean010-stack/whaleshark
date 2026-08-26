@@ -1,10 +1,21 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, Pressable, Image, Linking, Dimensions, Platform, TextInput } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import YoutubePlayer from "react-native-youtube-iframe";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "../firebaseConfig";
 import { TOURS, PRICES } from "../prices";
 import { colors, fonts } from "../theme";
 import MenuDrawer from "../components/MenuDrawer";
+
+// admin이 settings/tourStatus 문서를 바꾸면 앱 홈 화면에 바로 반영되는
+// "오늘 운영 여부" 배너. 상태값이 없거나 모르는 값이면 기본적으로 정상
+// 운영으로 취급합니다 — 배너가 잘못된 이유로 "취소"처럼 보이면 안 되니까요.
+const STATUS_STYLES = {
+  operating: { bg: "#166534", icon: "🐋", fallback: "Today's tour is operating as scheduled." },
+  delayed: { bg: "#92400e", icon: "⚠️", fallback: "Today's tour schedule may be affected." },
+  cancelled: { bg: "#991b1b", icon: "⛔", fallback: "Today's tour is cancelled." },
+};
 
 // aspectRatio 스타일만 믿지 않고 실제 화면 너비 기준으로 높이를 직접
 // 계산합니다 — 배너가 의도보다 훨씬 크게 보인다는 피드백이 있어, 크기를
@@ -84,6 +95,13 @@ export default function HomeScreen({ navigation }) {
   const [qsPeople, setQsPeople] = useState("2");
   const [qsNationality, setQsNationality] = useState("PH");
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [tourStatus, setTourStatus] = useState(null);
+
+  useEffect(() => {
+    return onSnapshot(doc(db, "settings", "tourStatus"), (snap) => {
+      setTourStatus(snap.exists() ? snap.data() : null);
+    }, () => {});
+  }, []);
 
   function onPickDate(event, selectedDate) {
     setShowDatePicker(Platform.OS === "ios");
@@ -121,6 +139,17 @@ export default function HomeScreen({ navigation }) {
             </Text>
           </View>
         </View>
+
+        {/* TODAY'S TOUR STATUS — admin.html/앱 Admin 화면에서 관리자가 바꾸면
+            바로 반영되는 오늘 운영 여부 배너. */}
+        {tourStatus && (
+          <View style={[styles.statusBanner, { backgroundColor: (STATUS_STYLES[tourStatus.status] || STATUS_STYLES.operating).bg }]}>
+            <Text style={styles.statusIcon}>{(STATUS_STYLES[tourStatus.status] || STATUS_STYLES.operating).icon}</Text>
+            <Text style={styles.statusText} numberOfLines={2}>
+              {tourStatus.message || (STATUS_STYLES[tourStatus.status] || STATUS_STYLES.operating).fallback}
+            </Text>
+          </View>
+        )}
 
         {/* TRUST BAR */}
         <View style={styles.trustBar}>
@@ -384,6 +413,9 @@ const styles = StyleSheet.create({
   heroContent: { paddingHorizontal: 24 },
   heroTitle: { color: colors.white, fontFamily: fonts.headingBlack, fontSize: 40, lineHeight: 44, marginBottom: 16 },
   heroSubtitle: { color: "rgba(255,255,255,0.85)", fontFamily: fonts.body, fontSize: 14, lineHeight: 20, maxWidth: 320 },
+  statusBanner: { flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 12, paddingHorizontal: 20 },
+  statusIcon: { fontSize: 18 },
+  statusText: { flex: 1, color: colors.white, fontFamily: fonts.bodyMedium, fontSize: 13, lineHeight: 18 },
 
   trustBar: {
     flexDirection: "row", flexWrap: "wrap", justifyContent: "center", gap: 16,
