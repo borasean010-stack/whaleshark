@@ -10,7 +10,7 @@ export default function DetailScreen({ route, navigation }) {
   const accent = colors.tour[tourType];
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 60 }}>
       <View style={styles.body}>
         <View style={[styles.tag, { backgroundColor: accent, alignSelf: "flex-start" }]}>
           <Text style={styles.tagText}>{tour.tag}</Text>
