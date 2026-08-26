@@ -458,7 +458,10 @@ async function loadAgencies() {
           <td>${a.email}</td>
           <td>${fmtPeso(a.depositBalance)}</td>
           <td>${pending > 0 ? `<span class="badge cancelled">${pending}건</span>` : '-'}</td>
-          <td><button class="action-btn topup-btn" data-uid="${uid}" data-name="${a.name}">입금 반영</button></td>
+          <td>
+            <button class="action-btn topup-btn" data-uid="${uid}" data-name="${a.name}">입금 반영</button>
+            <button class="action-btn deduct-btn" data-uid="${uid}" data-name="${a.name}" data-balance="${a.depositBalance || 0}" style="background: var(--admin-danger);">차감</button>
+          </td>
         </tr>
       `);
     });
@@ -480,6 +483,9 @@ async function loadAgencies() {
 
     document.querySelectorAll(".topup-btn").forEach(btn => {
       btn.addEventListener("click", () => handleTopup(btn.dataset.uid, btn.dataset.name));
+    });
+    document.querySelectorAll(".deduct-btn").forEach(btn => {
+      btn.addEventListener("click", () => handleDeduct(btn.dataset.uid, btn.dataset.name, Number(btn.dataset.balance)));
     });
   } catch (err) {
     console.error("Error loading agencies:", err);
@@ -509,6 +515,36 @@ async function handleTopup(uid, name) {
   } catch (err) {
     console.error("Error recording top-up:", err);
     alert("입금 반영에 실패했습니다.");
+  }
+}
+
+async function handleDeduct(uid, name, currentBalance) {
+  const input = prompt(`${name} 에서 차감할 금액을 입력하세요 (PHP)\n현재 잔액: ${fmtPeso(currentBalance)}`);
+  if (input === null) return;
+  const amount = Number(input);
+  if (!Number.isFinite(amount) || amount <= 0) {
+    alert("올바른 금액을 입력해주세요.");
+    return;
+  }
+  if (amount > currentBalance) {
+    alert(`차감액이 현재 잔액(${fmtPeso(currentBalance)})보다 많습니다.`);
+    return;
+  }
+  const note = prompt("차감 사유를 입력하세요 (예: 정산 오류 조정):", "관리자 차감") || "관리자 차감";
+  try {
+    await updateDoc(doc(db, "agencies", uid), { depositBalance: increment(-amount) });
+    await addDoc(collection(db, "agencyTransactions"), {
+      agencyId: uid,
+      type: "deduction",
+      amount: -amount,
+      note,
+      createdAt: serverTimestamp(),
+      createdBy: auth.currentUser.uid
+    });
+    loadAgencies();
+  } catch (err) {
+    console.error("Error recording deduction:", err);
+    alert("차감 처리에 실패했습니다.");
   }
 }
 
