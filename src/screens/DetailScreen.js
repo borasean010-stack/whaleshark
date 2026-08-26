@@ -3,10 +3,12 @@ import { TOURS, PRICES } from "../prices";
 import { DETAILS } from "../details";
 import { colors, fonts } from "../theme";
 
-// 홈 화면 투어 카드의 썸네일과 정확히 같은 비율(4:3, cover)로 맞춰서,
-// 상세 페이지 히어로가 그 썸네일을 그대로 화면 폭 꽉 차게 확대한
-// 모습으로 보이게 합니다 — 썸네일과 다른 비율로 다시 잘리지 않도록.
-const DETAIL_HERO_HEIGHT = Dimensions.get("window").width * (3 / 4);
+// tour.image(pkg-*.jpg)는 원본이 정사각형(900x900)입니다. 화면 폭을
+// 꽉 채우면서도 원본 사진이 한 픽셀도 잘리지 않게 하려면, 히어로 높이를
+// 화면 폭과 똑같이 맞춰서 정사각형으로 만들어야 합니다 (다른 비율 박스에
+// 넣으면 반드시 위/아래 또는 좌/우가 잘려나갑니다). resizeMode="contain"
+// 으로 크롭을 원천 차단합니다.
+const DETAIL_HERO_HEIGHT = Dimensions.get("window").width;
 
 export default function DetailScreen({ route, navigation }) {
   const { tourType } = route.params;
@@ -17,7 +19,7 @@ export default function DetailScreen({ route, navigation }) {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.hero}>
-        <Image source={tour.image} style={StyleSheet.absoluteFillObject} resizeMode="cover" />
+        <Image source={tour.image} style={StyleSheet.absoluteFillObject} resizeMode="contain" />
       </View>
 
       <View style={styles.body}>
