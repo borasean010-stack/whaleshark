@@ -3,10 +3,12 @@ import { TOURS, PRICES } from "../prices";
 import { DETAILS } from "../details";
 import { colors, fonts } from "../theme";
 
-// 웹사이트 .detail-hero(min-height:52vh, object-fit:cover)와 같은 비율을
-// aspectRatio가 아니라 화면 높이 기준 실제 px로 계산합니다 — 카드/배너에서도
-// aspectRatio만 믿었다가 이미지가 과도하게 커지는 문제가 있었습니다.
-const DETAIL_HERO_HEIGHT = Dimensions.get("window").height * 0.52;
+// tour.image(pkg-*.jpg)는 정사각형 마케팅 포스터라 큰 제목 글씨가 이미
+// 박혀있어서(홈 화면 카드 썸네일용) 세로로 긴 히어로에 그대로 쓰면 글씨가
+// 화면 가득 확대되고, 앱이 겹쳐 그리는 자체 타이틀과 두 번 겹쳐 보입니다.
+// 그래서 상세페이지 히어로는 홈 화면과 같은, 글씨 없는 사진으로 통일하고
+// 비율도 정사각형이 아니라 홈 히어로와 비슷한 와이드 비율로 잡습니다.
+const DETAIL_HERO_HEIGHT = Dimensions.get("window").width * 0.72;
 
 export default function DetailScreen({ route, navigation }) {
   const { tourType } = route.params;
@@ -17,7 +19,7 @@ export default function DetailScreen({ route, navigation }) {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.hero}>
-        <Image source={tour.image} style={StyleSheet.absoluteFillObject} resizeMode="cover" />
+        <Image source={require("../../assets/images/hero-bg.jpg")} style={StyleSheet.absoluteFillObject} resizeMode="cover" />
         <View style={styles.heroOverlay} />
         <View style={styles.heroContent}>
           <View style={[styles.tag, { backgroundColor: accent }]}>
