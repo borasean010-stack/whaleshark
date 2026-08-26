@@ -3,12 +3,10 @@ import { TOURS, PRICES } from "../prices";
 import { DETAILS } from "../details";
 import { colors, fonts } from "../theme";
 
-// tour.image(pkg-*.jpg)는 제목 텍스트가 이미 디자인에 포함된 정사각형
-// (900x900) 포스터 이미지입니다. 그 위에 어두운 오버레이나 또 다른 제목
-// 텍스트를 겹치면 "원본 그대로"가 아니게 되므로, 히어로에는 사진만 원본
-// 비율(정사각형) 그대로 잘림/변형 없이 보여주고, 태그/이름은 사진 아래
-// 본문 쪽에 별도로 표시합니다.
-const DETAIL_HERO_HEIGHT = Dimensions.get("window").width;
+// tour.image(pkg-*.jpg)는 900x900 정사각형이라, 화면 폭과 같은 높이로
+// 꽉 채우면 히어로가 화면 절반 가까이 차지해버립니다. 16:9 비율의
+// 작은 박스로 줄여서 모바일 화면에 맞는 크기로 보여줍니다.
+const DETAIL_HERO_HEIGHT = Dimensions.get("window").width * (9 / 16);
 
 export default function DetailScreen({ route, navigation }) {
   const { tourType } = route.params;
