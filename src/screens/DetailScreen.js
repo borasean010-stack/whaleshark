@@ -3,10 +3,10 @@ import { TOURS, PRICES } from "../prices";
 import { DETAILS } from "../details";
 import { colors, fonts } from "../theme";
 
-// tour.image(pkg-*.jpg)는 원본이 정사각형(900x900)입니다. 이전에는 화면
-// 높이의 52%로 히어로를 잡아서 정사각형 사진이 세로로 긴 프레임에 억지로
-// cover되며 좌우가 꽤 잘려나갔습니다 — 프레임을 원본과 같은 정사각형
-// 비율(너비 기준)로 맞춰서 잘림 없이 깔끔하게 보이게 합니다.
+// tour.image(pkg-*.jpg)는 원본이 정사각형(900x900)이라, 세로로 긴 히어로
+// 프레임에 cover로 채우면 조금이라도 잘려나갑니다. contain으로 바꿔서
+// 사진 전체가 항상 잘림 없이 다 보이게 하고, 남는 여백은 히어로 배경색
+// (navy)으로 자연스럽게 채웁니다.
 const DETAIL_HERO_HEIGHT = Dimensions.get("window").width;
 
 export default function DetailScreen({ route, navigation }) {
@@ -18,7 +18,7 @@ export default function DetailScreen({ route, navigation }) {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.hero}>
-        <Image source={tour.image} style={StyleSheet.absoluteFillObject} resizeMode="cover" />
+        <Image source={tour.image} style={StyleSheet.absoluteFillObject} resizeMode="contain" />
         <View style={styles.heroOverlay} />
         <View style={styles.heroContent}>
           <View style={[styles.tag, { backgroundColor: accent }]}>
