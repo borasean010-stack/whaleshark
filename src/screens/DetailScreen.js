@@ -3,12 +3,11 @@ import { TOURS, PRICES } from "../prices";
 import { DETAILS } from "../details";
 import { colors, fonts } from "../theme";
 
-// tour.image(pkg-*.jpg)는 정사각형 마케팅 포스터라 큰 제목 글씨가 이미
-// 박혀있어서(홈 화면 카드 썸네일용) 세로로 긴 히어로에 그대로 쓰면 글씨가
-// 화면 가득 확대되고, 앱이 겹쳐 그리는 자체 타이틀과 두 번 겹쳐 보입니다.
-// 그래서 상세페이지 히어로는 홈 화면과 같은, 글씨 없는 사진으로 통일하고
-// 비율도 정사각형이 아니라 홈 히어로와 비슷한 와이드 비율로 잡습니다.
-const DETAIL_HERO_HEIGHT = Dimensions.get("window").width * 0.72;
+// tour.image(pkg-*.jpg)는 원본이 정사각형(900x900)입니다. 이전에는 화면
+// 높이의 52%로 히어로를 잡아서 정사각형 사진이 세로로 긴 프레임에 억지로
+// cover되며 좌우가 꽤 잘려나갔습니다 — 프레임을 원본과 같은 정사각형
+// 비율(너비 기준)로 맞춰서 잘림 없이 깔끔하게 보이게 합니다.
+const DETAIL_HERO_HEIGHT = Dimensions.get("window").width;
 
 export default function DetailScreen({ route, navigation }) {
   const { tourType } = route.params;
@@ -19,7 +18,7 @@ export default function DetailScreen({ route, navigation }) {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.hero}>
-        <Image source={require("../../assets/images/hero-bg.jpg")} style={StyleSheet.absoluteFillObject} resizeMode="cover" />
+        <Image source={tour.image} style={StyleSheet.absoluteFillObject} resizeMode="cover" />
         <View style={styles.heroOverlay} />
         <View style={styles.heroContent}>
           <View style={[styles.tag, { backgroundColor: accent }]}>
