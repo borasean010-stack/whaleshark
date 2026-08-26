@@ -61,7 +61,7 @@ export default function App() {
         <Stack.Screen
           name="Detail"
           component={DetailScreen}
-          options={{ headerTransparent: true, headerTintColor: colors.white, headerTitle: "" }}
+          options={{ headerTitle: "" }}
         />
         <Stack.Screen name="Booking" component={BookingScreen} options={{ title: "Book Your Tour" }} />
         <Stack.Screen name="Payment" component={PaymentScreen} options={{ title: "Review & Payment" }} />
