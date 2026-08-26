@@ -12,9 +12,9 @@ import MenuDrawer from "../components/MenuDrawer";
 // "오늘 운영 여부" 배너. 상태값이 없거나 모르는 값이면 기본적으로 정상
 // 운영으로 취급합니다 — 배너가 잘못된 이유로 "취소"처럼 보이면 안 되니까요.
 const STATUS_STYLES = {
-  operating: { bg: "#166534", icon: "🐋", fallback: "Today's tour is operating as scheduled." },
-  delayed: { bg: "#92400e", icon: "⚠️", fallback: "Today's tour schedule may be affected." },
-  cancelled: { bg: "#991b1b", icon: "⛔", fallback: "Today's tour is cancelled." },
+  operating: { tint: "#16a34a", soft: "rgba(22,163,74,0.12)", icon: "🐋", label: "TODAY — OPERATING", fallback: "Today's tour is operating as scheduled." },
+  delayed: { tint: "#d97706", soft: "rgba(217,119,6,0.12)", icon: "⚠️", label: "TODAY — SCHEDULE MAY CHANGE", fallback: "Today's tour schedule may be affected." },
+  cancelled: { tint: "#dc2626", soft: "rgba(220,38,38,0.12)", icon: "⛔", label: "TODAY — CANCELLED", fallback: "Today's tour is cancelled." },
 };
 
 // aspectRatio 스타일만 믿지 않고 실제 화면 너비 기준으로 높이를 직접
@@ -141,15 +141,25 @@ export default function HomeScreen({ navigation }) {
         </View>
 
         {/* TODAY'S TOUR STATUS — admin.html/앱 Admin 화면에서 관리자가 바꾸면
-            바로 반영되는 오늘 운영 여부 배너. */}
-        {tourStatus && (
-          <View style={[styles.statusBanner, { backgroundColor: (STATUS_STYLES[tourStatus.status] || STATUS_STYLES.operating).bg }]}>
-            <Text style={styles.statusIcon}>{(STATUS_STYLES[tourStatus.status] || STATUS_STYLES.operating).icon}</Text>
-            <Text style={styles.statusText} numberOfLines={2}>
-              {tourStatus.message || (STATUS_STYLES[tourStatus.status] || STATUS_STYLES.operating).fallback}
-            </Text>
-          </View>
-        )}
+            바로 반영되는 오늘 운영 여부. 히어로 하단에 살짝 겹치는 카드형. */}
+        {tourStatus && (() => {
+          const st = STATUS_STYLES[tourStatus.status] || STATUS_STYLES.operating;
+          return (
+            <View style={styles.statusCardWrap}>
+              <View style={styles.statusCard}>
+                <View style={[styles.statusIconBadge, { backgroundColor: st.soft }]}>
+                  <Text style={styles.statusIconText}>{st.icon}</Text>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.statusLabel, { color: st.tint }]}>{st.label}</Text>
+                  <Text style={styles.statusMessage} numberOfLines={2}>
+                    {tourStatus.message || st.fallback}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          );
+        })()}
 
         {/* TRUST BAR */}
         <View style={styles.trustBar}>
@@ -413,9 +423,17 @@ const styles = StyleSheet.create({
   heroContent: { paddingHorizontal: 24 },
   heroTitle: { color: colors.white, fontFamily: fonts.headingBlack, fontSize: 40, lineHeight: 44, marginBottom: 16 },
   heroSubtitle: { color: "rgba(255,255,255,0.85)", fontFamily: fonts.body, fontSize: 14, lineHeight: 20, maxWidth: 320 },
-  statusBanner: { flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 12, paddingHorizontal: 20 },
-  statusIcon: { fontSize: 18 },
-  statusText: { flex: 1, color: colors.white, fontFamily: fonts.bodyMedium, fontSize: 13, lineHeight: 18 },
+  statusCardWrap: { paddingHorizontal: 20, marginTop: -28, marginBottom: 8, zIndex: 5 },
+  statusCard: {
+    flexDirection: "row", alignItems: "center", gap: 12,
+    backgroundColor: colors.white, borderRadius: 18, padding: 14,
+    shadowColor: "#000", shadowOpacity: 0.12, shadowRadius: 16, shadowOffset: { width: 0, height: 6 },
+    elevation: 6,
+  },
+  statusIconBadge: { width: 40, height: 40, borderRadius: 20, alignItems: "center", justifyContent: "center" },
+  statusIconText: { fontSize: 18 },
+  statusLabel: { fontFamily: fonts.heading, fontSize: 10, letterSpacing: 0.8, marginBottom: 3 },
+  statusMessage: { color: colors.heading, fontFamily: fonts.bodyMedium, fontSize: 13, lineHeight: 18 },
 
   trustBar: {
     flexDirection: "row", flexWrap: "wrap", justifyContent: "center", gap: 16,
