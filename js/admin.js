@@ -5,6 +5,7 @@ import {
   query,
   orderBy,
   getDocs,
+  getDoc,
   doc,
   updateDoc,
   deleteDoc,
@@ -546,6 +547,42 @@ document.getElementById("agency-create-form").addEventListener("submit", async (
     msgEl.textContent = err.code === "auth/email-already-in-use"
       ? "이미 사용 중인 이메일입니다."
       : "등록에 실패했습니다.";
+  }
+});
+
+// =====================================================================
+// 오늘 투어 운영 상태 — 앱 홈 화면 히어로 영상 아래 배너에 그대로 반영되는
+// settings/tourStatus 문서 하나만 계속 덮어씁니다(날짜별 기록 아님).
+// =====================================================================
+(async () => {
+  try {
+    const snap = await getDoc(doc(db, "settings", "tourStatus"));
+    if (snap.exists()) {
+      const d = snap.data();
+      document.getElementById("tour-status-select").value = d.status || "operating";
+      document.getElementById("tour-status-message-input").value = d.message || "";
+    }
+  } catch (err) {
+    console.error("Failed to load tour status:", err);
+  }
+})();
+
+document.getElementById("tour-status-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const msgEl = document.getElementById("tour-status-message");
+  msgEl.textContent = "";
+  try {
+    await setDoc(doc(db, "settings", "tourStatus"), {
+      status: document.getElementById("tour-status-select").value,
+      message: document.getElementById("tour-status-message-input").value.trim(),
+      updatedAt: serverTimestamp()
+    });
+    msgEl.style.color = "var(--admin-success)";
+    msgEl.textContent = "저장했습니다 — 앱 홈 화면에 바로 반영됩니다.";
+  } catch (err) {
+    console.error("Tour status save failed:", err);
+    msgEl.style.color = "var(--admin-danger)";
+    msgEl.textContent = "저장에 실패했습니다.";
   }
 });
 

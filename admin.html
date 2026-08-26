@@ -88,6 +88,28 @@
 
           <div class="table-container" style="margin-bottom: 24px;">
             <div class="table-header">
+              <h2>오늘 투어 운영 상태</h2>
+            </div>
+            <form id="tour-status-form" style="padding: 24px; display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end;">
+              <div>
+                <label style="display:block; font-size:0.8rem; color:var(--admin-text-muted); margin-bottom:6px;">상태</label>
+                <select id="tour-status-select" style="padding:10px 12px; border-radius:8px; border:1px solid var(--admin-border); background:rgba(255,255,255,0.05); color:#fff;">
+                  <option value="operating">정상 운영</option>
+                  <option value="delayed">일정 변동 가능</option>
+                  <option value="cancelled">취소</option>
+                </select>
+              </div>
+              <div style="flex:1; min-width:260px;">
+                <label style="display:block; font-size:0.8rem; color:var(--admin-text-muted); margin-bottom:6px;">안내 문구 (비워두면 기본 문구 사용)</label>
+                <input type="text" id="tour-status-message-input" placeholder="예: 기상 악화로 오늘 투어가 취소되었습니다." style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid var(--admin-border); background:rgba(255,255,255,0.05); color:#fff;">
+              </div>
+              <button type="submit" class="action-btn" style="background: var(--admin-primary);">저장 (앱 홈 화면에 바로 반영)</button>
+              <span id="tour-status-message" style="font-size:0.85rem;"></span>
+            </form>
+          </div>
+
+          <div class="table-container" style="margin-bottom: 24px;">
+            <div class="table-header">
               <h2>🐋 고래상어 출몰 알림 방송</h2>
             </div>
             <form id="sighting-broadcast-form" style="padding: 24px; display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end;">
@@ -302,6 +324,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/admin.js?v=1787552289"></script>
+  <script type="module" src="js/admin.js?v=1787714179"></script>
 </body>
 </html>
