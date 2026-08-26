@@ -128,6 +128,10 @@ export default function HomeScreen({ navigation }) {
               videoId={HERO_VIDEO_ID}
               webViewStyle={{ backgroundColor: "transparent" }}
               initialPlayerParams={{ controls: false, modestbranding: true, rel: false, loop: true, playlist: HERO_VIDEO_ID }}
+              webViewProps={{
+                allowsInlineMediaPlayback: true,
+                mediaPlaybackRequiresUserAction: false,
+              }}
             />
           </View>
           <View style={styles.heroOverlay} pointerEvents="none" />
