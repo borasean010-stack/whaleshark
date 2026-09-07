@@ -542,12 +542,10 @@ body {
   margin-top: 2px;
   color: inherit;
 }
-.footer-icon--facebook,
 .footer-icon--kakao {
   width: 17px;
   height: 17px;
 }
-.footer-icon--facebook path { fill: #1877F2; }
 .footer-icon--kakao path { fill: #3C1E1E; }
 
 .footer-bottom {
@@ -1504,7 +1502,7 @@ body.lang-ko .lang-en-block { display: none; }
   .conservation-inner { grid-template-columns: 1fr; gap: 32px; }
 }
 
-/* ── Facebook video gallery ── */
+/* ── Video gallery ── */
 .fb-video-section {
   background: #fff;
   padding: 80px 24px;
