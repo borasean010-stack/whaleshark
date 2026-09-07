@@ -1685,3 +1685,53 @@ iframe.fb-video-thumb {
   .about-shark, .guest-rules { padding: 70px 20px; }
   .guest-rules-grid { grid-template-columns: 1fr; }
 }
+
+.faq-section {
+  background: #fff;
+  padding: 100px 24px;
+}
+.faq-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+.faq-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.faq-header h2 {
+  font-size: clamp(1.76rem, 4vw, 2.46rem);
+  font-weight: 900;
+  color: #1C529E;
+  margin: 0 0 10px;
+}
+.faq-item {
+  background: #F8FAFC;
+  border-radius: 16px;
+  padding: 22px 28px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 16px rgba(28,82,158,0.06);
+}
+.faq-item summary {
+  cursor: pointer;
+  font-weight: 800;
+  color: #1C529E;
+  font-size: 1rem;
+  list-style: none;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after {
+  content: "+";
+  float: right;
+  font-weight: 900;
+  color: #1C529E;
+}
+.faq-item[open] summary::after { content: "\2212"; }
+.faq-item p {
+  margin: 14px 0 0;
+  color: rgba(28,82,158,0.75);
+  font-size: 0.88rem;
+  line-height: 1.7;
+}
+@media (max-width: 720px) {
+  .faq-section { padding: 70px 20px; }
+}
