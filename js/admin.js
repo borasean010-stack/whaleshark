@@ -94,7 +94,6 @@ onAuthStateChanged(auth, (user) => {
     }
     loginOverlay.style.display = "none";
     dashboard.style.display = "block";
-    loadReservations();
     loadDashboard();
   } else {
     loginOverlay.style.display = "flex";
