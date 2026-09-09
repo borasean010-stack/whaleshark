@@ -174,7 +174,7 @@ function localDateStr(offsetDays = 0) {
 
 // Load Data from Firestore
 async function loadReservations() {
-  tbody.innerHTML = "<tr><td colspan='11' style='text-align:center;'>로딩 중...</td></tr>";
+  tbody.innerHTML = "<tr><td colspan='12' style='text-align:center;'>로딩 중...</td></tr>";
   try {
     const q = query(collection(db, "reservations"), orderBy("createdAt", "desc"));
     const querySnapshot = await getDocs(q);
@@ -248,6 +248,7 @@ async function loadReservations() {
           <div>${data.email}</div>
         </td>
         <td>${data.emergencyContact || "-"}</td>
+        <td>${data.referralCode ? `<span style="background:#dbeafe;color:#1d4ed8;padding:2px 7px;border-radius:6px;font-size:0.78rem;font-weight:700;">${data.referralCode}</span>` : "-"}</td>
         <td>${data.meetingTime ? data.meetingTime + " AM" : "-"}</td>
         <td>${selectHtml}</td>
         <td>
@@ -263,7 +264,7 @@ async function loadReservations() {
     });
 
     if (total === 0) {
-      tbody.innerHTML = "<tr><td colspan='11' style='text-align:center;'>예약 내역이 없습니다.</td></tr>";
+      tbody.innerHTML = "<tr><td colspan='12' style='text-align:center;'>예약 내역이 없습니다.</td></tr>";
     }
 
     statTotal.textContent = total;
@@ -302,7 +303,7 @@ async function loadReservations() {
     const msg = error.code === 'permission-denied'
       ? `권한 없음 (permission-denied). luca@boracaywhaleshark.com 으로 로그인했는지 확인하세요.`
       : `오류: ${error.code || error.message}`;
-    tbody.innerHTML = `<tr><td colspan='11' style='text-align:center; color: red;'>${msg}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan='12' style='text-align:center; color: red;'>${msg}</td></tr>`;
   }
 }
 

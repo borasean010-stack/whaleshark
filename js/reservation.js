@@ -9,6 +9,8 @@ const form = document.getElementById("reservation-form");
 const submitBtn = document.getElementById("submit-btn");
 const statusEl = document.getElementById("form-status");
 
+const referralCode = new URLSearchParams(window.location.search).get('ref') || '';
+
 // 예약 확정 바우처 이메일 발송 + PayMongo QRPh 결제 생성/확인을 처리하는
 // Google Apps Script 웹 앱 (Secret key는 여기 없고 Apps Script 안에만 있음).
 const VOUCHER_ENDPOINT = "https://script.google.com/macros/s/AKfycbwkaT0m8W5Q0HEAH6aNGZqibNgfXkJzUGzp28Txo2RyOPEenGtmujWaS2EEgJu7dhz3/exec";
@@ -227,6 +229,7 @@ form.addEventListener("submit", async (e) => {
     name: formData.get("name").trim(),
     email: formData.get("email").trim(),
     emergencyContact: (formData.get("emergencyContact") || "").trim(),
+    ...(referralCode && { referralCode }),
     status: "pending",
     createdAt: serverTimestamp()
   };
