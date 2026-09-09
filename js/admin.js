@@ -925,68 +925,234 @@ async function loadSettlement() {
 
 // ===== REFERRAL CODE MANAGEMENT =====
 const BASE_URL = "https://boracaywhaleshark.com/reservation";
+const TOUR_LABELS = { VF: "VIP 패스트트랙", F: "패스트트랙", R: "레귤러", T: "티켓만" };
+const STATUS_LABELS = { confirmed: "예약확정", pending: "대기중", cancelled: "취소됨" };
+
+let _refDateFrom = null;
+let _refDateTo = null;
 
 async function loadReferralCodes() {
-  const tbody = document.getElementById("referral-tbody");
-  tbody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>로딩 중...</td></tr>";
+  const container = document.getElementById("referral-cards");
+  container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--admin-text-muted);">로딩 중...</div>`;
   try {
-    const snap = await getDocs(query(collection(db, "referralCodes"), orderBy("createdAt", "desc")));
-    if (snap.empty) {
-      tbody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>등록된 레퍼럴 코드가 없습니다.</td></tr>";
+    const [codesSnap, resSnap] = await Promise.all([
+      getDocs(query(collection(db, "referralCodes"), orderBy("createdAt", "desc"))),
+      getDocs(query(collection(db, "reservations"), orderBy("createdAt", "desc"))),
+    ]);
+
+    if (codesSnap.empty) {
+      container.innerHTML = `<div style="text-align:center;padding:60px;color:var(--admin-text-muted);font-size:1rem;">등록된 레퍼럴 코드가 없습니다.<br>위에서 새 코드를 생성하세요.</div>`;
       return;
     }
-    tbody.innerHTML = "";
-    snap.forEach(docSnap => {
+
+    // 예약 데이터를 referralCode별로 그룹화
+    const resMap = {};
+    resSnap.forEach(d => {
+      const data = d.data();
+      if (!data.referralCode) return;
+      const code = data.referralCode;
+      if (!resMap[code]) resMap[code] = [];
+      // 날짜 필터 적용
+      if (_refDateFrom && data.date < _refDateFrom) return;
+      if (_refDateTo && data.date > _refDateTo) return;
+      resMap[code].push({ id: d.id, ...data });
+    });
+
+    container.innerHTML = "";
+
+    codesSnap.forEach(docSnap => {
       const d = docSnap.data();
       const link = `${BASE_URL}?ref=${encodeURIComponent(d.code)}`;
-      const createdDate = d.createdAt?.toDate ? d.createdAt.toDate().toLocaleDateString('ko-KR') : "-";
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td><span style="background:#dbeafe;color:#1d4ed8;padding:3px 10px;border-radius:6px;font-weight:700;font-size:0.85rem;">${d.code}</span></td>
-        <td>${d.name || "-"}</td>
-        <td>
-          <div style="display:flex;gap:6px;align-items:center;">
-            <input type="text" value="${link}" readonly style="font-size:0.78rem;padding:4px 8px;border:1px solid var(--admin-border);border-radius:6px;background:var(--admin-bg);color:var(--admin-text);width:300px;max-width:100%;">
-            <button onclick="navigator.clipboard.writeText('${link}').then(()=>{this.textContent='✓ 복사됨';setTimeout(()=>{this.textContent='복사';},1500)})" style="padding:4px 10px;background:#10b981;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.8rem;white-space:nowrap;">복사</button>
+      const reservations = resMap[d.code] || [];
+      const confirmed = reservations.filter(r => r.status === "confirmed");
+      const pending = reservations.filter(r => r.status === "pending");
+      const cancelled = reservations.filter(r => r.status === "cancelled");
+      const revenue = confirmed.reduce((sum, r) => sum + (r.totalPrice || 0), 0);
+      const commRate = d.commissionRate || 0;
+      const commission = Math.round(revenue * commRate / 100);
+      const unsettled = confirmed.filter(r => !r.refSettled);
+      const unsettledRevenue = unsettled.reduce((sum, r) => sum + (r.totalPrice || 0), 0);
+      const unsettledCommission = Math.round(unsettledRevenue * commRate / 100);
+
+      const card = document.createElement("div");
+      card.style.cssText = "background:var(--admin-bg);border:1px solid var(--admin-border);border-radius:12px;margin-bottom:16px;overflow:hidden;";
+      card.innerHTML = `
+        <!-- 카드 헤더 -->
+        <div style="display:flex;align-items:center;gap:16px;padding:18px 20px;cursor:pointer;user-select:none;" class="ref-card-header" data-code="${d.code}">
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <span style="background:#dbeafe;color:#1d4ed8;padding:4px 12px;border-radius:8px;font-weight:800;font-size:0.95rem;letter-spacing:1px;">${d.code}</span>
+              <span style="font-weight:600;font-size:1rem;color:var(--admin-text);">${d.name || ""}</span>
+            </div>
+            <div style="margin-top:6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+              <input type="text" value="${link}" readonly style="font-size:0.75rem;padding:3px 8px;border:1px solid var(--admin-border);border-radius:6px;background:var(--admin-bg-2);color:var(--admin-text-muted);width:320px;max-width:100%;" onclick="event.stopPropagation()">
+              <button onclick="event.stopPropagation();navigator.clipboard.writeText('${link}').then(()=>{this.textContent='✓ 복사됨';setTimeout(()=>{this.textContent='링크 복사';},1500)})" style="padding:3px 10px;background:#10b981;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;white-space:nowrap;">링크 복사</button>
+            </div>
           </div>
-        </td>
-        <td style="text-align:center; font-weight:700;">${d.usageCount || 0}건</td>
-        <td>${createdDate}</td>
-        <td><button class="action-btn delete-btn" data-ref-id="${docSnap.id}">삭제</button></td>
+          <!-- 통계 뱃지 -->
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;" onclick="event.stopPropagation()">
+            <div style="text-align:center;background:var(--admin-bg-2);border-radius:10px;padding:8px 14px;min-width:64px;">
+              <div style="font-size:1.3rem;font-weight:800;color:var(--admin-text);">${reservations.length}</div>
+              <div style="font-size:0.72rem;color:var(--admin-text-muted);">총 예약</div>
+            </div>
+            <div style="text-align:center;background:#dcfce7;border-radius:10px;padding:8px 14px;min-width:64px;">
+              <div style="font-size:1.3rem;font-weight:800;color:#16a34a;">${confirmed.length}</div>
+              <div style="font-size:0.72rem;color:#16a34a;">확정</div>
+            </div>
+            <div style="text-align:center;background:#fef9c3;border-radius:10px;padding:8px 14px;min-width:64px;">
+              <div style="font-size:1.3rem;font-weight:800;color:#ca8a04;">${pending.length}</div>
+              <div style="font-size:0.72rem;color:#ca8a04;">대기</div>
+            </div>
+            <div style="text-align:center;background:#f0f9ff;border-radius:10px;padding:8px 14px;min-width:80px;">
+              <div style="font-size:1rem;font-weight:800;color:#0369a1;">₱${revenue.toLocaleString()}</div>
+              <div style="font-size:0.72rem;color:#0369a1;">확정 매출</div>
+            </div>
+            ${commRate > 0 ? `
+            <div style="text-align:center;background:#fdf4ff;border-radius:10px;padding:8px 14px;min-width:80px;">
+              <div style="font-size:1rem;font-weight:800;color:#7e22ce;">₱${commission.toLocaleString()}</div>
+              <div style="font-size:0.72rem;color:#7e22ce;">수수료 ${commRate}%</div>
+            </div>
+            ` : ""}
+            ${unsettled.length > 0 ? `
+            <div style="text-align:center;background:#fff1f2;border-radius:10px;padding:8px 14px;min-width:80px;border:1px solid #fecdd3;">
+              <div style="font-size:1rem;font-weight:800;color:#be123c;">₱${unsettledCommission.toLocaleString()}</div>
+              <div style="font-size:0.72rem;color:#be123c;">미정산 ${unsettled.length}건</div>
+            </div>
+            ` : `
+            <div style="text-align:center;background:#f0fdf4;border-radius:10px;padding:8px 14px;min-width:72px;border:1px solid #bbf7d0;">
+              <div style="font-size:0.85rem;font-weight:700;color:#15803d;">✓ 정산완료</div>
+              <div style="font-size:0.72rem;color:#15803d;">미정산 없음</div>
+            </div>
+            `}
+          </div>
+          <!-- 수수료율 편집 + 삭제 -->
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;" onclick="event.stopPropagation()">
+            <div style="display:flex;gap:6px;align-items:center;">
+              <input type="number" class="ref-comm-input" data-id="${docSnap.id}" value="${commRate}" min="0" max="100" placeholder="%" style="width:60px;padding:4px 8px;border:1px solid var(--admin-border);border-radius:6px;font-size:0.85rem;background:var(--admin-bg-2);color:var(--admin-text);text-align:center;">
+              <button class="ref-comm-save" data-id="${docSnap.id}" style="padding:4px 10px;background:#6366f1;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;white-space:nowrap;">% 저장</button>
+            </div>
+            ${unsettled.length > 0 ? `<button class="ref-settle-btn action-btn" data-id="${docSnap.id}" data-code="${d.code}" data-amount="${unsettledCommission}" style="font-size:0.78rem;white-space:nowrap;background:#be123c;">정산 완료 처리</button>` : ""}
+            <button class="ref-delete-btn action-btn delete-btn" data-ref-id="${docSnap.id}" style="font-size:0.78rem;">삭제</button>
+          </div>
+          <div style="font-size:1.2rem;color:var(--admin-text-muted);margin-left:4px;" class="ref-chevron">▼</div>
+        </div>
+
+        <!-- 예약 목록 (접혀있음) -->
+        <div class="ref-card-body" style="display:none;border-top:1px solid var(--admin-border);overflow-x:auto;">
+          ${reservations.length === 0 ? `<div style="padding:24px;text-align:center;color:var(--admin-text-muted);">해당 기간 예약 없음</div>` : `
+          <table style="width:100%;font-size:0.85rem;">
+            <thead><tr style="background:var(--admin-bg-2);">
+              <th style="padding:10px 12px;text-align:left;">날짜</th>
+              <th>예약자</th>
+              <th>투어</th>
+              <th>인원</th>
+              <th>금액</th>
+              <th>결제</th>
+              <th>상태</th>
+              <th>정산</th>
+            </tr></thead>
+            <tbody>
+              ${reservations.map(r => `
+              <tr style="border-top:1px solid var(--admin-border);">
+                <td style="padding:8px 12px;">${r.date}</td>
+                <td style="padding:8px 12px;">${r.name}</td>
+                <td style="padding:8px 12px;">${TOUR_LABELS[r.tourType] || r.tourType}</td>
+                <td style="padding:8px 12px;text-align:center;">${r.people}명</td>
+                <td style="padding:8px 12px;font-weight:700;">₱${(r.totalPrice||0).toLocaleString()}</td>
+                <td style="padding:8px 12px;">${r.paymentStatus === 'paid' ? '<span style="color:#16a34a;font-weight:600;">결제완료</span>' : '<span style="color:#ca8a04;">미결제</span>'}</td>
+                <td style="padding:8px 12px;"><span style="padding:2px 8px;border-radius:6px;font-size:0.78rem;font-weight:600;background:${r.status==='confirmed'?'#dcfce7':r.status==='pending'?'#fef9c3':'#fee2e2'};color:${r.status==='confirmed'?'#16a34a':r.status==='pending'?'#ca8a04':'#dc2626'}">${STATUS_LABELS[r.status]||r.status}</span></td>
+                <td style="padding:8px 12px;">${r.refSettled ? '<span style="color:#16a34a;font-weight:600;">✓ 정산</span>' : '<span style="color:#9ca3af;">미정산</span>'}</td>
+              </tr>`).join("")}
+            </tbody>
+            <tfoot>
+              <tr style="background:var(--admin-bg-2);font-weight:700;border-top:2px solid var(--admin-border);">
+                <td colspan="4" style="padding:10px 12px;">합계</td>
+                <td style="padding:10px 12px;">₱${revenue.toLocaleString()}</td>
+                <td colspan="2" style="padding:10px 12px;color:#7e22ce;">${commRate>0?`수수료 ₱${commission.toLocaleString()}`:""}</td>
+                <td style="padding:10px 12px;color:#be123c;">${unsettled.length>0?`미정산 ₱${unsettledCommission.toLocaleString()}`:'완료'}</td>
+              </tr>
+            </tfoot>
+          </table>`}
+        </div>
       `;
-      tbody.appendChild(tr);
+      container.appendChild(card);
     });
-    tbody.querySelectorAll("button[data-ref-id]").forEach(btn => {
+
+    // 이벤트 바인딩
+    container.querySelectorAll(".ref-card-header").forEach(hdr => {
+      hdr.addEventListener("click", () => {
+        const body = hdr.nextElementSibling;
+        const chevron = hdr.querySelector(".ref-chevron");
+        const open = body.style.display !== "none";
+        body.style.display = open ? "none" : "block";
+        chevron.textContent = open ? "▼" : "▲";
+      });
+    });
+
+    container.querySelectorAll(".ref-comm-save").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const rate = Number(btn.parentElement.querySelector(".ref-comm-input").value) || 0;
+        await updateDoc(doc(db, "referralCodes", btn.dataset.id), { commissionRate: rate });
+        btn.textContent = "✓ 저장됨";
+        setTimeout(() => { btn.textContent = "% 저장"; loadReferralCodes(); }, 1000);
+      });
+    });
+
+    container.querySelectorAll(".ref-settle-btn").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const { code, amount } = btn.dataset;
+        if (!confirm(`${code} 미정산 예약을 정산 완료 처리할까요?\n수수료 금액: ₱${Number(amount).toLocaleString()}`)) return;
+        // 해당 코드의 미정산 예약에 refSettled: true 표시
+        const q = query(collection(db, "reservations"), where("referralCode", "==", code), where("status", "==", "confirmed"));
+        const snap = await getDocs(q);
+        const updates = [];
+        snap.forEach(d => { if (!d.data().refSettled) updates.push(updateDoc(d.ref, { refSettled: true, refSettledAt: serverTimestamp() })); });
+        await Promise.all(updates);
+        loadReferralCodes();
+      });
+    });
+
+    container.querySelectorAll(".ref-delete-btn").forEach(btn => {
       btn.addEventListener("click", async () => {
         if (!confirm("이 레퍼럴 코드를 삭제할까요?")) return;
         await deleteDoc(doc(db, "referralCodes", btn.dataset.refId));
         loadReferralCodes();
       });
     });
+
   } catch (err) {
     console.error("Error loading referral codes:", err);
-    tbody.innerHTML = "<tr><td colspan='6' style='text-align:center; color:red;'>오류가 발생했습니다.</td></tr>";
+    container.innerHTML = `<div style="text-align:center;padding:40px;color:red;">오류가 발생했습니다.</div>`;
   }
 }
 
 document.getElementById("ref-create-btn")?.addEventListener("click", async () => {
   const codeInput = document.getElementById("ref-code-input");
   const nameInput = document.getElementById("ref-name-input");
+  const commInput = document.getElementById("ref-commission-input");
   const code = codeInput.value.trim().toUpperCase().replace(/\s+/g, '_');
   const name = nameInput.value.trim();
+  const commissionRate = Number(commInput.value) || 0;
   if (!code) { alert("코드명을 입력하세요."); return; }
   try {
-    await addDoc(collection(db, "referralCodes"), {
-      code,
-      name,
-      usageCount: 0,
-      createdAt: serverTimestamp(),
-    });
-    codeInput.value = "";
-    nameInput.value = "";
+    await addDoc(collection(db, "referralCodes"), { code, name, commissionRate, usageCount: 0, createdAt: serverTimestamp() });
+    codeInput.value = ""; nameInput.value = ""; commInput.value = "";
     loadReferralCodes();
   } catch (err) {
     console.error("Error creating referral code:", err);
     alert("생성에 실패했습니다.");
   }
+});
+
+document.getElementById("ref-filter-btn")?.addEventListener("click", () => {
+  _refDateFrom = document.getElementById("ref-date-from").value || null;
+  _refDateTo = document.getElementById("ref-date-to").value || null;
+  loadReferralCodes();
+});
+
+document.getElementById("ref-filter-clear")?.addEventListener("click", () => {
+  _refDateFrom = null; _refDateTo = null;
+  document.getElementById("ref-date-from").value = "";
+  document.getElementById("ref-date-to").value = "";
+  loadReferralCodes();
 });
