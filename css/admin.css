@@ -165,6 +165,63 @@ body {
   flex: 1;
 }
 
+/* Dashboard Today Stats (오늘 일정 / 내일 일정 / 신규예약 / 예약확정) */
+.today-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.today-stat-card {
+  display: block;
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: 16px;
+  padding: 20px;
+  text-decoration: none;
+  color: var(--admin-text);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.today-stat-card:hover {
+  border-color: var(--admin-primary);
+  transform: translateY(-2px);
+}
+.today-stat-card--accent {
+  background: var(--admin-primary);
+  border-color: var(--admin-primary);
+}
+.today-stat-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.today-stat-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--admin-text-muted);
+}
+.today-stat-card--accent .today-stat-label {
+  color: rgba(255, 255, 255, 0.85);
+}
+.today-stat-icon {
+  font-size: 1.2rem;
+}
+.today-stat-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--admin-text);
+}
+.today-stat-sub {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: var(--admin-text-muted);
+}
+.today-stat-card--accent .today-stat-sub {
+  color: rgba(255, 255, 255, 0.75);
+}
+
 /* Stats Cards */
 .stats-grid {
   display: grid;

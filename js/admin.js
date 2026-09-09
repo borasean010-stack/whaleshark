@@ -141,6 +141,27 @@ document.querySelectorAll(".nav-item[data-view]").forEach(navEl => {
   });
 });
 
+// Dashboard "오늘 일정 / 내일 일정 / 신규예약 / 예약확정" cards — same
+// destinations as the sidebar, just delegated to the matching sidebar link's
+// own click handler above so the sidebar's active state and view loaders
+// stay in sync with a single source of truth instead of duplicating the
+// switching logic here.
+document.querySelectorAll(".today-stat-card[data-view]").forEach(card => {
+  card.addEventListener("click", (e) => {
+    e.preventDefault();
+    const sidebarLink = document.querySelector(`.nav-item[data-view="${card.dataset.view}"]`);
+    if (sidebarLink) sidebarLink.click();
+  });
+});
+
+// Local YYYY-MM-DD for today (offsetDays=0) or an offset day, matching the
+// plain date string format reservations are stored under (data.date).
+function localDateStr(offsetDays = 0) {
+  const d = new Date();
+  d.setDate(d.getDate() + offsetDays);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
 // Load Data from Firestore
 async function loadReservations() {
   tbody.innerHTML = "<tr><td colspan='11' style='text-align:center;'>로딩 중...</td></tr>";
@@ -151,6 +172,10 @@ async function loadReservations() {
     let total = 0;
     let pending = 0;
     let confirmed = 0;
+    let todayCount = 0;
+    let tomorrowCount = 0;
+    const todayStr = localDateStr(0);
+    const tomorrowStr = localDateStr(1);
     const recentRows = [];
 
     tbody.innerHTML = "";
@@ -163,7 +188,9 @@ async function loadReservations() {
       total++;
       if (data.status === "pending") pending++;
       if (data.status === "confirmed") confirmed++;
-      
+      if (data.date === todayStr) todayCount++;
+      if (data.date === tomorrowStr) tomorrowCount++;
+
       const tr = document.createElement("tr");
       
       // Format Date
@@ -238,6 +265,20 @@ async function loadReservations() {
     const dashRecent = document.getElementById("dashboard-recent-tbody");
     if (dashTotal) dashTotal.textContent = total;
     if (dashPending) dashPending.textContent = pending;
+
+    const dashTodayDate = document.getElementById("dash-today-date");
+    const dashTodayCount = document.getElementById("dash-today-count");
+    const dashTomorrowDate = document.getElementById("dash-tomorrow-date");
+    const dashTomorrowCount = document.getElementById("dash-tomorrow-count");
+    const dashStatNew = document.getElementById("dash-stat-new");
+    const dashStatConfirmed = document.getElementById("dash-stat-confirmed");
+    if (dashTodayDate) dashTodayDate.textContent = todayStr;
+    if (dashTodayCount) dashTodayCount.textContent = `예약 ${todayCount}건`;
+    if (dashTomorrowDate) dashTomorrowDate.textContent = tomorrowStr;
+    if (dashTomorrowCount) dashTomorrowCount.textContent = `예약 ${tomorrowCount}건`;
+    if (dashStatNew) dashStatNew.textContent = pending;
+    if (dashStatConfirmed) dashStatConfirmed.textContent = confirmed;
+
     if (dashRecent) {
       dashRecent.innerHTML = recentRows.length
         ? recentRows.join("")
@@ -419,12 +460,6 @@ function fmtPeso(amount) {
   return `₱${(Number(amount) || 0).toLocaleString('en-US')}`;
 }
 
-function randomTempPassword() {
-  const bytes = new Uint8Array(18);
-  crypto.getRandomValues(bytes);
-  return btoa(String.fromCharCode(...bytes)).replace(/[^A-Za-z0-9]/g, "").slice(0, 20) + "!1";
-}
-
 async function loadAgencies() {
   const tbody = document.getElementById("agency-tbody");
   tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>로딩 중...</td></tr>";
@@ -461,6 +496,8 @@ async function loadAgencies() {
           <td>
             <button class="action-btn topup-btn" data-uid="${uid}" data-name="${a.name}">입금 반영</button>
             <button class="action-btn deduct-btn" data-uid="${uid}" data-name="${a.name}" data-balance="${a.depositBalance || 0}" style="background: var(--admin-danger);">차감</button>
+            <button class="action-btn resend-btn" data-email="${a.email}" data-name="${a.name}">비밀번호 재설정 메일</button>
+            <button class="action-btn delete-agency-btn" data-uid="${uid}" data-name="${a.name}" style="background: var(--admin-danger);">삭제</button>
           </td>
         </tr>
       `);
@@ -486,6 +523,12 @@ async function loadAgencies() {
     });
     document.querySelectorAll(".deduct-btn").forEach(btn => {
       btn.addEventListener("click", () => handleDeduct(btn.dataset.uid, btn.dataset.name, Number(btn.dataset.balance)));
+    });
+    document.querySelectorAll(".resend-btn").forEach(btn => {
+      btn.addEventListener("click", () => handleResendPasswordReset(btn.dataset.email, btn.dataset.name));
+    });
+    document.querySelectorAll(".delete-agency-btn").forEach(btn => {
+      btn.addEventListener("click", () => handleDeleteAgency(btn.dataset.uid, btn.dataset.name));
     });
   } catch (err) {
     console.error("Error loading agencies:", err);
@@ -548,10 +591,60 @@ async function handleDeduct(uid, name, currentBalance) {
   }
 }
 
+// 에이전시가 비밀번호를 잊었거나 최초 설정 메일을 못 받았을 때, 계정을 다시
+// 만들지 않고 재설정 메일만 다시 보냅니다 (재가입은 "이미 사용 중인
+// 이메일" 오류로 막혀 있으므로 이 방법이 유일한 자가 복구 경로입니다).
+async function handleResendPasswordReset(email, name) {
+  if (!confirm(`${name} (${email}) 에게 비밀번호 재설정 메일을 다시 보낼까요?`)) return;
+  try {
+    await sendPasswordResetEmail(auth, email);
+    alert(`${email} 로 비밀번호 재설정 메일을 보냈습니다.`);
+  } catch (err) {
+    console.error("Error sending password reset email:", err);
+    alert("메일 발송에 실패했습니다.");
+  }
+}
+
+// Firestore의 agencies 문서만 지웁니다 — 브라우저 SDK로는 다른 사용자의
+// Firebase Auth 계정 자체를 지울 수 없습니다(Admin SDK/Cloud Function이
+// 필요한데 이 프로젝트는 쓰지 않음). 문서를 지우면 agency-portal.js가
+// 로그인 시 "에이전시로 등록되지 않음" 처리를 하므로 앱 상으로는 완전히
+// 접근이 막히지만, Firebase Authentication 사용자 목록에는 이메일이 계속
+// 남아있을 수 있습니다 — 완전히 지우려면 Firebase 콘솔에서 별도 삭제가
+// 필요합니다.
+async function handleDeleteAgency(uid, name) {
+  if (!confirm(`정말 "${name}" 에이전시를 삭제할까요?\n예치금 잔액과 정산 이력이 모두 사라지며 되돌릴 수 없습니다.`)) return;
+  try {
+    await deleteDoc(doc(db, "agencies", uid));
+    alert(`"${name}" 에이전시를 삭제했습니다.`);
+    loadAgencies();
+  } catch (err) {
+    console.error("Error deleting agency:", err);
+    alert("삭제에 실패했습니다.");
+  }
+}
+
+// 헷갈리기 쉬운 문자(0/O, 1/l/I 등)를 뺀 문자셋으로, 관리자가 전화/카카오로
+// 직접 불러주거나 타이핑해도 헷갈리지 않을 정도의 임시 비밀번호를 만듭니다.
+function randomReadablePassword() {
+  const chars = "ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
+  const bytes = new Uint8Array(10);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, b => chars[b % chars.length]).join("");
+}
+
+document.getElementById("agency-password-generate").addEventListener("click", () => {
+  document.getElementById("agency-password-input").value = randomReadablePassword();
+});
+
+// 이메일 발송(sendPasswordResetEmail)이 안정적으로 도착하지 않아, 관리자가
+// 직접 초기 비밀번호를 정해서 계정을 만들고 화면에 그대로 보여줍니다 —
+// 관리자가 호텔 측에 전화/카카오 등으로 직접 전달하는 방식입니다.
 document.getElementById("agency-create-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const name = document.getElementById("agency-name-input").value.trim();
   const email = document.getElementById("agency-email-input").value.trim();
+  const password = document.getElementById("agency-password-input").value;
   const msgEl = document.getElementById("agency-create-message");
   msgEl.textContent = "";
 
@@ -560,9 +653,8 @@ document.getElementById("agency-create-form").addEventListener("submit", async (
   const secondaryAuth = getAuth(secondaryApp);
 
   try {
-    const cred = await createUserWithEmailAndPassword(secondaryAuth, email, randomTempPassword());
+    const cred = await createUserWithEmailAndPassword(secondaryAuth, email, password);
     const uid = cred.user.uid;
-    await sendPasswordResetEmail(secondaryAuth, email);
     await signOut(secondaryAuth);
 
     await setDoc(doc(db, "agencies", uid), {
@@ -574,7 +666,7 @@ document.getElementById("agency-create-form").addEventListener("submit", async (
     });
 
     msgEl.style.color = "var(--admin-success)";
-    msgEl.textContent = `등록 완료 — ${email} 로 비밀번호 설정 메일을 보냈습니다.`;
+    msgEl.innerHTML = `등록 완료 — 이메일: <strong>${email}</strong> / 비밀번호: <strong>${password}</strong> (호텔 측에 직접 전달해주세요)`;
     e.target.reset();
     loadAgencies();
   } catch (err) {
@@ -582,6 +674,8 @@ document.getElementById("agency-create-form").addEventListener("submit", async (
     msgEl.style.color = "var(--admin-danger)";
     msgEl.textContent = err.code === "auth/email-already-in-use"
       ? "이미 사용 중인 이메일입니다."
+      : err.code === "auth/weak-password"
+      ? "비밀번호는 6자 이상이어야 합니다."
       : "등록에 실패했습니다.";
   }
 });

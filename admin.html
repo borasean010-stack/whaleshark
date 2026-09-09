@@ -63,6 +63,41 @@
           <!-- View: Dashboard -->
           <div id="view-dashboard" class="admin-view">
 
+          <div class="today-stats-grid">
+            <a href="#" class="today-stat-card today-stat-card--accent" data-view="reservations">
+              <div class="today-stat-top">
+                <span class="today-stat-label">오늘 일정</span>
+                <span class="today-stat-icon">📅</span>
+              </div>
+              <div class="today-stat-value" id="dash-today-date">-</div>
+              <div class="today-stat-sub" id="dash-today-count">예약 0건</div>
+            </a>
+            <a href="#" class="today-stat-card" data-view="reservations">
+              <div class="today-stat-top">
+                <span class="today-stat-label">내일 일정</span>
+                <span class="today-stat-icon">📅</span>
+              </div>
+              <div class="today-stat-value" id="dash-tomorrow-date">-</div>
+              <div class="today-stat-sub" id="dash-tomorrow-count">예약 0건</div>
+            </a>
+            <a href="#" class="today-stat-card" data-view="reservations">
+              <div class="today-stat-top">
+                <span class="today-stat-label">신규예약</span>
+                <span class="today-stat-icon">📥</span>
+              </div>
+              <div class="today-stat-value" id="dash-stat-new">0</div>
+              <div class="today-stat-sub">예약 접수 대기중</div>
+            </a>
+            <a href="#" class="today-stat-card" data-view="reservations">
+              <div class="today-stat-top">
+                <span class="today-stat-label">예약확정</span>
+                <span class="today-stat-icon">✅</span>
+              </div>
+              <div class="today-stat-value" id="dash-stat-confirmed">0</div>
+              <div class="today-stat-sub">진행 중인 예약</div>
+            </a>
+          </div>
+
           <div class="stats-grid">
             <div class="stat-card">
               <h3>전체 예약건수</h3>
@@ -217,7 +252,14 @@
                 <label style="display:block; font-size:0.8rem; color:var(--admin-text-muted); margin-bottom:6px;">로그인 이메일</label>
                 <input type="email" id="agency-email-input" required style="padding:10px 12px; border-radius:8px; border:1px solid var(--admin-border); background:rgba(255,255,255,0.05); color:#fff;">
               </div>
-              <button type="submit" class="action-btn" style="background: var(--admin-primary);">등록 + 비밀번호 설정 메일 발송</button>
+              <div>
+                <label style="display:block; font-size:0.8rem; color:var(--admin-text-muted); margin-bottom:6px;">초기 비밀번호</label>
+                <div style="display:flex; gap:6px;">
+                  <input type="text" id="agency-password-input" required minlength="6" placeholder="6자 이상" style="padding:10px 12px; border-radius:8px; border:1px solid var(--admin-border); background:rgba(255,255,255,0.05); color:#fff; width:140px;">
+                  <button type="button" id="agency-password-generate" class="action-btn">자동생성</button>
+                </div>
+              </div>
+              <button type="submit" class="action-btn" style="background: var(--admin-primary);">등록</button>
               <span id="agency-create-message" style="font-size:0.85rem;"></span>
             </form>
           </div>
