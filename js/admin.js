@@ -123,6 +123,7 @@ refreshBtn.addEventListener("click", () => {
 // Pricing / Deposit·Cash / Settlement / Reports.
 const VIEW_LOADERS = {
   dashboard: loadDashboard,
+  reservations: loadReservations,
   agencies: () => { loadAgencies(); },
   depositcash: loadDepositRequests,
   settlement: loadSettlement,
