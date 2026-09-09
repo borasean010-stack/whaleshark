@@ -229,6 +229,11 @@
             <input type="tel" id="emergencyContact" name="emergencyContact" class="input-luxury" placeholder="+63 9XX XXX XXXX">
           </div>
 
+          <div class="form-group">
+            <label for="referralCode" data-en="Referral Code (optional)" data-ko="레퍼럴 코드 (선택사항)" data-zh="推荐码（选填）" data-ja="紹介コード（任意）">Referral Code (optional)</label>
+            <input type="text" id="referralCode" name="referralCode" class="input-luxury" placeholder="e.g. HOTEL_CODE" autocomplete="off">
+          </div>
+
           <div class="wizard-actions">
             <button type="button" class="wizard-back" data-goto="1" data-en="Back" data-ko="이전" data-zh="上一步" data-ja="戻る">Back</button>
             <button type="button" class="wizard-next" data-goto="3" data-en="Next: Review Booking" data-ko="다음: 예약 확인" data-zh="下一步：预约确认" data-ja="次へ：予約確認">Next: Review Booking</button>
@@ -415,6 +420,8 @@
     if (requestedPeople) document.getElementById('people').value = requestedPeople;
     const requestedNationality = urlParams.get('nationality');
     if (requestedNationality) document.getElementById('nationality').value = requestedNationality;
+    const requestedRef = urlParams.get('ref');
+    if (requestedRef) document.getElementById('referralCode').value = requestedRef;
 
     // Update inclusions on initial load
     updateInclusions();
@@ -800,6 +807,6 @@
     applyLang(currentLang);
   });
 </script>
-<script type="module" src="js/reservation.js?v=1788925198"></script>
+<script type="module" src="js/reservation.js?v=1788925200"></script>
 </body>
 </html>

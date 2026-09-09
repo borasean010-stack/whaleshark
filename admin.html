@@ -43,6 +43,7 @@
           <a href="#" class="nav-item" data-view="products">Products &amp; Pricing</a>
           <a href="#" class="nav-item" data-view="depositcash">Deposit / Cash</a>
           <a href="#" class="nav-item" data-view="settlement">Settlement</a>
+          <a href="#" class="nav-item" data-view="referral">레퍼럴 코드</a>
           <a href="#" class="nav-item" data-view="reports">Reports</a>
           <a href="./" class="nav-item">메인 사이트로 돌아가기</a>
         </nav>
@@ -345,6 +346,43 @@
           </div>
 
           <!-- View: Reports -->
+          <!-- ===== REFERRAL CODES ===== -->
+          <div id="view-referral" class="admin-view" style="display:none;">
+            <div class="table-container">
+              <div class="table-header">
+                <h2>레퍼럴 코드 관리</h2>
+              </div>
+              <div style="padding: 20px 24px; border-bottom: 1px solid var(--admin-border);">
+                <div style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap;">
+                  <div>
+                    <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:4px; color:var(--admin-text-muted);">코드명 (영문/숫자)</label>
+                    <input type="text" id="ref-code-input" placeholder="예: SHANGRI_LA" style="padding:8px 12px; border:1px solid var(--admin-border); border-radius:8px; font-size:0.9rem; background:var(--admin-bg); color:var(--admin-text); width:180px;" autocomplete="off">
+                  </div>
+                  <div>
+                    <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:4px; color:var(--admin-text-muted);">설명 (호텔명/파트너명)</label>
+                    <input type="text" id="ref-name-input" placeholder="예: 샹그릴라 보라카이" style="padding:8px 12px; border:1px solid var(--admin-border); border-radius:8px; font-size:0.9rem; background:var(--admin-bg); color:var(--admin-text); width:200px;" autocomplete="off">
+                  </div>
+                  <button id="ref-create-btn" style="padding:8px 18px; background:#1d4ed8; color:#fff; border:none; border-radius:8px; font-size:0.9rem; font-weight:600; cursor:pointer;">+ 코드 생성</button>
+                </div>
+              </div>
+              <div style="overflow-x:auto;">
+                <table>
+                  <thead><tr>
+                    <th>코드</th>
+                    <th>설명</th>
+                    <th>예약 링크 (복사)</th>
+                    <th>사용 횟수</th>
+                    <th>생성일</th>
+                    <th>관리</th>
+                  </tr></thead>
+                  <tbody id="referral-tbody">
+                    <tr><td colspan="6" style="text-align:center;">로딩 중...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
           <div id="view-reports" class="admin-view" style="display:none;">
             <div class="table-container">
               <div class="table-header"><h2>Reports</h2></div>
@@ -367,6 +405,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/admin.js?v=1788925199"></script>
+  <script type="module" src="js/admin.js?v=1788925201"></script>
 </body>
 </html>

@@ -179,5 +179,12 @@ service cloud.firestore {
       // 좁은 쿼리로만 조회합니다.
       allow read: if isLibertadStaff() && resource.data.get('qrToken', '') != '';
     }
+
+    // 레퍼럴 코드 — 어드민만 생성/수정/삭제, 예약 페이지(비로그인)는 읽기+사용횟수 증가만.
+    match /referralCodes/{codeId} {
+      allow read: if true;
+      allow update: if isAdmin() || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['usageCount']));
+      allow create, delete: if isAdmin();
+    }
   }
 }

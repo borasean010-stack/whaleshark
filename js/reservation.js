@@ -2,6 +2,11 @@ import { db } from "./firebase-config.js";
 import {
   collection,
   addDoc,
+  query,
+  where,
+  getDocs,
+  updateDoc,
+  increment,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -229,7 +234,7 @@ form.addEventListener("submit", async (e) => {
     name: formData.get("name").trim(),
     email: formData.get("email").trim(),
     emergencyContact: (formData.get("emergencyContact") || "").trim(),
-    ...(referralCode && { referralCode }),
+    referralCode: (formData.get("referralCode") || "").trim() || referralCode,
     status: "pending",
     createdAt: serverTimestamp()
   };
@@ -267,6 +272,14 @@ form.addEventListener("submit", async (e) => {
   try {
     // Save to Firebase
     await addDoc(collection(db, "reservations"), reservation);
+
+    // Increment referral code usage count (best-effort)
+    if (reservation.referralCode) {
+      try {
+        const refSnap = await getDocs(query(collection(db, "referralCodes"), where("code", "==", reservation.referralCode)));
+        if (!refSnap.empty) await updateDoc(refSnap.docs[0].ref, { usageCount: increment(1) });
+      } catch (_) {}
+    }
 
     // Send the confirmation voucher email (best-effort, doesn't block the flow)
     sendVoucherEmail(reservation);

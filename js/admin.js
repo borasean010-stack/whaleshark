@@ -136,6 +136,7 @@ const VIEW_LOADERS = {
   agencies: () => { loadAgencies(); },
   depositcash: loadDepositRequests,
   settlement: loadSettlement,
+  referral: loadReferralCodes,
 };
 
 document.querySelectorAll(".nav-item[data-view]").forEach(navEl => {
@@ -921,3 +922,71 @@ async function loadSettlement() {
     cashTbody.innerHTML = "";
   }
 }
+
+// ===== REFERRAL CODE MANAGEMENT =====
+const BASE_URL = "https://boracaywhaleshark.com/reservation";
+
+async function loadReferralCodes() {
+  const tbody = document.getElementById("referral-tbody");
+  tbody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>로딩 중...</td></tr>";
+  try {
+    const snap = await getDocs(query(collection(db, "referralCodes"), orderBy("createdAt", "desc")));
+    if (snap.empty) {
+      tbody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>등록된 레퍼럴 코드가 없습니다.</td></tr>";
+      return;
+    }
+    tbody.innerHTML = "";
+    snap.forEach(docSnap => {
+      const d = docSnap.data();
+      const link = `${BASE_URL}?ref=${encodeURIComponent(d.code)}`;
+      const createdDate = d.createdAt?.toDate ? d.createdAt.toDate().toLocaleDateString('ko-KR') : "-";
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><span style="background:#dbeafe;color:#1d4ed8;padding:3px 10px;border-radius:6px;font-weight:700;font-size:0.85rem;">${d.code}</span></td>
+        <td>${d.name || "-"}</td>
+        <td>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <input type="text" value="${link}" readonly style="font-size:0.78rem;padding:4px 8px;border:1px solid var(--admin-border);border-radius:6px;background:var(--admin-bg);color:var(--admin-text);width:300px;max-width:100%;">
+            <button onclick="navigator.clipboard.writeText('${link}').then(()=>{this.textContent='✓ 복사됨';setTimeout(()=>{this.textContent='복사';},1500)})" style="padding:4px 10px;background:#10b981;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.8rem;white-space:nowrap;">복사</button>
+          </div>
+        </td>
+        <td style="text-align:center; font-weight:700;">${d.usageCount || 0}건</td>
+        <td>${createdDate}</td>
+        <td><button class="action-btn delete-btn" data-ref-id="${docSnap.id}">삭제</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+    tbody.querySelectorAll("button[data-ref-id]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        if (!confirm("이 레퍼럴 코드를 삭제할까요?")) return;
+        await deleteDoc(doc(db, "referralCodes", btn.dataset.refId));
+        loadReferralCodes();
+      });
+    });
+  } catch (err) {
+    console.error("Error loading referral codes:", err);
+    tbody.innerHTML = "<tr><td colspan='6' style='text-align:center; color:red;'>오류가 발생했습니다.</td></tr>";
+  }
+}
+
+document.getElementById("ref-create-btn")?.addEventListener("click", async () => {
+  const codeInput = document.getElementById("ref-code-input");
+  const nameInput = document.getElementById("ref-name-input");
+  const code = codeInput.value.trim().toUpperCase().replace(/\s+/g, '_');
+  const name = nameInput.value.trim();
+  if (!code) { alert("코드명을 입력하세요."); return; }
+  try {
+    await addDoc(collection(db, "referralCodes"), {
+      code,
+      name,
+      usageCount: 0,
+      createdAt: serverTimestamp(),
+    });
+    codeInput.value = "";
+    nameInput.value = "";
+    loadReferralCodes();
+  } catch (err) {
+    console.error("Error creating referral code:", err);
+    alert("생성에 실패했습니다.");
+  }
+});
