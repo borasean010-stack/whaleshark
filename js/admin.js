@@ -80,8 +80,18 @@ function notifyReservationConfirmed({ pushToken, date, tourType }) {
 
 // Real Firebase Authentication — replaces the old client-side-only PIN check,
 // which never satisfied Firestore's `request.auth != null` rule anyway.
+const ADMIN_EMAIL = 'luca@boracaywhaleshark.com';
+
 onAuthStateChanged(auth, (user) => {
   if (user) {
+    if (user.email !== ADMIN_EMAIL) {
+      loginOverlay.style.display = "flex";
+      dashboard.style.display = "none";
+      loginError.textContent = `접근 권한 없음: ${user.email} 은 관리자 계정이 아닙니다. luca@boracaywhaleshark.com 으로 로그인하세요.`;
+      loginError.style.display = "block";
+      signOut(auth);
+      return;
+    }
     loginOverlay.style.display = "none";
     dashboard.style.display = "block";
     loadReservations();
@@ -290,7 +300,10 @@ async function loadReservations() {
 
   } catch (error) {
     console.error("Error loading reservations: ", error);
-    tbody.innerHTML = "<tr><td colspan='11' style='text-align:center; color: red;'>데이터를 불러오는 중 오류가 발생했습니다.</td></tr>";
+    const msg = error.code === 'permission-denied'
+      ? `권한 없음 (permission-denied). luca@boracaywhaleshark.com 으로 로그인했는지 확인하세요.`
+      : `오류: ${error.code || error.message}`;
+    tbody.innerHTML = `<tr><td colspan='11' style='text-align:center; color: red;'>${msg}</td></tr>`;
   }
 }
 
