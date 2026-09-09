@@ -10,6 +10,16 @@
   -webkit-backdrop-filter: blur(16px) !important;
 }
 
+/* body is transparent so the fixed background video/overlay show through —
+   but the shared site stylesheet still sets html's own background to the
+   light theme color. Override it to the overlay's dark base tone so any gap
+   left by a slow-to-load or blocked video (not every network can reach
+   YouTube) looks like intentional dark theming instead of a broken/blank
+   page. */
+html {
+  background-color: #041018;
+}
+
 body {
   background-color: transparent;
   color: var(--color-fg);

@@ -70,6 +70,30 @@ const MSG = {
     qrSucceeded: "결제가 확인됐습니다! 예약을 확정하는 중...",
     qrFailed: "결제가 실패했거나 만료됐습니다. 다시 시도해주세요.",
     qrError: "QR 결제를 시작하지 못했습니다. 다시 시도하시거나 다른 결제 방법을 선택해주세요."
+  },
+  zh: {
+    fillFields: "请填写所有必填项。",
+    processing: "正在处理支付...",
+    approving: "正在确认支付...",
+    error: "预约处理过程中发生错误，请稍后再试。",
+    payNow: "确认预约",
+    qrGenerating: "正在生成二维码...",
+    qrWaiting: "等待支付中...",
+    qrSucceeded: "已确认支付！正在确认预约...",
+    qrFailed: "支付失败或已过期，请重试。",
+    qrError: "无法启动扫码支付，请重试或选择其他支付方式。"
+  },
+  ja: {
+    fillFields: "必須項目をすべて入力してください。",
+    processing: "決済処理中...",
+    approving: "決済承認中...",
+    error: "予約処理中にエラーが発生しました。しばらくしてから再度お試しください。",
+    payNow: "予約を確定する",
+    qrGenerating: "QRコードを生成中...",
+    qrWaiting: "決済待機中...",
+    qrSucceeded: "決済が確認されました！予約を確定しています...",
+    qrFailed: "決済が失敗したか期限が切れました。もう一度お試しください。",
+    qrError: "QR決済を開始できませんでした。再度お試しいただくか、別のお支払い方法をお選びください。"
   }
 };
 
@@ -187,11 +211,14 @@ form.addEventListener("submit", async (e) => {
   const pricePerPerson = window.PRICES && window.PRICES[nationality] ? window.PRICES[nationality][tourType] : null;
   const totalPrice = pricePerPerson ? pricePerPerson * people : null;
 
+  const pickupResort = (formData.get("pickupResort") || "").trim();
+
   const reservation = {
     tourType,
     date: formData.get("date"),
     people,
-    pickup: formData.get("pickup"),
+    // A specified pickup resort overrides the fixed meeting-point option.
+    pickup: pickupResort || formData.get("pickup"),
     // Regular: shared meeting point, one of two departure times (customer's choice).
     // Fast Track / VIP Fast Track: also meet at 07:30, but it's fixed, not a choice.
     meetingTime: (tourType === "R" || tourType === "F" || tourType === "VF") ? formData.get("meetingTime") : "",

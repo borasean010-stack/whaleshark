@@ -43,8 +43,9 @@ document.addEventListener('DOMContentLoaded', () => {
       menu.classList.remove('open');
       if (lang === currentLang) return;
 
-      // reservation.html/success.html only understand ko/en, so zh/ja map to en.
-      localStorage.setItem(STORAGE_KEY, lang === 'ko' ? 'ko' : 'en');
+      // success.html still only understands ko/en (falls back to en for zh/ja),
+      // but reservation.html now understands all four languages directly.
+      localStorage.setItem(STORAGE_KEY, lang);
 
       let bare = path;
       if (currentLang !== 'ko') {
