@@ -211,14 +211,12 @@ form.addEventListener("submit", async (e) => {
   const pricePerPerson = window.PRICES && window.PRICES[nationality] ? window.PRICES[nationality][tourType] : null;
   const totalPrice = pricePerPerson ? pricePerPerson * people : null;
 
-  const pickupResort = (formData.get("pickupResort") || "").trim();
-
   const reservation = {
     tourType,
     date: formData.get("date"),
     people,
-    // A specified pickup resort overrides the fixed meeting-point option.
-    pickup: pickupResort || formData.get("pickup"),
+    pickup: formData.get("pickup"),
+    resort: (formData.get("pickupResort") || "").trim(),
     // Regular: shared meeting point, one of two departure times (customer's choice).
     // Fast Track / VIP Fast Track: also meet at 07:30, but it's fixed, not a choice.
     meetingTime: (tourType === "R" || tourType === "F" || tourType === "VF") ? formData.get("meetingTime") : "",

@@ -152,7 +152,7 @@
           </div>
 
           <div class="form-group">
-            <label for="pickupResort" data-en="Pickup Resort (optional)" data-ko="픽업 리조트 (선택사항)" data-zh="接送度假村（选填）" data-ja="ピックアップリゾート（任意）">Pickup Resort (optional)</label>
+            <label for="pickupResort" data-en="Resort (optional)" data-ko="리조트 (선택사항)" data-zh="度假村（选填）" data-ja="リゾート（任意）">Resort (optional)</label>
             <input type="text" id="pickupResort" name="pickupResort" class="input-luxury" placeholder="e.g. Shangri-La Boracay">
           </div>
 
@@ -242,6 +242,7 @@
             <div class="review-row"><span data-en="Package Type" data-ko="패키지 종류" data-zh="套餐类型" data-ja="パッケージ種類">Package Type</span><strong id="rv-package">-</strong></div>
             <div class="review-row"><span data-en="Travel Date" data-ko="투어 날짜" data-zh="游览日期" data-ja="ツアー日">Travel Date</span><strong id="rv-date">-</strong></div>
             <div class="review-row"><span data-en="Pick Up Location" data-ko="픽업 장소" data-zh="接送地点" data-ja="ピックアップ場所">Pick Up Location</span><strong id="rv-pickup">-</strong></div>
+            <div class="review-row"><span data-en="Resort" data-ko="리조트" data-zh="度假村" data-ja="リゾート">Resort</span><strong id="rv-resort">-</strong></div>
             <div class="review-row" id="rv-meeting-row" style="display:none;"><span data-en="Meeting Time" data-ko="미팅 시간" data-zh="集合时间" data-ja="集合時間">Meeting Time</span><strong id="rv-meeting">-</strong></div>
             <div class="review-row"><span data-en="Passengers" data-ko="인원" data-zh="人数" data-ja="人数">Passengers</span><strong id="rv-people">-</strong></div>
             <div class="review-row"><span data-en="Nationality" data-ko="국적" data-zh="国籍" data-ja="国籍">Nationality</span><strong id="rv-nationality">-</strong></div>
@@ -523,10 +524,8 @@
       const pkg = selectedPackageName();
       const dateVal = fmtDate(document.getElementById('date').value);
       const pickupSelect = document.getElementById('pickup');
-      const pickupResortInput = document.getElementById('pickupResort').value.trim();
-      // A specified pickup resort overrides the fixed meeting-point option —
-      // it becomes the actual pickup location shown/saved for the booking.
-      const pickupVal = pickupResortInput || (pickupSelect.selectedOptions[0] ? pickupSelect.selectedOptions[0].textContent : '-');
+      const pickupVal = pickupSelect.selectedOptions[0] ? pickupSelect.selectedOptions[0].textContent : '-';
+      const resortVal = document.getElementById('pickupResort').value.trim() || '-';
       const peopleVal = document.getElementById('people').value || '-';
       const people = Number(document.getElementById('people').value) || 0;
       const nameVal = document.getElementById('name').value || '-';
@@ -541,6 +540,7 @@
       ['sum-date', 'rv-date'].forEach(id => document.getElementById(id).textContent = dateVal);
       ['sum-pickup', 'rv-pickup'].forEach(id => document.getElementById(id).textContent = pickupVal);
       ['sum-people', 'rv-people'].forEach(id => document.getElementById(id).textContent = peopleVal);
+      document.getElementById('rv-resort').textContent = resortVal;
       document.getElementById('rv-name').textContent = nameVal;
       document.getElementById('rv-email').textContent = emailVal;
       document.getElementById('rv-emergency').textContent = emergencyVal;
