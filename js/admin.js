@@ -82,7 +82,7 @@ function notifyReservationConfirmed({ pushToken, date, tourType }) {
 
 // Real Firebase Authentication — replaces the old client-side-only PIN check,
 // which never satisfied Firestore's `request.auth != null` rule anyway.
-const SUPERADMIN_EMAIL = 'luca@boracaywhaleshark.com';
+const SUPERADMIN_EMAIL = 'ehdgus0737@naver.com';
 
 // 2차 Firebase 앱 — 새 계정 생성 시 현재 로그인 세션을 유지하기 위해 사용.
 const secondaryApp = initializeApp(firebaseConfig, "admin-secondary");

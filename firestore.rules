@@ -11,7 +11,7 @@ service cloud.firestore {
     // 발급하고 신뢰할 수 있는 사람에게만 전달합니다.
     // ---------------------------------------------------------------
     function isAdmin() {
-      return request.auth != null && request.auth.token.email == 'luca@boracaywhaleshark.com';
+      return request.auth != null && request.auth.token.email == 'ehdgus0737@naver.com';
     }
     function isLibertadStaff() {
       return request.auth != null && request.auth.token.email == 'checkin@boracaywhaleshark.com';
