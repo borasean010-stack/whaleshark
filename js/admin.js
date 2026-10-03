@@ -12,7 +12,8 @@ import {
   setDoc,
   addDoc,
   increment,
-  serverTimestamp
+  serverTimestamp,
+  where
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import {
   signInWithEmailAndPassword,
@@ -20,6 +21,7 @@ import {
   onAuthStateChanged,
   getAuth,
   createUserWithEmailAndPassword,
+  updatePassword,
   sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
@@ -80,14 +82,27 @@ function notifyReservationConfirmed({ pushToken, date, tourType }) {
 
 // Real Firebase Authentication — replaces the old client-side-only PIN check,
 // which never satisfied Firestore's `request.auth != null` rule anyway.
-const ADMIN_EMAIL = 'luca@boracaywhaleshark.com';
+const SUPERADMIN_EMAIL = 'luca@boracaywhaleshark.com';
 
-onAuthStateChanged(auth, (user) => {
+// 2차 Firebase 앱 — 새 계정 생성 시 현재 로그인 세션을 유지하기 위해 사용.
+const secondaryApp = initializeApp(firebaseConfig, "admin-secondary");
+const secondaryAuth = getAuth(secondaryApp);
+
+async function isAllowedAdmin(user) {
+  if (user.email === SUPERADMIN_EMAIL) return true;
+  try {
+    const snap = await getDoc(doc(db, "adminAccounts", user.uid));
+    return snap.exists() && snap.data().active === true;
+  } catch (_) { return false; }
+}
+
+onAuthStateChanged(auth, async (user) => {
   if (user) {
-    if (user.email !== ADMIN_EMAIL) {
+    const allowed = await isAllowedAdmin(user);
+    if (!allowed) {
       loginOverlay.style.display = "flex";
       dashboard.style.display = "none";
-      loginError.textContent = `접근 권한 없음: ${user.email} 은 관리자 계정이 아닙니다. luca@boracaywhaleshark.com 으로 로그인하세요.`;
+      loginError.textContent = `접근 권한 없음: ${user.email} 은 관리자 계정이 아닙니다.`;
       loginError.style.display = "block";
       signOut(auth);
       return;
@@ -137,6 +152,7 @@ const VIEW_LOADERS = {
   depositcash: loadDepositRequests,
   settlement: loadSettlement,
   referral: loadReferralCodes,
+  accounts: loadAdminAccounts,
 };
 
 document.querySelectorAll(".nav-item[data-view]").forEach(navEl => {
@@ -302,7 +318,7 @@ async function loadReservations() {
   } catch (error) {
     console.error("Error loading reservations: ", error);
     const msg = error.code === 'permission-denied'
-      ? `권한 없음 (permission-denied). luca@boracaywhaleshark.com 으로 로그인했는지 확인하세요.`
+      ? `권한 없음 (permission-denied). 관리자 계정으로 로그인했는지 확인하세요.`
       : `오류: ${error.code || error.message}`;
     tbody.innerHTML = `<tr><td colspan='12' style='text-align:center; color: red;'>${msg}</td></tr>`;
   }
@@ -1155,4 +1171,132 @@ document.getElementById("ref-filter-clear")?.addEventListener("click", () => {
   document.getElementById("ref-date-from").value = "";
   document.getElementById("ref-date-to").value = "";
   loadReferralCodes();
+});
+
+// ===== ADMIN ACCOUNT MANAGEMENT =====
+async function loadAdminAccounts() {
+  const tbody = document.getElementById("accounts-tbody");
+  tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>로딩 중...</td></tr>";
+  try {
+    const snap = await getDocs(query(collection(db, "adminAccounts"), orderBy("createdAt", "desc")));
+    tbody.innerHTML = "";
+
+    // 슈퍼어드민 고정 행
+    const superRow = document.createElement("tr");
+    superRow.innerHTML = `
+      <td><strong>${SUPERADMIN_EMAIL}</strong></td>
+      <td>슈퍼어드민</td>
+      <td><span style="background:#dcfce7;color:#16a34a;padding:2px 8px;border-radius:6px;font-size:0.8rem;font-weight:600;">활성</span></td>
+      <td><span style="color:var(--admin-text-muted);font-size:0.8rem;">변경 불가</span></td>
+    `;
+    tbody.appendChild(superRow);
+
+    if (snap.empty) {
+      const emptyRow = document.createElement("tr");
+      emptyRow.innerHTML = `<td colspan='4' style='text-align:center;color:var(--admin-text-muted);padding:16px;'>추가 관리자 계정 없음</td>`;
+      tbody.appendChild(emptyRow);
+      return;
+    }
+
+    snap.forEach(docSnap => {
+      const d = docSnap.data();
+      const createdDate = d.createdAt?.toDate ? d.createdAt.toDate().toLocaleDateString('ko-KR') : "-";
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${d.email}</td>
+        <td>${d.name || "-"}</td>
+        <td>
+          <span style="background:${d.active ? '#dcfce7' : '#fee2e2'};color:${d.active ? '#16a34a' : '#dc2626'};padding:2px 8px;border-radius:6px;font-size:0.8rem;font-weight:600;">
+            ${d.active ? '활성' : '비활성'}
+          </span>
+        </td>
+        <td style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button class="action-btn acc-toggle-btn" data-id="${docSnap.id}" data-active="${d.active}" style="background:${d.active ? '#f59e0b' : '#10b981'};">
+            ${d.active ? '비활성화' : '활성화'}
+          </button>
+          <button class="action-btn acc-reset-btn" data-email="${d.email}" style="background:#6366f1;">비번 재설정</button>
+          <button class="action-btn delete-btn acc-delete-btn" data-id="${docSnap.id}" data-email="${d.email}">삭제</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    tbody.querySelectorAll(".acc-toggle-btn").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const active = btn.dataset.active === "true";
+        await updateDoc(doc(db, "adminAccounts", btn.dataset.id), { active: !active });
+        loadAdminAccounts();
+      });
+    });
+
+    tbody.querySelectorAll(".acc-reset-btn").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        if (!confirm(`${btn.dataset.email} 계정으로 비밀번호 재설정 이메일을 보낼까요?`)) return;
+        try {
+          await sendPasswordResetEmail(auth, btn.dataset.email);
+          alert("비밀번호 재설정 이메일을 발송했습니다.");
+        } catch (err) {
+          alert("발송 실패: " + (err.message || err.code));
+        }
+      });
+    });
+
+    tbody.querySelectorAll(".acc-delete-btn").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        if (!confirm(`${btn.dataset.email} 관리자 계정을 삭제할까요?\nFirebase 로그인 계정은 유지되지만 어드민 접근이 차단됩니다.`)) return;
+        await deleteDoc(doc(db, "adminAccounts", btn.dataset.id));
+        loadAdminAccounts();
+      });
+    });
+
+  } catch (err) {
+    console.error("Error loading admin accounts:", err);
+    tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;color:red;'>오류가 발생했습니다.</td></tr>";
+  }
+}
+
+document.getElementById("acc-create-btn")?.addEventListener("click", async () => {
+  const emailInput = document.getElementById("acc-email-input");
+  const pwInput = document.getElementById("acc-pw-input");
+  const nameInput = document.getElementById("acc-name-input");
+  const email = emailInput.value.trim();
+  const pw = pwInput.value;
+  const name = nameInput.value.trim();
+
+  if (!email || !pw) { alert("이메일과 비밀번호를 입력하세요."); return; }
+  if (pw.length < 6) { alert("비밀번호는 6자 이상이어야 합니다."); return; }
+
+  const btn = document.getElementById("acc-create-btn");
+  btn.disabled = true;
+  btn.textContent = "생성 중...";
+
+  try {
+    // 2차 앱으로 계정 생성 — 현재 로그인 세션 유지됨
+    const cred = await createUserWithEmailAndPassword(secondaryAuth, email, pw);
+    await signOut(secondaryAuth);
+
+    // Firestore에 어드민 계정 기록
+    await setDoc(doc(db, "adminAccounts", cred.user.uid), {
+      email,
+      name,
+      active: true,
+      createdAt: serverTimestamp(),
+      createdBy: auth.currentUser?.email || "admin",
+    });
+
+    emailInput.value = ""; pwInput.value = ""; nameInput.value = "";
+    alert(`✓ ${email} 계정이 생성됐습니다.`);
+    loadAdminAccounts();
+  } catch (err) {
+    console.error("Error creating admin account:", err);
+    const msg = err.code === 'auth/email-already-in-use'
+      ? "이미 등록된 이메일입니다."
+      : err.code === 'auth/invalid-email'
+      ? "유효하지 않은 이메일 형식입니다."
+      : (err.message || "계정 생성에 실패했습니다.");
+    alert(msg);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "+ 계정 생성";
+  }
 });

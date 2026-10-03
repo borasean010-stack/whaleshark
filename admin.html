@@ -44,6 +44,7 @@
           <a href="#" class="nav-item" data-view="depositcash">Deposit / Cash</a>
           <a href="#" class="nav-item" data-view="settlement">Settlement</a>
           <a href="#" class="nav-item" data-view="referral">레퍼럴 코드</a>
+          <a href="#" class="nav-item" data-view="accounts">계정 관리</a>
           <a href="#" class="nav-item" data-view="reports">Reports</a>
           <a href="./" class="nav-item">메인 사이트로 돌아가기</a>
         </nav>
@@ -384,6 +385,44 @@
             <div id="referral-cards"></div>
           </div>
 
+          <!-- ===== ACCOUNT MANAGEMENT ===== -->
+          <div id="view-accounts" class="admin-view" style="display:none;">
+            <div class="table-container" style="margin-bottom:20px;">
+              <div class="table-header"><h2>관리자 계정 관리</h2></div>
+              <div style="padding:20px 24px;border-bottom:1px solid var(--admin-border);">
+                <p style="font-size:0.85rem;color:var(--admin-text-muted);margin-bottom:16px;">새 관리자 계정을 생성합니다. 생성된 계정은 이 어드민 페이지에 로그인할 수 있습니다.</p>
+                <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;">
+                  <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;color:var(--admin-text-muted);">이메일</label>
+                    <input type="email" id="acc-email-input" placeholder="admin@example.com" style="padding:8px 12px;border:1px solid var(--admin-border);border-radius:8px;font-size:0.9rem;background:var(--admin-bg);color:var(--admin-text);width:220px;" autocomplete="off">
+                  </div>
+                  <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;color:var(--admin-text-muted);">비밀번호 (6자 이상)</label>
+                    <input type="password" id="acc-pw-input" placeholder="••••••••" style="padding:8px 12px;border:1px solid var(--admin-border);border-radius:8px;font-size:0.9rem;background:var(--admin-bg);color:var(--admin-text);width:160px;" autocomplete="new-password">
+                  </div>
+                  <div>
+                    <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;color:var(--admin-text-muted);">담당자명</label>
+                    <input type="text" id="acc-name-input" placeholder="홍길동" style="padding:8px 12px;border:1px solid var(--admin-border);border-radius:8px;font-size:0.9rem;background:var(--admin-bg);color:var(--admin-text);width:130px;" autocomplete="off">
+                  </div>
+                  <button id="acc-create-btn" style="padding:8px 18px;background:#1d4ed8;color:#fff;border:none;border-radius:8px;font-size:0.9rem;font-weight:600;cursor:pointer;">+ 계정 생성</button>
+                </div>
+              </div>
+              <div style="overflow-x:auto;">
+                <table>
+                  <thead><tr>
+                    <th>이메일</th>
+                    <th>담당자명</th>
+                    <th>상태</th>
+                    <th>관리</th>
+                  </tr></thead>
+                  <tbody id="accounts-tbody">
+                    <tr><td colspan="4" style="text-align:center;">로딩 중...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
           <div id="view-reports" class="admin-view" style="display:none;">
             <div class="table-container">
               <div class="table-header"><h2>Reports</h2></div>
@@ -406,6 +445,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/admin.js?v=1788925202"></script>
+  <script type="module" src="js/admin.js?v=1788925203"></script>
 </body>
 </html>

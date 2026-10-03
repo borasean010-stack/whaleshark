@@ -180,6 +180,12 @@ service cloud.firestore {
       allow read: if isLibertadStaff() && resource.data.get('qrToken', '') != '';
     }
 
+    // 관리자 계정 목록 — 슈퍼어드민만 생성/삭제, 본인 문서는 자기만 읽기 가능 (어드민 여부 확인용).
+    match /adminAccounts/{uid} {
+      allow read: if isAdmin() || (isSignedIn() && request.auth.uid == uid);
+      allow create, update, delete: if isAdmin();
+    }
+
     // 레퍼럴 코드 — 어드민만 생성/수정/삭제, 예약 페이지(비로그인)는 읽기+사용횟수 증가만.
     match /referralCodes/{codeId} {
       allow read: if true;
