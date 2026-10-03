@@ -44,6 +44,7 @@
           <a href="#" class="nav-item" data-view="depositcash">Deposit / Cash</a>
           <a href="#" class="nav-item" data-view="settlement">Settlement</a>
           <a href="#" class="nav-item" data-view="referral">레퍼럴 코드</a>
+          <a href="#" class="nav-item" data-view="yebo">YEBO 예약</a>
           <a href="#" class="nav-item" data-view="accounts">계정 관리</a>
           <a href="#" class="nav-item" data-view="reports">Reports</a>
           <a href="./" class="nav-item">메인 사이트로 돌아가기</a>
@@ -383,6 +384,42 @@
 
             <!-- 코드별 카드 목록 -->
             <div id="referral-cards"></div>
+          </div>
+
+          <!-- ===== YEBO ===== -->
+          <div id="view-yebo" class="admin-view" style="display:none;">
+            <div class="table-container">
+              <div class="table-header">
+                <h2>YEBO 예약 현황</h2>
+                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                  <input type="date" id="yebo-date-from" style="padding:6px 10px;border:1px solid var(--admin-border);border-radius:8px;font-size:0.85rem;background:var(--admin-bg);color:var(--admin-text);">
+                  <span style="color:var(--admin-text-muted);">~</span>
+                  <input type="date" id="yebo-date-to" style="padding:6px 10px;border:1px solid var(--admin-border);border-radius:8px;font-size:0.85rem;background:var(--admin-bg);color:var(--admin-text);">
+                  <button id="yebo-filter-btn" style="padding:6px 14px;background:var(--admin-accent);color:#fff;border:none;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;">조회</button>
+                  <button id="yebo-filter-clear" style="padding:6px 14px;background:var(--admin-bg-2);color:var(--admin-text);border:1px solid var(--admin-border);border-radius:8px;font-size:0.85rem;cursor:pointer;">전체</button>
+                </div>
+              </div>
+              <!-- 통계 -->
+              <div id="yebo-stats" style="display:flex;gap:12px;flex-wrap:wrap;padding:16px 24px;border-bottom:1px solid var(--admin-border);"></div>
+              <!-- 테이블 -->
+              <div style="overflow-x:auto;">
+                <table>
+                  <thead><tr>
+                    <th>날짜</th>
+                    <th>예약자</th>
+                    <th>인원</th>
+                    <th>국적</th>
+                    <th>금액</th>
+                    <th>결제</th>
+                    <th>상태</th>
+                    <th>정산</th>
+                  </tr></thead>
+                  <tbody id="yebo-tbody">
+                    <tr><td colspan="8" style="text-align:center;">로딩 중...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
 
           <!-- ===== ACCOUNT MANAGEMENT ===== -->

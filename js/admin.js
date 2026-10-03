@@ -152,6 +152,7 @@ const VIEW_LOADERS = {
   depositcash: loadDepositRequests,
   settlement: loadSettlement,
   referral: loadReferralCodes,
+  yebo: loadYebo,
   accounts: loadAdminAccounts,
 };
 
@@ -1299,4 +1300,94 @@ document.getElementById("acc-create-btn")?.addEventListener("click", async () =>
     btn.disabled = false;
     btn.textContent = "+ 계정 생성";
   }
+});
+
+// ===== YEBO =====
+const NAT_LABELS = { PH: '필리핀', FOREIGN: '외국인', CN: '중국인', KR: '한국인' };
+
+let _yeboFrom = null, _yeboTo = null;
+
+async function loadYebo() {
+  const tbody = document.getElementById("yebo-tbody");
+  const statsEl = document.getElementById("yebo-stats");
+  tbody.innerHTML = "<tr><td colspan='8' style='text-align:center;'>로딩 중...</td></tr>";
+  statsEl.innerHTML = "";
+  try {
+    const q = query(collection(db, "reservations"), where("referralCode", "==", "YEBO"), orderBy("createdAt", "desc"));
+    const snap = await getDocs(q);
+
+    let rows = [];
+    snap.forEach(d => {
+      const data = d.data();
+      if (_yeboFrom && data.date < _yeboFrom) return;
+      if (_yeboTo && data.date > _yeboTo) return;
+      rows.push({ id: d.id, ...data });
+    });
+
+    // 통계
+    const total = rows.length;
+    const confirmed = rows.filter(r => r.status === 'confirmed');
+    const revenue = confirmed.reduce((s, r) => s + (r.totalPrice || 0), 0);
+    const unsettled = confirmed.filter(r => !r.refSettled);
+    const unsettledRev = unsettled.reduce((s, r) => s + (r.totalPrice || 0), 0);
+
+    statsEl.innerHTML = `
+      <div style="background:var(--admin-bg-2);border-radius:10px;padding:10px 18px;text-align:center;">
+        <div style="font-size:1.4rem;font-weight:800;">${total}</div><div style="font-size:0.75rem;color:var(--admin-text-muted);">총 예약</div>
+      </div>
+      <div style="background:#dcfce7;border-radius:10px;padding:10px 18px;text-align:center;">
+        <div style="font-size:1.4rem;font-weight:800;color:#16a34a;">${confirmed.length}</div><div style="font-size:0.75rem;color:#16a34a;">확정</div>
+      </div>
+      <div style="background:#f0f9ff;border-radius:10px;padding:10px 18px;text-align:center;">
+        <div style="font-size:1.1rem;font-weight:800;color:#0369a1;">₱${revenue.toLocaleString()}</div><div style="font-size:0.75rem;color:#0369a1;">확정 매출</div>
+      </div>
+      ${unsettled.length > 0 ? `
+      <div style="background:#fff1f2;border:1px solid #fecdd3;border-radius:10px;padding:10px 18px;text-align:center;">
+        <div style="font-size:1.1rem;font-weight:800;color:#be123c;">₱${unsettledRev.toLocaleString()}</div><div style="font-size:0.75rem;color:#be123c;">미정산 ${unsettled.length}건</div>
+      </div>` : `
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:10px 18px;text-align:center;">
+        <div style="font-size:0.9rem;font-weight:700;color:#15803d;">✓ 정산완료</div>
+      </div>`}
+      <button id="yebo-settle-btn" style="padding:8px 16px;background:#be123c;color:#fff;border:none;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;${unsettled.length === 0 ? 'display:none;' : ''}">정산 완료 처리</button>
+    `;
+
+    if (rows.length === 0) {
+      tbody.innerHTML = "<tr><td colspan='8' style='text-align:center;color:var(--admin-text-muted);'>YEBO 예약이 없습니다.</td></tr>";
+    } else {
+      tbody.innerHTML = rows.map(r => `
+        <tr>
+          <td style="padding:8px 12px;">${r.date}</td>
+          <td style="padding:8px 12px;">${r.name}</td>
+          <td style="padding:8px 12px;text-align:center;">${r.people}명</td>
+          <td style="padding:8px 12px;">${NAT_LABELS[r.nationality] || r.nationality}</td>
+          <td style="padding:8px 12px;font-weight:700;">₱${(r.totalPrice||0).toLocaleString()}</td>
+          <td style="padding:8px 12px;">${r.paymentStatus==='paid'?'<span style="color:#16a34a;font-weight:600;">결제완료</span>':'<span style="color:#ca8a04;">미결제</span>'}</td>
+          <td style="padding:8px 12px;"><span style="padding:2px 8px;border-radius:6px;font-size:0.78rem;font-weight:600;background:${r.status==='confirmed'?'#dcfce7':r.status==='pending'?'#fef9c3':'#fee2e2'};color:${r.status==='confirmed'?'#16a34a':r.status==='pending'?'#ca8a04':'#dc2626'}">${STATUS_LABELS[r.status]||r.status}</span></td>
+          <td style="padding:8px 12px;">${r.refSettled?'<span style="color:#16a34a;font-weight:600;">✓ 정산</span>':'<span style="color:#9ca3af;">미정산</span>'}</td>
+        </tr>`).join('');
+    }
+
+    document.getElementById("yebo-settle-btn")?.addEventListener("click", async () => {
+      if (!confirm(`YEBO 미정산 ${unsettled.length}건을 정산 완료 처리할까요?`)) return;
+      await Promise.all(unsettled.map(r => updateDoc(doc(db, "reservations", r.id), { refSettled: true, refSettledAt: serverTimestamp() })));
+      loadYebo();
+    });
+
+  } catch (err) {
+    console.error("Error loading YEBO reservations:", err);
+    tbody.innerHTML = "<tr><td colspan='8' style='text-align:center;color:red;'>오류가 발생했습니다.</td></tr>";
+  }
+}
+
+document.getElementById("yebo-filter-btn")?.addEventListener("click", () => {
+  _yeboFrom = document.getElementById("yebo-date-from").value || null;
+  _yeboTo = document.getElementById("yebo-date-to").value || null;
+  loadYebo();
+});
+
+document.getElementById("yebo-filter-clear")?.addEventListener("click", () => {
+  _yeboFrom = null; _yeboTo = null;
+  document.getElementById("yebo-date-from").value = "";
+  document.getElementById("yebo-date-to").value = "";
+  loadYebo();
 });
