@@ -6,15 +6,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>예보 x 보라카이 고래상어 패스트트랙</title>
 <meta name="robots" content="noindex, nofollow">
-
-<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ko_KR">
 <meta property="og:title" content="예보 x 보라카이 고래상어 패스트트랙 예약">
 <meta property="og:description" content="예보 커뮤니티 전용 예약 링크. 패스트트랙 투어 온라인 예약 즉시 확정.">
 <meta property="og:image" content="https://boracaywhaleshark.com/assets/yebo-og.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
 <meta property="og:url" content="https://boracaywhaleshark.com/reservationyebo">
 <meta property="og:site_name" content="Boracay Whale Shark">
 <meta name="twitter:card" content="summary_large_image">
@@ -24,226 +20,215 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Noto Sans KR', sans-serif; background: #0a0f1e; color: #f1f5f9; line-height: 1.6; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* Hero */
-  .hero { position: relative; width: 100%; }
-  .hero img { width: 100%; display: block; max-height: 320px; object-fit: cover; object-position: center; }
-  .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(10,15,30,0) 40%, rgba(10,15,30,1) 100%); }
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: #fff;
+  color: #111;
+  -webkit-font-smoothing: antialiased;
+}
 
-  /* Container */
-  .container { max-width: 640px; margin: 0 auto; padding: 0 16px; }
+/* ── Hero ── */
+.hero {
+  position: relative;
+  height: 56vw;
+  max-height: 380px;
+  min-height: 220px;
+  overflow: hidden;
+}
+.hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  display: block;
+}
+.hero-dim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,.15) 0%, rgba(0,0,0,.55) 100%);
+}
+.hero-label {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+}
+.hero-label .tag {
+  display: inline-block;
+  background: rgba(255,255,255,.18);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,.3);
+  color: #fff;
+  font-size: .7rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.hero-label h1 {
+  color: #fff;
+  font-size: clamp(1.4rem, 5vw, 2rem);
+  font-weight: 900;
+  line-height: 1.2;
+  text-shadow: 0 1px 8px rgba(0,0,0,.4);
+}
+.hero-label h1 em {
+  font-style: normal;
+  color: #7dd3fc;
+}
 
-  /* Badge */
-  .exclusive-badge {
-    display: inline-block;
-    background: linear-gradient(135deg, #f59e0b, #ef4444);
-    color: #fff;
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 4px 12px;
-    border-radius: 20px;
-    letter-spacing: 0.5px;
-    margin-bottom: 12px;
-  }
+/* ── Body ── */
+.wrap { max-width: 560px; margin: 0 auto; padding: 0 20px; }
 
-  /* Title section */
-  .title-section { padding: 0 0 32px; text-align: center; }
-  .title-section h1 { font-size: 1.9rem; font-weight: 900; line-height: 1.25; margin-bottom: 8px; }
-  .title-section h1 span { color: #38bdf8; }
-  .title-section p { color: #94a3b8; font-size: 0.95rem; }
+/* ── Price ── */
+.price-block {
+  padding: 28px 0 4px;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 28px;
+}
+.price-block .per { font-size: .75rem; color: #999; margin-bottom: 4px; }
+.price-block .num { font-size: 2.6rem; font-weight: 900; color: #0ea5e9; letter-spacing: -1px; }
+.price-block .num sup { font-size: 1.1rem; vertical-align: super; font-weight: 700; }
+.price-block .num sub { font-size: .8rem; font-weight: 500; color: #888; vertical-align: bottom; margin-left: 2px; }
+.price-block .note { margin-top: 6px; font-size: .78rem; color: #aaa; }
 
-  /* Price card */
-  .price-card {
-    background: linear-gradient(135deg, #1e293b, #0f172a);
-    border: 1px solid rgba(56,189,248,0.2);
-    border-radius: 16px;
-    padding: 24px;
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-  .price-item { text-align: center; flex: 1; min-width: 100px; }
-  .price-item .label { font-size: 0.75rem; color: #64748b; margin-bottom: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-  .price-item .amount { font-size: 1.6rem; font-weight: 900; color: #38bdf8; }
-  .price-item .unit { font-size: 0.75rem; color: #64748b; }
-  .price-divider { width: 1px; height: 50px; background: rgba(255,255,255,0.08); }
+/* ── Section heading ── */
+.sh {
+  font-size: .7rem;
+  font-weight: 700;
+  color: #bbb;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 14px;
+}
 
-  /* Section */
-  .section { margin-bottom: 24px; }
-  .section-title {
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: #38bdf8;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin-bottom: 12px;
-  }
+/* ── Includes ── */
+.inc-list { list-style: none; margin-bottom: 32px; }
+.inc-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid #f5f5f5;
+  font-size: .92rem;
+  color: #222;
+}
+.inc-list li:last-child { border-bottom: none; }
+.inc-list li .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #0ea5e9;
+  flex-shrink: 0;
+}
 
-  /* Includes list */
-  .includes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .include-item {
-    background: #1e293b;
-    border-radius: 10px;
-    padding: 12px 14px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 0.88rem;
-    font-weight: 500;
-  }
-  .include-item .icon { font-size: 1.2rem; flex-shrink: 0; }
+/* ── Info ── */
+.info-list { margin-bottom: 32px; }
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid #f5f5f5;
+  font-size: .9rem;
+}
+.info-row:last-child { border-bottom: none; }
+.info-row .k { color: #999; font-weight: 500; white-space: nowrap; }
+.info-row .v { font-weight: 600; color: #111; text-align: right; }
+.info-row .v small { display: block; font-size: .74rem; color: #bbb; font-weight: 400; margin-top: 2px; }
 
-  /* Info rows */
-  .info-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 12px 0;
-    border-bottom: 1px solid #1e293b;
-    font-size: 0.9rem;
-    gap: 16px;
-  }
-  .info-row:last-child { border-bottom: none; }
-  .info-row .key { color: #64748b; font-weight: 500; flex-shrink: 0; }
-  .info-row .val { font-weight: 600; text-align: right; }
+/* ── Bottom spacer & CTA ── */
+.spacer { height: 90px; }
 
-  /* Notice */
-  .notice {
-    background: #1e293b;
-    border-left: 3px solid #f59e0b;
-    border-radius: 8px;
-    padding: 14px 16px;
-    font-size: 0.85rem;
-    color: #94a3b8;
-    line-height: 1.7;
-  }
-  .notice strong { color: #fbbf24; }
-
-  /* CTA */
-  .cta-wrap {
-    position: sticky;
-    bottom: 0;
-    padding: 16px;
-    background: linear-gradient(to top, #0a0f1e 80%, transparent 100%);
-    margin: 0 -16px;
-  }
-  .cta-btn {
-    display: block;
-    width: 100%;
-    background: linear-gradient(135deg, #0ea5e9, #6366f1);
-    color: #fff;
-    font-size: 1.05rem;
-    font-weight: 800;
-    padding: 16px;
-    border-radius: 14px;
-    border: none;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    box-shadow: 0 4px 24px rgba(14,165,233,0.35);
-    transition: opacity 0.15s;
-    letter-spacing: 0.3px;
-  }
-  .cta-btn:hover { opacity: 0.9; }
-
-  /* Spacer before sticky btn */
-  .bottom-spacer { height: 100px; }
+.cta-fixed {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  padding: 12px 20px 20px;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid #eee;
+}
+.cta-btn {
+  display: block;
+  background: #0ea5e9;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 15px;
+  border-radius: 12px;
+  letter-spacing: .2px;
+  transition: background .15s;
+}
+.cta-btn:hover { background: #0284c7; }
 </style>
 </head>
 <body>
 
-<!-- Hero image -->
 <div class="hero">
   <img src="assets/yebo-og.jpg" alt="예보 x 보라카이 고래상어">
-  <div class="hero-overlay"></div>
+  <div class="hero-dim"></div>
+  <div class="hero-label">
+    <div class="tag">예보 커뮤니티 전용</div>
+    <h1>보라카이<br><em>고래상어</em> 패스트트랙</h1>
+  </div>
 </div>
 
-<div class="container">
+<div class="wrap">
 
-  <!-- Title -->
-  <div class="title-section" style="padding-top: 28px;">
-    <div class="exclusive-badge">✦ 예보 커뮤니티 전용</div>
-    <h1>보라카이<br><span>고래상어</span> 패스트트랙</h1>
-    <p>최소 대기, 올인클루시브 패키지</p>
+  <div class="price-block">
+    <div class="per">1인 요금</div>
+    <div class="num"><sup>₱</sup>3,600<sub>/ person</sub></div>
+    <div class="note">필리핀 국적자는 ₱3,300</div>
   </div>
 
-  <!-- Price -->
-  <div class="section">
-    <div class="section-title">1인 요금</div>
-    <div class="price-card" style="justify-content:center;">
-      <div class="price-item">
-        <div class="label">1인 요금</div>
-        <div class="amount">₱3,600</div>
-        <div class="unit">per person</div>
-      </div>
+  <p class="sh">포함 사항</p>
+  <ul class="inc-list">
+    <li><span class="dot"></span>입장료 · 관람료 · 환경보호세</li>
+    <li><span class="dot"></span>왕복 차량</li>
+    <li><span class="dot"></span>구명조끼 · 오리발 대여</li>
+    <li><span class="dot"></span>짐 보관 · 생수 제공</li>
+    <li><span class="dot"></span>수중 촬영 포함</li>
+    <li><span class="dot"></span>Fast Track — 고래상어 대기 최소화</li>
+    <li><span class="dot"></span>투어 종료 후 드랍 서비스</li>
+  </ul>
+
+  <p class="sh">투어 정보</p>
+  <div class="info-list">
+    <div class="info-row">
+      <span class="k">미팅 장소</span>
+      <span class="v">졸리비 메인로드, 보라카이</span>
+    </div>
+    <div class="info-row">
+      <span class="k">미팅 시간</span>
+      <span class="v">07:30 AM
+        <small>10/25 이후 예약은 08:00 AM</small>
+      </span>
+    </div>
+    <div class="info-row">
+      <span class="k">소요 시간</span>
+      <span class="v">약 4~5시간</span>
+    </div>
+    <div class="info-row">
+      <span class="k">결제 방식</span>
+      <span class="v">온라인 카드결제 / 현장지불</span>
+    </div>
+    <div class="info-row">
+      <span class="k">예약 확정</span>
+      <span class="v">결제 즉시 이메일로 바우처 발송</span>
     </div>
   </div>
 
-  <!-- Includes -->
-  <div class="section">
-    <div class="section-title">포함 사항</div>
-    <div class="includes-grid">
-      <div class="include-item"><span class="icon">🎟️</span> 입장료 · 관람료 · 환경보호세</div>
-      <div class="include-item"><span class="icon">🚌</span> 왕복 차량</div>
-      <div class="include-item"><span class="icon">🦺</span> 구명조끼 대여</div>
-      <div class="include-item"><span class="icon">🐟</span> 오리발 대여</div>
-      <div class="include-item"><span class="icon">🧳</span> 짐 보관</div>
-      <div class="include-item"><span class="icon">💧</span> 생수 제공</div>
-      <div class="include-item"><span class="icon">📸</span> 수중 촬영</div>
-      <div class="include-item"><span class="icon">⚡</span> Fast Track (대기 최소화)</div>
-    </div>
-  </div>
+  <div class="spacer"></div>
+</div>
 
-  <!-- Tour info -->
-  <div class="section">
-    <div class="section-title">투어 정보</div>
-    <div>
-      <div class="info-row">
-        <span class="key">미팅 장소</span>
-        <span class="val">졸리비 메인로드, 보라카이</span>
-      </div>
-      <div class="info-row">
-        <span class="key">미팅 시간</span>
-        <span class="val">오전 07:30 AM<br><span style="font-size:0.78rem;color:#64748b;">(10/25 이후 예약은 08:00 AM)</span></span>
-      </div>
-      <div class="info-row">
-        <span class="key">소요 시간</span>
-        <span class="val">약 4~5시간</span>
-      </div>
-      <div class="info-row">
-        <span class="key">결제 방식</span>
-        <span class="val">온라인 카드 결제 (PayMongo)</span>
-      </div>
-      <div class="info-row">
-        <span class="key">예약 확정</span>
-        <span class="val">결제 즉시 이메일로 바우처 발송</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Notice -->
-  <div class="section">
-    <div class="section-title">예약 전 확인사항</div>
-    <div class="notice">
-      <strong>취소 및 환불 정책</strong><br>
-      투어일 15일 전 취소 시 전액 환불 / 8~14일 전 80% / 4~7일 전 50% / 3일 이내 환불 불가<br><br>
-      <strong>날씨 취소</strong><br>
-      기상 악화로 투어가 불가능할 경우 전액 환불 또는 날짜 변경 가능
-    </div>
-  </div>
-
-  <div class="bottom-spacer"></div>
-
-  <!-- Sticky CTA -->
-  <div class="cta-wrap">
-    <a href="reservationyebo-form.html" class="cta-btn">지금 예약하기 →</a>
-  </div>
-
+<div class="cta-fixed">
+  <a href="reservationyebo-form.html" class="cta-btn">예약하기</a>
 </div>
 
 </body>
