@@ -1313,7 +1313,7 @@ async function loadYebo() {
   tbody.innerHTML = "<tr><td colspan='8' style='text-align:center;'>로딩 중...</td></tr>";
   statsEl.innerHTML = "";
   try {
-    const q = query(collection(db, "reservations"), where("referralCode", "==", "YEBO"), orderBy("createdAt", "desc"));
+    const q = query(collection(db, "reservations"), where("referralCode", "==", "YEBO"));
     const snap = await getDocs(q);
 
     let rows = [];
@@ -1323,6 +1323,7 @@ async function loadYebo() {
       if (_yeboTo && data.date > _yeboTo) return;
       rows.push({ id: d.id, ...data });
     });
+    rows.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
 
     // 통계
     const total = rows.length;
