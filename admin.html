@@ -111,6 +111,14 @@
               <div class="value" id="dash-stat-pending" style="color: var(--admin-warning);">0</div>
             </div>
             <div class="stat-card">
+              <h3>이번달 확정 매출</h3>
+              <div class="value" id="dash-stat-month-revenue" style="color: var(--admin-success); font-size:1.2rem;">₱0</div>
+            </div>
+            <div class="stat-card">
+              <h3>이번달 예약 수</h3>
+              <div class="value" id="dash-stat-month-count">0</div>
+            </div>
+            <div class="stat-card">
               <h3>B2B 파트너 수</h3>
               <div class="value" id="dash-stat-agencies">0</div>
             </div>
@@ -121,6 +129,20 @@
             <div class="stat-card">
               <h3>정산 필요</h3>
               <div class="value" id="dash-stat-settlement" style="color: var(--admin-danger);">0</div>
+            </div>
+          </div>
+
+          <!-- 대기중 예약 빠른 처리 -->
+          <div class="table-container" style="margin-bottom:24px;">
+            <div class="table-header">
+              <h2>⏳ 대기중 예약 — 빠른 처리</h2>
+              <span style="font-size:0.8rem;color:var(--admin-text-muted);">확정하거나 취소할 예약이 있으면 여기서 바로 처리하세요</span>
+            </div>
+            <div style="overflow-x:auto;">
+              <table>
+                <thead><tr><th>투어일</th><th>예약자</th><th>투어</th><th>인원</th><th>금액</th><th>결제</th><th>액션</th></tr></thead>
+                <tbody id="dash-pending-tbody"><tr><td colspan="7" style="text-align:center;">로딩 중...</td></tr></tbody>
+              </table>
             </div>
           </div>
 
@@ -392,6 +414,11 @@
               <div class="table-header">
                 <h2>YEBO 예약 현황</h2>
                 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                  <!-- 뷰 탭 -->
+                  <div style="display:flex;gap:4px;background:var(--admin-bg-2);border-radius:8px;padding:3px;">
+                    <button id="yebo-tab-list" onclick="yeboSetTab('list')" style="padding:5px 14px;border:none;border-radius:6px;font-size:0.82rem;font-weight:600;cursor:pointer;background:var(--admin-accent);color:#fff;">예약 목록</button>
+                    <button id="yebo-tab-month" onclick="yeboSetTab('month')" style="padding:5px 14px;border:none;border-radius:6px;font-size:0.82rem;font-weight:600;cursor:pointer;background:transparent;color:var(--admin-text-muted);">월별 정산</button>
+                  </div>
                   <input type="date" id="yebo-date-from" style="padding:6px 10px;border:1px solid var(--admin-border);border-radius:8px;font-size:0.85rem;background:var(--admin-bg);color:var(--admin-text);">
                   <span style="color:var(--admin-text-muted);">~</span>
                   <input type="date" id="yebo-date-to" style="padding:6px 10px;border:1px solid var(--admin-border);border-radius:8px;font-size:0.85rem;background:var(--admin-bg);color:var(--admin-text);">
@@ -400,24 +427,31 @@
                 </div>
               </div>
               <!-- 통계 -->
-              <div id="yebo-stats" style="display:flex;gap:12px;flex-wrap:wrap;padding:16px 24px;border-bottom:1px solid var(--admin-border);"></div>
-              <!-- 테이블 -->
-              <div style="overflow-x:auto;">
-                <table>
-                  <thead><tr>
-                    <th>날짜</th>
-                    <th>예약자</th>
-                    <th>인원</th>
-                    <th>국적</th>
-                    <th>금액</th>
-                    <th>결제</th>
-                    <th>상태</th>
-                    <th>정산</th>
-                  </tr></thead>
-                  <tbody id="yebo-tbody">
-                    <tr><td colspan="8" style="text-align:center;">로딩 중...</td></tr>
-                  </tbody>
-                </table>
+              <div id="yebo-stats" style="display:flex;gap:12px;flex-wrap:wrap;padding:16px 24px;border-bottom:1px solid var(--admin-border);align-items:center;"></div>
+              <!-- 예약 목록 뷰 -->
+              <div id="yebo-view-list">
+                <div style="overflow-x:auto;">
+                  <table>
+                    <thead><tr>
+                      <th>날짜</th>
+                      <th>예약자</th>
+                      <th>인원</th>
+                      <th>국적</th>
+                      <th>금액</th>
+                      <th>결제</th>
+                      <th>상태</th>
+                      <th>정산</th>
+                      <th>액션</th>
+                    </tr></thead>
+                    <tbody id="yebo-tbody">
+                      <tr><td colspan="9" style="text-align:center;">로딩 중...</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- 월별 정산 뷰 -->
+              <div id="yebo-view-month" style="display:none;padding:16px 24px;">
+                <div id="yebo-month-content"></div>
               </div>
             </div>
           </div>
@@ -482,6 +516,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/admin.js?v=1788925205"></script>
+  <script type="module" src="js/admin.js?v=1788925207"></script>
 </body>
 </html>
