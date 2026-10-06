@@ -41,13 +41,11 @@
         <a href="#" class="nav-item active" data-view="dashboard"><span class="ni">📊</span>Dashboard</a>
         <a href="#" class="nav-item" data-view="reservations"><span class="ni">📋</span>예약 목록</a>
         <a href="#" class="nav-item" data-view="agencies"><span class="ni">🤝</span>B2B 파트너</a>
-        <a href="#" class="nav-item" data-view="products"><span class="ni">🏷️</span>요금 관리</a>
         <a href="#" class="nav-item" data-view="depositcash"><span class="ni">💳</span>예치금</a>
         <a href="#" class="nav-item" data-view="settlement"><span class="ni">📑</span>정산</a>
         <a href="#" class="nav-item" data-view="referral"><span class="ni">🔗</span>레퍼럴</a>
         <a href="#" class="nav-item" data-view="yebo"><span class="ni">⭐</span>YEBO</a>
         <a href="#" class="nav-item" data-view="accounts"><span class="ni">👤</span>계정 관리</a>
-        <a href="#" class="nav-item" data-view="reports"><span class="ni">📈</span>Reports</a>
       </nav>
       <div class="sidebar-footer">
         <a href="./" class="nav-item"><span class="ni">🏠</span>메인 사이트</a>
@@ -171,50 +169,6 @@
                 </div>
               </div>
 
-              <!-- Tour status -->
-              <div class="table-container">
-                <div class="table-header"><h2>오늘 투어 운영 상태</h2></div>
-                <form id="tour-status-form">
-                  <div class="fg">
-                    <label>상태</label>
-                    <select id="tour-status-select">
-                      <option value="operating">정상 운영</option>
-                      <option value="delayed">일정 변동 가능</option>
-                      <option value="cancelled">취소</option>
-                    </select>
-                  </div>
-                  <div class="fg" style="flex:1;min-width:260px;">
-                    <label>안내 문구 (비워두면 기본 문구)</label>
-                    <input type="text" id="tour-status-message-input" placeholder="예: 기상 악화로 오늘 투어가 취소되었습니다.">
-                  </div>
-                  <button type="submit" class="action-btn" style="background:var(--admin-primary);color:#fff;border-color:var(--admin-primary);">저장 (앱 홈 반영)</button>
-                  <span id="tour-status-message" style="font-size:.85rem;color:var(--admin-text-muted);"></span>
-                </form>
-              </div>
-
-              <!-- Sighting broadcast -->
-              <div class="table-container">
-                <div class="table-header"><h2>🐋 고래상어 출몰 알림 방송</h2></div>
-                <form id="sighting-broadcast-form">
-                  <div class="fg" style="flex:1;min-width:260px;">
-                    <label>알림 내용</label>
-                    <input type="text" id="sighting-message-input" required placeholder="예: 오늘 고래상어 나타났어요! 🦈">
-                  </div>
-                  <button type="submit" class="action-btn" style="background:var(--admin-primary);color:#fff;border-color:var(--admin-primary);">전체 앱 사용자에게 전송</button>
-                  <span id="sighting-broadcast-message" style="font-size:.85rem;color:var(--admin-text-muted);"></span>
-                </form>
-              </div>
-
-              <!-- Recent reservations -->
-              <div class="table-container">
-                <div class="table-header"><h2>최신 예약 (최근 10건)</h2></div>
-                <div style="overflow-x:auto;">
-                  <table>
-                    <thead><tr><th>날짜</th><th>예약자</th><th>투어</th><th>상태</th></tr></thead>
-                    <tbody id="dashboard-recent-tbody"></tbody>
-                  </table>
-                </div>
-              </div>
 
             </div><!-- /.dash-left -->
 
@@ -327,14 +281,6 @@
                 <tbody id="agency-tbody"></tbody>
               </table>
             </div>
-          </div>
-        </div>
-
-        <!-- ══════════ VIEW: Products & Pricing ══════════ -->
-        <div id="view-products" class="admin-view" style="display:none;">
-          <div class="table-container">
-            <div class="table-header"><h2>Products &amp; Pricing</h2></div>
-            <div style="padding:40px;text-align:center;color:var(--admin-text-muted);">준비 중입니다.</div>
           </div>
         </div>
 
@@ -466,14 +412,6 @@
                 <tbody id="accounts-tbody"><tr><td colspan="4" style="text-align:center;">로딩 중...</td></tr></tbody>
               </table>
             </div>
-          </div>
-        </div>
-
-        <!-- ══════════ VIEW: Reports ══════════ -->
-        <div id="view-reports" class="admin-view" style="display:none;">
-          <div class="table-container">
-            <div class="table-header"><h2>Reports</h2></div>
-            <div style="padding:40px;text-align:center;color:var(--admin-text-muted);">준비 중입니다.</div>
           </div>
         </div>
 
