@@ -109,6 +109,11 @@ onAuthStateChanged(auth, async (user) => {
     }
     loginOverlay.style.display = "none";
     dashboard.style.display = "block";
+    // Topbar user info
+    const emailShort = document.getElementById("topbar-email-short");
+    const avatar = document.getElementById("topbar-avatar");
+    if (emailShort) emailShort.textContent = user.email.split("@")[0];
+    if (avatar) avatar.textContent = (user.email[0] || "A").toUpperCase();
     loadDashboard();
   } else {
     loginOverlay.style.display = "flex";
@@ -333,6 +338,11 @@ async function loadReservations() {
     if (dashMonthRev) dashMonthRev.textContent = `₱${monthRevenue.toLocaleString()}`;
     if (dashMonthCnt) dashMonthCnt.textContent = monthCount;
 
+    // Right panel — donut chart + month label
+    updateDonutChart(monthCount, pending, querySnapshot);
+    // Activity list
+    updateActivityList(querySnapshot);
+
     // 대기중 빠른처리 테이블
     const pendingTbody = document.getElementById("dash-pending-tbody");
     if (pendingTbody) {
@@ -392,6 +402,59 @@ async function loadReservations() {
       : `오류: ${error.code || error.message}`;
     tbody.innerHTML = `<tr><td colspan='12' style='text-align:center; color: red;'>${msg}</td></tr>`;
   }
+}
+
+// ── Right panel: donut chart ──────────────────────────────────────────────
+function updateDonutChart(confirmedCount, pendingCount, querySnapshot) {
+  const circ = 2 * Math.PI * 46; // ~289
+  const thisMonth = new Date().toISOString().slice(0, 7);
+  let mConfirmed = 0, mPending = 0, mCancelled = 0, mRevenue = 0;
+  querySnapshot.forEach(d => {
+    const s = d.data();
+    if (!s.date || !s.date.startsWith(thisMonth)) return;
+    if (s.status === 'confirmed') { mConfirmed++; mRevenue += s.totalPrice || 0; }
+    else if (s.status === 'pending') mPending++;
+    else if (s.status === 'cancelled') mCancelled++;
+  });
+  const total = mConfirmed + mPending + mCancelled || 1;
+  const segConfirmed = document.getElementById("donut-seg-confirmed");
+  const segPending   = document.getElementById("donut-seg-pending");
+  const donutRev     = document.getElementById("donut-revenue");
+  const panelMonth   = document.getElementById("panel-month-label");
+  if (segConfirmed) {
+    const cLen = (mConfirmed / total) * circ;
+    segConfirmed.setAttribute("stroke-dasharray", `${cLen} ${circ - cLen}`);
+    segConfirmed.setAttribute("stroke-dashoffset", "0");
+  }
+  if (segPending) {
+    const cLen = (mConfirmed / total) * circ;
+    const pLen = (mPending / total) * circ;
+    segPending.setAttribute("stroke-dasharray", `${pLen} ${circ - pLen}`);
+    segPending.setAttribute("stroke-dashoffset", `-${cLen}`);
+  }
+  if (donutRev) donutRev.textContent = `₱${mRevenue.toLocaleString()}`;
+  if (panelMonth) panelMonth.textContent = thisMonth;
+}
+
+function updateActivityList(querySnapshot) {
+  const list = document.getElementById("dash-activity-list");
+  if (!list) return;
+  const TOUR = { VF:'VIP패스트트랙', F:'패스트트랙', R:'레귤러', T:'티켓' };
+  const ICON = { confirmed:'✅', pending:'⏳', cancelled:'✕' };
+  const CLR  = { confirmed:'confirmed', pending:'pending', cancelled:'cancelled' };
+  const rows = [];
+  querySnapshot.forEach(d => rows.push({ id: d.id, ...d.data() }));
+  const recent = rows.slice(0, 8);
+  if (!recent.length) { list.innerHTML = '<div style="text-align:center;color:var(--admin-text-muted);font-size:.8rem;padding:12px 0;">예약 없음</div>'; return; }
+  list.innerHTML = recent.map(r => `
+    <div class="activity-item">
+      <div class="ac-icon ac-icon--${CLR[r.status] || 'pending'}">${ICON[r.status] || '⏳'}</div>
+      <div class="ac-info">
+        <div class="ac-name">${r.name || '-'}</div>
+        <div class="ac-meta">${r.date || '-'} · ${TOUR[r.tourType] || r.tourType}</div>
+      </div>
+      <div class="ac-amount">₱${(r.totalPrice||0).toLocaleString()}</div>
+    </div>`).join('');
 }
 
 // Voucher Preview — mirrors the layout of the actual voucher email
