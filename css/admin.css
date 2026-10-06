@@ -395,6 +395,10 @@ button.dash-cancel-btn {
 .ac-icon--confirmed { background: #d1fae5; }
 .ac-icon--pending   { background: #fef3c7; }
 .ac-icon--cancelled { background: #fee2e2; }
+.ac-tour--vf { background: #f3e8ff; color: #7e22ce; font-weight: 700; font-size: .7rem; }
+.ac-tour--f  { background: #fff7ed; color: #c2410c; font-weight: 700; font-size: .7rem; }
+.ac-tour--r  { background: #eff6ff; color: #1d4ed8; font-weight: 700; font-size: .7rem; }
+.ac-tour--t  { background: #f0fdf4; color: #166534; font-weight: 700; font-size: .7rem; }
 .ac-info { flex: 1; min-width: 0; }
 .ac-name { font-size: .8rem; font-weight: 600; color: var(--admin-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ac-meta { font-size: .7rem; color: var(--admin-text-muted); margin-top: 1px; }

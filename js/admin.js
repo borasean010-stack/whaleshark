@@ -452,21 +452,24 @@ function updateDonutChart(confirmedCount, pendingCount, querySnapshot) {
 function updateActivityList(querySnapshot) {
   const list = document.getElementById("dash-activity-list");
   if (!list) return;
-  const ICON = { confirmed:'✅', pending:'⏳', cancelled:'✕' };
-  const CLR  = { confirmed:'confirmed', pending:'pending', cancelled:'cancelled' };
+  const TOUR_CLS = { VF:'vf', F:'f', R:'r', T:'t' };
   const rows = [];
   querySnapshot.forEach(d => rows.push({ id: d.id, ...d.data() }));
   const recent = rows.slice(0, 8);
   if (!recent.length) { list.innerHTML = '<div style="text-align:center;color:var(--admin-text-muted);font-size:.8rem;padding:12px 0;">예약 없음</div>'; return; }
-  list.innerHTML = recent.map(r => `
+  list.innerHTML = recent.map(r => {
+    const cls = TOUR_CLS[r.tourType] || 'r';
+    const statusCls = { confirmed:'confirmed', pending:'pending', cancelled:'cancelled' }[r.status] || 'pending';
+    return `
     <div class="activity-item">
-      <div class="ac-icon ac-icon--${CLR[r.status] || 'pending'}">${ICON[r.status] || '⏳'}</div>
+      <div class="ac-icon ac-tour--${cls}">${r.tourType || '?'}</div>
       <div class="ac-info">
         <div class="ac-name">${r.name || '-'}</div>
-        <div class="ac-meta">${r.date || '-'} · ${tourTypeBadge(r.tourType)}</div>
+        <div class="ac-meta">${r.date || '-'} <span class="badge ${statusCls}" style="font-size:.65rem;padding:2px 6px;">${{ confirmed:'확정', pending:'대기', cancelled:'취소' }[r.status] || r.status}</span></div>
       </div>
       <div class="ac-amount">₱${(r.totalPrice||0).toLocaleString()}</div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 // Voucher Preview — mirrors the layout of the actual voucher email
