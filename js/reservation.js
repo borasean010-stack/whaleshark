@@ -215,7 +215,10 @@ form.addEventListener("submit", async (e) => {
   const tourType = formData.get("tourType").trim();
   const people = Number(formData.get("people"));
   const nationality = formData.get("nationality");
-  const pricePerPerson = window.PRICES && window.PRICES[nationality] ? window.PRICES[nationality][tourType] : null;
+  const basePricePerPerson = window.PRICES && window.PRICES[nationality] ? window.PRICES[nationality][tourType] : null;
+  const refCodeVal = (formData.get("referralCode") || "").trim() || referralCode;
+  const discountPP = window.getDiscountPerPerson ? window.getDiscountPerPerson(refCodeVal, tourType) : 0;
+  const pricePerPerson = basePricePerPerson ? basePricePerPerson - discountPP : null;
   const totalPrice = pricePerPerson ? pricePerPerson * people : null;
 
   const reservation = {

@@ -519,6 +519,18 @@
       FOREIGN: { VF: 5820, F: 3600, R: 2820, T: 1920 }
     };
     window.PRICES = PRICES;
+
+    // ── Referral discounts (per person, PHP) ──
+    const REFERRAL_DISCOUNTS = {
+      FCWS: { F: 150, R: 120 }
+    };
+    window.REFERRAL_DISCOUNTS = REFERRAL_DISCOUNTS;
+
+    function getDiscountPerPerson(code, tourType) {
+      const upper = (code || '').trim().toUpperCase();
+      return (REFERRAL_DISCOUNTS[upper] && REFERRAL_DISCOUNTS[upper][tourType]) || 0;
+    }
+    window.getDiscountPerPerson = getDiscountPerPerson;
     const nationalityNames = {
       en: { PH: 'Philippine', FOREIGN: 'Foreigner' },
       ko: { PH: '필리핀', FOREIGN: '외국인' },
@@ -578,24 +590,32 @@
       // Price preview (Step 1)
       const pricePreview = document.getElementById('price-preview');
       const perPerson = currentPricePerPerson();
+      const refCode = (document.getElementById('referralCode').value || '').trim();
+      const discount = getDiscountPerPerson(refCode, tourVal);
+      const discountedPerPerson = perPerson ? perPerson - discount : null;
       if (perPerson) {
         pricePreview.style.display = 'flex';
-        document.getElementById('pp-price').textContent = fmtPHP(perPerson);
-        const totalLabel = lang === 'ko' ? `(총 ${people}명: ${fmtPHP(perPerson * people)})` : `(Total for ${people}: ${fmtPHP(perPerson * people)})`;
+        if (discount > 0) {
+          document.getElementById('pp-price').innerHTML = `<s style="color:#aaa;font-size:.9em">${fmtPHP(perPerson)}</s> ${fmtPHP(discountedPerPerson)} <span style="color:#16a34a;font-size:.85em">(${lang==='ko'?'할인':'discount'} -${fmtPHP(discount)})</span>`;
+        } else {
+          document.getElementById('pp-price').textContent = fmtPHP(perPerson);
+        }
+        const effTotal = discountedPerPerson * people;
+        const totalLabel = lang === 'ko' ? `(총 ${people}명: ${fmtPHP(effTotal)})` : `(Total for ${people}: ${fmtPHP(effTotal)})`;
         document.getElementById('pp-total').textContent = people > 0 ? totalLabel : '';
       } else {
         pricePreview.style.display = 'none';
       }
 
       // Total price
-      const total = perPerson && people > 0 ? perPerson * people : 0;
+      const total = discountedPerPerson && people > 0 ? discountedPerPerson * people : 0;
       const totalText = total ? fmtPHP(total) : '-';
       ['sum-total', 'rv-total', 'pay-total'].forEach(id => document.getElementById(id).textContent = totalText);
 
       if (window.updateRouteMap) window.updateRouteMap(pickupVal);
     }
 
-    ['date', 'people', 'pickup', 'name', 'email', 'nationality'].forEach(id => {
+    ['date', 'people', 'pickup', 'name', 'email', 'nationality', 'referralCode'].forEach(id => {
       document.getElementById(id).addEventListener('input', updateSummary);
       document.getElementById(id).addEventListener('change', updateSummary);
     });
