@@ -175,6 +175,7 @@
             <strong id="pp-price">-</strong>
             <span class="price-total" id="pp-total"></span>
           </div>
+          <div id="discount-notice" style="display:none;margin-top:8px;padding:10px 14px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;font-size:.88rem;color:#166534;line-height:1.5;"></div>
 
           <div class="form-group">
             <label for="pickup" data-en="Pick Up Location *" data-ko="픽업 장소 *" data-zh="接送地点 *" data-ja="ピックアップ場所 *">Pick Up Location *</label>
@@ -593,18 +594,26 @@
       const refCode = (document.getElementById('referralCode').value || '').trim();
       const discount = getDiscountPerPerson(refCode, tourVal);
       const discountedPerPerson = perPerson ? perPerson - discount : null;
+      const discountNotice = document.getElementById('discount-notice');
       if (perPerson) {
         pricePreview.style.display = 'flex';
         if (discount > 0) {
-          document.getElementById('pp-price').innerHTML = `<s style="color:#aaa;font-size:.9em">${fmtPHP(perPerson)}</s> ${fmtPHP(discountedPerPerson)} <span style="color:#16a34a;font-size:.85em">(${lang==='ko'?'할인':'discount'} -${fmtPHP(discount)})</span>`;
+          document.getElementById('pp-price').innerHTML =
+            `<s style="color:#aaa;font-weight:400;font-size:.92em">${fmtPHP(perPerson)}</s>&nbsp;<strong style="color:#16a34a">${fmtPHP(discountedPerPerson)}</strong>`;
+          const ko = lang === 'ko';
+          discountNotice.style.display = 'block';
+          discountNotice.innerHTML = `🎉 <b>${refCode}</b> ${ko?'코드 적용됨':'code applied'} — ${ko?`1인당 ₱${discount} 할인`:`₱${discount} off per person`}`
+            + (people > 0 ? `<br>✅ ${ko?`총 ${people}명 × ₱${discount} = <b>₱${discount*people} 할인</b>`:`${people} pax × ₱${discount} = <b>₱${discount*people} off</b>`}` : '');
         } else {
           document.getElementById('pp-price').textContent = fmtPHP(perPerson);
+          discountNotice.style.display = 'none';
         }
-        const effTotal = discountedPerPerson * people;
+        const effTotal = (discountedPerPerson || perPerson) * people;
         const totalLabel = lang === 'ko' ? `(총 ${people}명: ${fmtPHP(effTotal)})` : `(Total for ${people}: ${fmtPHP(effTotal)})`;
         document.getElementById('pp-total').textContent = people > 0 ? totalLabel : '';
       } else {
         pricePreview.style.display = 'none';
+        discountNotice.style.display = 'none';
       }
 
       // Total price
