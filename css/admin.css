@@ -86,75 +86,65 @@ select option { background: var(--admin-surface); color: var(--admin-text); }
 #dashboard { display: none; height: 100vh; }
 .layout    { display: flex; height: 100%; }
 
-/* ── Sidebar (dark, icon-only, 68 px) ── */
+/* ── Sidebar (dark, text labels, 188 px) ── */
 .sidebar {
-  width: 68px;
+  width: 188px;
   background: #1a1d2e;
   display: flex; flex-direction: column;
-  align-items: center;
   flex-shrink: 0;
   position: relative; z-index: 20;
-  padding: 16px 0 12px;
+  padding: 0 0 12px;
 }
 .sidebar-header {
-  padding-bottom: 16px;
+  padding: 18px 16px 16px;
   border-bottom: 1px solid rgba(255,255,255,.08);
-  width: 100%; display: flex; justify-content: center;
+  display: flex; align-items: center; gap: 10px;
   margin-bottom: 10px;
 }
 .sidebar-logo {
-  width: 36px; height: 36px;
+  width: 32px; height: 32px;
   background: var(--admin-primary);
-  border-radius: 10px;
+  border-radius: 8px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.15rem;
+  font-size: 1rem;
 }
+.sidebar-brand {
+  font-size: .78rem; font-weight: 800; color: #fff;
+  letter-spacing: .5px; line-height: 1.2;
+}
+.sidebar-brand small { display: block; font-size: .65rem; font-weight: 400; color: rgba(255,255,255,.4); }
 .sidebar-nav {
   flex: 1; width: 100%;
   display: flex; flex-direction: column;
-  align-items: center; gap: 2px;
-  padding: 4px 8px;
+  gap: 1px; padding: 0 10px;
 }
 .nav-item {
   position: relative;
-  width: 44px; height: 44px;
-  display: flex; align-items: center; justify-content: center;
-  color: rgba(255,255,255,.4);
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px;
+  color: rgba(255,255,255,.45);
   text-decoration: none;
-  border-radius: 10px;
+  border-radius: 8px;
   transition: all .16s;
-  font-size: 1.2rem;
-  cursor: pointer;
-  flex-shrink: 0;
+  font-size: .82rem; font-weight: 500;
+  cursor: pointer; white-space: nowrap;
 }
-.nav-item:hover { background: rgba(255,255,255,.08); color: #fff; }
-.nav-item.active { background: rgba(79,110,247,.2); color: #fff; }
+.nav-item .ni { font-size: 1rem; flex-shrink: 0; width: 18px; text-align: center; }
+.nav-item:hover { background: rgba(255,255,255,.07); color: #fff; }
+.nav-item.active {
+  background: rgba(79,110,247,.18); color: #fff; font-weight: 600;
+}
 .nav-item.active::before {
   content: '';
-  position: absolute; left: -8px;
+  position: absolute; left: 0;
   top: 50%; transform: translateY(-50%);
-  width: 3px; height: 20px;
+  width: 3px; height: 18px;
   background: var(--admin-primary);
   border-radius: 0 3px 3px 0;
 }
-/* Tooltip */
-.nav-item[data-label]::after {
-  content: attr(data-label);
-  position: absolute; left: calc(100% + 10px);
-  background: #2d3250; color: #fff;
-  font-size: .75rem; font-weight: 600;
-  padding: 5px 10px; border-radius: 7px;
-  white-space: nowrap; pointer-events: none;
-  opacity: 0; transform: translateX(-4px);
-  transition: all .14s; z-index: 100;
-  box-shadow: 0 4px 12px rgba(0,0,0,.3);
-  font-family: 'Inter', sans-serif;
-}
-.nav-item[data-label]:hover::after { opacity: 1; transform: translateX(0); }
 .sidebar-footer {
   width: 100%; display: flex; flex-direction: column;
-  align-items: center; gap: 2px;
-  padding: 10px 8px 0;
+  gap: 1px; padding: 10px 10px 0;
   border-top: 1px solid rgba(255,255,255,.08);
 }
 
@@ -253,7 +243,7 @@ select option { background: var(--admin-surface); color: var(--admin-text); }
 /* ── Stat Cards ── */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 12px; margin-bottom: 16px;
 }
 .stat-card {
@@ -503,6 +493,18 @@ button.dash-cancel-btn {
   cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,.2); z-index: 1;
 }
 .voucher-modal-close:hover { background: #f1f5f9; }
+
+/* ── Tour Type Badges ── */
+.tour-badge {
+  display: inline-block;
+  padding: 3px 9px; border-radius: 6px;
+  font-size: .72rem; font-weight: 700;
+  white-space: nowrap;
+}
+.tour-vf { background: #f3e8ff; color: #7e22ce; }
+.tour-f  { background: #fff7ed; color: #c2410c; }
+.tour-r  { background: #eff6ff; color: #1d4ed8; }
+.tour-t  { background: #f0fdf4; color: #166534; }
 
 /* ── Admin View containers ── */
 .admin-view {}

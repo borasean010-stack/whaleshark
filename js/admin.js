@@ -234,6 +234,7 @@ async function loadReservations() {
       }
       
       // Tour Type Mapping
+      const tourBadgeHtml = tourTypeBadge(data.tourType);
       let tourName = data.tourType;
       if (tourName === "VF") tourName = "VIP패스트트랙";
       if (tourName === "F") tourName = "패스트트랙";
@@ -261,7 +262,7 @@ async function loadReservations() {
           <div style="font-size: 0.8rem; color: var(--admin-text-muted);">신청: ${createdDate}</div>
         </td>
         <td style="font-weight: bold;">${data.name}</td>
-        <td>${tourName}</td>
+        <td>${tourBadgeHtml}</td>
         <td>
           <div class="badge ${data.paymentStatus === 'paid' ? 'confirmed' : 'pending'}">
             ${data.paymentStatus === 'paid' ? '결제완료' : '미결제'}
@@ -286,7 +287,8 @@ async function loadReservations() {
       tbody.appendChild(tr);
 
       if (recentRows.length < 10) {
-        recentRows.push(`<tr><td>${data.date}</td><td>${data.name}</td><td>${tourName}</td><td><span class="badge ${data.status}" style="display:inline-block;">${data.status}</span></td></tr>`);
+        const statusLabel = { confirmed:'예약확정', pending:'대기중', cancelled:'취소됨' }[data.status] || data.status;
+        recentRows.push(`<tr><td>${data.date}</td><td>${data.name}</td><td>${tourBadgeHtml}</td><td><span class="badge ${data.status}">${statusLabel}</span></td></tr>`);
       }
     });
 
@@ -351,12 +353,11 @@ async function loadReservations() {
         const d = docSnap.data();
         const id = docSnap.id;
         if (d.status !== 'pending') return;
-        const tName = { VF:"VIP패스트트랙", F:"패스트트랙", R:"레귤러", T:"티켓" }[d.tourType] || d.tourType;
         pendingRows.push(`
           <tr>
             <td style="font-weight:600;">${d.date}</td>
             <td>${d.name}</td>
-            <td>${tName}</td>
+            <td>${tourTypeBadge(d.tourType)}</td>
             <td>${d.people}명</td>
             <td>₱${(d.totalPrice||0).toLocaleString()}</td>
             <td>${d.paymentStatus==='paid'?'<span style="color:#16a34a;font-weight:600;">결제완료</span>':'<span style="color:#ca8a04;">미결제</span>'}</td>
@@ -402,6 +403,18 @@ async function loadReservations() {
       : `오류: ${error.code || error.message}`;
     tbody.innerHTML = `<tr><td colspan='12' style='text-align:center; color: red;'>${msg}</td></tr>`;
   }
+}
+
+// ── Tour type badge ───────────────────────────────────────────────────────
+function tourTypeBadge(type) {
+  const MAP = {
+    VF: { label: 'VIP FT',    cls: 'tour-vf' },
+    F:  { label: 'Fast Track', cls: 'tour-f'  },
+    R:  { label: 'Regular',    cls: 'tour-r'  },
+    T:  { label: 'Ticket',     cls: 'tour-t'  },
+  };
+  const t = MAP[type] || { label: type, cls: 'tour-r' };
+  return `<span class="tour-badge ${t.cls}">${t.label}</span>`;
 }
 
 // ── Right panel: donut chart ──────────────────────────────────────────────
