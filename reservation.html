@@ -175,7 +175,6 @@
             <strong id="pp-price">-</strong>
             <span class="price-total" id="pp-total"></span>
           </div>
-          <div id="discount-notice" style="display:none;margin-top:8px;padding:10px 14px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;font-size:.88rem;color:#166534;line-height:1.5;"></div>
 
           <div class="form-group">
             <label for="pickup" data-en="Pick Up Location *" data-ko="픽업 장소 *" data-zh="接送地点 *" data-ja="ピックアップ場所 *">Pick Up Location *</label>
@@ -234,7 +233,6 @@
           <div class="form-group">
             <label for="referralCode" data-en="Referral Code (optional)" data-ko="레퍼럴 코드 (선택사항)" data-zh="推荐码（选填）" data-ja="紹介コード（任意）">Referral Code (optional)</label>
             <input type="text" id="referralCode" name="referralCode" class="input-luxury" placeholder="" autocomplete="off">
-            <div id="referral-discount-badge" style="display:none;margin-top:8px;padding:10px 14px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;font-size:.88rem;color:#166534;line-height:1.6;"></div>
           </div>
 
           <div class="wizard-actions">
@@ -257,6 +255,7 @@
             <div class="review-row"><span data-en="Name" data-ko="예약자 성함" data-zh="姓名" data-ja="氏名">Name</span><strong id="rv-name">-</strong></div>
             <div class="review-row"><span data-en="Email" data-ko="이메일" data-zh="邮箱" data-ja="メール">Email</span><strong id="rv-email">-</strong></div>
             <div class="review-row"><span data-en="Emergency Contact" data-ko="비상 연락처" data-zh="紧急联系方式" data-ja="緊急連絡先">Emergency Contact</span><strong id="rv-emergency">-</strong></div>
+            <div class="review-row" id="rv-discount-row" style="display:none;color:#16a34a;"><span data-en="Discount" data-ko="할인" data-zh="折扣" data-ja="割引">Discount</span><strong id="rv-discount">-</strong></div>
             <div class="review-row review-row--total"><span data-en="Total Price" data-ko="총 금액" data-zh="总金额" data-ja="合計金額">Total Price</span><strong id="rv-total">-</strong></div>
           </div>
 
@@ -595,31 +594,34 @@
       const refCode = (document.getElementById('referralCode').value || '').trim();
       const discount = getDiscountPerPerson(refCode, tourVal);
       const discountedPerPerson = perPerson ? perPerson - discount : null;
-      const discountNotice = document.getElementById('discount-notice');
-      const discountBadge = document.getElementById('referral-discount-badge');
       if (perPerson) {
         pricePreview.style.display = 'flex';
         if (discount > 0) {
           document.getElementById('pp-price').innerHTML =
             `<s style="color:#aaa;font-weight:400;font-size:.92em">${fmtPHP(perPerson)}</s>&nbsp;<strong style="color:#16a34a">${fmtPHP(discountedPerPerson)}</strong>`;
-          const ko = lang === 'ko';
-          const badgeHtml = `🎉 <b>${refCode}</b> ${ko?'코드 적용됨':'code applied'} — ${ko?`1인당 ₱${discount} 할인`:`₱${discount} off per person`}`
-            + (people > 0 ? `<br>✅ ${ko?`총 ${people}명 × ₱${discount} = <b>₱${discount*people} 할인</b>`:`${people} pax × ₱${discount} = <b>₱${discount*people} off</b>`}` : '');
-          discountNotice.style.display = 'block';
-          discountNotice.innerHTML = badgeHtml;
-          if (discountBadge) { discountBadge.style.display = 'block'; discountBadge.innerHTML = badgeHtml; }
         } else {
           document.getElementById('pp-price').textContent = fmtPHP(perPerson);
-          discountNotice.style.display = 'none';
-          if (discountBadge) discountBadge.style.display = 'none';
         }
         const effTotal = (discountedPerPerson || perPerson) * people;
         const totalLabel = lang === 'ko' ? `(총 ${people}명: ${fmtPHP(effTotal)})` : `(Total for ${people}: ${fmtPHP(effTotal)})`;
         document.getElementById('pp-total').textContent = people > 0 ? totalLabel : '';
       } else {
         pricePreview.style.display = 'none';
-        discountNotice.style.display = 'none';
-        if (discountBadge) discountBadge.style.display = 'none';
+      }
+
+      // Discount row in review step
+      const rvDiscountRow = document.getElementById('rv-discount-row');
+      const rvDiscount = document.getElementById('rv-discount');
+      if (rvDiscountRow && rvDiscount) {
+        if (discount > 0 && people > 0) {
+          rvDiscountRow.style.display = '';
+          const ko = lang === 'ko';
+          rvDiscount.textContent = ko
+            ? `-₱${(discount * people).toLocaleString()} (${refCode}, 1인 ₱${discount})`
+            : `-₱${(discount * people).toLocaleString()} (${refCode}, ₱${discount}/pax)`;
+        } else {
+          rvDiscountRow.style.display = 'none';
+        }
       }
 
       // Total price
