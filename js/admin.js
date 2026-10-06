@@ -455,7 +455,7 @@ function updateActivityList(querySnapshot) {
   const TOUR_CLS = { VF:'vf', F:'f', R:'r', T:'t' };
   const rows = [];
   querySnapshot.forEach(d => rows.push({ id: d.id, ...d.data() }));
-  const recent = rows.slice(0, 8);
+  const recent = rows.filter(r => r.status !== 'cancelled').slice(0, 8);
   if (!recent.length) { list.innerHTML = '<div style="text-align:center;color:var(--admin-text-muted);font-size:.8rem;padding:12px 0;">예약 없음</div>'; return; }
   list.innerHTML = recent.map(r => {
     const cls = TOUR_CLS[r.tourType] || 'r';
