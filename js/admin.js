@@ -452,7 +452,6 @@ function updateDonutChart(confirmedCount, pendingCount, querySnapshot) {
 function updateActivityList(querySnapshot) {
   const list = document.getElementById("dash-activity-list");
   if (!list) return;
-  const TOUR = { VF:'VIP패스트트랙', F:'패스트트랙', R:'레귤러', T:'티켓' };
   const ICON = { confirmed:'✅', pending:'⏳', cancelled:'✕' };
   const CLR  = { confirmed:'confirmed', pending:'pending', cancelled:'cancelled' };
   const rows = [];
@@ -464,7 +463,7 @@ function updateActivityList(querySnapshot) {
       <div class="ac-icon ac-icon--${CLR[r.status] || 'pending'}">${ICON[r.status] || '⏳'}</div>
       <div class="ac-info">
         <div class="ac-name">${r.name || '-'}</div>
-        <div class="ac-meta">${r.date || '-'} · ${TOUR[r.tourType] || r.tourType}</div>
+        <div class="ac-meta">${r.date || '-'} · ${tourTypeBadge(r.tourType)}</div>
       </div>
       <div class="ac-amount">₱${(r.totalPrice||0).toLocaleString()}</div>
     </div>`).join('');

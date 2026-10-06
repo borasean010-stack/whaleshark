@@ -88,7 +88,7 @@ select option { background: var(--admin-surface); color: var(--admin-text); }
 
 /* ── Sidebar (dark, text labels, 188 px) ── */
 .sidebar {
-  width: 188px;
+  width: 210px;
   background: #1a1d2e;
   display: flex; flex-direction: column;
   flex-shrink: 0;
@@ -121,13 +121,15 @@ select option { background: var(--admin-surface); color: var(--admin-text); }
 .nav-item {
   position: relative;
   display: flex; align-items: center; gap: 10px;
-  padding: 10px 12px;
+  padding: 9px 12px;
   color: rgba(255,255,255,.45);
   text-decoration: none;
   border-radius: 8px;
   transition: all .16s;
-  font-size: .82rem; font-weight: 500;
-  cursor: pointer; white-space: nowrap;
+  font-size: .81rem; font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
 }
 .nav-item .ni { font-size: 1rem; flex-shrink: 0; width: 18px; text-align: center; }
 .nav-item:hover { background: rgba(255,255,255,.07); color: #fff; }
@@ -242,8 +244,8 @@ select option { background: var(--admin-surface); color: var(--admin-text); }
 
 /* ── Stat Cards ── */
 .stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
   gap: 12px; margin-bottom: 16px;
 }
 .stat-card {
