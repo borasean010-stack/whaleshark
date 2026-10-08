@@ -72,13 +72,19 @@ body {
 .hero-label-text { flex: 1; }
 .hero-label h1 {
   color: #0f172a;
-  font-size: clamp(2rem, 7vw, 2.8rem);
+  font-size: clamp(1.7rem, 6vw, 2.4rem);
   font-weight: 900;
   line-height: 1.1;
 }
 .hero-label h1 em {
   font-style: normal;
   color: #0ea5e9;
+}
+.mascot-area {
+  display: flex;
+  align-items: flex-end;
+  flex-shrink: 0;
+  gap: 4px;
 }
 .mascot-bubble {
   background: #fff;
@@ -97,18 +103,18 @@ body {
 .mascot-bubble::after {
   content: '';
   position: absolute;
-  bottom: -10px;
-  right: 30px;
+  top: 10px;
+  right: -10px;
   border: 5px solid transparent;
-  border-top-color: #0ea5e9;
+  border-left-color: #0ea5e9;
 }
 .mascot-bubble::before {
   content: '';
   position: absolute;
-  bottom: -7px;
-  right: 31px;
+  top: 11px;
+  right: -7px;
   border: 4px solid transparent;
-  border-top-color: #fff;
+  border-left-color: #fff;
   z-index: 1;
 }
 .mascot-img {
@@ -209,15 +215,15 @@ body {
   <img src="assets/yebo-hero.jpg" alt="예린이(yebo) x 보라카이 고래상어">
 </div>
 <div class="hero-label">
-  <div class="hero-top-row">
-    <div class="tag">예린이(YEBO) X 보라카이 션</div>
-    <div class="mascot-bubble">yebo에 힘을!! 🔥<br>예린이 전용!!</div>
-  </div>
+  <div class="tag">예린이(YEBO) X 보라카이 션</div>
   <div class="hero-label-inner">
     <div class="hero-label-text">
       <h1>보라카이<br><em>고래상어</em> 패스트트랙</h1>
     </div>
-    <img src="assets/yebo-mascot.png" alt="yebo mascot" class="mascot-img">
+    <div class="mascot-area">
+      <div class="mascot-bubble">yebo에 힘을!! 🔥<br>예린이 전용!!</div>
+      <img src="assets/yebo-mascot.png" alt="yebo mascot" class="mascot-img">
+    </div>
   </div>
 </div>
 
