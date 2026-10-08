@@ -79,10 +79,46 @@ body {
   font-style: normal;
   color: #0ea5e9;
 }
+.mascot-wrap {
+  flex-shrink: 0;
+  position: relative;
+  width: 110px;
+  margin-bottom: -8px;
+}
+.mascot-bubble {
+  position: absolute;
+  top: -10px;
+  right: 105px;
+  background: #fff;
+  border: 2px solid #0ea5e9;
+  border-radius: 12px;
+  padding: 7px 11px;
+  font-size: .72rem;
+  font-weight: 800;
+  color: #0369a1;
+  white-space: nowrap;
+  line-height: 1.5;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+.mascot-bubble::after {
+  content: '';
+  position: absolute;
+  top: 14px;
+  right: -10px;
+  border: 5px solid transparent;
+  border-left-color: #0ea5e9;
+}
+.mascot-bubble::before {
+  content: '';
+  position: absolute;
+  top: 15px;
+  right: -7px;
+  border: 4px solid transparent;
+  border-left-color: #fff;
+  z-index: 1;
+}
 .mascot-img {
   width: 110px;
-  flex-shrink: 0;
-  margin-bottom: -8px;
 }
 
 /* ── Body ── */
@@ -183,7 +219,10 @@ body {
     <div class="hero-label-text">
       <h1>보라카이<br><em>고래상어</em> 패스트트랙</h1>
     </div>
-    <img src="assets/yebo-mascot.png" alt="yebo mascot" class="mascot-img">
+    <div class="mascot-wrap">
+      <div class="mascot-bubble">yebo에 힘을!! 🔥<br>예린이 전용!!</div>
+      <img src="assets/yebo-mascot.png" alt="yebo mascot" class="mascot-img">
+    </div>
   </div>
 </div>
 
