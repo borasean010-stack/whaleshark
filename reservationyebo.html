@@ -63,6 +63,12 @@ body {
   text-transform: uppercase;
   margin-bottom: 10px;
 }
+.hero-label-inner {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+}
+.hero-label-text { flex: 1; }
 .hero-label h1 {
   color: #0f172a;
   font-size: clamp(1.6rem, 5vw, 2.2rem);
@@ -72,6 +78,11 @@ body {
 .hero-label h1 em {
   font-style: normal;
   color: #0ea5e9;
+}
+.mascot-img {
+  width: 110px;
+  flex-shrink: 0;
+  margin-bottom: -8px;
 }
 
 /* ── Body ── */
@@ -168,7 +179,12 @@ body {
 </div>
 <div class="hero-label">
   <div class="tag">예린이(YEBO) X 보라카이 션</div>
-  <h1>보라카이<br><em>고래상어</em> 패스트트랙</h1>
+  <div class="hero-label-inner">
+    <div class="hero-label-text">
+      <h1>보라카이<br><em>고래상어</em> 패스트트랙</h1>
+    </div>
+    <img src="assets/yebo-mascot.png" alt="yebo mascot" class="mascot-img">
+  </div>
 </div>
 
 <div class="wrap">
