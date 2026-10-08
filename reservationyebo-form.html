@@ -192,15 +192,13 @@
           <div class="form-group" id="meeting-time-group" style="display:none;">
             <label for="meetingTime" data-en="Meeting Time *" data-ko="미팅 시간 *" data-zh="集合时间 *" data-ja="集合時間 *">Meeting Time *</label>
 
-            <div id="meeting-select-block">
+            <div id="meeting-select-block" style="display:none;">
               <select id="meetingTime" name="meetingTime" class="input-luxury">
-                <option value="07:30" data-en="07:30 AM" data-ko="오전 07:30" data-zh="上午7:30" data-ja="午前7:30">07:30 AM</option>
                 <option value="08:00" data-en="08:00 AM" data-ko="오전 08:00" data-zh="上午8:00" data-ja="午前8:00">08:00 AM</option>
-                <option value="09:00" data-en="09:00 AM" data-ko="오전 09:00" data-zh="上午9:00" data-ja="午前9:00">09:00 AM</option>
               </select>
             </div>
 
-            <p class="map-caption" id="meeting-fixed-note" style="display:none;">Meeting Time: 07:30 AM</p>
+            <p class="map-caption" id="meeting-fixed-note">Meeting Time: 08:00 AM</p>
 
             <p class="map-caption" data-en="Meeting Point: Jollibee Main Road, Boracay" data-ko="미팅 장소: 메인로드 졸리비, 보라카이" data-zh="集合地点：长滩岛乔利比大道" data-ja="集合場所：ボラカイ ジョリビー・メインロード">Meeting Point: Jollibee Main Road, Boracay</p>
             <a id="meeting-map-link" href="https://www.google.com/maps/search/?api=1&query=Jollibee+Boracay+Main+Road+Malay+Aklan+Philippines" target="_blank" rel="noopener" class="map-link-btn" data-en="Open in Google Maps" data-ko="구글맵에서 보기" data-zh="在谷歌地图中查看" data-ja="Googleマップで見る">Open in Google Maps</a>
@@ -381,30 +379,15 @@
     const meetingFixedNote = document.getElementById('meeting-fixed-note');
     const meetingSelect = document.getElementById('meetingTime');
 
-    // Regular tour: shared meeting point, customer picks one of two times.
-    // Fast Track / VIP Fast Track: also meet at a fixed 07:30 AM, but there's
-    // no choice, so it's shown as plain text and the value is set programmatically.
-    // Ticket Only: no scheduled meeting at all. The meeting-point caption/map
-    // link (Jollibee Main Road) is static markup shared by both branches.
-    function getFastTrackTime() {
-      const dateVal = document.getElementById('date').value;
-      return (dateVal && dateVal >= '2026-10-25') ? '08:00' : '07:30';
-    }
-
     function updateMeetingTime() {
       const selectedValue = document.querySelector('input[name="tourType"]:checked').value;
 
-      if (selectedValue === 'R') {
-        meetingTimeGroup.style.display = 'block';
-        meetingSelectBlock.style.display = 'block';
-        meetingFixedNote.style.display = 'none';
-      } else if (selectedValue === 'F' || selectedValue === 'VF') {
-        const ftTime = getFastTrackTime();
+      if (selectedValue === 'R' || selectedValue === 'F' || selectedValue === 'VF') {
         meetingTimeGroup.style.display = 'block';
         meetingSelectBlock.style.display = 'none';
         meetingFixedNote.style.display = 'block';
-        meetingFixedNote.textContent = ftTime === '08:00' ? 'Meeting Time: 08:00 AM' : 'Meeting Time: 07:30 AM';
-        meetingSelect.value = ftTime;
+        meetingFixedNote.textContent = 'Meeting Time: 08:00 AM';
+        meetingSelect.value = '08:00';
       } else {
         meetingTimeGroup.style.display = 'none';
       }
