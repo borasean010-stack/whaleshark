@@ -361,6 +361,7 @@ async function loadReservations() {
             <td>${d.people}명</td>
             <td>₱${(d.totalPrice||0).toLocaleString()}</td>
             <td>${d.paymentStatus==='paid'?'<span style="color:#16a34a;font-weight:600;">결제완료</span>':'<span style="color:#ca8a04;">미결제</span>'}</td>
+            <td>${d.referralCode ? `<span style="background:#f3e8ff;color:#7e22ce;font-size:.75rem;font-weight:700;padding:2px 7px;border-radius:4px;">${d.referralCode}</span>` : '<span style="color:var(--admin-text-muted);font-size:.75rem;">-</span>'}</td>
             <td style="white-space:nowrap;">
               <button class="action-btn dash-confirm-btn" data-id="${id}" style="background:#16a34a;padding:5px 12px;font-size:0.8rem;">✅ 확정</button>
               <button class="action-btn dash-cancel-btn" data-id="${id}" style="background:var(--admin-danger);padding:5px 12px;font-size:0.8rem;">✕ 취소</button>
@@ -369,7 +370,7 @@ async function loadReservations() {
       });
       pendingTbody.innerHTML = pendingRows.length
         ? pendingRows.join("")
-        : "<tr><td colspan='7' style='text-align:center;color:var(--admin-text-muted);'>대기중 예약이 없습니다 👍</td></tr>";
+        : "<tr><td colspan='8' style='text-align:center;color:var(--admin-text-muted);'>대기중 예약이 없습니다 👍</td></tr>";
 
       pendingTbody.querySelectorAll(".dash-confirm-btn").forEach(btn => {
         btn.addEventListener("click", async () => {
