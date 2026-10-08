@@ -1418,7 +1418,7 @@ async function loadYebo() {
   const tbody = document.getElementById("yebo-tbody");
   const statsEl = document.getElementById("yebo-stats");
   const monthContent = document.getElementById("yebo-month-content");
-  if (_yeboTab === 'list') tbody.innerHTML = "<tr><td colspan='9' style='text-align:center;'>로딩 중...</td></tr>";
+  if (_yeboTab === 'list') tbody.innerHTML = "<tr><td colspan='10' style='text-align:center;'>로딩 중...</td></tr>";
   else if (monthContent) monthContent.innerHTML = "<div style='text-align:center;padding:40px;color:var(--admin-text-muted);'>로딩 중...</div>";
   statsEl.innerHTML = "";
 
@@ -1477,7 +1477,7 @@ async function loadYebo() {
     // ── 예약 목록 탭 ──
     if (_yeboTab === 'list') {
       if (rows.length === 0) {
-        tbody.innerHTML = "<tr><td colspan='9' style='text-align:center;color:var(--admin-text-muted);'>YEBO 예약이 없습니다.</td></tr>";
+        tbody.innerHTML = "<tr><td colspan='10' style='text-align:center;color:var(--admin-text-muted);'>YEBO 예약이 없습니다.</td></tr>";
       } else {
         tbody.innerHTML = rows.map(r => `
           <tr data-id="${r.id}">
@@ -1487,6 +1487,7 @@ async function loadYebo() {
             <td style="padding:8px 12px;">${NAT_LABELS[r.nationality] || r.nationality}</td>
             <td style="padding:8px 12px;font-weight:700;">₱${(r.totalPrice||0).toLocaleString()}</td>
             <td style="padding:8px 12px;">${r.paymentStatus==='paid'?'<span style="color:#16a34a;font-weight:600;">결제완료</span>':'<span style="color:#ca8a04;">미결제</span>'}</td>
+            <td style="padding:8px 12px;">${r.referralCode ? `<span style="background:#f3e8ff;color:#7e22ce;font-size:.75rem;font-weight:700;padding:2px 7px;border-radius:4px;">${r.referralCode}</span>` : '<span style="color:var(--admin-text-muted);font-size:.75rem;">-</span>'}</td>
             <td style="padding:8px 12px;"><span style="padding:2px 8px;border-radius:6px;font-size:0.78rem;font-weight:600;background:${r.status==='confirmed'?'#dcfce7':r.status==='pending'?'#fef9c3':'#fee2e2'};color:${r.status==='confirmed'?'#16a34a':r.status==='pending'?'#ca8a04':'#dc2626'}">${STATUS_LABELS[r.status]||r.status}</span></td>
             <td style="padding:8px 12px;">${r.refSettled?'<span style="color:#16a34a;font-weight:600;">✓ 정산</span>':'<span style="color:#9ca3af;">미정산</span>'}</td>
             <td style="padding:8px 4px;white-space:nowrap;">
@@ -1619,7 +1620,7 @@ async function loadYebo() {
   } catch (err) {
     console.error("Error loading YEBO reservations:", err);
     if (document.getElementById("yebo-tbody"))
-      document.getElementById("yebo-tbody").innerHTML = "<tr><td colspan='9' style='text-align:center;color:red;'>오류가 발생했습니다.</td></tr>";
+      document.getElementById("yebo-tbody").innerHTML = "<tr><td colspan='10' style='text-align:center;color:red;'>오류가 발생했습니다.</td></tr>";
   }
 }
 
