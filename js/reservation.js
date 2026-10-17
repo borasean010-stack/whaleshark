@@ -15,17 +15,6 @@ const form = document.getElementById("reservation-form");
 const allPayBtns = document.querySelectorAll('.pay-now-btn');
 const statusEl = document.getElementById("form-status");
 
-// 현장결제 버튼 별도 처리
-document.addEventListener('DOMContentLoaded', () => {
-  const cashBtn = document.getElementById('cash-btn');
-  if (cashBtn) {
-    cashBtn.addEventListener('click', () => {
-      cashBtn.dataset._cashClick = '1';
-      form.requestSubmit ? form.requestSubmit(cashBtn) : form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
-    });
-  }
-});
-
 const referralCode = new URLSearchParams(window.location.search).get('ref') || '';
 
 const VOUCHER_ENDPOINT = "https://script.google.com/macros/s/AKfycbzTPR3kwrarZUs7_H8Eta094STF_xmIN7BVyF-6JLhg7KMTQgG4DUbbRBwFVqxa3F0k/exec";
@@ -36,26 +25,18 @@ const MAYA_CHECKOUT_URL = "https://pg-sandbox.paymaya.com/checkout/v1/checkouts"
 const MSG = {
   en: {
     fillFields: "Please fill in all required fields.",
-    payNow: "Confirm Reservation",
-    mayaRedirecting: "Redirecting to Maya payment...",
     mayaError: "Could not start Maya payment. Please try again."
   },
   ko: {
     fillFields: "필수 항목을 모두 입력해주세요.",
-    payNow: "예약 확정하기",
-    mayaRedirecting: "Maya 결제 페이지로 이동 중...",
     mayaError: "Maya 결제를 시작하지 못했습니다. 다시 시도해주세요."
   },
   zh: {
     fillFields: "请填写所有必填项。",
-    payNow: "确认预约",
-    mayaRedirecting: "正在跳转到Maya支付页面...",
     mayaError: "无法启动Maya支付，请重试。"
   },
   ja: {
     fillFields: "必須項目をすべて入力してください。",
-    payNow: "予約を確定する",
-    mayaRedirecting: "Maya決済ページに移動中...",
     mayaError: "Maya決済を開始できませんでした。再度お試しください。"
   }
 };
@@ -65,7 +46,6 @@ async function callVoucherEndpoint(payload) {
   const opts = { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body };
   const res = await fetch(VOUCHER_ENDPOINT, opts);
   const text = await res.text();
-  // Apps Script sometimes redirects POST→GET and returns HTML — retry POST to final URL
   if (text.trim().startsWith('<') && res.url && res.url !== VOUCHER_ENDPOINT) {
     const res2 = await fetch(res.url, opts);
     return res2.json();
@@ -73,13 +53,9 @@ async function callVoucherEndpoint(payload) {
   return JSON.parse(text);
 }
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
+function getReservationData() {
   const lang = localStorage.getItem('ws_lang') || 'ko';
   const t = MSG[lang] || MSG.en;
-  statusEl.textContent = "";
-  statusEl.className = "form-status";
-
   const formData = new FormData(form);
   const tourType = formData.get("tourType").trim();
   const people = Number(formData.get("people"));
@@ -109,22 +85,28 @@ form.addEventListener("submit", async (e) => {
     createdAt: serverTimestamp()
   };
 
-  if (!reservation.tourType || !reservation.date || !reservation.pickup || !reservation.nationality || !reservation.name || !reservation.email) {
-    statusEl.textContent = t.fillFields;
-    statusEl.classList.add("error");
-    return;
-  }
+  const valid = !!(reservation.tourType && reservation.date && reservation.pickup && reservation.nationality && reservation.name && reservation.email);
+  return { reservation, lang, t, valid };
+}
 
-  const clickedBtn = e.submitter;
-  const cashBtn = document.getElementById('cash-btn');
-  const payMethod = (cashBtn?.dataset?._cashClick === '1') ? 'cash' : (clickedBtn?.dataset?.method || 'card');
-  if (cashBtn) delete cashBtn.dataset._cashClick;
-  allPayBtns.forEach(b => { b.disabled = true; });
-  if (clickedBtn) clickedBtn.classList.add('loading');
+// 현장결제 버튼 핸들러
+const cashBtn = document.getElementById('cash-btn');
+if (cashBtn) {
+  cashBtn.addEventListener('click', async () => {
+    const { reservation, lang, t, valid } = getReservationData();
+    statusEl.textContent = "";
+    statusEl.className = "form-status";
 
-  try {
-    // 현장결제
-    if (payMethod === 'cash') {
+    if (!valid) {
+      statusEl.textContent = t.fillFields;
+      statusEl.classList.add("error");
+      return;
+    }
+
+    allPayBtns.forEach(b => { b.disabled = true; });
+    cashBtn.classList.add('loading');
+
+    try {
       reservation.paymentStatus = 'pending';
       reservation.paymentMethod = 'cash';
       reservation.selectedPaymentMethod = 'cash';
@@ -142,16 +124,41 @@ form.addEventListener("submit", async (e) => {
         pickup: reservation.pickup, meetingTime: reservation.meetingTime, nationality: reservation.nationality,
         totalPrice: reservation.totalPrice, paymentStatus: 'pending', paymentMethod: 'On-Site Payment',
         currency: reservation.currency, name: reservation.name, email: reservation.email,
-        lang: localStorage.getItem('ws_lang') || 'ko'
+        lang
       });
 
       window.location.href = '/success?cash=1';
-      return;
+    } catch (err) {
+      console.error(err);
+      statusEl.textContent = String(err.message || err);
+      statusEl.classList.add("error");
+      allPayBtns.forEach(b => { b.disabled = false; });
+      cashBtn.classList.remove('loading');
     }
+  });
+}
 
+// 카드(Maya) 결제
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const { reservation, lang, t, valid } = getReservationData();
+  statusEl.textContent = "";
+  statusEl.className = "form-status";
+
+  if (!valid) {
+    statusEl.textContent = t.fillFields;
+    statusEl.classList.add("error");
+    return;
+  }
+
+  const clickedBtn = e.submitter;
+  allPayBtns.forEach(b => { b.disabled = true; });
+  if (clickedBtn) clickedBtn.classList.add('loading');
+
+  try {
     reservation.paymentStatus = 'pending';
     reservation.paymentMethod = 'Maya';
-    reservation.selectedPaymentMethod = payMethod;
+    reservation.selectedPaymentMethod = 'card';
     const docRef = await addDoc(collection(db, "reservations"), reservation);
 
     if (reservation.referralCode) {
@@ -196,11 +203,11 @@ form.addEventListener("submit", async (e) => {
     localStorage.setItem('maya_pending', JSON.stringify({
       checkoutId: maya.checkoutId,
       reservationId: docRef.id,
-      nationality,
+      nationality: reservation.nationality,
       reservation: { ...reservation, createdAt: null }
     }));
 
-    window.location.href = maya.redirectUrl;  // e.g. payments-web-sandbox.maya.ph/v2/checkout?id=...
+    window.location.href = maya.redirectUrl;
   } catch (err) {
     console.error(err);
     statusEl.textContent = String(err.message || err || t.mayaError);
