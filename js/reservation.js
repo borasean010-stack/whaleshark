@@ -152,7 +152,7 @@ form.addEventListener("submit", async (e) => {
     const maya = await mayaRes.json();
     if (!maya.checkoutId) throw new Error("Maya: " + (maya.message || JSON.stringify(maya)));
 
-    await updateDoc(doc(db, "reservations", docRef.id), { checkoutId: maya.checkoutId });
+    try { await updateDoc(doc(db, "reservations", docRef.id), { checkoutId: maya.checkoutId }); } catch (_) {}
 
     localStorage.setItem('maya_pending', JSON.stringify({
       checkoutId: maya.checkoutId,

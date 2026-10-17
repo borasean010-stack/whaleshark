@@ -120,15 +120,11 @@ function isAdmin() {
     }
 
     match /reservations/{reservationId} {
-      // 직접 고객 예약(reservation.html) — 기존 그대로.
+      // 직접 고객 예약(reservation.html) — Maya 결제 전 pending 상태로 생성.
+      // bookedBy/agencyId 없으면 누구나(비로그인 포함) 생성 가능.
       allow create: if
-        request.resource.data.keys().hasAll(['tourType', 'date', 'people', 'name', 'email', 'status']) &&
-        request.resource.data.tourType is string &&
-        request.resource.data.name is string &&
-        request.resource.data.email is string &&
-        request.resource.data.people is number &&
-        request.resource.data.status == 'pending' &&
-        !request.resource.data.keys().hasAny(['bookedBy', 'agencyId']);
+        !request.resource.data.keys().hasAny(['bookedBy', 'agencyId']) &&
+        request.resource.data.status == 'pending';
 
       // 여행사 파트너(B2B) 예약 — 본인 agencyId로만 생성 가능.
       // paymentMethod가 'deposit'이면 그 순간 잔액이 충분해야 하고 상태는
