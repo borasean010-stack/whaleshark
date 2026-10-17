@@ -267,11 +267,75 @@
         <div class="wizard-panel" data-step="4">
           <h2 data-en="Payment" data-ko="결제" data-zh="支付" data-ja="お支払い">Payment</h2>
 
-          <input type="hidden" name="paymentChoice" value="maya">
+          <input type="hidden" name="paymentChoice" value="">
 
-          <div class="review-row review-row--total" style="margin-bottom:20px;"><span data-en="Total" data-ko="총 금액" data-zh="总计" data-ja="合計">Total</span><strong id="pay-total">-</strong></div>
+          <div class="review-row review-row--total" style="margin-bottom:24px;"><span data-en="Total" data-ko="총 금액" data-zh="总计" data-ja="合計">Total</span><strong id="pay-total">-</strong></div>
 
-          <button type="submit" class="btn-submit" id="submit-btn" data-en="Confirm Reservation" data-ko="예약 확정하기" data-zh="确认预约" data-ja="予約を確定する">Confirm Reservation</button>
+          <p class="pay-choose-label" data-en="Select Payment Method" data-ko="결제 수단 선택" data-zh="选择支付方式" data-ja="支払い方法を選択">Select Payment Method</p>
+
+          <div class="pay-methods-grid">
+
+            <!-- Credit / Debit Card -->
+            <button type="submit" class="pay-method-btn" id="submit-btn" data-method="card">
+              <div class="pay-logos">
+                <svg width="44" height="28" viewBox="0 0 44 28" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="15" cy="14" r="13" fill="#EB001B"/>
+                  <circle cx="29" cy="14" r="13" fill="#F79E1B"/>
+                  <path d="M22 3.8c2.6 2.3 4.2 5.7 4.2 10.2s-1.6 7.9-4.2 10.2C19.4 21.9 17.8 18.5 17.8 14S19.4 6.1 22 3.8z" fill="#FF5F00"/>
+                </svg>
+                <svg width="52" height="18" viewBox="0 0 52 18" xmlns="http://www.w3.org/2000/svg">
+                  <text x="1" y="16" font-family="'Times New Roman',serif" font-size="18" font-weight="900" font-style="italic" fill="#fff" letter-spacing="-0.5">VISA</text>
+                </svg>
+              </div>
+              <span class="pay-method-name" data-en="Credit / Debit Card" data-ko="신용 / 체크카드" data-zh="信用/借记卡" data-ja="クレジット/デビット">Credit / Debit Card</span>
+            </button>
+
+            <!-- GCash -->
+            <button type="submit" class="pay-method-btn" data-method="gcash">
+              <div class="pay-logos">
+                <svg width="90" height="32" viewBox="0 0 90 32" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="32" height="32" rx="8" fill="#007DFF"/>
+                  <text x="16" y="24" font-family="Arial,sans-serif" font-size="20" font-weight="900" fill="#fff" text-anchor="middle">G</text>
+                  <text x="46" y="24" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="#fff">Cash</text>
+                </svg>
+              </div>
+              <span class="pay-method-name">GCash</span>
+            </button>
+
+            <!-- Maya Pay -->
+            <button type="submit" class="pay-method-btn" data-method="maya">
+              <div class="pay-logos">
+                <svg width="88" height="32" viewBox="0 0 88 32" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="88" height="32" rx="8" fill="#00B94A"/>
+                  <text x="44" y="23" font-family="Arial,sans-serif" font-size="18" font-weight="800" fill="#fff" text-anchor="middle" letter-spacing="1">maya</text>
+                </svg>
+              </div>
+              <span class="pay-method-name">Maya Pay</span>
+            </button>
+
+            <!-- QR Ph -->
+            <button type="submit" class="pay-method-btn" data-method="qrph">
+              <div class="pay-logos">
+                <svg width="88" height="32" viewBox="0 0 88 32" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="88" height="32" rx="8" fill="#1A1A2E"/>
+                  <!-- QR squares -->
+                  <rect x="8" y="6" width="8" height="8" rx="1" fill="#fff"/>
+                  <rect x="10" y="8" width="4" height="4" rx="0.5" fill="#1A1A2E"/>
+                  <rect x="8" y="18" width="8" height="8" rx="1" fill="#fff"/>
+                  <rect x="10" y="20" width="4" height="4" rx="0.5" fill="#1A1A2E"/>
+                  <rect x="20" y="6" width="8" height="8" rx="1" fill="#fff"/>
+                  <rect x="22" y="8" width="4" height="4" rx="0.5" fill="#1A1A2E"/>
+                  <rect x="20" y="17" width="3" height="3" rx="0.5" fill="#fff"/>
+                  <rect x="24" y="17" width="3" height="3" rx="0.5" fill="#fff"/>
+                  <rect x="20" y="21" width="3" height="3" rx="0.5" fill="#fff"/>
+                  <text x="36" y="23" font-family="Arial,sans-serif" font-size="16" font-weight="800" fill="#fff">QR Ph</text>
+                </svg>
+              </div>
+              <span class="pay-method-name">QR Ph</span>
+            </button>
+
+          </div>
+
           <p id="form-status" class="form-status" role="status"></p>
 
           <div class="wizard-actions">
@@ -402,7 +466,7 @@
     const badge = document.getElementById('dyn-badge');
     const title = document.getElementById('dyn-title');
     const desc = document.getElementById('dyn-desc');
-    const btn = document.getElementById('submit-btn');
+    const payGrid = document.querySelector('.pay-methods-grid');
 
     // Dynamically update left panel
     const leftPanelTitle = {
@@ -450,12 +514,12 @@
       const d = leftPanelDesc[lang];
       title.textContent = selectedPackageName();
       desc.textContent = d[val];
-      btn.style.border = 'none';
-      btn.style.color = '#fff';
-      if (val === 'VF') { btn.style.background = 'var(--color-primary)'; }
-      else if (val === 'F') { btn.style.background = 'var(--color-accent)'; }
-      else if (val === 'R') { btn.style.background = 'var(--color-fg)'; }
-      else if (val === 'T') { btn.style.background = '#10b981'; }
+      if (payGrid) {
+        if (val === 'VF') { payGrid.style.setProperty('--pay-accent', 'var(--color-primary)'); }
+        else if (val === 'F') { payGrid.style.setProperty('--pay-accent', 'var(--color-accent)'); }
+        else if (val === 'R') { payGrid.style.setProperty('--pay-accent', 'var(--color-fg)'); }
+        else if (val === 'T') { payGrid.style.setProperty('--pay-accent', '#10b981'); }
+      }
     }
 
     updateLeftPanel();
@@ -788,7 +852,7 @@
     document.getElementById('email') && (document.getElementById('email').placeholder = t.placeholderEmail);
     document.getElementById('pickupResort') && (document.getElementById('pickupResort').placeholder = t.placeholderPickupResort);
     // Submit button
-    document.getElementById('submit-btn') && (document.getElementById('submit-btn').textContent = t.btnSubmit);
+    document.querySelectorAll('.pay-choose-label[data-' + lang + ']').forEach(el => { el.textContent = el.getAttribute('data-' + lang); });
     // Lang dropdown current label + active state
     if (langSelect) {
       const current = langSelect.querySelector('.lang-select-current');
@@ -809,6 +873,6 @@
     applyLang(currentLang);
   });
 </script>
-<script type="module" src="js/reservation.js?v=1792209000"></script>
+<script type="module" src="js/reservation.js?v=1792210000"></script>
 </body>
 </html>

@@ -12,7 +12,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const form = document.getElementById("reservation-form");
-const submitBtn = document.getElementById("submit-btn");
+const allPayBtns = document.querySelectorAll('.pay-method-btn');
 const statusEl = document.getElementById("form-status");
 
 const referralCode = new URLSearchParams(window.location.search).get('ref') || '';
@@ -104,12 +104,15 @@ form.addEventListener("submit", async (e) => {
     return;
   }
 
-  submitBtn.disabled = true;
-  submitBtn.textContent = t.mayaRedirecting;
+  const clickedBtn = e.submitter;
+  const payMethod = clickedBtn?.dataset?.method || 'card';
+  allPayBtns.forEach(b => { b.disabled = true; });
+  if (clickedBtn) clickedBtn.classList.add('loading');
 
   try {
     reservation.paymentStatus = 'pending';
     reservation.paymentMethod = 'Maya';
+    reservation.selectedPaymentMethod = payMethod;
     const docRef = await addDoc(collection(db, "reservations"), reservation);
 
     if (reservation.referralCode) {
@@ -163,7 +166,7 @@ form.addEventListener("submit", async (e) => {
     console.error(err);
     statusEl.textContent = String(err.message || err || t.mayaError);
     statusEl.classList.add("error");
-    submitBtn.disabled = false;
-    submitBtn.textContent = t.payNow;
+    allPayBtns.forEach(b => { b.disabled = false; });
+    if (clickedBtn) clickedBtn.classList.remove('loading');
   }
 });
