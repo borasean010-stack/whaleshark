@@ -27,7 +27,7 @@
 <link rel="canonical" href="https://boracaywhaleshark.com/reservation">
 
 <link rel="stylesheet" href="css/style.css"> <!-- for nav -->
-<link rel="stylesheet" href="css/reservation.css?v=1792215000">
+<link rel="stylesheet" href="css/reservation.css?v=1792225000">
 <!-- Flatpickr (Premium Datepicker) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
@@ -271,43 +271,15 @@
 
           <div class="review-row review-row--total" style="margin-bottom:24px;"><span data-en="Total" data-ko="총 금액" data-zh="总计" data-ja="合計">Total</span><strong id="pay-total">-</strong></div>
 
-          <p class="pay-choose-label" data-en="Select Payment Method" data-ko="결제 수단 선택" data-zh="选择支付方式" data-ja="支払い方法を選択">Select Payment Method</p>
-
-          <div class="pay-methods-grid">
-
-            <!-- Credit / Debit Card -->
-            <button type="submit" class="pay-method-btn" id="submit-btn" data-method="card">
-              <div class="pay-logos">
-                <img src="assets/logos/visa-mastercard-logo.jpg" alt="Visa / Mastercard">
-              </div>
-              <span class="pay-method-name" data-en="Credit / Debit Card" data-ko="신용 / 체크카드" data-zh="信用/借记卡" data-ja="クレジット/デビット">Credit / Debit Card</span>
-            </button>
-
-            <!-- GCash -->
-            <button type="submit" class="pay-method-btn" data-method="gcash">
-              <div class="pay-logos">
-                <img src="assets/logos/gcash-logo.png" alt="GCash">
-              </div>
-              <span class="pay-method-name">GCash</span>
-            </button>
-
-            <!-- Maya Pay -->
-            <button type="submit" class="pay-method-btn" data-method="maya">
-              <div class="pay-logos">
-                <img src="assets/logos/maya-logo.png" alt="Maya">
-              </div>
-              <span class="pay-method-name">Maya Pay</span>
-            </button>
-
-            <!-- QR Ph -->
-            <button type="submit" class="pay-method-btn" data-method="qrph">
-              <div class="pay-logos">
-                <img src="assets/logos/qrph-logo.png" alt="QR Ph">
-              </div>
-              <span class="pay-method-name">QR Ph</span>
-            </button>
-
+          <div class="pay-logos-row">
+            <img src="assets/logos/visa-mastercard-logo.jpg" alt="Visa / Mastercard">
+            <img src="assets/logos/gcash-logo.png" alt="GCash">
+            <img src="assets/logos/maya-logo.png" alt="Maya">
+            <img src="assets/logos/qrph-logo.png" alt="QR Ph">
           </div>
+
+          <button type="submit" class="pay-now-btn" id="submit-btn" data-method="card"
+            data-en="Pay Now" data-ko="결제하기" data-zh="立即支付" data-ja="今すぐ支払う">Pay Now</button>
 
           <p id="form-status" class="form-status" role="status"></p>
 
@@ -846,6 +818,6 @@
     applyLang(currentLang);
   });
 </script>
-<script type="module" src="js/reservation.js?v=1792220000"></script>
+<script type="module" src="js/reservation.js?v=1792225000"></script>
 </body>
 </html>

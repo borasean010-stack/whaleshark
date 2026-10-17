@@ -530,77 +530,54 @@ body {
   text-align: center;
   margin: 0 0 14px 0;
 }
-.pay-methods-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 8px;
-}
-.pay-method-btn {
-  background: rgba(255,255,255,0.06);
-  border: 1.5px solid rgba(255,255,255,0.13);
-  border-radius: 16px;
-  padding: 16px 10px 14px;
-  cursor: pointer;
+.pay-logos-row {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  transition: all 0.2s ease;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.pay-logos-row img {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 4px;
+  opacity: 0.85;
+}
+.pay-now-btn {
+  width: 100%;
+  background: var(--color-accent, #f97316);
+  border: none;
+  border-radius: 16px;
+  padding: 18px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 800;
   color: #fff;
-  height: 110px;
-  position: relative;
-  overflow: hidden;
+  letter-spacing: 0.3px;
+  transition: all 0.2s ease;
+  box-shadow: 0 6px 20px rgba(249,115,22,0.35);
   box-sizing: border-box;
 }
-.pay-method-btn:hover:not(:disabled) {
-  background: rgba(255,255,255,0.12);
-  border-color: rgba(255,255,255,0.35);
-  transform: translateY(-3px);
-  box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+.pay-now-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(249,115,22,0.5);
 }
-.pay-method-btn:active:not(:disabled) {
-  transform: translateY(-1px);
+.pay-now-btn:active:not(:disabled) {
+  transform: translateY(0);
 }
-.pay-method-btn:disabled {
+.pay-now-btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
-.pay-method-btn.loading {
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 2px rgba(249,115,22,0.3);
-}
-.pay-method-btn.loading .pay-method-name::after {
+.pay-now-btn.loading::after {
   content: ' …';
   animation: dots 1s infinite;
 }
 @keyframes dots {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.3; }
-}
-.pay-logos {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 50px;
-  flex-shrink: 0;
-}
-.pay-logos img {
-  width: auto;
-  height: 46px;
-  max-width: calc(100% - 8px);
-  object-fit: contain;
-  border-radius: 6px;
-}
-.pay-method-name {
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-  text-align: center;
-  color: rgba(255,255,255,0.85);
 }
 
 .form-status {

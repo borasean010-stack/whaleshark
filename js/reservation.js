@@ -12,7 +12,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const form = document.getElementById("reservation-form");
-const allPayBtns = document.querySelectorAll('.pay-method-btn');
+const allPayBtns = document.querySelectorAll('.pay-now-btn');
 const statusEl = document.getElementById("form-status");
 
 const referralCode = new URLSearchParams(window.location.search).get('ref') || '';
