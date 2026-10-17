@@ -530,22 +530,47 @@ body {
   text-align: center;
   margin: 0 0 14px 0;
 }
-.pay-logos-row {
+.pay-methods-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.pay-method-card {
+  background: rgba(255,255,255,0.06);
+  border: 1.5px solid rgba(255,255,255,0.13);
+  border-radius: 16px;
+  padding: 16px 10px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #fff;
+  height: 110px;
+  box-sizing: border-box;
+}
+.pay-logos {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
+  width: 100%;
+  height: 50px;
+  flex-shrink: 0;
 }
-.pay-logos-row img {
-  height: 28px !important;
-  width: auto !important;
-  max-width: 80px !important;
+.pay-logos img {
+  width: auto;
+  height: 46px;
+  max-width: calc(100% - 8px);
   object-fit: contain;
-  border-radius: 4px;
-  opacity: 0.85;
-  display: block;
+  border-radius: 6px;
+}
+.pay-method-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-align: center;
+  color: rgba(255,255,255,0.85);
 }
 .pay-now-btn {
   width: 100%;
