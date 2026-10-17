@@ -272,35 +272,9 @@
         <div class="wizard-panel" data-step="4">
           <h2 data-en="Payment" data-ko="결제" data-zh="支付" data-ja="お支払い">Payment</h2>
 
-          <div class="form-group" id="payment-choice-group">
-            <label data-en="How would you like to pay? *" data-ko="결제 방법을 선택해 주세요 *" data-zh="请选择支付方式 *" data-ja="お支払い方法をお選びください *">How would you like to pay? *</label>
-            <div class="payment-type-options">
-              <label class="payment-type-option">
-                <input type="radio" name="paymentChoice" value="qrph" checked>
-                <div class="payment-type-card">
-                  <span class="pt-title" data-en="Pay via QR" data-ko="QR 결제" data-zh="扫码支付" data-ja="QRコード決済">Pay via QR</span>
-                  <span class="pt-desc" data-en="GCash, Maya, or any bank app" data-ko="GCash, Maya, 은행 앱 모두 가능" data-zh="支持GCash、Maya及各类银行App" data-ja="GCash・Maya・銀行アプリでお支払い可能">GCash, Maya, or any bank app</span>
-                </div>
-              </label>
-              <label class="payment-type-option">
-                <input type="radio" name="paymentChoice" value="onsite">
-                <div class="payment-type-card">
-                  <span class="pt-title" data-en="Pay On-Site" data-ko="현장결제" data-zh="现场支付" data-ja="現地払い">Pay On-Site</span>
-                  <span class="pt-desc" data-en="Cash at the meeting point on tour day" data-ko="투어 당일 미팅 장소에서 현금 결제" data-zh="游览当天在集合地点现金支付" data-ja="ツアー当日、集合場所にて現金でお支払い">Cash at the meeting point on tour day</span>
-                </div>
-              </label>
-            </div>
-          </div>
-
-          <p class="payment-note" id="payment-note" data-en="Choose Pay via QR to pay online now, or pay in person on-site on tour day." data-ko="QR 결제로 지금 결제하시거나, 투어 당일 현장에서 결제하실 수 있습니다." data-zh="选择扫码支付即可立即在线完成付款，或选择在游览当天现场支付。" data-ja="QRコード決済を選ぶと今すぐオンラインでお支払いいただけます。ツアー当日に現地でお支払いいただくことも可能です。">Choose Pay via QR to pay online now, or pay in person on-site on tour day.</p>
+          <input type="hidden" name="paymentChoice" value="maya">
 
           <div class="review-row review-row--total" style="margin-bottom:20px;"><span data-en="Total" data-ko="총 금액" data-zh="总计" data-ja="合計">Total</span><strong id="pay-total">-</strong></div>
-
-          <div class="qrph-box" id="qrph-box" style="display:none;">
-            <img id="qrph-qr-img" alt="Scan to Pay" class="qrph-qr-img">
-            <p class="qrph-status" id="qrph-status" data-en="Waiting for payment..." data-ko="결제 대기 중..." data-zh="等待支付中..." data-ja="決済待機中...">Waiting for payment...</p>
-            <button type="button" class="qrph-cancel" id="qrph-cancel" data-en="Cancel" data-ko="취소" data-zh="取消" data-ja="キャンセル">Cancel</button>
-          </div>
 
           <button type="submit" class="btn-submit" id="submit-btn" data-en="Confirm Reservation" data-ko="예약 확정하기" data-zh="确认预约" data-ja="予約を確定する">Confirm Reservation</button>
           <p id="form-status" class="form-status" role="status"></p>
@@ -764,10 +738,7 @@
   // (js/reservation.js의 runQrphFlow가 직접 show/hide 제어) — 결제수단을
   // 바꾸면 혹시 열려있던 QR 박스는 닫아줍니다.
   document.querySelectorAll('input[name="paymentChoice"]').forEach(r => {
-    r.addEventListener('change', () => {
-      const qrphBox = document.getElementById('qrph-box');
-      if (qrphBox) qrphBox.style.display = 'none';
-    });
+    r.addEventListener('change', () => {});
   });
 
   function applyLang(lang) {
