@@ -172,6 +172,20 @@
   }
 
   const params = new URLSearchParams(window.location.search);
+
+  // 현장결제 — 결제 완료가 아니라 "예약 접수" 안내
+  if (params.get('cash') === '1') {
+    const titleEl = document.querySelector('.success-title');
+    const descEl = document.querySelector('.success-desc');
+    if (lang === 'ko') {
+      titleEl.innerHTML = '예약이 접수되었습니다!';
+      descEl.innerHTML = '현장 결제로 예약이 접수되었습니다.<br>투어 당일 미팅 장소에서 결제해 주세요.<br><br>담당자가 곧 이메일로 예약 바우처를 보내드립니다.';
+    } else {
+      titleEl.innerHTML = 'Reservation Received!';
+      descEl.innerHTML = 'Your reservation has been received with on-site payment.<br>Please pay at the meeting point on the tour day.<br><br>Our representative will send you the voucher via email shortly.';
+    }
+  }
+
   const nationality = params.get('nationality');
   if (nationality === 'FOREIGN') {
     document.getElementById('kakao-btn').style.display = 'inline-flex';
@@ -201,7 +215,12 @@
 
         const data = await postToScript({ action: "checkMayaCheckout", checkoutId: pending.checkoutId });
 
-        if (data.ok && data.status === 'PAYMENT_SUCCESS') {
+        const paid = data.ok && (
+          data.paymentStatus === 'PAYMENT_SUCCESS' ||
+          data.status === 'PAYMENT_SUCCESS' ||
+          data.status === 'COMPLETED'
+        );
+        if (paid) {
           // Firebase Firestore 결제 상태 업데이트
           if (pending.reservationId) {
             try {
