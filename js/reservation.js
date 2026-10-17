@@ -19,7 +19,7 @@ const referralCode = new URLSearchParams(window.location.search).get('ref') || '
 
 const VOUCHER_ENDPOINT = "https://script.google.com/macros/s/AKfycbzTPR3kwrarZUs7_H8Eta094STF_xmIN7BVyF-6JLhg7KMTQgG4DUbbRBwFVqxa3F0k/exec";
 const VOUCHER_SECRET = "lA6grkC0pujbOn5B5ooSip3z9N-Wvwre";
-const MAYA_PUBLIC_KEY = "pk-Z0OSzLvIcOI2UIvDhdTGVVfRSSeiGStnceqwUE7n0Ah";
+const MAYA_PUBLIC_KEY = "pk-ya31iXgneNcHxHsUCAOo4nmAoznKtA5xW4oinVLGhde";
 const MAYA_CHECKOUT_URL = "https://pg-sandbox.paymaya.com/checkout/v1/checkouts";
 
 const MSG = {
