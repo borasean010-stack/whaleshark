@@ -15,6 +15,17 @@ const form = document.getElementById("reservation-form");
 const allPayBtns = document.querySelectorAll('.pay-now-btn');
 const statusEl = document.getElementById("form-status");
 
+// 현장결제 버튼 별도 처리
+document.addEventListener('DOMContentLoaded', () => {
+  const cashBtn = document.getElementById('cash-btn');
+  if (cashBtn) {
+    cashBtn.addEventListener('click', () => {
+      cashBtn.dataset._cashClick = '1';
+      form.requestSubmit ? form.requestSubmit(cashBtn) : form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    });
+  }
+});
+
 const referralCode = new URLSearchParams(window.location.search).get('ref') || '';
 
 const VOUCHER_ENDPOINT = "https://script.google.com/macros/s/AKfycbzTPR3kwrarZUs7_H8Eta094STF_xmIN7BVyF-6JLhg7KMTQgG4DUbbRBwFVqxa3F0k/exec";
@@ -105,7 +116,9 @@ form.addEventListener("submit", async (e) => {
   }
 
   const clickedBtn = e.submitter;
-  const payMethod = clickedBtn?.dataset?.method || 'card';
+  const cashBtn = document.getElementById('cash-btn');
+  const payMethod = (cashBtn?.dataset?._cashClick === '1') ? 'cash' : (clickedBtn?.dataset?.method || 'card');
+  if (cashBtn) delete cashBtn.dataset._cashClick;
   allPayBtns.forEach(b => { b.disabled = true; });
   if (clickedBtn) clickedBtn.classList.add('loading');
 
