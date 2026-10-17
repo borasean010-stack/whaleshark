@@ -1,4 +1,4 @@
-import { db, auth } from "./firebase-config.js";
+import { db } from "./firebase-config.js";
 import {
   collection,
   addDoc,
@@ -10,7 +10,6 @@ import {
   increment,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const form = document.getElementById("reservation-form");
 const submitBtn = document.getElementById("submit-btn");
@@ -109,8 +108,6 @@ form.addEventListener("submit", async (e) => {
   submitBtn.textContent = t.mayaRedirecting;
 
   try {
-    if (!auth.currentUser) await signInAnonymously(auth);
-
     reservation.paymentStatus = 'pending';
     reservation.paymentMethod = 'Maya';
     const docRef = await addDoc(collection(db, "reservations"), reservation);
