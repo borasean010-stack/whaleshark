@@ -123,7 +123,7 @@ form.addEventListener("submit", async (e) => {
       reservationId: docRef.id
     });
 
-    if (!maya.ok) throw new Error(maya.error || "maya_checkout_failed");
+    if (!maya.ok) throw new Error("Maya: " + (maya.error || "maya_checkout_failed"));
 
     await updateDoc(doc(db, "reservations", docRef.id), { checkoutId: maya.checkoutId });
 
@@ -137,7 +137,7 @@ form.addEventListener("submit", async (e) => {
     window.location.href = maya.redirectUrl;
   } catch (err) {
     console.error(err);
-    statusEl.textContent = t.mayaError;
+    statusEl.textContent = err.message || t.mayaError;
     statusEl.classList.add("error");
     submitBtn.disabled = false;
     submitBtn.textContent = t.payNow;
