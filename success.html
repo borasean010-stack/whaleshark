@@ -213,7 +213,11 @@
         const pending = JSON.parse(localStorage.getItem('maya_pending') || 'null');
         if (!pending || !pending.checkoutId) return;
 
-        const data = await postToScript({ action: "checkMayaCheckout", checkoutId: pending.checkoutId });
+        const data = await fetch('/api/maya-status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ secret: VOUCHER_SECRET, checkoutId: pending.checkoutId })
+        }).then(r => r.json());
 
         const paid = data.ok && (
           data.paymentStatus === 'PAYMENT_SUCCESS' ||
