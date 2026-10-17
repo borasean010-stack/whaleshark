@@ -45,6 +45,17 @@ const voucherModalBody = document.getElementById("voucher-modal-body");
 const voucherModalClose = document.getElementById("voucher-modal-close");
 const reservationsById = {}; // id -> Firestore data, populated by loadReservations()
 
+// 카드 결제는 Maya로 넘어가기 전에 예약 문서를 먼저 만들기 때문에, 손님이
+// 결제창에서 이탈하면 결제되지 않은 예약이 그대로 남습니다. 이런 건 실제
+// 예약이 아니므로 관리자 화면·집계에서 제외합니다. 현장결제(cash)와 여행사
+// 예약은 미결제 상태가 정상이므로 그대로 둡니다.
+function isAbandonedCardBooking(d) {
+  return d.paymentMethod === 'Maya'
+    && d.paymentStatus !== 'paid'
+    && !d.bookedBy
+    && !d.agencyId;
+}
+
 // =====================================================================
 // 푸시 알림 — Cloud Functions 없이, 관리자 브라우저가 직접 Expo Push API를
 // 호출합니다(관리자가 확정 버튼을 누르는 순간이 곧 "이벤트 발생 시점"이라
@@ -216,6 +227,7 @@ async function loadReservations() {
     querySnapshot.forEach((docSnap) => {
       const data = docSnap.data();
       const id = docSnap.id;
+      if (isAbandonedCardBooking(data)) return;
       reservationsById[id] = data;
 
       total++;
@@ -1061,6 +1073,7 @@ async function loadReferralCodes() {
     resSnap.forEach(d => {
       const data = d.data();
       if (!data.referralCode) return;
+      if (isAbandonedCardBooking(data)) return;
       const code = data.referralCode;
       if (!resMap[code]) resMap[code] = [];
       // 날짜 필터 적용
@@ -1426,7 +1439,11 @@ async function loadYebo() {
     const snap = await getDocs(query(collection(db, "reservations"), where("referralCode", "==", "YEBO")));
 
     let allRows = [];
-    snap.forEach(d => { allRows.push({ id: d.id, ...d.data() }); });
+    snap.forEach(d => {
+      const data = d.data();
+      if (isAbandonedCardBooking(data)) return;
+      allRows.push({ id: d.id, ...data });
+    });
     allRows.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
 
     // 날짜 필터 적용 (목록 탭에서만)
