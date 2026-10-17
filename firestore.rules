@@ -10,9 +10,13 @@ service cloud.firestore {
     // 계정. 두 계정 모두 관리자가 Firebase 콘솔/보조 앱 인스턴스로 직접
     // 발급하고 신뢰할 수 있는 사람에게만 전달합니다.
     // ---------------------------------------------------------------
-    function isAdmin() {
-      return request.auth != null && request.auth.token.email == 'ehdgus0737@naver.com';
-    }
+function isAdmin() {
+  return request.auth != null && (
+    request.auth.token.email == 'ehdgus0737@naver.com' ||
+    (exists(/databases/$(database)/documents/adminAccounts/$(request.auth.uid)) &&
+     get(/databases/$(database)/documents/adminAccounts/$(request.auth.uid)).data.active == true)
+  );
+}
     function isLibertadStaff() {
       return request.auth != null && request.auth.token.email == 'checkin@boracaywhaleshark.com';
     }
