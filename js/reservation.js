@@ -110,6 +110,32 @@ form.addEventListener("submit", async (e) => {
   if (clickedBtn) clickedBtn.classList.add('loading');
 
   try {
+    // 현장결제
+    if (payMethod === 'cash') {
+      reservation.paymentStatus = 'pending';
+      reservation.paymentMethod = 'cash';
+      reservation.selectedPaymentMethod = 'cash';
+      const docRef = await addDoc(collection(db, "reservations"), reservation);
+
+      if (reservation.referralCode) {
+        try {
+          const refSnap = await getDocs(query(collection(db, "referralCodes"), where("code", "==", reservation.referralCode)));
+          if (!refSnap.empty) await updateDoc(refSnap.docs[0].ref, { usageCount: increment(1) });
+        } catch (_) {}
+      }
+
+      await callVoucherEndpoint({
+        tourType: reservation.tourType, date: reservation.date, people: reservation.people,
+        pickup: reservation.pickup, meetingTime: reservation.meetingTime, nationality: reservation.nationality,
+        totalPrice: reservation.totalPrice, paymentStatus: 'pending', paymentMethod: 'On-Site Payment',
+        currency: reservation.currency, name: reservation.name, email: reservation.email,
+        lang: localStorage.getItem('ws_lang') || 'ko'
+      });
+
+      window.location.href = '/success?cash=1';
+      return;
+    }
+
     reservation.paymentStatus = 'pending';
     reservation.paymentMethod = 'Maya';
     reservation.selectedPaymentMethod = payMethod;
