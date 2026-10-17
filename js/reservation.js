@@ -17,8 +17,10 @@ const statusEl = document.getElementById("form-status");
 
 const referralCode = new URLSearchParams(window.location.search).get('ref') || '';
 
-const VOUCHER_ENDPOINT = "https://script.google.com/macros/s/AKfycbwzcdiPv1AHkZ7qL6zDfUCbi9_nNcWdNn_DU96nfQZckcrgvL-FCNvZI7fc2L6dVrbK/exec";
+const VOUCHER_ENDPOINT = "https://script.google.com/macros/s/AKfycbw3ui-ImyumvU9yzfowtNv1W04SH7S3YIP6Ufj3AxP9xKN8yOSLAnVsxtyt8FLUbt5p/exec";
 const VOUCHER_SECRET = "lA6grkC0pujbOn5B5ooSip3z9N-Wvwre";
+const MAYA_PUBLIC_KEY = "pk-ya31iXgneNcHxHsUCAOo4nmAoznKtA5xW4oinVLGhde";
+const MAYA_CHECKOUT_URL = "https://pg-sandbox.paymaya.com/checkout/v1/checkouts";
 
 const MSG = {
   en: {
@@ -117,17 +119,35 @@ form.addEventListener("submit", async (e) => {
       } catch (_) {}
     }
 
-    const maya = await callVoucherEndpoint({
-      action: "createMayaCheckout",
-      amount: reservation.totalPrice,
-      description: `${reservation.tourType} tour - ${reservation.date}`,
-      name: reservation.name,
-      email: reservation.email,
-      phone: reservation.emergencyContact || '',
-      reservationId: docRef.id
+    const parts = reservation.name.trim().split(' ');
+    const mayaRes = await fetch(MAYA_CHECKOUT_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Basic " + btoa(MAYA_PUBLIC_KEY + ":")
+      },
+      body: JSON.stringify({
+        totalAmount: { value: reservation.totalPrice, currency: "PHP" },
+        buyer: {
+          firstName: parts[0],
+          lastName: parts.slice(1).join(' ') || '-',
+          contact: { email: reservation.email, phone: reservation.emergencyContact || '' }
+        },
+        items: [{
+          name: `${reservation.tourType} tour - ${reservation.date}`,
+          quantity: 1,
+          totalAmount: { value: reservation.totalPrice, currency: "PHP" }
+        }],
+        redirectUrl: {
+          success: "https://boracaywhaleshark.com/success?maya=1",
+          failure: "https://boracaywhaleshark.com/reservation?payment=failed",
+          cancel:  "https://boracaywhaleshark.com/reservation?payment=cancelled"
+        },
+        requestReferenceNumber: docRef.id
+      })
     });
-
-    if (!maya.ok) throw new Error("Maya: " + (maya.error || "maya_checkout_failed"));
+    const maya = await mayaRes.json();
+    if (!maya.checkoutId) throw new Error("Maya: " + (maya.message || JSON.stringify(maya)));
 
     await updateDoc(doc(db, "reservations", docRef.id), { checkoutId: maya.checkoutId });
 
@@ -138,7 +158,7 @@ form.addEventListener("submit", async (e) => {
       reservation: { ...reservation, createdAt: null }
     }));
 
-    window.location.href = maya.redirectUrl;
+    window.location.href = maya.redirectUrl;  // e.g. payments-web-sandbox.maya.ph/v2/checkout?id=...
   } catch (err) {
     console.error(err);
     statusEl.textContent = err.message || t.mayaError;
