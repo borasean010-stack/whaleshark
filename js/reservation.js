@@ -161,7 +161,7 @@ form.addEventListener("submit", async (e) => {
     window.location.href = maya.redirectUrl;  // e.g. payments-web-sandbox.maya.ph/v2/checkout?id=...
   } catch (err) {
     console.error(err);
-    statusEl.textContent = err.message || t.mayaError;
+    statusEl.textContent = String(err.message || err || t.mayaError);
     statusEl.classList.add("error");
     submitBtn.disabled = false;
     submitBtn.textContent = t.payNow;
