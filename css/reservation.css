@@ -534,16 +534,18 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 20px;
   flex-wrap: wrap;
 }
 .pay-logos-row img {
-  height: 32px;
-  width: auto;
+  height: 28px !important;
+  width: auto !important;
+  max-width: 80px !important;
   object-fit: contain;
   border-radius: 4px;
   opacity: 0.85;
+  display: block;
 }
 .pay-now-btn {
   width: 100%;
