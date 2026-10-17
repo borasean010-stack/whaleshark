@@ -182,31 +182,33 @@
     const VOUCHER_ENDPOINT = "https://script.google.com/macros/s/AKfycbzbTakld5b6sv21tq8pJytUyP-104cvirKudx_ZhX1n4LFEI-B7DPlUynaiyihxrAjH/exec";
     const VOUCHER_SECRET = "lA6grkC0pujbOn5B5ooSip3z9N-Wvwre";
 
+    async function postToScript(payload) {
+      const body = JSON.stringify({ secret: VOUCHER_SECRET, ...payload });
+      const opts = { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body };
+      const res = await fetch(VOUCHER_ENDPOINT, opts);
+      const text = await res.text();
+      if (text.trim().startsWith('<') && res.url && res.url !== VOUCHER_ENDPOINT) {
+        const res2 = await fetch(res.url, opts);
+        return res2.json();
+      }
+      return JSON.parse(text);
+    }
+
     (async () => {
       try {
         const pending = JSON.parse(localStorage.getItem('maya_pending') || 'null');
         if (!pending || !pending.checkoutId) return;
 
-        const res = await fetch(VOUCHER_ENDPOINT, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify({ secret: VOUCHER_SECRET, action: "checkMayaCheckout", checkoutId: pending.checkoutId })
-        });
-        const data = await res.json();
+        const data = await postToScript({ action: "checkMayaCheckout", checkoutId: pending.checkoutId });
 
         if (data.ok && data.status === 'PAYMENT_SUCCESS') {
           const r = pending.reservation;
-          await fetch(VOUCHER_ENDPOINT, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify({
-              secret: VOUCHER_SECRET,
-              tourType: r.tourType, date: r.date, people: r.people,
-              pickup: r.pickup, meetingTime: r.meetingTime, nationality: r.nationality,
-              totalPrice: r.totalPrice, paymentStatus: 'paid', paymentMethod: 'Maya',
-              currency: r.currency, name: r.name, email: r.email,
-              lang: localStorage.getItem('ws_lang') || 'ko'
-            })
+          await postToScript({
+            tourType: r.tourType, date: r.date, people: r.people,
+            pickup: r.pickup, meetingTime: r.meetingTime, nationality: r.nationality,
+            totalPrice: r.totalPrice, paymentStatus: 'paid', paymentMethod: 'Maya',
+            currency: r.currency, name: r.name, email: r.email,
+            lang: localStorage.getItem('ws_lang') || 'ko'
           });
         }
         localStorage.removeItem('maya_pending');

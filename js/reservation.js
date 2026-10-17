@@ -48,12 +48,16 @@ const MSG = {
 };
 
 async function callVoucherEndpoint(payload) {
-  const res = await fetch(VOUCHER_ENDPOINT, {
-    method: "POST",
-    headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify({ secret: VOUCHER_SECRET, ...payload })
-  });
-  return res.json();
+  const body = JSON.stringify({ secret: VOUCHER_SECRET, ...payload });
+  const opts = { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body };
+  const res = await fetch(VOUCHER_ENDPOINT, opts);
+  const text = await res.text();
+  // Apps Script sometimes redirects POST→GET and returns HTML — retry POST to final URL
+  if (text.trim().startsWith('<') && res.url && res.url !== VOUCHER_ENDPOINT) {
+    const res2 = await fetch(res.url, opts);
+    return res2.json();
+  }
+  return JSON.parse(text);
 }
 
 form.addEventListener("submit", async (e) => {
