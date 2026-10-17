@@ -202,6 +202,25 @@
         const data = await postToScript({ action: "checkMayaCheckout", checkoutId: pending.checkoutId });
 
         if (data.ok && data.status === 'PAYMENT_SUCCESS') {
+          // Firebase Firestore 결제 상태 업데이트
+          if (pending.reservationId) {
+            try {
+              const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js");
+              const { getFirestore, doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+              const app = initializeApp({
+                apiKey: "AIzaSyB5HjvqxyKucPIx2tMQpmlFM0A2h_DtzBk",
+                authDomain: "boracaysean-6217a.firebaseapp.com",
+                projectId: "boracaysean-6217a"
+              }, "success-app");
+              const db = getFirestore(app);
+              await updateDoc(doc(db, "reservations", pending.reservationId), {
+                paymentStatus: 'paid',
+                status: 'confirmed'
+              });
+            } catch (_) {}
+          }
+
+          // 바우처 이메일 발송
           const r = pending.reservation;
           await postToScript({
             tourType: r.tourType, date: r.date, people: r.people,

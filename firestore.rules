@@ -160,6 +160,15 @@ function isAdmin() {
         request.resource.data.depositApplied == true &&
         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['depositApplied']);
 
+      // Maya 결제 완료 후 고객이 직접 결제 상태를 paid/confirmed로 업데이트
+      allow update: if
+        !resource.data.keys().hasAny(['bookedBy', 'agencyId']) &&
+        resource.data.status == 'pending' &&
+        resource.data.paymentStatus == 'pending' &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['paymentStatus', 'status']) &&
+        request.resource.data.paymentStatus == 'paid' &&
+        request.resource.data.status == 'confirmed';
+
       // 리버타드 체크인 담당: 미체크인 -> 체크인 상태로만, 그 필드들만 변경 가능.
       allow update: if isLibertadStaff() &&
         resource.data.checkedIn == false &&
