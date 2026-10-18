@@ -94,6 +94,14 @@
   }
   .photo-status.error { color: #b91c1c; }
 
+  .photo-preview-note {
+    margin: 0 0 14px;
+    text-align: center;
+    color: #64748b;
+    font-size: 0.92rem;
+  }
+  .photo-preview-note strong { color: var(--color-fg); font-weight: 800; }
+
   .photo-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
@@ -190,15 +198,16 @@
 
   <div id="photo-status" class="photo-status"></div>
   <div id="photo-result" hidden>
+    <p class="photo-preview-note" id="photo-preview-note"></p>
     <div class="photo-grid" id="photo-grid"></div>
     <div class="photo-download">
       <a id="photo-openall" href="#" target="_blank" rel="noopener"
-         data-en="Download All" data-ko="전체 다운받기" data-zh="下载全部" data-ja="すべてダウンロード">전체 다운받기</a>
-      <p data-en="Opens the Google Drive folder with all photos and videos from that day."
-         data-ko="그날의 사진과 영상 전체가 담긴 구글 드라이브 폴더가 열립니다."
-         data-zh="将打开包含当天全部照片与影片的 Google 云端硬盘资料夹。"
-         data-ja="その日の写真と動画がすべて入った Google ドライブのフォルダが開きます。">
-        그날의 사진과 영상 전체가 담긴 구글 드라이브 폴더가 열립니다.
+         data-en="View All" data-ko="전체 보기" data-zh="查看全部" data-ja="すべて見る">전체 보기</a>
+      <p data-en="Opens the Google Drive folder with every photo and video from that day, where you can download them."
+         data-ko="그날의 사진과 영상이 모두 담긴 구글 드라이브 폴더가 열립니다. 거기서 내려받으시면 됩니다."
+         data-zh="将打开包含当天全部照片与影片的 Google 云端硬盘资料夹，可在该处下载。"
+         data-ja="その日の写真と動画がすべて入った Google ドライブのフォルダが開き、そこからダウンロードできます。">
+        그날의 사진과 영상이 모두 담긴 구글 드라이브 폴더가 열립니다. 거기서 내려받으시면 됩니다.
       </p>
     </div>
   </div>
@@ -210,24 +219,28 @@
   const MSG = {
     ko: {
       pickDate: '날짜를 선택해 주세요.',
+      previewNote: (shown, total) => `총 <strong>${total}개</strong> 중 ${shown}개를 미리 보여드립니다. 전체는 아래에서 확인하세요.`,
       loading: '불러오는 중입니다...',
       none: '해당 날짜의 자료가 아직 없습니다.<br>사진과 영상은 투어 후 며칠 내에 올라갑니다.',
       error: '불러오지 못했습니다. 잠시 후 다시 시도해 주세요.'
     },
     en: {
       pickDate: 'Please choose a date.',
+      previewNote: (shown, total) => `Showing ${shown} of <strong>${total}</strong>. See them all below.`,
       loading: 'Loading...',
       none: 'Nothing for that date yet.<br>Photos and videos are usually uploaded within a few days after the tour.',
       error: 'Could not load the photos. Please try again shortly.'
     },
     zh: {
       pickDate: '请选择日期。',
+      previewNote: (shown, total) => `共 <strong>${total} 个</strong>，此处预览 ${shown} 个。全部内容请见下方。`,
       loading: '正在载入...',
       none: '该日期的内容尚未上传。<br>照片与影片通常会在行程结束后几天内上传。',
       error: '无法载入照片，请稍后再试。'
     },
     ja: {
       pickDate: '日付を選択してください。',
+      previewNote: (shown, total) => `全 <strong>${total}件</strong> のうち ${shown}件 を表示しています。すべては下からご覧ください。`,
       loading: '読み込んでいます...',
       none: 'その日付のデータはまだありません。<br>写真と動画はツアー後、数日以内にアップロードされます。',
       error: '写真を読み込めませんでした。しばらくしてからお試しください。'
@@ -260,6 +273,7 @@
   const resultEl = document.getElementById('photo-result');
   const gridEl = document.getElementById('photo-grid');
   const openAllEl = document.getElementById('photo-openall');
+  const noteEl = document.getElementById('photo-preview-note');
 
   dateEl.max = new Date().toISOString().slice(0, 10);
 
@@ -304,6 +318,11 @@
         card.appendChild(img);
         gridEl.appendChild(card);
       });
+
+      // total은 새 Apps Script에서만 옵니다. 없으면 안내문을 비워둡니다.
+      noteEl.innerHTML = (data.total && data.total > data.photos.length)
+        ? t.previewNote(data.photos.length, data.total)
+        : '';
 
       openAllEl.href = 'https://drive.google.com/drive/folders/' + data.folderId;
 
