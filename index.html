@@ -49,7 +49,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css?v=1788925196">
-<link rel="stylesheet" href="css/main.css?v=1788925196">
+<link rel="stylesheet" href="css/main.css?v=1792320000">
 
 <!-- JSON-LD Structured Data (Naver / Google) -->
 <script type="application/ld+json">
@@ -443,6 +443,19 @@
   </div>
 </section>
 
+<!-- ===== TOUR PHOTOS ===== -->
+<section class="tour-photos-section" id="tour-photos">
+  <div class="tour-photos-inner" data-scroll-up>
+    <h2 data-en="Get Your Tour Photos" data-ko="투어 사진 받기">Get Your Tour Photos</h2>
+    <p data-en="Choose the date you joined the tour."
+       data-ko="참여하신 날짜를 선택해 주세요.">Choose the date you joined the tour.</p>
+    <form class="tour-photos-form" id="tour-photos-form">
+      <input type="date" id="tour-photos-date" aria-label="Tour date" required>
+      <button type="submit" data-en="View Photos" data-ko="사진 보기">View Photos</button>
+    </form>
+  </div>
+</section>
+
 <!-- ===== ABOUT THE WHALE SHARK ===== -->
 <section class="about-shark">
 
@@ -765,6 +778,17 @@
       const nationality = document.getElementById('qs-nationality').value;
       const params = new URLSearchParams({ tour, date, people, nationality });
       window.location.href = `reservation.html?${params.toString()}`;
+    });
+  }
+
+  const photoForm = document.getElementById('tour-photos-form');
+  if (photoForm) {
+    const photoDate = document.getElementById('tour-photos-date');
+    photoDate.max = new Date().toISOString().slice(0, 10);
+    photoForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!photoDate.value) return;
+      window.location.href = `photos.html?date=${encodeURIComponent(photoDate.value)}`;
     });
   }
 </script>

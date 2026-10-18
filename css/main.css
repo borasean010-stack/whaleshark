@@ -1735,3 +1735,62 @@ iframe.fb-video-thumb {
 @media (max-width: 720px) {
   .faq-section { padding: 70px 20px; }
 }
+
+/* ===== TOUR PHOTOS ===== */
+.tour-photos-section {
+  background: linear-gradient(135deg, #1C529E 0%, #2563EB 100%);
+  padding: 72px 24px;
+}
+.tour-photos-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+  color: #fff;
+  font-family: 'Outfit', 'Noto Sans KR', sans-serif;
+}
+.tour-photos-inner h2 {
+  font-size: 1.94rem;
+  font-weight: 900;
+  margin: 0 0 8px;
+}
+.tour-photos-inner p {
+  color: rgba(255,255,255,0.78);
+  font-size: 0.95rem;
+  margin: 0 0 28px;
+}
+.tour-photos-form {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.tour-photos-form input[type="date"] {
+  padding: 15px 20px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: 600;
+  color: #1C529E;
+  background: #fff;
+  min-width: 210px;
+}
+.tour-photos-form button {
+  padding: 15px 34px;
+  border: none;
+  border-radius: 12px;
+  background: var(--color-accent, #F97316);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  transition: filter 0.2s ease;
+}
+.tour-photos-form button:hover { filter: brightness(1.08); }
+
+@media (max-width: 600px) {
+  .tour-photos-section { padding: 56px 16px; }
+  .tour-photos-form input[type="date"],
+  .tour-photos-form button { width: 100%; }
+}
