@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>투어 사진 다운로드 | Boracay Whale Shark</title>
-<meta name="description" content="보라카이 고래상어 투어 사진을 날짜별로 확인하고 다운로드하세요.">
+<title>투어 사진 및 영상 다운로드 | Boracay Whale Shark</title>
+<meta name="description" content="보라카이 고래상어 투어 사진과 영상을 날짜별로 확인하고 다운로드하세요.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
@@ -159,12 +159,12 @@
 
 <main class="photo-main">
   <div class="photo-head">
-    <h1 data-en="Tour Photos" data-ko="투어 사진" data-zh="行程照片" data-ja="ツアー写真">투어 사진</h1>
-    <p data-en="Pick the date you joined the tour to view and download your photos."
-       data-ko="투어에 참여하신 날짜를 선택하시면 사진을 보고 내려받을 수 있습니다."
-       data-zh="选择您参加行程的日期，即可查看并下载照片。"
-       data-ja="ツアーに参加された日付を選ぶと、写真をご覧いただき、ダウンロードできます。">
-      투어에 참여하신 날짜를 선택하시면 사진을 보고 내려받을 수 있습니다.
+    <h1 data-en="Tour Photos &amp; Videos" data-ko="투어 사진 및 영상" data-zh="行程照片与影片" data-ja="ツアー写真・動画">투어 사진 및 영상</h1>
+    <p data-en="Pick the date you joined the tour to view and download your photos and videos."
+       data-ko="투어에 참여하신 날짜를 선택하시면 사진과 영상을 보고 내려받을 수 있습니다."
+       data-zh="选择您参加行程的日期，即可查看并下载照片与影片。"
+       data-ja="ツアーに参加された日付を選ぶと、写真と動画をご覧いただき、ダウンロードできます。">
+      투어에 참여하신 날짜를 선택하시면 사진과 영상을 보고 내려받을 수 있습니다.
     </p>
   </div>
 
@@ -180,11 +180,11 @@
 
   <div class="photo-notice">
     <strong data-en="Please note" data-ko="유의사항" data-zh="注意事项" data-ja="ご注意">유의사항</strong>
-    <span data-en="Photos are kept for one week from the tour date. Please download them before they are removed."
-          data-ko="사진 보관기간은 투어일로부터 1주일입니다. 기간이 지나면 삭제되니 미리 내려받아 주세요."
-          data-zh="照片自行程当日起保存一周。逾期将被删除，请及时下载。"
-          data-ja="写真の保存期間はツアー当日から1週間です。期間を過ぎると削除されますので、お早めにダウンロードしてください。">
-      사진 보관기간은 투어일로부터 1주일입니다. 기간이 지나면 삭제되니 미리 내려받아 주세요.
+    <span data-en="Photos and videos are kept for one week from the tour date. Please download them before they are removed."
+          data-ko="사진 및 영상 보관기간은 투어일로부터 1주일입니다. 기간이 지나면 삭제되니 미리 내려받아 주세요."
+          data-zh="照片与影片自行程当日起保存一周。逾期将被删除，请及时下载。"
+          data-ja="写真・動画の保存期間はツアー当日から1週間です。期間を過ぎると削除されますので、お早めにダウンロードしてください。">
+      사진 및 영상 보관기간은 투어일로부터 1주일입니다. 기간이 지나면 삭제되니 미리 내려받아 주세요.
     </span>
   </div>
 
@@ -193,7 +193,7 @@
     <div class="photo-grid" id="photo-grid"></div>
     <div class="photo-download">
       <a id="photo-openall" href="#" target="_blank" rel="noopener"
-         data-en="Download Photos" data-ko="사진 다운받기" data-zh="下载照片" data-ja="写真をダウンロード">사진 다운받기</a>
+         data-en="Download All" data-ko="전체 다운받기" data-zh="下载全部" data-ja="すべてダウンロード">전체 다운받기</a>
       <p data-en="Opens the Google Drive folder with all photos and videos from that day."
          data-ko="그날의 사진과 영상 전체가 담긴 구글 드라이브 폴더가 열립니다."
          data-zh="将打开包含当天全部照片与影片的 Google 云端硬盘资料夹。"
@@ -210,26 +210,26 @@
   const MSG = {
     ko: {
       pickDate: '날짜를 선택해 주세요.',
-      loading: '사진을 불러오는 중입니다...',
-      none: '해당 날짜의 사진이 아직 없습니다.<br>사진은 투어 후 며칠 내에 올라갑니다.',
-      error: '사진을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.'
+      loading: '불러오는 중입니다...',
+      none: '해당 날짜의 자료가 아직 없습니다.<br>사진과 영상은 투어 후 며칠 내에 올라갑니다.',
+      error: '불러오지 못했습니다. 잠시 후 다시 시도해 주세요.'
     },
     en: {
       pickDate: 'Please choose a date.',
-      loading: 'Loading photos...',
-      none: 'No photos for that date yet.<br>Photos are usually uploaded within a few days after the tour.',
+      loading: 'Loading...',
+      none: 'Nothing for that date yet.<br>Photos and videos are usually uploaded within a few days after the tour.',
       error: 'Could not load the photos. Please try again shortly.'
     },
     zh: {
       pickDate: '请选择日期。',
-      loading: '正在载入照片...',
-      none: '该日期的照片尚未上传。<br>照片通常会在行程结束后几天内上传。',
+      loading: '正在载入...',
+      none: '该日期的内容尚未上传。<br>照片与影片通常会在行程结束后几天内上传。',
       error: '无法载入照片，请稍后再试。'
     },
     ja: {
       pickDate: '日付を選択してください。',
-      loading: '写真を読み込んでいます...',
-      none: 'その日付の写真はまだありません。<br>写真はツアー後、数日以内にアップロードされます。',
+      loading: '読み込んでいます...',
+      none: 'その日付のデータはまだありません。<br>写真と動画はツアー後、数日以内にアップロードされます。',
       error: '写真を読み込めませんでした。しばらくしてからお試しください。'
     }
   };
