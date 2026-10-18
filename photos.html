@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투어 사진 다운로드 | Boracay Whale Shark</title>
+<meta name="description" content="보라카이 고래상어 투어 사진을 날짜별로 확인하고 다운로드하세요.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .photo-main { max-width: 1100px; margin: 0 auto; padding: 120px 20px 80px; }
+  .photo-head { text-align: center; margin-bottom: 36px; }
+  .photo-head h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(1.9rem, 5vw, 2.8rem);
+    font-weight: 900;
+    margin: 0 0 10px;
+    color: var(--color-fg);
+  }
+  .photo-head p { margin: 0; color: #64748b; font-size: 1rem; line-height: 1.6; }
+
+  .photo-picker {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 36px;
+  }
+  .photo-picker input[type="date"] {
+    padding: 14px 18px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-family: inherit;
+    background: #fff;
+    color: var(--color-fg);
+    min-width: 200px;
+  }
+  .photo-picker button {
+    padding: 14px 32px;
+    border: none;
+    border-radius: var(--radius);
+    background: var(--color-accent);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 800;
+    font-family: inherit;
+    cursor: pointer;
+    transition: filter 0.2s ease;
+  }
+  .photo-picker button:hover:not(:disabled) { filter: brightness(1.08); }
+  .photo-picker button:disabled { opacity: 0.55; cursor: default; }
+
+  .photo-status {
+    text-align: center;
+    color: #64748b;
+    font-size: 0.98rem;
+    line-height: 1.7;
+    padding: 40px 20px;
+  }
+  .photo-status.error { color: #b91c1c; }
+
+  .photo-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .photo-count { font-weight: 700; color: var(--color-fg); }
+  .photo-openall {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 99px;
+    background: var(--color-primary);
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 700;
+  }
+
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 14px;
+  }
+  .photo-card {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #e2e8f0;
+    aspect-ratio: 4 / 3;
+  }
+  .photo-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .photo-dl {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    padding: 7px 14px;
+    border-radius: 99px;
+    background: rgba(15, 23, 42, 0.78);
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 700;
+    backdrop-filter: blur(4px);
+  }
+  .photo-dl:hover { background: rgba(15, 23, 42, 0.92); }
+
+  @media (max-width: 600px) {
+    .photo-main { padding: 100px 16px 60px; }
+    .photo-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="./" class="logo"><img src="assets/mwlogo.png" alt="Libertad Whale Shark" class="logo-img"><span class="logo-text">BORACAY WHALE SHARK</span></a>
+    <nav class="nav">
+      <a href="./" data-en="Home" data-ko="홈">홈</a>
+      <a href="./#comparison-section" data-en="Tours" data-ko="투어">투어</a>
+      <a href="reservation" data-en="Book Now" data-ko="예약하기">예약하기</a>
+      <a href="https://open.kakao.com/o/s0qOPfJi" target="_blank" rel="noopener">카카오 오픈채팅</a>
+    </nav>
+  </div>
+</header>
+
+<main class="photo-main">
+  <div class="photo-head">
+    <h1 data-en="Tour Photos" data-ko="투어 사진">투어 사진</h1>
+    <p data-en="Pick the date you joined the tour to view and download your photos."
+       data-ko="투어에 참여하신 날짜를 선택하시면 사진을 보고 내려받을 수 있습니다.">
+      투어에 참여하신 날짜를 선택하시면 사진을 보고 내려받을 수 있습니다.
+    </p>
+  </div>
+
+  <div class="photo-picker">
+    <input type="date" id="photo-date" aria-label="투어 날짜">
+    <button type="button" id="photo-search" data-en="View Photos" data-ko="사진 보기">사진 보기</button>
+  </div>
+
+  <div id="photo-status" class="photo-status"></div>
+  <div id="photo-result" hidden>
+    <div class="photo-toolbar">
+      <span class="photo-count" id="photo-count"></span>
+      <a class="photo-openall" id="photo-openall" href="#" target="_blank" rel="noopener"
+         data-en="Open all in Google Drive" data-ko="구글 드라이브에서 전체 보기">구글 드라이브에서 전체 보기</a>
+    </div>
+    <div class="photo-grid" id="photo-grid"></div>
+  </div>
+</main>
+
+<script>
+  const PHOTO_ENDPOINT = "https://script.google.com/macros/s/AKfycbzTPR3kwrarZUs7_H8Eta094STF_xmIN7BVyF-6JLhg7KMTQgG4DUbbRBwFVqxa3F0k/exec";
+
+  const MSG = {
+    ko: {
+      pickDate: '날짜를 선택해 주세요.',
+      loading: '사진을 불러오는 중입니다...',
+      none: '해당 날짜의 사진이 아직 없습니다.<br>사진은 투어 후 며칠 내에 올라갑니다.',
+      error: '사진을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.',
+      count: n => n + '장',
+      download: '저장'
+    },
+    en: {
+      pickDate: 'Please choose a date.',
+      loading: 'Loading photos...',
+      none: 'No photos for that date yet.<br>Photos are usually uploaded within a few days after the tour.',
+      error: 'Could not load the photos. Please try again shortly.',
+      count: n => n + ' photos',
+      download: 'Save'
+    }
+  };
+
+  const lang = (localStorage.getItem('ws_lang') || 'ko') === 'ko' ? 'ko' : 'en';
+  const t = MSG[lang];
+  if (lang === 'en') {
+    document.querySelectorAll('[data-en]').forEach(el => { el.textContent = el.getAttribute('data-en'); });
+    document.documentElement.lang = 'en';
+  }
+
+  const dateEl = document.getElementById('photo-date');
+  const btnEl = document.getElementById('photo-search');
+  const statusEl = document.getElementById('photo-status');
+  const resultEl = document.getElementById('photo-result');
+  const gridEl = document.getElementById('photo-grid');
+  const countEl = document.getElementById('photo-count');
+  const openAllEl = document.getElementById('photo-openall');
+
+  dateEl.max = new Date().toISOString().slice(0, 10);
+
+  function showStatus(html, isError) {
+    statusEl.innerHTML = html;
+    statusEl.className = 'photo-status' + (isError ? ' error' : '');
+    resultEl.hidden = true;
+  }
+
+  async function loadPhotos() {
+    const date = dateEl.value;
+    if (!date) { showStatus(t.pickDate, true); return; }
+
+    btnEl.disabled = true;
+    showStatus(t.loading, false);
+
+    try {
+      const url = PHOTO_ENDPOINT
+        + '?action=listTourPhotos&date=' + encodeURIComponent(date);
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if (!data.ok) throw new Error(data.error || 'failed');
+      if (!data.photos || data.photos.length === 0) { showStatus(t.none, false); return; }
+
+      gridEl.innerHTML = '';
+      data.photos.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'photo-card';
+
+        const img = document.createElement('img');
+        img.loading = 'lazy';
+        img.src = 'https://drive.google.com/thumbnail?id=' + p.id + '&sz=w600';
+        img.alt = p.name || '';
+
+        const dl = document.createElement('a');
+        dl.className = 'photo-dl';
+        dl.href = 'https://drive.google.com/uc?export=download&id=' + p.id;
+        dl.textContent = t.download;
+        dl.setAttribute('download', '');
+
+        card.appendChild(img);
+        card.appendChild(dl);
+        gridEl.appendChild(card);
+      });
+
+      countEl.textContent = t.count(data.photos.length);
+      if (data.folderId) {
+        openAllEl.href = 'https://drive.google.com/drive/folders/' + data.folderId;
+        openAllEl.hidden = false;
+      } else {
+        openAllEl.hidden = true;
+      }
+
+      statusEl.innerHTML = '';
+      statusEl.className = 'photo-status';
+      resultEl.hidden = false;
+    } catch (err) {
+      console.error(err);
+      showStatus(t.error, true);
+    } finally {
+      btnEl.disabled = false;
+    }
+  }
+
+  btnEl.addEventListener('click', loadPhotos);
+  dateEl.addEventListener('keydown', e => { if (e.key === 'Enter') loadPhotos(); });
+</script>
+</body>
+</html>
