@@ -155,7 +155,7 @@ p { margin: 0 0 16px; color: var(--muted); }
   color: var(--white);
   padding-top: 80px;
   background-color: #050a0e;
-  background-image: url('../assets/hero-bg.jpg');
+  background-image: url('../assets/hero-bg.webp');
   background-size: cover;
   background-position: center;
 }
