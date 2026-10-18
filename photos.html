@@ -52,6 +52,24 @@
   .photo-picker button:hover:not(:disabled) { filter: brightness(1.08); }
   .photo-picker button:disabled { opacity: 0.55; cursor: default; }
 
+  .photo-notice {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 14px 18px;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: var(--radius);
+    color: #92400e;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    text-align: center;
+  }
+  .photo-notice strong {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 800;
+  }
+
   .photo-status {
     text-align: center;
     color: #64748b;
@@ -136,6 +154,14 @@
   <div class="photo-picker">
     <input type="date" id="photo-date" aria-label="투어 날짜">
     <button type="button" id="photo-search" data-en="View Photos" data-ko="사진 보기">사진 보기</button>
+  </div>
+
+  <div class="photo-notice">
+    <strong data-en="Please note" data-ko="유의사항">유의사항</strong>
+    <span data-en="Photos are kept for one week from the tour date. Please download them before they are removed."
+          data-ko="사진 보관기간은 투어일로부터 1주일입니다. 기간이 지나면 삭제되니 미리 내려받아 주세요.">
+      사진 보관기간은 투어일로부터 1주일입니다. 기간이 지나면 삭제되니 미리 내려받아 주세요.
+    </span>
   </div>
 
   <div id="photo-status" class="photo-status"></div>
