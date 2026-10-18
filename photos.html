@@ -61,30 +61,11 @@
   }
   .photo-status.error { color: #b91c1c; }
 
-  .photo-toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 18px;
-  }
-  .photo-count { font-weight: 700; color: var(--color-fg); }
-  .photo-openall {
-    display: inline-block;
-    padding: 10px 20px;
-    border-radius: 99px;
-    background: var(--color-primary);
-    color: #fff;
-    text-decoration: none;
-    font-size: 0.88rem;
-    font-weight: 700;
-  }
-
   .photo-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
     gap: 14px;
+    margin-bottom: 32px;
   }
   .photo-card {
     position: relative;
@@ -99,20 +80,29 @@
     object-fit: cover;
     display: block;
   }
-  .photo-dl {
-    position: absolute;
-    right: 8px;
-    bottom: 8px;
-    padding: 7px 14px;
-    border-radius: 99px;
-    background: rgba(15, 23, 42, 0.78);
+
+  .photo-download {
+    text-align: center;
+  }
+  .photo-download a {
+    display: inline-block;
+    padding: 18px 48px;
+    border-radius: var(--radius);
+    background: var(--color-accent);
     color: #fff;
     text-decoration: none;
-    font-size: 0.78rem;
-    font-weight: 700;
-    backdrop-filter: blur(4px);
+    font-size: 1.05rem;
+    font-weight: 800;
+    box-shadow: 0 6px 20px rgba(249, 115, 22, 0.3);
+    transition: filter 0.2s ease;
   }
-  .photo-dl:hover { background: rgba(15, 23, 42, 0.92); }
+  .photo-download a:hover { filter: brightness(1.08); }
+  .photo-download p {
+    margin: 14px 0 0;
+    color: #64748b;
+    font-size: 0.86rem;
+    line-height: 1.6;
+  }
 
   @media (max-width: 600px) {
     .photo-main { padding: 100px 16px 60px; }
@@ -150,12 +140,15 @@
 
   <div id="photo-status" class="photo-status"></div>
   <div id="photo-result" hidden>
-    <div class="photo-toolbar">
-      <span class="photo-count" id="photo-count"></span>
-      <a class="photo-openall" id="photo-openall" href="#" target="_blank" rel="noopener"
-         data-en="Open all in Google Drive" data-ko="구글 드라이브에서 전체 보기">구글 드라이브에서 전체 보기</a>
-    </div>
     <div class="photo-grid" id="photo-grid"></div>
+    <div class="photo-download">
+      <a id="photo-openall" href="#" target="_blank" rel="noopener"
+         data-en="Download Photos" data-ko="사진 다운받기">사진 다운받기</a>
+      <p data-en="Opens the Google Drive folder with all photos and videos from that day."
+         data-ko="그날의 사진과 영상 전체가 담긴 구글 드라이브 폴더가 열립니다.">
+        그날의 사진과 영상 전체가 담긴 구글 드라이브 폴더가 열립니다.
+      </p>
+    </div>
   </div>
 </main>
 
@@ -167,17 +160,13 @@
       pickDate: '날짜를 선택해 주세요.',
       loading: '사진을 불러오는 중입니다...',
       none: '해당 날짜의 사진이 아직 없습니다.<br>사진은 투어 후 며칠 내에 올라갑니다.',
-      error: '사진을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.',
-      count: n => n + '장',
-      download: '저장'
+      error: '사진을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.'
     },
     en: {
       pickDate: 'Please choose a date.',
       loading: 'Loading photos...',
       none: 'No photos for that date yet.<br>Photos are usually uploaded within a few days after the tour.',
-      error: 'Could not load the photos. Please try again shortly.',
-      count: n => n + ' photos',
-      download: 'Save'
+      error: 'Could not load the photos. Please try again shortly.'
     }
   };
 
@@ -193,7 +182,6 @@
   const statusEl = document.getElementById('photo-status');
   const resultEl = document.getElementById('photo-result');
   const gridEl = document.getElementById('photo-grid');
-  const countEl = document.getElementById('photo-count');
   const openAllEl = document.getElementById('photo-openall');
 
   dateEl.max = new Date().toISOString().slice(0, 10);
@@ -230,24 +218,11 @@
         img.src = 'https://drive.google.com/thumbnail?id=' + p.id + '&sz=w600';
         img.alt = p.name || '';
 
-        const dl = document.createElement('a');
-        dl.className = 'photo-dl';
-        dl.href = 'https://drive.google.com/uc?export=download&id=' + p.id;
-        dl.textContent = t.download;
-        dl.setAttribute('download', '');
-
         card.appendChild(img);
-        card.appendChild(dl);
         gridEl.appendChild(card);
       });
 
-      countEl.textContent = t.count(data.photos.length);
-      if (data.folderId) {
-        openAllEl.href = 'https://drive.google.com/drive/folders/' + data.folderId;
-        openAllEl.hidden = false;
-      } else {
-        openAllEl.hidden = true;
-      }
+      openAllEl.href = 'https://drive.google.com/drive/folders/' + data.folderId;
 
       statusEl.innerHTML = '';
       statusEl.className = 'photo-status';
