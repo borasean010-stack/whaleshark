@@ -220,4 +220,10 @@
     <xhtml:link rel="alternate" hreflang="ja" href="https://boracaywhaleshark.com/ja/t-details"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://boracaywhaleshark.com/t-details"/>
   </url>
+  <url>
+    <loc>https://boracaywhaleshark.com/photos</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
 </urlset>
