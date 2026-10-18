@@ -37,6 +37,21 @@
     color: var(--color-fg);
     min-width: 200px;
   }
+
+  /* 크롬은 날짜 칸의 빈 자리 표시를 브라우저 언어로 그립니다(페이지 언어와
+     무관). 비어 있을 때는 그걸 감추고 사이트 언어로 된 안내를 대신 얹습니다. */
+  .date-field { position: relative; display: inline-block; }
+  .date-field input[type="date"]:not(.has-value)::-webkit-datetime-edit { opacity: 0; }
+  .date-ph {
+    position: absolute;
+    left: 19px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 1rem;
+    pointer-events: none;
+  }
+  .date-field input.has-value ~ .date-ph { display: none; }
   .photo-picker button {
     padding: 14px 32px;
     border: none;
@@ -134,9 +149,9 @@
   <div class="container header-inner">
     <a href="./" class="logo"><img src="assets/mwlogo.png" alt="Libertad Whale Shark" class="logo-img"><span class="logo-text">BORACAY WHALE SHARK</span></a>
     <nav class="nav">
-      <a href="./" data-en="Home" data-ko="홈">홈</a>
-      <a href="./#comparison-section" data-en="Tours" data-ko="투어">투어</a>
-      <a href="reservation" data-en="Book Now" data-ko="예약하기">예약하기</a>
+      <a href="./" data-en="Home" data-ko="홈" data-zh="首页" data-ja="ホーム">홈</a>
+      <a href="./#comparison-section" data-en="Tours" data-ko="투어" data-zh="行程" data-ja="ツアー">투어</a>
+      <a href="reservation" data-en="Book Now" data-ko="예약하기" data-zh="立即预订" data-ja="今すぐ予約">예약하기</a>
       <a href="https://open.kakao.com/o/s0qOPfJi" target="_blank" rel="noopener">카카오 오픈채팅</a>
     </nav>
   </div>
@@ -144,22 +159,31 @@
 
 <main class="photo-main">
   <div class="photo-head">
-    <h1 data-en="Tour Photos" data-ko="투어 사진">투어 사진</h1>
+    <h1 data-en="Tour Photos" data-ko="투어 사진" data-zh="行程照片" data-ja="ツアー写真">투어 사진</h1>
     <p data-en="Pick the date you joined the tour to view and download your photos."
-       data-ko="투어에 참여하신 날짜를 선택하시면 사진을 보고 내려받을 수 있습니다.">
+       data-ko="투어에 참여하신 날짜를 선택하시면 사진을 보고 내려받을 수 있습니다."
+       data-zh="选择您参加行程的日期，即可查看并下载照片。"
+       data-ja="ツアーに参加された日付を選ぶと、写真をご覧いただき、ダウンロードできます。">
       투어에 참여하신 날짜를 선택하시면 사진을 보고 내려받을 수 있습니다.
     </p>
   </div>
 
   <div class="photo-picker">
-    <input type="date" id="photo-date" aria-label="투어 날짜">
-    <button type="button" id="photo-search" data-en="View Photos" data-ko="사진 보기">사진 보기</button>
+    <span class="date-field">
+      <input type="date" id="photo-date" aria-label="Tour date">
+      <span class="date-ph" data-en="Select date" data-ko="날짜 선택"
+            data-zh="选择日期" data-ja="日付を選択">날짜 선택</span>
+    </span>
+    <button type="button" id="photo-search"
+            data-en="View Photos" data-ko="사진 보기" data-zh="查看照片" data-ja="写真を見る">사진 보기</button>
   </div>
 
   <div class="photo-notice">
-    <strong data-en="Please note" data-ko="유의사항">유의사항</strong>
+    <strong data-en="Please note" data-ko="유의사항" data-zh="注意事项" data-ja="ご注意">유의사항</strong>
     <span data-en="Photos are kept for one week from the tour date. Please download them before they are removed."
-          data-ko="사진 보관기간은 투어일로부터 1주일입니다. 기간이 지나면 삭제되니 미리 내려받아 주세요.">
+          data-ko="사진 보관기간은 투어일로부터 1주일입니다. 기간이 지나면 삭제되니 미리 내려받아 주세요."
+          data-zh="照片自行程当日起保存一周。逾期将被删除，请及时下载。"
+          data-ja="写真の保存期間はツアー当日から1週間です。期間を過ぎると削除されますので、お早めにダウンロードしてください。">
       사진 보관기간은 투어일로부터 1주일입니다. 기간이 지나면 삭제되니 미리 내려받아 주세요.
     </span>
   </div>
@@ -169,9 +193,11 @@
     <div class="photo-grid" id="photo-grid"></div>
     <div class="photo-download">
       <a id="photo-openall" href="#" target="_blank" rel="noopener"
-         data-en="Download Photos" data-ko="사진 다운받기">사진 다운받기</a>
+         data-en="Download Photos" data-ko="사진 다운받기" data-zh="下载照片" data-ja="写真をダウンロード">사진 다운받기</a>
       <p data-en="Opens the Google Drive folder with all photos and videos from that day."
-         data-ko="그날의 사진과 영상 전체가 담긴 구글 드라이브 폴더가 열립니다.">
+         data-ko="그날의 사진과 영상 전체가 담긴 구글 드라이브 폴더가 열립니다."
+         data-zh="将打开包含当天全部照片与影片的 Google 云端硬盘资料夹。"
+         data-ja="その日の写真と動画がすべて入った Google ドライブのフォルダが開きます。">
         그날의 사진과 영상 전체가 담긴 구글 드라이브 폴더가 열립니다.
       </p>
     </div>
@@ -193,15 +219,40 @@
       loading: 'Loading photos...',
       none: 'No photos for that date yet.<br>Photos are usually uploaded within a few days after the tour.',
       error: 'Could not load the photos. Please try again shortly.'
+    },
+    zh: {
+      pickDate: '请选择日期。',
+      loading: '正在载入照片...',
+      none: '该日期的照片尚未上传。<br>照片通常会在行程结束后几天内上传。',
+      error: '无法载入照片，请稍后再试。'
+    },
+    ja: {
+      pickDate: '日付を選択してください。',
+      loading: '写真を読み込んでいます...',
+      none: 'その日付の写真はまだありません。<br>写真はツアー後、数日以内にアップロードされます。',
+      error: '写真を読み込めませんでした。しばらくしてからお試しください。'
     }
   };
 
-  const lang = (localStorage.getItem('ws_lang') || 'ko') === 'ko' ? 'ko' : 'en';
-  const t = MSG[lang];
-  if (lang === 'en') {
-    document.querySelectorAll('[data-en]').forEach(el => { el.textContent = el.getAttribute('data-en'); });
-    document.documentElement.lang = 'en';
+  // 이 페이지는 /en /zh /ja 사본이 없는 단일 페이지라, 언어를 직접 고릅니다.
+  // 저장된 선택이 없으면 브라우저 언어를 따릅니다.
+  function detectLang() {
+    const saved = localStorage.getItem('ws_lang');
+    if (MSG[saved]) return saved;
+    const nav = (navigator.language || '').toLowerCase();
+    if (nav.startsWith('ko')) return 'ko';
+    if (nav.startsWith('zh')) return 'zh';
+    if (nav.startsWith('ja')) return 'ja';
+    return 'en';
   }
+
+  const lang = detectLang();
+  const t = MSG[lang];
+  document.querySelectorAll('[data-en]').forEach(el => {
+    const text = el.getAttribute('data-' + lang);
+    if (text) el.innerHTML = text;
+  });
+  document.documentElement.lang = lang;
 
   const dateEl = document.getElementById('photo-date');
   const btnEl = document.getElementById('photo-search');
@@ -211,6 +262,12 @@
   const openAllEl = document.getElementById('photo-openall');
 
   dateEl.max = new Date().toISOString().slice(0, 10);
+
+  function syncDateFilled() {
+    dateEl.classList.toggle('has-value', !!dateEl.value);
+  }
+  dateEl.addEventListener('input', syncDateFilled);
+  dateEl.addEventListener('change', syncDateFilled);
 
   function showStatus(html, isError) {
     statusEl.innerHTML = html;
@@ -268,6 +325,7 @@
   const presetDate = new URLSearchParams(location.search).get('date');
   if (presetDate && /^\d{4}-\d{2}-\d{2}$/.test(presetDate)) {
     dateEl.value = presetDate;
+    syncDateFilled();
     loadPhotos();
   }
 </script>

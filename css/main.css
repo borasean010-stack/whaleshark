@@ -1794,3 +1794,23 @@ iframe.fb-video-thumb {
   .tour-photos-form input[type="date"],
   .tour-photos-form button { width: 100%; }
 }
+
+/* 크롬은 날짜 칸의 빈 자리 표시를 브라우저 언어로 그립니다(페이지 언어와
+   무관). 비어 있을 때는 그걸 감추고 사이트 언어로 된 안내를 대신 얹습니다. */
+.tour-photos-form .date-field { position: relative; display: inline-block; }
+.tour-photos-form input[type="date"]:not(.has-value)::-webkit-datetime-edit { opacity: 0; }
+.tour-photos-form .date-ph {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: 1rem;
+  font-weight: 600;
+  pointer-events: none;
+}
+.tour-photos-form input.has-value ~ .date-ph { display: none; }
+
+@media (max-width: 600px) {
+  .tour-photos-form .date-field { width: 100%; }
+}

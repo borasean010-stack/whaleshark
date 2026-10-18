@@ -44,7 +44,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/style.css?v=1786959573">
-<link rel="stylesheet" href="../css/main.css?v=1787114131">
+<link rel="stylesheet" href="../css/main.css?v=1792320000">
 
 <!-- JSON-LD Structured Data -->
 <script type="application/ld+json">
@@ -437,6 +437,21 @@
   </div>
 </section>
 
+<!-- ===== TOUR PHOTOS ===== -->
+<section class="tour-photos-section" id="tour-photos">
+  <div class="tour-photos-inner" data-scroll-up>
+    <h2>ツアー写真を受け取る</h2>
+    <p>参加された日付を選んでください。</p>
+    <form class="tour-photos-form" id="tour-photos-form">
+      <span class="date-field">
+        <input type="date" id="tour-photos-date" aria-label="Tour date" required>
+        <span class="date-ph">日付を選択</span>
+      </span>
+      <button type="submit">写真を見る</button>
+    </form>
+  </div>
+</section>
+
 <!-- ===== ABOUT THE WHALE SHARK ===== -->
 <section class="about-shark">
 
@@ -725,6 +740,22 @@
       window.location.href = `../reservation.html?${params.toString()}`;
     });
   }
+</script>
+<script>
+  (function () {
+    const form = document.getElementById('tour-photos-form');
+    if (!form) return;
+    const date = document.getElementById('tour-photos-date');
+    date.max = new Date().toISOString().slice(0, 10);
+    const syncFilled = () => date.classList.toggle('has-value', !!date.value);
+    date.addEventListener('input', syncFilled);
+    date.addEventListener('change', syncFilled);
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!date.value) return;
+      window.location.href = `../photos.html?date=${encodeURIComponent(date.value)}`;
+    });
+  })();
 </script>
 </body>
 </html>

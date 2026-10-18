@@ -446,12 +446,19 @@
 <!-- ===== TOUR PHOTOS ===== -->
 <section class="tour-photos-section" id="tour-photos">
   <div class="tour-photos-inner" data-scroll-up>
-    <h2 data-en="Get Your Tour Photos" data-ko="투어 사진 받기">Get Your Tour Photos</h2>
+    <h2 data-en="Get Your Tour Photos" data-ko="투어 사진 받기"
+        data-zh="领取行程照片" data-ja="ツアー写真を受け取る">Get Your Tour Photos</h2>
     <p data-en="Choose the date you joined the tour."
-       data-ko="참여하신 날짜를 선택해 주세요.">Choose the date you joined the tour.</p>
+       data-ko="참여하신 날짜를 선택해 주세요."
+       data-zh="请选择您参加行程的日期。"
+       data-ja="参加された日付を選んでください。">Choose the date you joined the tour.</p>
     <form class="tour-photos-form" id="tour-photos-form">
-      <input type="date" id="tour-photos-date" aria-label="Tour date" required>
-      <button type="submit" data-en="View Photos" data-ko="사진 보기">View Photos</button>
+      <span class="date-field">
+        <input type="date" id="tour-photos-date" aria-label="Tour date" required>
+        <span class="date-ph" data-en="Select date" data-ko="날짜 선택" data-zh="选择日期" data-ja="日付を選択">Select date</span>
+      </span>
+      <button type="submit" data-en="View Photos" data-ko="사진 보기"
+              data-zh="查看照片" data-ja="写真を見る">View Photos</button>
     </form>
   </div>
 </section>
@@ -784,7 +791,11 @@
   const photoForm = document.getElementById('tour-photos-form');
   if (photoForm) {
     const photoDate = document.getElementById('tour-photos-date');
+    // i18n.js가 html lang을 정한 뒤 실행되도록 defer 스크립트 이후에 읽습니다
     photoDate.max = new Date().toISOString().slice(0, 10);
+    const syncFilled = () => photoDate.classList.toggle('has-value', !!photoDate.value);
+    photoDate.addEventListener('input', syncFilled);
+    photoDate.addEventListener('change', syncFilled);
     photoForm.addEventListener('submit', (e) => {
       e.preventDefault();
       if (!photoDate.value) return;
