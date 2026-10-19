@@ -49,11 +49,18 @@ const reservationsById = {}; // id -> Firestore data, populated by loadReservati
 // 결제창에서 이탈하면 결제되지 않은 예약이 그대로 남습니다. 이런 건 실제
 // 예약이 아니므로 관리자 화면·집계에서 제외합니다. 현장결제(cash)와 여행사
 // 예약은 미결제 상태가 정상이므로 그대로 둡니다.
+// 현장에서 받기로 한 예약은 미결제가 정상이다. 결제수단 문구가 시기마다
+// 바뀌어 왔으므로(PayMongo·GCash·QRPh·Maya…) 온라인 수단을 열거하지 않고,
+// 현장결제 계열만 추려 그 외의 미결제를 이탈 건으로 본다.
+const PAY_LATER_METHODS = [
+  'cash', 'On-Site', '현장결제', '현장결제 (GCash/현금)',
+  '보라카이션 오피스페이', 'cash_office'
+];
+
 function isAbandonedCardBooking(d) {
-  return d.paymentMethod === 'Maya'
-    && d.paymentStatus !== 'paid'
-    && !d.bookedBy
-    && !d.agencyId;
+  if (d.bookedBy || d.agencyId) return false;        // 여행사 예약
+  if (d.paymentStatus === 'paid') return false;      // 결제 완료
+  return !PAY_LATER_METHODS.includes(d.paymentMethod);
 }
 
 // =====================================================================
@@ -364,6 +371,7 @@ async function loadReservations() {
       querySnapshot.forEach(docSnap => {
         const d = docSnap.data();
         const id = docSnap.id;
+        if (isAbandonedCardBooking(d)) return;
         if (d.status !== 'pending') return;
         pendingRows.push(`
           <tr>
@@ -437,6 +445,7 @@ function updateDonutChart(confirmedCount, pendingCount, querySnapshot) {
   let mConfirmed = 0, mPending = 0, mCancelled = 0, mRevenue = 0;
   querySnapshot.forEach(d => {
     const s = d.data();
+    if (isAbandonedCardBooking(s)) return;
     if (!s.date || !s.date.startsWith(thisMonth)) return;
     if (s.status === 'confirmed') { mConfirmed++; mRevenue += s.totalPrice || 0; }
     else if (s.status === 'pending') mPending++;
@@ -467,7 +476,11 @@ function updateActivityList(querySnapshot) {
   if (!list) return;
   const TOUR_CLS = { VF:'vf', F:'f', R:'r', T:'t' };
   const rows = [];
-  querySnapshot.forEach(d => rows.push({ id: d.id, ...d.data() }));
+  querySnapshot.forEach(d => {
+    const data = d.data();
+    if (isAbandonedCardBooking(data)) return;
+    rows.push({ id: d.id, ...data });
+  });
   const recent = rows.filter(r => r.status !== 'cancelled').slice(0, 8);
   if (!recent.length) { list.innerHTML = '<div style="text-align:center;color:var(--admin-text-muted);font-size:.8rem;padding:12px 0;">예약 없음</div>'; return; }
   list.innerHTML = recent.map(r => {
