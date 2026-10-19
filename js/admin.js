@@ -1097,8 +1097,23 @@ async function loadReferralCodes() {
 
     container.innerHTML = "";
 
+    // 코드 등록 없이 손님이 직접 입력해 할인을 받은 건도 집계에 들어와야 한다.
+    // 등록 목록과 예약에서 발견된 코드를 합치고, 미등록 건은 바로 등록할 수
+    // 있는 버튼을 달아 준다.
+    const entries = [];
+    const registered = new Set();
     codesSnap.forEach(docSnap => {
       const d = docSnap.data();
+      registered.add(d.code);
+      entries.push({ id: docSnap.id, code: d.code, name: d.name || "", commissionRate: d.commissionRate || 0 });
+    });
+    Object.keys(resMap).sort().forEach(code => {
+      if (registered.has(code)) return;
+      entries.push({ id: null, code, name: "", commissionRate: 0 });
+    });
+
+    entries.forEach(entry => {
+      const d = entry;
       const link = `${BASE_URL}?ref=${encodeURIComponent(d.code)}`;
       const reservations = resMap[d.code] || [];
       const confirmed = reservations.filter(r => r.status === "confirmed");
@@ -1120,6 +1135,7 @@ async function loadReferralCodes() {
             <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
               <span style="background:#dbeafe;color:#1d4ed8;padding:4px 12px;border-radius:8px;font-weight:800;font-size:0.95rem;letter-spacing:1px;">${d.code}</span>
               <span style="font-weight:600;font-size:1rem;color:var(--admin-text);">${d.name || ""}</span>
+              ${entry.id ? "" : `<span style="background:#fef3c7;color:#92400e;padding:3px 9px;border-radius:6px;font-size:0.72rem;font-weight:700;">미등록</span>`}
             </div>
             <div style="margin-top:6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
               <input type="text" value="${link}" readonly style="font-size:0.75rem;padding:3px 8px;border:1px solid var(--admin-border);border-radius:6px;background:var(--admin-bg-2);color:var(--admin-text-muted);width:320px;max-width:100%;" onclick="event.stopPropagation()">
@@ -1164,12 +1180,16 @@ async function loadReferralCodes() {
           </div>
           <!-- 수수료율 편집 + 삭제 -->
           <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;" onclick="event.stopPropagation()">
+            ${entry.id ? `
             <div style="display:flex;gap:6px;align-items:center;">
-              <input type="number" class="ref-comm-input" data-id="${docSnap.id}" value="${commRate}" min="0" max="100" placeholder="%" style="width:60px;padding:4px 8px;border:1px solid var(--admin-border);border-radius:6px;font-size:0.85rem;background:var(--admin-bg-2);color:var(--admin-text);text-align:center;">
-              <button class="ref-comm-save" data-id="${docSnap.id}" style="padding:4px 10px;background:#6366f1;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;white-space:nowrap;">% 저장</button>
+              <input type="number" class="ref-comm-input" data-id="${entry.id}" value="${commRate}" min="0" max="100" placeholder="%" style="width:60px;padding:4px 8px;border:1px solid var(--admin-border);border-radius:6px;font-size:0.85rem;background:var(--admin-bg-2);color:var(--admin-text);text-align:center;">
+              <button class="ref-comm-save" data-id="${entry.id}" style="padding:4px 10px;background:#6366f1;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;white-space:nowrap;">% 저장</button>
             </div>
-            ${unsettled.length > 0 ? `<button class="ref-settle-btn action-btn" data-id="${docSnap.id}" data-code="${d.code}" data-amount="${unsettledCommission}" style="font-size:0.78rem;white-space:nowrap;background:#be123c;">정산 완료 처리</button>` : ""}
-            <button class="ref-delete-btn action-btn delete-btn" data-ref-id="${docSnap.id}" style="font-size:0.78rem;">삭제</button>
+            ${unsettled.length > 0 ? `<button class="ref-settle-btn action-btn" data-id="${entry.id}" data-code="${d.code}" data-amount="${unsettledCommission}" style="font-size:0.78rem;white-space:nowrap;background:#be123c;">정산 완료 처리</button>` : ""}
+            <button class="ref-delete-btn action-btn delete-btn" data-ref-id="${entry.id}" style="font-size:0.78rem;">삭제</button>
+            ` : `
+            <button class="ref-register-btn action-btn" data-code="${d.code}" style="font-size:0.78rem;white-space:nowrap;background:#f59e0b;">코드 등록</button>
+            `}
           </div>
           <div style="font-size:1.2rem;color:var(--admin-text-muted);margin-left:4px;" class="ref-chevron">▼</div>
         </div>
@@ -1254,6 +1274,28 @@ async function loadReferralCodes() {
         if (!confirm("이 레퍼럴 코드를 삭제할까요?")) return;
         await deleteDoc(doc(db, "referralCodes", btn.dataset.refId));
         loadReferralCodes();
+      });
+    });
+
+    // 예약에서 발견된 미등록 코드를 정식 등록해 수수료율·정산을 쓸 수 있게 한다
+    container.querySelectorAll(".ref-register-btn").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const code = btn.dataset.code;
+        const name = prompt(`"${code}" 코드의 이름(제휴처)을 입력하세요.`, "");
+        if (name === null) return;
+        const rate = Number(prompt("수수료율(%)을 입력하세요.", "0"));
+        if (Number.isNaN(rate)) { alert("수수료율은 숫자로 입력해 주세요."); return; }
+        btn.disabled = true;
+        try {
+          await addDoc(collection(db, "referralCodes"), {
+            code, name: name.trim(), commissionRate: rate, usageCount: 0, createdAt: serverTimestamp()
+          });
+          loadReferralCodes();
+        } catch (err) {
+          console.error(err);
+          alert("등록에 실패했습니다.");
+          btn.disabled = false;
+        }
       });
     });
 
