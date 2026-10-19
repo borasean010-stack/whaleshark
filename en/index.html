@@ -44,7 +44,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/style.css?v=1786959573">
-<link rel="stylesheet" href="../css/main.css?v=1792480000">
+<link rel="stylesheet" href="../css/main.css?v=1792490000">
 
 <!-- JSON-LD Structured Data -->
 <script type="application/ld+json">
@@ -489,13 +489,15 @@
     <h2>Get Your Tour Photos &amp; Videos</h2>
     <p>Choose the date you joined the tour.</p>
       <div class="tour-calendar" id="tour-calendar"></div>
-    <form class="tour-photos-form" id="tour-photos-form">
-      <span class="date-field">
-        <input type="date" id="tour-photos-date" aria-label="Tour date" required>
-      </span>
-      <button type="submit">View Photos</button>
-    </form>
-    <p class="tour-photos-note">Photos and videos are kept for one week from the tour date.</p>
+      <div class="tour-photos-form">
+        <span class="date-field">
+          <input type="date" id="tour-photos-date" aria-label="Tour date">
+        </span>
+      </div>
+
+      <button type="button" class="tp-review-btn" id="tour-photos-go">Open Photos &amp; Videos</button>
+      <p class="tour-photos-status" id="tour-photos-status" role="status"></p>
+<p class="tour-photos-note">Photos and videos are kept for one week from the tour date.</p>
     </div>
 
     <div class="tp-col tp-col--review">
@@ -512,7 +514,7 @@
 
       <div class="tp-stars" aria-hidden="true">★★★★★</div>
 
-      <a class="tp-review-btn" href="https://search.google.com/local/writereview?placeid=0x33a5432b305bd059:0xb371b646105eb143" target="_blank" rel="noopener">Write a Google Review</a>
+      <a class="tp-review-btn" href="https://search.google.com/local/writereview?placeid=ChIJWdBbMCtDpTMRQ7FeEEa2cbM" target="_blank" rel="noopener">Write a Google Review</a>
     </div>
 
   </div>
@@ -808,7 +810,7 @@
 </div><!-- /.snap-last -->
 
 <script src="../js/i18n.js?v=1788925195" defer></script>
-<script src="../js/tour-calendar.js?v=1792441000" defer></script>
+<script src="../js/tour-calendar.js?v=1792490000" defer></script>
 <script>
   // ── 1. General Intersection Observer ──
   const io = new IntersectionObserver((entries) => {
@@ -840,22 +842,6 @@
       window.location.href = `../reservation.html?${params.toString()}`;
     });
   }
-</script>
-<script>
-  (function () {
-    const form = document.getElementById('tour-photos-form');
-    if (!form) return;
-    const date = document.getElementById('tour-photos-date');
-    date.max = new Date().toISOString().slice(0, 10);
-    const syncFilled = () => date.classList.toggle('has-value', !!date.value);
-    date.addEventListener('input', syncFilled);
-    date.addEventListener('change', syncFilled);
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (!date.value) return;
-      window.location.href = `../photos.html?date=${encodeURIComponent(date.value)}`;
-    });
-  })();
 </script>
 </body>
 </html>

@@ -1,29 +1,45 @@
-// 홈 화면 "투어 사진 및 영상 받기"의 PC용 인라인 달력.
-// 모바일은 OS 기본 날짜 선택기가 더 쓰기 좋아 CSS에서 이 달력을 숨기고
-// 기존 <input type="date">를 보여준다.
+// 홈 화면 "투어 사진 및 영상 받기".
+// 날짜를 고르면 그날의 구글 드라이브 폴더를 바로 연다 — 중간에 썸네일을
+// 보여주는 단계는 두지 않는다.
+// PC는 펼쳐둔 달력, 모바일은 OS 기본 날짜 선택기를 쓴다(CSS에서 전환).
 (function () {
   const root = document.getElementById('tour-calendar');
-  if (!root) return;
+  const btn = document.getElementById('tour-photos-go');
+  if (!root || !btn) return;
+
+  const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzTPR3kwrarZUs7_H8Eta094STF_xmIN7BVyF-6JLhg7KMTQgG4DUbbRBwFVqxa3F0k/exec';
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  // i18n.js가 html lang을 정한 뒤 실행되도록 defer 순서에 의존한다
   const lang = document.documentElement.lang || 'en';
   const locale = { ko: 'ko-KR', en: 'en-US', zh: 'zh-CN', ja: 'ja-JP' }[lang] || lang;
+
+  const T = {
+    ko: { pick: '날짜를 선택해 주세요.', loading: '여는 중...', none: '해당 날짜의 사진이 아직 없습니다.', error: '불러오지 못했습니다. 잠시 후 다시 시도해 주세요.', prev: '이전 달', next: '다음 달' },
+    en: { pick: 'Please choose a date.', loading: 'Opening...', none: 'No photos for that date yet.', error: 'Could not load. Please try again shortly.', prev: 'Previous month', next: 'Next month' },
+    zh: { pick: '请选择日期。', loading: '正在打开...', none: '该日期的内容尚未上传。', error: '无法载入，请稍后再试。', prev: '上个月', next: '下个月' },
+    ja: { pick: '日付を選択してください。', loading: '開いています...', none: 'その日付のデータはまだありません。', error: '読み込めませんでした。しばらくしてからお試しください。', prev: '前の月', next: '次の月' }
+  }[lang] || {};
 
   const monthFmt = new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long' });
   const dowFmt = new Intl.DateTimeFormat(locale, { weekday: 'short' });
 
-  const PREV_LABEL = { ko: '이전 달', en: 'Previous month', zh: '上个月', ja: '前の月' }[lang] || 'Previous month';
-  const NEXT_LABEL = { ko: '다음 달', en: 'Next month', zh: '下个月', ja: '次の月' }[lang] || 'Next month';
+  const statusEl = document.getElementById('tour-photos-status');
+  const dateInput = document.getElementById('tour-photos-date');
+  const btnLabel = btn.textContent;
 
   let view = new Date(today.getFullYear(), today.getMonth(), 1);
+  let selected = null;
 
   function ymd(d) {
     return d.getFullYear() + '-' +
       String(d.getMonth() + 1).padStart(2, '0') + '-' +
       String(d.getDate()).padStart(2, '0');
+  }
+
+  function say(msg) {
+    if (statusEl) statusEl.textContent = msg || '';
   }
 
   function weekdayNames() {
@@ -40,9 +56,9 @@
       view.getFullYear() === today.getFullYear() && view.getMonth() === today.getMonth();
 
     let html = '<div class="cal-head">' +
-      `<button type="button" class="cal-nav" data-step="-1" aria-label="${PREV_LABEL}">‹</button>` +
+      `<button type="button" class="cal-nav" data-step="-1" aria-label="${T.prev}">‹</button>` +
       `<span class="cal-title">${monthFmt.format(first)}</span>` +
-      `<button type="button" class="cal-nav" data-step="1" aria-label="${NEXT_LABEL}"` +
+      `<button type="button" class="cal-nav" data-step="1" aria-label="${T.next}"` +
       (atCurrentMonth ? ' disabled' : '') + '>›</button>' +
       '</div><div class="cal-grid">';
 
@@ -51,10 +67,12 @@
 
     for (let d = 1; d <= daysInMonth; d++) {
       const date = new Date(view.getFullYear(), view.getMonth(), d);
-      const future = date > today;
-      const isToday = date.getTime() === today.getTime();
-      html += `<button type="button" class="cal-day${isToday ? ' is-today' : ''}"` +
-        ` data-date="${ymd(date)}"${future ? ' disabled' : ''}>${d}</button>`;
+      const key = ymd(date);
+      const cls = ['cal-day'];
+      if (date.getTime() === today.getTime()) cls.push('is-today');
+      if (key === selected) cls.push('is-selected');
+      html += `<button type="button" class="${cls.join(' ')}" data-date="${key}"` +
+        (date > today ? ' disabled' : '') + `>${d}</button>`;
     }
 
     root.innerHTML = html + '</div>';
@@ -69,8 +87,54 @@
     }
     const day = e.target.closest('.cal-day');
     if (day && !day.disabled) {
-      const prefix = location.pathname.replace(/\/[^/]*$/, '/').match(/\/(en|zh|ja)\/$/) ? '../' : '';
-      location.href = `${prefix}photos.html?date=${encodeURIComponent(day.dataset.date)}`;
+      selected = day.dataset.date;
+      if (dateInput) dateInput.value = selected;
+      say('');
+      render();
+    }
+  });
+
+  if (dateInput) {
+    dateInput.max = ymd(today);
+    dateInput.addEventListener('change', () => {
+      selected = dateInput.value || null;
+      say('');
+      render();
+    });
+  }
+
+  btn.addEventListener('click', async () => {
+    const date = selected || (dateInput && dateInput.value);
+    if (!date) { say(T.pick); return; }
+
+    // 팝업 차단을 피하려면 클릭과 같은 흐름에서 창을 먼저 열어야 한다.
+    // 주소는 폴더를 확인한 뒤에 넣는다.
+    const win = window.open('', '_blank');
+
+    btn.disabled = true;
+    btn.textContent = T.loading;
+    say('');
+
+    try {
+      const res = await fetch(`${ENDPOINT}?action=listTourPhotos&date=${encodeURIComponent(date)}`);
+      const data = await res.json();
+
+      if (!data.ok) throw new Error(data.error || 'failed');
+      if (!data.folderId) {
+        if (win) win.close();
+        say(T.none);
+        return;
+      }
+
+      const url = `https://drive.google.com/drive/folders/${data.folderId}`;
+      if (win) win.location = url; else location.href = url;
+    } catch (err) {
+      console.error(err);
+      if (win) win.close();
+      say(T.error);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = btnLabel;
     }
   });
 
