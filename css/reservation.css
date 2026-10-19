@@ -689,3 +689,12 @@ body {
   .wizard-step-tab span:last-child { display: none; }
   .wizard-step-tab { padding: 10px 12px; }
 }
+
+/* 영문만 받는 입력칸에서 다른 문자를 거를 때 뜨는 안내 */
+.input-hint {
+  margin: 7px 0 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #fbbf24;
+}
+.input-hint[hidden] { display: none; }

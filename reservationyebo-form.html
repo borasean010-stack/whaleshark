@@ -33,7 +33,7 @@
 <link rel="canonical" href="https://boracaywhaleshark.com/reservationyebo">
 
 <link rel="stylesheet" href="css/style.css"> <!-- for nav -->
-<link rel="stylesheet" href="css/reservation.css?v=1788925195">
+<link rel="stylesheet" href="css/reservation.css?v=1792443000">
 <!-- Flatpickr (Premium Datepicker) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
@@ -159,7 +159,13 @@
 
           <div class="form-group">
             <label for="pickupResort" data-en="Resort (optional)" data-ko="리조트 (선택사항)" data-zh="度假村（选填）" data-ja="リゾート（任意）">Resort (optional)</label>
-            <input type="text" id="pickupResort" name="pickupResort" class="input-luxury" placeholder="e.g. Shangri-La Boracay">
+            <input type="text" id="pickupResort" name="pickupResort" class="input-luxury" placeholder="e.g. Shangri-La Boracay"
+                   lang="en" data-latin-only>
+            <p class="input-hint" id="pickupResort-hint" hidden
+               data-en="Please enter the resort name in English so the driver can find it."
+               data-ko="기사님이 찾을 수 있도록 리조트명을 영문으로 입력해 주세요."
+               data-zh="请用英文填写酒店名称，以便司机查找。"
+               data-ja="ドライバーが分かるよう、リゾート名はローマ字で入力してください。">Please enter the resort name in English so the driver can find it.</p>
           </div>
 
           <div class="form-group">
@@ -221,7 +227,14 @@
 
           <div class="form-group">
             <label for="name" data-en="Name (English) *" data-ko="예약자 성함 (영문) *" data-zh="姓名（英文）*" data-ja="氏名（ローマ字）*">Name (English) *</label>
-            <input type="text" id="name" name="name" class="input-luxury" placeholder="HONG GILDONG" required>
+            <input type="text" id="name" name="name" class="input-luxury" placeholder="HONG GILDONG"
+                   lang="en" autocapitalize="characters" autocomplete="name"
+                   data-latin-only pattern="[A-Za-z][A-Za-z .'\-]*" required>
+            <p class="input-hint" id="name-hint" hidden
+               data-en="Please enter your name in English, as shown on your passport."
+               data-ko="여권과 동일한 영문으로 입력해 주세요."
+               data-zh="请输入与护照一致的英文姓名。"
+               data-ja="パスポートと同じローマ字で入力してください。">Please enter your name in English, as shown on your passport.</p>
           </div>
 
           <div class="form-group">
@@ -778,6 +791,25 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     applyLang(currentLang);
+  });
+
+  // 바우처와 현장 명단이 영문으로 나가고 픽업 기사도 영문만 읽으므로,
+  // 한글·한자·가나는 입력 단계에서 받지 않는다.
+  document.querySelectorAll('[data-latin-only]').forEach((input) => {
+    const hint = document.getElementById(input.id + '-hint');
+    let hintTimer;
+    input.addEventListener('input', () => {
+      const cleaned = input.value.replace(/[^A-Za-z0-9 .,'\-]/g, '');
+      if (cleaned === input.value) return;
+      const caret = input.selectionStart - (input.value.length - cleaned.length);
+      input.value = cleaned;
+      try { input.setSelectionRange(caret, caret); } catch (_) {}
+      if (hint) {
+        hint.hidden = false;
+        clearTimeout(hintTimer);
+        hintTimer = setTimeout(() => { hint.hidden = true; }, 4000);
+      }
+    });
   });
 </script>
 <script type="module" src="js/reservation.js?v=1788925206"></script>
