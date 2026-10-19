@@ -151,9 +151,14 @@ form.addEventListener("submit", async (e) => {
     return;
   }
 
+  // 예보 폼은 결제 버튼 클래스가 달라 allPayBtns에 잡히지 않는다. 누른 버튼을
+  // 따로 잠가야 두 번 눌러 예약이 중복 생성되는 일을 막을 수 있다.
   const clickedBtn = e.submitter;
   allPayBtns.forEach(b => { b.disabled = true; });
-  if (clickedBtn) clickedBtn.classList.add('loading');
+  if (clickedBtn) {
+    clickedBtn.disabled = true;
+    clickedBtn.classList.add('loading');
+  }
 
   try {
     reservation.paymentStatus = 'pending';
@@ -213,6 +218,9 @@ form.addEventListener("submit", async (e) => {
     statusEl.textContent = String(err.message || err || t.mayaError);
     statusEl.classList.add("error");
     allPayBtns.forEach(b => { b.disabled = false; });
-    if (clickedBtn) clickedBtn.classList.remove('loading');
+    if (clickedBtn) {
+      clickedBtn.disabled = false;
+      clickedBtn.classList.remove('loading');
+    }
   }
 });
