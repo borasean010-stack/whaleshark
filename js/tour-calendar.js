@@ -27,7 +27,6 @@
 
   const statusEl = document.getElementById('tour-photos-status');
   const dateInput = document.getElementById('tour-photos-date');
-  const btnLabel = btn.textContent;
 
   let view = new Date(today.getFullYear(), today.getMonth(), 1);
   let selected = null;
@@ -63,7 +62,10 @@
       '</div><div class="cal-grid">';
 
     for (const n of weekdayNames()) html += `<span class="cal-dow">${n}</span>`;
-    for (let i = 0; i < first.getDay(); i++) html += '<span></span>';
+    for (let i = 0; i < first.getDay(); i++) html += '<span class="cal-pad"></span>';
+
+    // 달마다 5주·6주로 높이가 달라지면 아래 버튼이 따라 움직이므로 6주로 맞춘다
+    const trailing = 42 - first.getDay() - daysInMonth;
 
     for (let d = 1; d <= daysInMonth; d++) {
       const date = new Date(view.getFullYear(), view.getMonth(), d);
@@ -74,6 +76,8 @@
       html += `<button type="button" class="${cls.join(' ')}" data-date="${key}"` +
         (date > today ? ' disabled' : '') + `>${d}</button>`;
     }
+
+    for (let i = 0; i < trailing; i++) html += '<span class="cal-pad"></span>';
 
     root.innerHTML = html + '</div>';
   }
@@ -111,6 +115,7 @@
     // 주소는 폴더를 확인한 뒤에 넣는다.
     const win = window.open('', '_blank');
 
+    const btnLabel = btn.textContent;
     btn.disabled = true;
     btn.textContent = T.loading;
     say('');

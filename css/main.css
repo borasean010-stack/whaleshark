@@ -1748,10 +1748,20 @@ iframe.fb-video-thumb {
   font-family: 'Outfit', 'Noto Sans KR', sans-serif;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr auto auto;
   gap: 48px;
-  align-items: start;
+  align-items: stretch;
 }
-.tp-col { text-align: center; }
+/* 본문·버튼·하단안내 3단. 두 칼럼이 바깥 격자의 같은 행을 공유해야(subgrid)
+   하단 안내 길이가 달라도 버튼이 같은 줄에 선다. */
+.tp-col {
+  text-align: center;
+  display: grid;
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+}
+.tp-col-foot { min-height: 1.4rem; }
+.tp-col > .tp-review-btn { justify-self: center; }
 .tour-photos-inner h2 {
   font-size: 1.94rem;
   font-weight: 900;
@@ -1946,7 +1956,8 @@ iframe.fb-video-thumb {
 .tp-col--review .tp-map { aspect-ratio: 16 / 9; }
 
 @media (max-width: 860px) {
-  .tour-photos-inner { grid-template-columns: 1fr; gap: 44px; }
+  .tour-photos-inner { grid-template-columns: 1fr; grid-template-rows: none; gap: 44px; }
+  .tp-col { grid-row: auto; grid-template-rows: none; }
   .tp-map { aspect-ratio: 3 / 2; }
 }
 
@@ -1995,6 +2006,7 @@ iframe.fb-video-thumb {
   text-align: center;
   padding-bottom: 4px;
 }
+.tour-calendar .cal-pad { aspect-ratio: 1; }
 .tour-calendar .cal-day {
   aspect-ratio: 1;
   border: none;
