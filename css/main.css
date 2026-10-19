@@ -1923,30 +1923,42 @@ iframe.fb-video-thumb {
   border: 0;
   display: block;
 }
-.tp-map-actions {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 16px;
+.tp-stars {
+  font-size: 1.45rem;
+  letter-spacing: 5px;
+  color: #FBBF24;
+  margin: 2px 0 16px;
 }
-.tp-map-actions a {
-  padding: 12px 22px;
+.tp-review-btn {
+  display: inline-block;
+  padding: 16px 38px;
   border-radius: 99px;
-  font-size: 0.88rem;
-  font-weight: 700;
-  text-decoration: none;
-  background: rgba(255, 255, 255, 0.14);
-  border: 1.5px solid rgba(255, 255, 255, 0.3);
-  color: #fff;
-  transition: background 0.2s ease;
-}
-.tp-map-actions a:hover { background: rgba(255, 255, 255, 0.24); }
-.tp-map-actions .tp-review-btn {
   background: var(--color-accent, #F97316);
-  border-color: var(--color-accent, #F97316);
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 800;
+  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.35);
+  transition: filter 0.2s ease;
 }
-.tp-map-actions .tp-review-btn:hover { filter: brightness(1.08); }
+.tp-review-btn:hover { filter: brightness(1.08); }
+
+/* 지도는 후기 다음의 보조 정보라 작게 둔다 */
+.tp-col--review .tp-map {
+  margin-top: 26px;
+  aspect-ratio: 16 / 9;
+}
+.tp-map-link {
+  display: inline-block;
+  margin-top: 12px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.84rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+  padding-bottom: 2px;
+}
+.tp-map-link:hover { color: #fff; }
 
 @media (max-width: 860px) {
   .tour-photos-inner { grid-template-columns: 1fr; gap: 44px; }
