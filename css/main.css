@@ -1927,7 +1927,7 @@ iframe.fb-video-thumb {
   font-size: 1.45rem;
   letter-spacing: 5px;
   color: #FBBF24;
-  margin: 2px 0 16px;
+  margin: 22px 0 14px;
 }
 .tp-review-btn {
   display: inline-block;
@@ -1943,22 +1943,7 @@ iframe.fb-video-thumb {
 }
 .tp-review-btn:hover { filter: brightness(1.08); }
 
-/* 지도는 후기 다음의 보조 정보라 작게 둔다 */
-.tp-col--review .tp-map {
-  margin-top: 26px;
-  aspect-ratio: 16 / 9;
-}
-.tp-map-link {
-  display: inline-block;
-  margin-top: 12px;
-  color: rgba(255, 255, 255, 0.78);
-  font-size: 0.84rem;
-  font-weight: 600;
-  text-decoration: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
-  padding-bottom: 2px;
-}
-.tp-map-link:hover { color: #fff; }
+.tp-col--review .tp-map { aspect-ratio: 16 / 9; }
 
 @media (max-width: 860px) {
   .tour-photos-inner { grid-template-columns: 1fr; gap: 44px; }
