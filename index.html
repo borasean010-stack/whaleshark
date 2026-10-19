@@ -49,7 +49,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css?v=1788925196">
-<link rel="stylesheet" href="css/main.css?v=1792352000">
+<link rel="stylesheet" href="css/main.css?v=1792440000">
 
 <!-- JSON-LD Structured Data (Naver / Google) -->
 <script type="application/ld+json">
@@ -495,20 +495,50 @@
 <!-- ===== TOUR PHOTOS ===== -->
 <section class="tour-photos-section" id="tour-photos">
   <div class="tour-photos-inner" data-scroll-up>
-    <h2 data-en="Get Your Tour Photos &amp; Videos" data-ko="투어 사진 및 영상 받기"
-        data-zh="领取行程照片与影片" data-ja="ツアー写真・動画を受け取る">Get Your Tour Photos &amp; Videos</h2>
-    <p data-en="Choose the date you joined the tour."
-       data-ko="참여하신 날짜를 선택해 주세요."
-       data-zh="请选择您参加行程的日期。"
-       data-ja="参加された日付を選んでください。">Choose the date you joined the tour.</p>
-    <form class="tour-photos-form" id="tour-photos-form">
-      <span class="date-field">
-        <input type="date" id="tour-photos-date" aria-label="Tour date" required>
-      </span>
-      <button type="submit" data-en="View Photos" data-ko="사진 보기"
-              data-zh="查看照片" data-ja="写真を見る">View Photos</button>
-    </form>
-    <p class="tour-photos-note" data-en="Photos and videos are kept for one week from the tour date." data-ko="사진 및 영상 보관기간은 투어일로부터 1주일입니다." data-zh="照片与影片自行程当日起保存一周。" data-ja="写真・動画の保存期間はツアー当日から1週間です。">사진 및 영상 보관기간은 투어일로부터 1주일입니다.</p>
+
+    <div class="tp-col tp-col--photos">
+      <h2 data-en="Get Your Tour Photos &amp; Videos" data-ko="투어 사진 및 영상 받기"
+          data-zh="领取行程照片与影片" data-ja="ツアー写真・動画を受け取る">Get Your Tour Photos &amp; Videos</h2>
+      <p data-en="Choose the date you joined the tour."
+         data-ko="참여하신 날짜를 선택해 주세요."
+         data-zh="请选择您参加行程的日期。"
+         data-ja="参加された日付を選んでください。">Choose the date you joined the tour.</p>
+      <form class="tour-photos-form" id="tour-photos-form">
+        <span class="date-field">
+          <input type="date" id="tour-photos-date" aria-label="Tour date" required>
+        </span>
+        <button type="submit" data-en="View Photos" data-ko="사진 보기"
+                data-zh="查看照片" data-ja="写真を見る">View Photos</button>
+      </form>
+      <p class="tour-photos-note" data-en="Photos and videos are kept for one week from the tour date." data-ko="사진 및 영상 보관기간은 투어일로부터 1주일입니다." data-zh="照片与影片自行程当日起保存一周。" data-ja="写真・動画の保存期間はツアー当日から1週間です。">사진 및 영상 보관기간은 투어일로부터 1주일입니다.</p>
+    </div>
+
+    <div class="tp-col tp-col--map">
+      <h2 data-en="Find Us" data-ko="오시는 길"
+          data-zh="交通位置" data-ja="アクセス">Find Us</h2>
+      <p data-en="Boracay Whale Shark official sales point."
+         data-ko="보라카이 고래상어 공식 지정 판매처입니다."
+         data-zh="长滩岛鲸鲨官方指定销售点。"
+         data-ja="ボラカイ ジンベエザメ公式指定販売所です。">Boracay Whale Shark official sales point.</p>
+      <div class="tp-map">
+        <iframe
+          src="https://maps.google.com/maps?q=BORACAY+WHALE+SHARK,+Boracay&ll=11.7655283,121.9308266&z=16&hl=ko&output=embed"
+          title="BORACAY WHALE SHARK — Google Maps"
+          loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen></iframe>
+      </div>
+      <div class="tp-map-actions">
+        <a href="https://maps.google.com/?cid=12930316417196011843" target="_blank" rel="noopener"
+           data-en="Open in Google Maps" data-ko="구글맵에서 열기"
+           data-zh="在谷歌地图打开" data-ja="Googleマップで開く">Open in Google Maps</a>
+        <a class="tp-review-btn"
+           href="https://search.google.com/local/writereview?placeid=0x33a5432b305bd059:0xb371b646105eb143"
+           target="_blank" rel="noopener"
+           data-en="Write a Review" data-ko="후기 작성하기"
+           data-zh="撰写评价" data-ja="クチコミを書く">Write a Review</a>
+      </div>
+    </div>
+
   </div>
 </section>
 

@@ -1742,12 +1742,16 @@ iframe.fb-video-thumb {
   padding: 72px 24px;
 }
 .tour-photos-inner {
-  max-width: 720px;
+  max-width: 1060px;
   margin: 0 auto;
-  text-align: center;
   color: #fff;
   font-family: 'Outfit', 'Noto Sans KR', sans-serif;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
 }
+.tp-col { text-align: center; }
 .tour-photos-inner h2 {
   font-size: 1.94rem;
   font-weight: 900;
@@ -1903,4 +1907,48 @@ iframe.fb-video-thumb {
   .pkg-price-table tbody th { font-size: 0.8rem; padding: 11px 6px; }
   .pkg-price-table tbody td { font-size: 0.82rem; padding: 11px 5px; }
   .pkg-price-table tbody td a { font-size: 0.78rem; }
+}
+
+/* 사진 받기(좌) + 오시는 길·후기(우) 2단 */
+.tp-map {
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.22);
+  background: #e2e8f0;
+  aspect-ratio: 4 / 3;
+}
+.tp-map iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+.tp-map-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+.tp-map-actions a {
+  padding: 12px 22px;
+  border-radius: 99px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  transition: background 0.2s ease;
+}
+.tp-map-actions a:hover { background: rgba(255, 255, 255, 0.24); }
+.tp-map-actions .tp-review-btn {
+  background: var(--color-accent, #F97316);
+  border-color: var(--color-accent, #F97316);
+}
+.tp-map-actions .tp-review-btn:hover { filter: brightness(1.08); }
+
+@media (max-width: 860px) {
+  .tour-photos-inner { grid-template-columns: 1fr; gap: 44px; }
+  .tp-map { aspect-ratio: 3 / 2; }
 }
