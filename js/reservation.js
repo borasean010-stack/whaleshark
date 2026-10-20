@@ -89,55 +89,6 @@ function getReservationData() {
   return { reservation, lang, t, valid };
 }
 
-// 현장결제 버튼 핸들러
-const cashBtn = document.getElementById('cash-btn');
-if (cashBtn) {
-  cashBtn.addEventListener('click', async () => {
-    const { reservation, lang, t, valid } = getReservationData();
-    statusEl.textContent = "";
-    statusEl.className = "form-status";
-
-    if (!valid) {
-      statusEl.textContent = t.fillFields;
-      statusEl.classList.add("error");
-      return;
-    }
-
-    allPayBtns.forEach(b => { b.disabled = true; });
-    cashBtn.classList.add('loading');
-
-    try {
-      reservation.paymentStatus = 'pending';
-      reservation.paymentMethod = 'cash';
-      reservation.selectedPaymentMethod = 'cash';
-      const docRef = await addDoc(collection(db, "reservations"), reservation);
-
-      if (reservation.referralCode) {
-        try {
-          const refSnap = await getDocs(query(collection(db, "referralCodes"), where("code", "==", reservation.referralCode)));
-          if (!refSnap.empty) await updateDoc(refSnap.docs[0].ref, { usageCount: increment(1) });
-        } catch (_) {}
-      }
-
-      await callVoucherEndpoint({
-        tourType: reservation.tourType, date: reservation.date, people: reservation.people,
-        pickup: reservation.pickup, meetingTime: reservation.meetingTime, nationality: reservation.nationality,
-        totalPrice: reservation.totalPrice, paymentStatus: 'pending', paymentMethod: 'On-Site Payment',
-        currency: reservation.currency, name: reservation.name, email: reservation.email,
-        lang
-      });
-
-      window.location.href = '/success?cash=1';
-    } catch (err) {
-      console.error(err);
-      statusEl.textContent = String(err.message || err);
-      statusEl.classList.add("error");
-      allPayBtns.forEach(b => { b.disabled = false; });
-      cashBtn.classList.remove('loading');
-    }
-  });
-}
-
 // 카드(Maya) 결제
 form.addEventListener("submit", async (e) => {
   e.preventDefault();

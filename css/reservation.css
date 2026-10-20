@@ -604,18 +604,7 @@ body {
 }
 .pay-btn-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
   gap: 10px;
-}
-.pay-cash-btn {
-  background: rgba(255,255,255,0.08);
-  border: 1.5px solid rgba(255,255,255,0.25);
-  color: rgba(255,255,255,0.75);
-  box-shadow: none;
-}
-.pay-cash-btn:hover:not(:disabled) {
-  background: rgba(255,255,255,0.14);
-  color: #fff;
 }
 @keyframes dots {
   0%, 100% { opacity: 1; }
