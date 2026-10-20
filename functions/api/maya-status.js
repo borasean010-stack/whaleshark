@@ -1,6 +1,4 @@
 export async function onRequestPost({ request, env }) {
-  // 프로덕션 전환 시 Cloudflare 환경변수 MAYA_BASE 를
-  // https://pg.paymaya.com/checkout/v1/checkouts 로만 바꾸면 됩니다.
   const MAYA_BASE = env.MAYA_BASE || 'https://pg.paymaya.com/checkout/v1/checkouts';
 
   const json = (obj, status = 200) =>
@@ -23,9 +21,21 @@ export async function onRequestPost({ request, env }) {
     return json({ ok: false, error: 'missing_checkoutId' }, 400);
   }
 
-  const res = await fetch(`${MAYA_BASE}/${encodeURIComponent(body.checkoutId)}`, {
-    headers: { Authorization: 'Basic ' + btoa(env.MAYA_SECRET_KEY + ':') }
-  });
+  if (!env.MAYA_SECRET_KEY) {
+    return json({ ok: false, error: 'missing_secret_key' }, 500);
+  }
+
+  // 대시보드에 붙여넣은 키에 공백·줄바꿈이 섞여 들어오는 일이 있다
+  const auth = 'Basic ' + btoa(env.MAYA_SECRET_KEY.trim() + ':');
+
+  let res;
+  try {
+    res = await fetch(`${MAYA_BASE}/${encodeURIComponent(body.checkoutId)}`, {
+      headers: { Authorization: auth }
+    });
+  } catch (err) {
+    return json({ ok: false, error: 'maya_unreachable', detail: String((err && err.message) || err) }, 502);
+  }
 
   const text = await res.text();
   let maya;
@@ -34,7 +44,9 @@ export async function onRequestPost({ request, env }) {
   } catch {
     return json({ ok: false, error: 'maya_non_json', httpStatus: res.status }, 502);
   }
-  if (!res.ok) return json({ ok: false, error: maya.error || 'maya_error' }, 502);
+  if (!res.ok) {
+    return json({ ok: false, error: maya.error || 'maya_error', code: maya.code || '', httpStatus: res.status }, 502);
+  }
 
   return json({
     ok: true,
