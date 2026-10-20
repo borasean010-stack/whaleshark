@@ -13,7 +13,8 @@ import {
   addDoc,
   increment,
   serverTimestamp,
-  where
+  where,
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import {
   signInWithEmailAndPassword,
@@ -44,6 +45,26 @@ const voucherModal = document.getElementById("voucher-modal");
 const voucherModalBody = document.getElementById("voucher-modal-body");
 const voucherModalClose = document.getElementById("voucher-modal-close");
 const reservationsById = {}; // id -> Firestore data, populated by loadReservations()
+
+let unsubscribeReservations = null;
+
+// 대기중 목록에 이미 올라와 있던 예약들. null이면 아직 첫 렌더 전이라
+// "새로 들어온 건"을 가릴 기준이 없다는 뜻이다.
+let seenPendingIds = null;
+
+function updatePendingBadge(count, arrived) {
+  const badge = document.getElementById("dash-pending-count");
+  if (badge) {
+    badge.textContent = count ? String(count) : "";
+    badge.classList.toggle("has-new", arrived > 0);
+  }
+  // 다른 탭을 보고 있어도 알아채도록 제목에 표시한다.
+  document.title = count ? `(${count}) 대기중 · ADMIN` : "Admin Dashboard | BORACAY WHALE SHARK";
+  if (arrived > 0) {
+    const note = document.getElementById("topbar-greeting-sub");
+    if (note) note.textContent = `새 예약 ${arrived}건이 들어왔습니다.`;
+  }
+}
 
 // 카드 결제는 Maya로 넘어가기 전에 예약 문서를 먼저 만들기 때문에, 손님이
 // 결제창에서 이탈하면 결제되지 않은 예약이 그대로 남습니다. 이런 건 실제
@@ -190,6 +211,12 @@ onAuthStateChanged(auth, async (user) => {
     loadDashboard();
     runReconcile();
   } else {
+    if (unsubscribeReservations) {
+      unsubscribeReservations();
+      unsubscribeReservations = null;
+      seenPendingIds = null;
+    }
+    document.title = "Admin Dashboard | BORACAY WHALE SHARK";
     loginOverlay.style.display = "flex";
     dashboard.style.display = "none";
   }
@@ -271,12 +298,23 @@ function localDateStr(offsetDays = 0) {
 }
 
 // Load Data from Firestore
-async function loadReservations() {
+// 예약이 들어오는 즉시 화면에 뜨도록 실시간으로 구독한다. 구독은 한 번만
+// 걸고, 이후 갱신은 스냅샷이 알아서 밀어준다.
+function loadReservations() {
+  if (unsubscribeReservations) return;
   tbody.innerHTML = "<tr><td colspan='12' style='text-align:center;'>로딩 중...</td></tr>";
+  const q = query(collection(db, "reservations"), orderBy("createdAt", "desc"));
+  unsubscribeReservations = onSnapshot(q, renderReservations, (error) => {
+    console.error("Error loading reservations: ", error);
+    const msg = error.code === 'permission-denied'
+      ? `권한 없음 (permission-denied). 관리자 계정으로 로그인했는지 확인하세요.`
+      : `오류: ${error.code || error.message}`;
+    tbody.innerHTML = `<tr><td colspan='12' style='text-align:center; color: red;'>${msg}</td></tr>`;
+  });
+}
+
+function renderReservations(querySnapshot) {
   try {
-    const q = query(collection(db, "reservations"), orderBy("createdAt", "desc"));
-    const querySnapshot = await getDocs(q);
-    
     let total = 0;
     let pending = 0;
     let confirmed = 0;
@@ -425,13 +463,18 @@ async function loadReservations() {
     const pendingTbody = document.getElementById("dash-pending-tbody");
     if (pendingTbody) {
       const pendingRows = [];
+      const nowPending = new Set();
       querySnapshot.forEach(docSnap => {
         const d = docSnap.data();
         const id = docSnap.id;
         if (isAbandonedCardBooking(d)) return;
         if (d.status !== 'pending') return;
+        nowPending.add(id);
+        // 화면을 보고 있는 동안 새로 들어온 건만 표시한다. 첫 렌더에서
+        // 기존 건까지 전부 반짝이면 오히려 눈에 안 들어온다.
+        const isNew = seenPendingIds !== null && !seenPendingIds.has(id);
         pendingRows.push(`
-          <tr>
+          <tr class="${isNew ? 'dash-row-new' : ''}">
             <td style="font-weight:600;">${d.date}</td>
             <td>${d.name}</td>
             <td>${tourTypeBadge(d.tourType)}</td>
@@ -448,6 +491,10 @@ async function loadReservations() {
       pendingTbody.innerHTML = pendingRows.length
         ? pendingRows.join("")
         : "<tr><td colspan='8' style='text-align:center;color:var(--admin-text-muted);'>대기중 예약이 없습니다 👍</td></tr>";
+
+      const arrived = seenPendingIds === null ? 0 : [...nowPending].filter(id => !seenPendingIds.has(id)).length;
+      seenPendingIds = nowPending;
+      updatePendingBadge(nowPending.size, arrived);
 
       pendingTbody.querySelectorAll(".dash-confirm-btn").forEach(btn => {
         btn.addEventListener("click", async () => {
@@ -475,11 +522,7 @@ async function loadReservations() {
     attachEventListeners();
 
   } catch (error) {
-    console.error("Error loading reservations: ", error);
-    const msg = error.code === 'permission-denied'
-      ? `권한 없음 (permission-denied). 관리자 계정으로 로그인했는지 확인하세요.`
-      : `오류: ${error.code || error.message}`;
-    tbody.innerHTML = `<tr><td colspan='12' style='text-align:center; color: red;'>${msg}</td></tr>`;
+    console.error("예약 목록을 그리지 못했습니다:", error);
   }
 }
 
