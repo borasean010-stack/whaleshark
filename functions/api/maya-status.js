@@ -1,7 +1,7 @@
 export async function onRequestPost({ request, env }) {
   // 프로덕션 전환 시 Cloudflare 환경변수 MAYA_BASE 를
   // https://pg.paymaya.com/checkout/v1/checkouts 로만 바꾸면 됩니다.
-  const MAYA_BASE = env.MAYA_BASE || 'https://pg-sandbox.paymaya.com/checkout/v1/checkouts';
+  const MAYA_BASE = env.MAYA_BASE || 'https://pg.paymaya.com/checkout/v1/checkouts';
 
   const json = (obj, status = 200) =>
     new Response(JSON.stringify(obj), {
