@@ -78,3 +78,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.toggle('lang-ko', currentLang === 'ko');
   }
 });
+
+// 광고나 제휴 링크로 들어온 레퍼럴 코드는 예약 페이지에서만 읽힌다. 홈이나
+// 상세 페이지를 먼저 거치면 주소에서 사라지므로, 탭이 살아있는 동안 들고 다닌다.
+(function () {
+  try {
+    const ref = new URLSearchParams(location.search).get('ref');
+    if (ref) sessionStorage.setItem('ws_ref', ref.trim().toUpperCase());
+  } catch (_) {}
+})();
