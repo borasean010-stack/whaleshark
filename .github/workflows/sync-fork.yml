@@ -20,7 +20,7 @@ jobs:
       - name: Push to Cho fork via token
         run: |
           git config --local --unset-all http.https://github.com/.extraheader || true
-          git remote add fork https://${{ secrets.FORK_SYNC_TOKEN }}@github.com/choheejung1979/whaleshark.git
+          git remote add fork https://x-access-token:${{ secrets.FORK_SYNC_TOKEN }}@github.com/choheejung1979/whaleshark.git
           
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
