@@ -5,12 +5,12 @@ const json = (obj, status = 200) =>
   });
 
 export async function onRequestPost({ request, env }) {
-  // success 페이지가 응답을 r.json()으로 읽으므로 어떤 실패든 JSON이어야 한다.
-  // 예외가 새어나가면 Cloudflare가 평문 502를 주고 결제 확인이 통째로 날아간다.
+  // 실패도 200으로 돌려준다 — Cloudflare Pages가 5xx 본문을 자기 에러 페이지로
+  // 갈아치우는 탓에, success 페이지의 r.json()이 결제 확인 전에 터진다.
   try {
     return await handle(request, env);
   } catch (err) {
-    return json({ ok: false, error: 'server_error', detail: String((err && err.message) || err) }, 502);
+    return json({ ok: false, error: 'server_error', detail: String((err && err.message) || err) });
   }
 }
 
@@ -44,13 +44,13 @@ async function handle(request, env) {
     return json({ ok: false, error: 'missing_checkoutId' }, 400);
   }
   if (!env.MAYA_SECRET_KEY) {
-    return json({ ok: false, error: 'missing_secret_key' }, 500);
+    return json({ ok: false, error: 'missing_secret_key' });
   }
 
   // 대시보드에 붙여넣은 키에 공백·줄바꿈이 섞여 들어오는 일이 있다
   const key = env.MAYA_SECRET_KEY.trim();
   if (!/^[\x21-\x7e]+$/.test(key)) {
-    return json({ ok: false, error: 'bad_secret_key_charset', length: key.length }, 500);
+    return json({ ok: false, error: 'bad_secret_key_charset', length: key.length });
   }
 
   const res = await fetch(`${MAYA_BASE}/${encodeURIComponent(body.checkoutId)}`, {
@@ -62,10 +62,10 @@ async function handle(request, env) {
   try {
     maya = JSON.parse(text);
   } catch {
-    return json({ ok: false, error: 'maya_non_json', httpStatus: res.status }, 502);
+    return json({ ok: false, error: 'maya_non_json', httpStatus: res.status });
   }
   if (!res.ok) {
-    return json({ ok: false, error: maya.error || 'maya_error', code: maya.code || '', httpStatus: res.status }, 502);
+    return json({ ok: false, error: maya.error || maya.message || 'maya_error', code: maya.code || '', httpStatus: res.status });
   }
 
   return json({
