@@ -27,6 +27,19 @@ async function handle(request, env) {
   if (!env.VOUCHER_SECRET || body.secret !== env.VOUCHER_SECRET) {
     return json({ ok: false, error: 'invalid_secret' }, 403);
   }
+  // 대시보드를 못 볼 때 환경변수 상태만 확인하는 용도. 키 값은 돌려주지 않는다.
+  if (body.action === 'diag') {
+    const k = env.MAYA_SECRET_KEY || '';
+    return json({
+      ok: true,
+      base: MAYA_BASE,
+      baseFromEnv: !!env.MAYA_BASE,
+      keyPrefix: k.slice(0, 3),
+      keyLength: k.length,
+      keyTrimmedLength: k.trim().length
+    });
+  }
+
   if (!body.checkoutId) {
     return json({ ok: false, error: 'missing_checkoutId' }, 400);
   }
