@@ -15,12 +15,7 @@ const form = document.getElementById("reservation-form");
 const allPayBtns = document.querySelectorAll('.pay-now-btn');
 const statusEl = document.getElementById("form-status");
 
-// 홈·상세 페이지를 거쳐 들어오면 주소에 ref가 없다. i18n.js가 들어올 때
-// 담아둔 값을 꺼내 쓴다.
-function storedReferral() {
-  try { return sessionStorage.getItem('ws_ref') || ''; } catch (_) { return ''; }
-}
-const referralCode = (new URLSearchParams(window.location.search).get('ref') || storedReferral()).trim().toUpperCase();
+const referralCode = new URLSearchParams(window.location.search).get('ref') || '';
 
 const VOUCHER_ENDPOINT = "https://script.google.com/macros/s/AKfycbzTPR3kwrarZUs7_H8Eta094STF_xmIN7BVyF-6JLhg7KMTQgG4DUbbRBwFVqxa3F0k/exec";
 const VOUCHER_SECRET = "lA6grkC0pujbOn5B5ooSip3z9N-Wvwre";

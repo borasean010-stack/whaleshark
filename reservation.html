@@ -425,7 +425,12 @@
     if (requestedPeople) document.getElementById('people').value = requestedPeople;
     const requestedNationality = urlParams.get('nationality');
     if (requestedNationality) document.getElementById('nationality').value = requestedNationality;
-    const requestedRef = urlParams.get('ref');
+    // 홈이나 상세 페이지를 먼저 거쳐 오면 주소에 ref가 없다. i18n.js가 들어올 때
+    // 담아둔 값을 꺼내, 손님이 직접 입력한 것과 똑같이 칸을 채운다 — 칸을 비워둔
+    // 채 할인만 적용하면 화면 금액과 결제 금액이 어긋난다.
+    let storedRef = '';
+    try { storedRef = sessionStorage.getItem('ws_ref') || ''; } catch (_) {}
+    const requestedRef = urlParams.get('ref') || storedRef;
     if (requestedRef) document.getElementById('referralCode').value = requestedRef;
 
     // Update inclusions on initial load
