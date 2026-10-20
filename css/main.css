@@ -2022,6 +2022,7 @@ iframe.fb-video-thumb {
 .tour-calendar .cal-day:hover:not(:disabled) { background: var(--color-accent, #F97316); }
 .tour-calendar .cal-day:disabled { color: rgba(255, 255, 255, 0.22); cursor: default; }
 .tour-calendar .cal-day.is-today { box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.6); }
+.tour-calendar .cal-day.is-selected { background: var(--color-accent, #F97316); color: #fff; }
 
 /* PC는 달력, 모바일은 OS 기본 날짜 선택기 */
 .tour-photos-form { display: none; }
