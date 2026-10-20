@@ -1,11 +1,21 @@
-export async function onRequestPost({ request, env }) {
-  const MAYA_BASE = env.MAYA_BASE || 'https://pg.paymaya.com/checkout/v1/checkouts';
+const json = (obj, status = 200) =>
+  new Response(JSON.stringify(obj), {
+    status,
+    headers: { 'Content-Type': 'application/json' }
+  });
 
-  const json = (obj, status = 200) =>
-    new Response(JSON.stringify(obj), {
-      status,
-      headers: { 'Content-Type': 'application/json' }
-    });
+export async function onRequestPost({ request, env }) {
+  // success 페이지가 응답을 r.json()으로 읽으므로 어떤 실패든 JSON이어야 한다.
+  // 예외가 새어나가면 Cloudflare가 평문 502를 주고 결제 확인이 통째로 날아간다.
+  try {
+    return await handle(request, env);
+  } catch (err) {
+    return json({ ok: false, error: 'server_error', detail: String((err && err.message) || err) }, 502);
+  }
+}
+
+async function handle(request, env) {
+  const MAYA_BASE = env.MAYA_BASE || 'https://pg.paymaya.com/checkout/v1/checkouts';
 
   let body;
   try {
@@ -20,22 +30,19 @@ export async function onRequestPost({ request, env }) {
   if (!body.checkoutId) {
     return json({ ok: false, error: 'missing_checkoutId' }, 400);
   }
-
   if (!env.MAYA_SECRET_KEY) {
     return json({ ok: false, error: 'missing_secret_key' }, 500);
   }
 
   // 대시보드에 붙여넣은 키에 공백·줄바꿈이 섞여 들어오는 일이 있다
-  const auth = 'Basic ' + btoa(env.MAYA_SECRET_KEY.trim() + ':');
-
-  let res;
-  try {
-    res = await fetch(`${MAYA_BASE}/${encodeURIComponent(body.checkoutId)}`, {
-      headers: { Authorization: auth }
-    });
-  } catch (err) {
-    return json({ ok: false, error: 'maya_unreachable', detail: String((err && err.message) || err) }, 502);
+  const key = env.MAYA_SECRET_KEY.trim();
+  if (!/^[\x21-\x7e]+$/.test(key)) {
+    return json({ ok: false, error: 'bad_secret_key_charset', length: key.length }, 500);
   }
+
+  const res = await fetch(`${MAYA_BASE}/${encodeURIComponent(body.checkoutId)}`, {
+    headers: { Authorization: 'Basic ' + btoa(key + ':') }
+  });
 
   const text = await res.text();
   let maya;
