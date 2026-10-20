@@ -236,9 +236,9 @@
                 projectId: "boracaysean-6217a"
               }, "success-app");
               const db = getFirestore(app);
+              // status는 'pending'으로 둔다 — 관리자가 대기중 목록에서 확인하고 확정한다.
               await updateDoc(doc(db, "reservations", pending.reservationId), {
-                paymentStatus: 'paid',
-                status: 'confirmed'
+                paymentStatus: 'paid'
               });
             } catch (_) {}
           }

@@ -48,17 +48,15 @@ export async function onRequestPost({ request, env }) {
     return json({ ok: true, skipped: 'not_paid' });
   }
 
+  // status는 건드리지 않는다 — 확정은 관리자가 대기중 목록에서 직접 한다.
   const url = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT}/databases/(default)/documents/reservations/${encodeURIComponent(reservationId)}` +
-    `?key=${FIREBASE_API_KEY}&updateMask.fieldPaths=paymentStatus&updateMask.fieldPaths=status`;
+    `?key=${FIREBASE_API_KEY}&updateMask.fieldPaths=paymentStatus`;
 
   const save = await fetch(url, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      fields: {
-        paymentStatus: { stringValue: 'paid' },
-        status: { stringValue: 'confirmed' }
-      }
+      fields: { paymentStatus: { stringValue: 'paid' } }
     })
   });
 

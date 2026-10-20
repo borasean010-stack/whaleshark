@@ -100,7 +100,7 @@ async function reconcilePendingCardPayments() {
         data.status === "COMPLETED"
       );
       if (!paid) continue;
-      await updateDoc(doc(db, "reservations", item.id), { paymentStatus: "paid", status: "confirmed" });
+      await updateDoc(doc(db, "reservations", item.id), { paymentStatus: "paid" });
       recovered++;
     } catch (err) {
       console.error("결제 대조 실패:", item.id, err);
@@ -113,7 +113,7 @@ function runReconcile() {
   reconcilePendingCardPayments().then((n) => {
     if (!n) return;
     const note = document.getElementById("topbar-greeting-sub");
-    if (note) note.textContent = `결제가 확인된 예약 ${n}건을 확정 처리했습니다.`;
+    if (note) note.textContent = `결제가 확인된 예약 ${n}건을 대기중 목록에 올렸습니다.`;
     loadReservations();
   });
 }
