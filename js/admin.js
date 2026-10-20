@@ -63,6 +63,61 @@ function isAbandonedCardBooking(d) {
   return !PAY_LATER_METHODS.includes(d.paymentMethod);
 }
 
+// 손님이 결제 직후 창을 닫으면 success 페이지가 못 돌아 확정 처리가 빠진다.
+// 그 예약은 미결제로 남고 위 필터에 걸려 목록에서 사라지므로, 돈은 들어왔는데
+// 어드민에서는 존재 자체가 보이지 않는다. Maya에 실제 결제 여부를 되물어
+// 되살린다 — 웹훅이 오든 말든 어드민을 열 때마다 스스로 정리된다.
+const VOUCHER_SECRET = "lA6grkC0pujbOn5B5ooSip3z9N-Wvwre";
+const RECONCILE_LIMIT = 40;
+
+async function reconcilePendingCardPayments() {
+  let snap;
+  try {
+    snap = await getDocs(query(collection(db, "reservations"), orderBy("createdAt", "desc")));
+  } catch (err) {
+    console.error("결제 대조: 예약을 불러오지 못했습니다", err);
+    return 0;
+  }
+
+  const stuck = [];
+  snap.forEach((docSnap) => {
+    const d = docSnap.data();
+    if (d.checkoutId && isAbandonedCardBooking(d)) stuck.push({ id: docSnap.id, checkoutId: d.checkoutId });
+  });
+
+  let recovered = 0;
+  for (const item of stuck.slice(0, RECONCILE_LIMIT)) {
+    try {
+      const res = await fetch("/api/maya-status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ secret: VOUCHER_SECRET, checkoutId: item.checkoutId })
+      });
+      const data = await res.json();
+      const paid = data.ok && (
+        data.paymentStatus === "PAYMENT_SUCCESS" ||
+        data.status === "PAYMENT_SUCCESS" ||
+        data.status === "COMPLETED"
+      );
+      if (!paid) continue;
+      await updateDoc(doc(db, "reservations", item.id), { paymentStatus: "paid", status: "confirmed" });
+      recovered++;
+    } catch (err) {
+      console.error("결제 대조 실패:", item.id, err);
+    }
+  }
+  return recovered;
+}
+
+function runReconcile() {
+  reconcilePendingCardPayments().then((n) => {
+    if (!n) return;
+    const note = document.getElementById("topbar-greeting-sub");
+    if (note) note.textContent = `결제가 확인된 예약 ${n}건을 확정 처리했습니다.`;
+    loadReservations();
+  });
+}
+
 // =====================================================================
 // 푸시 알림 — Cloud Functions 없이, 관리자 브라우저가 직접 Expo Push API를
 // 호출합니다(관리자가 확정 버튼을 누르는 순간이 곧 "이벤트 발생 시점"이라
@@ -133,6 +188,7 @@ onAuthStateChanged(auth, async (user) => {
     if (emailShort) emailShort.textContent = user.email.split("@")[0];
     if (avatar) avatar.textContent = (user.email[0] || "A").toUpperCase();
     loadDashboard();
+    runReconcile();
   } else {
     loginOverlay.style.display = "flex";
     dashboard.style.display = "none";
@@ -164,6 +220,7 @@ logoutBtn.addEventListener("click", () => {
 
 refreshBtn.addEventListener("click", () => {
   loadReservations();
+  runReconcile();
 });
 
 // Sidebar view switch — Dashboard / B2B Partners / Reservations / Products &
