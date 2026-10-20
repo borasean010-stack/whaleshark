@@ -33,7 +33,7 @@
 <link rel="canonical" href="https://boracaywhaleshark.com/reservationyebo">
 
 <link rel="stylesheet" href="css/style.css"> <!-- for nav -->
-<link rel="stylesheet" href="css/reservation.css?v=1792530000">
+<link rel="stylesheet" href="css/reservation.css?v=1792580000">
 <!-- Flatpickr (Premium Datepicker) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
@@ -287,9 +287,34 @@
 
           <input type="hidden" name="paymentChoice" value="maya">
 
-          <div class="review-row review-row--total" style="margin-bottom:20px;"><span data-en="Total" data-ko="총 금액" data-zh="总计" data-ja="合計">Total</span><strong id="pay-total">-</strong></div>
+          <div class="review-row review-row--total" style="margin-bottom:24px;"><span data-en="Total" data-ko="총 금액" data-zh="总计" data-ja="合計">Total</span><strong id="pay-total">-</strong></div>
 
-          <button type="submit" class="btn-submit" id="submit-btn" data-en="Confirm Reservation" data-ko="예약 확정하기" data-zh="确认预约" data-ja="予約を確定する">Confirm Reservation</button>
+          <p class="pay-choose-label" data-en="Available Payment Methods" data-ko="사용 가능한 결제 수단" data-zh="可用支付方式" data-ja="ご利用可能なお支払い方法">Available Payment Methods</p>
+
+          <div class="pay-methods-grid">
+            <div class="pay-method-card">
+              <div class="pay-logos"><img src="assets/logos/visa-mastercard-logo.webp" alt="Visa / Mastercard"></div>
+              <span class="pay-method-name" data-en="Credit / Debit Card" data-ko="신용 / 체크카드" data-zh="信用/借记卡" data-ja="クレジット/デビット">Credit / Debit Card</span>
+            </div>
+            <div class="pay-method-card">
+              <div class="pay-logos"><img src="assets/logos/gcash-logo.webp" alt="GCash"></div>
+              <span class="pay-method-name">GCash</span>
+            </div>
+            <div class="pay-method-card">
+              <div class="pay-logos"><img src="assets/logos/maya-logo.webp" alt="Maya"></div>
+              <span class="pay-method-name">Maya Pay</span>
+            </div>
+            <div class="pay-method-card">
+              <div class="pay-logos"><img src="assets/logos/qrph-logo.webp" alt="QR Ph"></div>
+              <span class="pay-method-name">QR Ph</span>
+              <span class="pay-method-note" data-en="Alipay · WeChat Pay" data-ko="알리페이 · 위챗페이" data-zh="支付宝 · 微信支付" data-ja="Alipay · WeChat Pay">Alipay · WeChat Pay</span>
+            </div>
+          </div>
+
+          <div class="pay-btn-row">
+            <button type="submit" class="pay-now-btn" id="submit-btn" data-method="card"
+              data-en="Pay Now" data-ko="결제하기" data-zh="立即支付" data-ja="お支払いへ">결제하기</button>
+          </div>
           <p id="form-status" class="form-status" role="status"></p>
 
           <div class="wizard-actions">
