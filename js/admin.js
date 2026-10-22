@@ -1565,7 +1565,7 @@ document.getElementById("acc-create-btn")?.addEventListener("click", async () =>
   }
 });
 
-// ===== YEBO =====
+// ===== 파트너 제휴 (YEBO · HABAGAT) =====
 const NAT_LABELS = { PH: '필리핀', FOREIGN: '외국인', CN: '중국인', KR: '한국인' };
 
 // 파트너 제휴 뷰(YEBO·Habagat)는 마크업만 다르고 로직이 같다. 어느 파트너를
@@ -1659,7 +1659,7 @@ async function loadPartner() {
     `;
 
     document.getElementById(`${_partnerPrefix}-settle-btn`)?.addEventListener("click", async () => {
-      if (!confirm(`YEBO 미정산 ${unsettledAll.length}건을 정산 완료 처리할까요?`)) return;
+      if (!confirm(`${_partnerCode} 미정산 ${unsettledAll.length}건을 정산 완료 처리할까요?`)) return;
       await Promise.all(unsettledAll.map(r => updateDoc(doc(db, "reservations", r.id), { refSettled: true, refSettledAt: serverTimestamp() })));
       loadPartner();
     });
@@ -1667,7 +1667,7 @@ async function loadPartner() {
     // ── 예약 목록 탭 ──
     if (_yeboTab === 'list') {
       if (rows.length === 0) {
-        tbody.innerHTML = "<tr><td colspan='10' style='text-align:center;color:var(--admin-text-muted);'>YEBO 예약이 없습니다.</td></tr>";
+        tbody.innerHTML = `<tr><td colspan='10' style='text-align:center;color:var(--admin-text-muted);'>${_partnerCode} 예약이 없습니다.</td></tr>`;
       } else {
         tbody.innerHTML = rows.map(r => `
           <tr data-id="${r.id}">
@@ -1808,7 +1808,7 @@ async function loadPartner() {
     }
 
   } catch (err) {
-    console.error("Error loading YEBO reservations:", err);
+    console.error(`Error loading ${_partnerCode} reservations:`, err);
     if (document.getElementById(`${_partnerPrefix}-tbody`))
       document.getElementById(`${_partnerPrefix}-tbody`).innerHTML = "<tr><td colspan='10' style='text-align:center;color:red;'>오류가 발생했습니다.</td></tr>";
   }
