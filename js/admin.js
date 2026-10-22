@@ -259,7 +259,8 @@ const VIEW_LOADERS = {
   depositcash: loadDepositRequests,
   settlement: loadSettlement,
   referral: loadReferralCodes,
-  yebo: loadYebo,
+  yebo: () => showPartnerView('YEBO', 'yebo'),
+  habagat: () => showPartnerView('HABAGAT', 'habagat'),
   accounts: loadAdminAccounts,
 };
 
@@ -1567,31 +1568,48 @@ document.getElementById("acc-create-btn")?.addEventListener("click", async () =>
 // ===== YEBO =====
 const NAT_LABELS = { PH: '필리핀', FOREIGN: '외국인', CN: '중국인', KR: '한국인' };
 
+// 파트너 제휴 뷰(YEBO·Habagat)는 마크업만 다르고 로직이 같다. 어느 파트너를
+// 보고 있는지만 바꿔가며 같은 구현을 재사용한다.
+let _partnerCode = 'YEBO';
+let _partnerPrefix = 'yebo';
 let _yeboFrom = null, _yeboTo = null;
 let _yeboTab = 'list'; // 'list' | 'month'
 
-function yeboSetTab(tab) {
-  _yeboTab = tab;
-  document.getElementById('yebo-tab-list').style.background = tab === 'list' ? 'var(--admin-accent)' : 'transparent';
-  document.getElementById('yebo-tab-list').style.color = tab === 'list' ? '#fff' : 'var(--admin-text-muted)';
-  document.getElementById('yebo-tab-month').style.background = tab === 'month' ? 'var(--admin-accent)' : 'transparent';
-  document.getElementById('yebo-tab-month').style.color = tab === 'month' ? '#fff' : 'var(--admin-text-muted)';
-  document.getElementById('yebo-view-list').style.display = tab === 'list' ? '' : 'none';
-  document.getElementById('yebo-view-month').style.display = tab === 'month' ? '' : 'none';
-  loadYebo();
+function showPartnerView(code, prefix) {
+  _partnerCode = code;
+  _partnerPrefix = prefix;
+  _yeboFrom = null;
+  _yeboTo = null;
+  _yeboTab = 'list';
+  const from = document.getElementById(`${prefix}-date-from`);
+  const to = document.getElementById(`${prefix}-date-to`);
+  if (from) from.value = '';
+  if (to) to.value = '';
+  partnerSetTab('list');
 }
-window.yeboSetTab = yeboSetTab;
 
-async function loadYebo() {
-  const tbody = document.getElementById("yebo-tbody");
-  const statsEl = document.getElementById("yebo-stats");
-  const monthContent = document.getElementById("yebo-month-content");
+function partnerSetTab(tab) {
+  _yeboTab = tab;
+  document.getElementById(`${_partnerPrefix}-tab-list`).style.background = tab === 'list' ? 'var(--admin-accent)' : 'transparent';
+  document.getElementById(`${_partnerPrefix}-tab-list`).style.color = tab === 'list' ? '#fff' : 'var(--admin-text-muted)';
+  document.getElementById(`${_partnerPrefix}-tab-month`).style.background = tab === 'month' ? 'var(--admin-accent)' : 'transparent';
+  document.getElementById(`${_partnerPrefix}-tab-month`).style.color = tab === 'month' ? '#fff' : 'var(--admin-text-muted)';
+  document.getElementById(`${_partnerPrefix}-view-list`).style.display = tab === 'list' ? '' : 'none';
+  document.getElementById(`${_partnerPrefix}-view-month`).style.display = tab === 'month' ? '' : 'none';
+  loadPartner();
+}
+window.partnerSetTab = partnerSetTab;
+
+async function loadPartner() {
+  const tbody = document.getElementById(`${_partnerPrefix}-tbody`);
+  const statsEl = document.getElementById(`${_partnerPrefix}-stats`);
+  const monthContent = document.getElementById(`${_partnerPrefix}-month-content`);
   if (_yeboTab === 'list') tbody.innerHTML = "<tr><td colspan='10' style='text-align:center;'>로딩 중...</td></tr>";
   else if (monthContent) monthContent.innerHTML = "<div style='text-align:center;padding:40px;color:var(--admin-text-muted);'>로딩 중...</div>";
   statsEl.innerHTML = "";
 
   try {
-    const snap = await getDocs(query(collection(db, "reservations"), where("referralCode", "==", "YEBO")));
+    const snap = await getDocs(query(collection(db, "reservations"), where("referralCode", "==", _partnerCode)));
 
     let allRows = [];
     snap.forEach(d => {
@@ -1633,17 +1651,17 @@ async function loadYebo() {
       <div style="background:#fff1f2;border:1px solid #fecdd3;border-radius:10px;padding:10px 18px;text-align:center;">
         <div style="font-size:1.1rem;font-weight:800;color:#be123c;">₱${unsettledRev.toLocaleString()}</div><div style="font-size:0.75rem;color:#be123c;">미정산 ${unsettledAll.length}건</div>
       </div>
-      <button id="yebo-settle-btn" style="padding:8px 16px;background:#be123c;color:#fff;border:none;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;">정산 완료 처리</button>
+      <button id="${_partnerPrefix}-settle-btn" style="padding:8px 16px;background:#be123c;color:#fff;border:none;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;">정산 완료 처리</button>
       ` : `
       <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:10px 18px;text-align:center;">
         <div style="font-size:0.9rem;font-weight:700;color:#15803d;">✓ 전체 정산완료</div>
       </div>`}
     `;
 
-    document.getElementById("yebo-settle-btn")?.addEventListener("click", async () => {
+    document.getElementById(`${_partnerPrefix}-settle-btn`)?.addEventListener("click", async () => {
       if (!confirm(`YEBO 미정산 ${unsettledAll.length}건을 정산 완료 처리할까요?`)) return;
       await Promise.all(unsettledAll.map(r => updateDoc(doc(db, "reservations", r.id), { refSettled: true, refSettledAt: serverTimestamp() })));
-      loadYebo();
+      loadPartner();
     });
 
     // ── 예약 목록 탭 ──
@@ -1679,7 +1697,7 @@ async function loadYebo() {
             btn.disabled = true;
             try {
               await updateDoc(doc(db, "reservations", btn.dataset.id), { status: "confirmed" });
-              loadYebo();
+              loadPartner();
             } catch(e) { alert("오류: "+e.message); btn.disabled=false; }
           });
         });
@@ -1689,7 +1707,7 @@ async function loadYebo() {
             btn.disabled = true;
             try {
               await updateDoc(doc(db, "reservations", btn.dataset.id), { status: "cancelled" });
-              loadYebo();
+              loadPartner();
             } catch(e) { alert("오류: "+e.message); btn.disabled=false; }
           });
         });
@@ -1698,7 +1716,7 @@ async function loadYebo() {
             btn.disabled = true;
             try {
               await updateDoc(doc(db, "reservations", btn.dataset.id), { refSettled: true, refSettledAt: serverTimestamp() });
-              loadYebo();
+              loadPartner();
             } catch(e) { alert("오류: "+e.message); btn.disabled=false; }
           });
         });
@@ -1784,27 +1802,31 @@ async function loadYebo() {
           if (!confirm(`${m} 미정산 ${targets.length}건을 정산 완료 처리할까요?`)) return;
           btn.disabled = true;
           await Promise.all(targets.map(r => updateDoc(doc(db, "reservations", r.id), { refSettled: true, refSettledAt: serverTimestamp() })));
-          loadYebo();
+          loadPartner();
         });
       });
     }
 
   } catch (err) {
     console.error("Error loading YEBO reservations:", err);
-    if (document.getElementById("yebo-tbody"))
-      document.getElementById("yebo-tbody").innerHTML = "<tr><td colspan='10' style='text-align:center;color:red;'>오류가 발생했습니다.</td></tr>";
+    if (document.getElementById(`${_partnerPrefix}-tbody`))
+      document.getElementById(`${_partnerPrefix}-tbody`).innerHTML = "<tr><td colspan='10' style='text-align:center;color:red;'>오류가 발생했습니다.</td></tr>";
   }
 }
 
-document.getElementById("yebo-filter-btn")?.addEventListener("click", () => {
-  _yeboFrom = document.getElementById("yebo-date-from").value || null;
-  _yeboTo = document.getElementById("yebo-date-to").value || null;
-  loadYebo();
-});
+// 파트너마다 자기 뷰의 버튼이 따로 있으므로 접두사별로 모두 묶는다. 모듈이
+// 로드되는 시점의 _partnerPrefix 하나에만 걸면 나머지 파트너는 조회가 먹지 않는다.
+['yebo', 'habagat'].forEach((prefix) => {
+  document.getElementById(`${prefix}-filter-btn`)?.addEventListener("click", () => {
+    _yeboFrom = document.getElementById(`${prefix}-date-from`).value || null;
+    _yeboTo = document.getElementById(`${prefix}-date-to`).value || null;
+    loadPartner();
+  });
 
-document.getElementById("yebo-filter-clear")?.addEventListener("click", () => {
-  _yeboFrom = null; _yeboTo = null;
-  document.getElementById("yebo-date-from").value = "";
-  document.getElementById("yebo-date-to").value = "";
-  loadYebo();
+  document.getElementById(`${prefix}-filter-clear`)?.addEventListener("click", () => {
+    _yeboFrom = null; _yeboTo = null;
+    document.getElementById(`${prefix}-date-from`).value = "";
+    document.getElementById(`${prefix}-date-to`).value = "";
+    loadPartner();
+  });
 });
