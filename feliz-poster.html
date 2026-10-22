@@ -42,31 +42,32 @@ html, body {
 /* 액션캠 배지는 하늘·야자수 위(우측 상단)에만 올린다 — 고래상어 쪽은 비워둔다. */
 .camcard {
   position: absolute;
-  top: 8mm;
-  right: 8mm;
-  width: 42mm;
-  background: #fff;
-  border-radius: 3mm;
-  padding: 3mm 3.5mm 3.5mm;
-  box-shadow: 0 1mm 4mm rgba(0,0,0,.3);
+  top: 44mm;
+  left: 5mm;
+  width: 40mm;
   text-align: center;
 }
-.camcard img { width: 30mm; height: auto; display: block; margin: 0 auto .5mm; }
+.camcard img {
+  width: 38mm; height: auto; display: block; margin: 0 auto 1mm;
+  filter: drop-shadow(0 1mm 2mm rgba(0,0,0,.45));
+}
+/* 흰 카드 없이 사진 위에 바로 얹는다 — 하늘이 밝아 흰 글씨에 짙은 그림자를
+   둘러야 읽힌다. FAST TRACK 글자를 침범하지 않도록 우측 띠 안에만 둔다. */
 .camcard .t {
-  font-size: 2.9mm;
+  font-size: 3.6mm;
   font-weight: 900;
-  line-height: 1.25;
-  color: #dc2626;
+  line-height: 1.15;
+  color: #fff;
   letter-spacing: -.1px;
+  text-shadow: 0 0 1mm rgba(0,0,0,.95), 0 .5mm 1.2mm rgba(0,0,0,.9), 0 0 3mm rgba(0,0,0,.6);
 }
 .camcard .s {
-  margin-top: 1.5mm;
-  padding-top: 1.5mm;
-  border-top: .3mm solid #e2e8f0;
-  font-size: 2.2mm;
-  font-weight: 700;
-  color: #64748b;
-  line-height: 1.35;
+  margin-top: 1mm;
+  font-size: 2.5mm;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: .2px;
+  text-shadow: 0 0 1mm rgba(0,0,0,.95), 0 .4mm 1mm rgba(0,0,0,.9);
 }
 
 /* 로고는 사진 위에 올리지 않는다 — 고래상어를 가린다. 아래 단에서 가격·QR과
@@ -199,9 +200,9 @@ html, body {
   <div class="hero">
     <img src="assets/pkg-fast.webp" alt="Fast Track Whale Shark Tour">
     <div class="camcard">
-      <img src="assets/action_cam.webp" alt="DJI Osmo Action 5">
-      <div class="t">ACTION CAM<br>FILMING INCLUDED</div>
-      <div class="s">Our guide films you underwater<br>on a DJI Osmo Action 5</div>
+      <img src="assets/action_cam.webp" alt="DJI Osmo Action 5 Pro">
+      <div class="t">FREE<br>UNDERWATER<br>FILMING</div>
+      <div class="s">DJI Osmo Action 5 Pro</div>
     </div>
   </div>
 
