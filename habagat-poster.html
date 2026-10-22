@@ -39,29 +39,20 @@ html, body {
 }
 .hero img { width: 100%; height: 100%; display: block; }
 
-/* 로고를 사진 위 흰 카드에 올린다. 본문에 작게 넣으면 야자수·잔글씨가
-   뭉개져 어느 리조트인지 안 보인다. */
-.badge {
-  position: absolute;
-  left: 9mm;
-  bottom: 9mm;
-  background: #fff;
-  border-radius: 3mm;
-  padding: 4mm 5mm;
-  box-shadow: 0 1mm 4mm rgba(0,0,0,.28);
-  text-align: center;
-}
-.badge img { width: 30mm; height: auto; display: block; }
-.badge .for {
-  margin-top: 2mm;
-  padding-top: 2mm;
+/* 로고는 사진 위에 올리지 않는다 — 고래상어를 가린다. 아래 단에서 가격·QR과
+   한 줄에 두면 그림을 건드리지 않으면서도 읽히는 크기를 유지할 수 있다. */
+.brand { text-align: center; }
+.brand img { width: 100%; height: auto; display: block; }
+.brand .for {
+  margin-top: 2.5mm;
+  padding-top: 2.5mm;
   border-top: .3mm solid #e2e8f0;
   font-size: 2.2mm;
   font-weight: 800;
-  letter-spacing: .7px;
+  letter-spacing: .6px;
   text-transform: uppercase;
   color: #64748b;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 /* ── Content ── */
@@ -75,8 +66,8 @@ html, body {
 .main {
   flex: 1;
   display: grid;
-  grid-template-columns: 1fr 44mm;
-  gap: 8mm;
+  grid-template-columns: 33mm 1fr 44mm;
+  gap: 7mm;
   align-items: center;
 }
 
@@ -174,15 +165,16 @@ html, body {
 
   <div class="hero">
     <img src="assets/pkg-fast.webp" alt="Fast Track Whale Shark Tour">
-    <div class="badge">
-      <img src="assets/logos/habagat-logo.webp" alt="Habagat Kite &amp; Beach Resort">
-      <div class="for">Exclusive for<br>our guests</div>
-    </div>
   </div>
 
   <div class="body">
 
     <div class="main">
+      <div class="brand">
+        <img src="assets/logos/habagat-logo.webp" alt="Habagat Kite &amp; Beach Resort">
+        <div class="for">Exclusive for guests of<br>Habagat Kite &amp; Beach Resort</div>
+      </div>
+
       <div>
         <div class="price-per">Per person</div>
         <div class="price"><sup>&#8369;</sup>3,600<small>all fees included</small></div>
