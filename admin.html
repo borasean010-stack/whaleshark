@@ -46,6 +46,7 @@
         <a href="#" class="nav-item" data-view="referral"><span class="ni">🔗</span>레퍼럴</a>
         <a href="#" class="nav-item" data-view="yebo"><span class="ni">⭐</span>YEBO</a>
         <a href="#" class="nav-item" data-view="habagat"><span class="ni">🪁</span>HABAGAT</a>
+        <a href="#" class="nav-item" data-view="feliz"><span class="ni">🌺</span>FELIZ</a>
         <a href="#" class="nav-item" data-view="accounts"><span class="ni">👤</span>계정 관리</a>
       </nav>
       <div class="sidebar-footer">
@@ -383,6 +384,36 @@
             </div>
           </div>
         </div>
+        <div id="view-feliz" class="admin-view" style="display:none;">
+          <div class="table-container">
+            <div class="table-header">
+              <h2>FELIZ 예약 현황 <span style="font-size:.8rem;font-weight:600;color:var(--admin-text-muted);">· 손님 10% 할인 적용</span></h2>
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                <div style="display:flex;gap:3px;background:var(--admin-bg-2);border-radius:8px;padding:3px;">
+                  <button id="feliz-tab-list" onclick="partnerSetTab('list')" style="padding:5px 14px;border:none;border-radius:6px;font-size:.8rem;font-weight:600;cursor:pointer;background:var(--admin-accent);color:#fff;">예약 목록</button>
+                  <button id="feliz-tab-month" onclick="partnerSetTab('month')" style="padding:5px 14px;border:none;border-radius:6px;font-size:.8rem;font-weight:600;cursor:pointer;background:transparent;color:var(--admin-text-muted);">월별 정산</button>
+                </div>
+                <input type="date" id="feliz-date-from">
+                <span style="color:var(--admin-text-muted);">~</span>
+                <input type="date" id="feliz-date-to">
+                <button id="feliz-filter-btn" class="action-btn" style="background:var(--admin-accent);color:#fff;border-color:var(--admin-accent);">조회</button>
+                <button id="feliz-filter-clear" class="action-btn">전체</button>
+              </div>
+            </div>
+            <div id="feliz-stats"></div>
+            <div id="feliz-view-list">
+              <div style="overflow-x:auto;">
+                <table>
+                  <thead><tr><th>날짜</th><th>예약자</th><th>인원</th><th>국적</th><th>금액</th><th>결제</th><th>레퍼럴</th><th>상태</th><th>정산</th><th>액션</th></tr></thead>
+                  <tbody id="feliz-tbody"><tr><td colspan="9" style="text-align:center;">로딩 중...</td></tr></tbody>
+                </table>
+              </div>
+            </div>
+            <div id="feliz-view-month" style="display:none;padding:16px 20px;">
+              <div id="feliz-month-content"></div>
+            </div>
+          </div>
+        </div>
 
         <!-- ══════════ VIEW: Account Management ══════════ -->
         <div id="view-accounts" class="admin-view" style="display:none;">
@@ -430,6 +461,6 @@
   </div>
 </div>
 
-<script type="module" src="js/admin.js?v=1792670000"></script>
+<script type="module" src="js/admin.js?v=1792680000"></script>
 </body>
 </html>
