@@ -47,27 +47,22 @@ html, body {
   width: 40mm;
   text-align: center;
 }
-.camcard img {
-  width: 38mm; height: auto; display: block; margin: 0 auto 1mm;
-  filter: drop-shadow(0 1mm 2mm rgba(0,0,0,.45));
-}
-/* 흰 카드 없이 사진 위에 바로 얹는다 — 하늘이 밝아 흰 글씨에 짙은 그림자를
-   둘러야 읽힌다. FAST TRACK 글자를 침범하지 않도록 우측 띠 안에만 둔다. */
+.camcard img { width: 38mm; height: auto; display: block; margin: 0 auto 1.5mm; }
+/* 글씨 뒤에 패널도 그림자도 두지 않는다. 밝은 하늘 위라 진한 색이라야 읽힌다. */
 .camcard .t {
   font-size: 3.6mm;
   font-weight: 900;
   line-height: 1.15;
-  color: #fff;
+  color: #0f172a;
   letter-spacing: -.1px;
-  text-shadow: 0 0 1mm rgba(0,0,0,.95), 0 .5mm 1.2mm rgba(0,0,0,.9), 0 0 3mm rgba(0,0,0,.6);
 }
+.camcard .t em { font-style: normal; color: #b91c1c; }
 .camcard .s {
-  margin-top: 1mm;
-  font-size: 2.5mm;
+  margin-top: 1.2mm;
+  font-size: 2.4mm;
   font-weight: 800;
-  color: #fff;
+  color: #1e293b;
   letter-spacing: .2px;
-  text-shadow: 0 0 1mm rgba(0,0,0,.95), 0 .4mm 1mm rgba(0,0,0,.9);
 }
 
 /* 로고는 사진 위에 올리지 않는다 — 고래상어를 가린다. 아래 단에서 가격·QR과
@@ -201,7 +196,7 @@ html, body {
     <img src="assets/pkg-fast.webp" alt="Fast Track Whale Shark Tour">
     <div class="camcard">
       <img src="assets/action_cam.webp" alt="DJI Osmo Action 5 Pro">
-      <div class="t">FREE<br>UNDERWATER<br>FILMING</div>
+      <div class="t"><em>FREE</em><br>UNDERWATER<br>FILMING</div>
       <div class="s">DJI Osmo Action 5 Pro</div>
     </div>
   </div>
