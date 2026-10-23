@@ -33,7 +33,7 @@
 <link rel="canonical" href="https://boracaywhaleshark.com/reservationyebo">
 
 <link rel="stylesheet" href="css/style.css"> <!-- for nav -->
-<link rel="stylesheet" href="css/reservation.css?v=1792580000">
+<link rel="stylesheet" href="css/reservation.css?v=1792790000">
 <!-- Flatpickr (Premium Datepicker) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
@@ -176,9 +176,7 @@
           <div class="form-group">
             <label for="nationality" data-en="Nationality *" data-ko="국적선택 *" data-zh="国籍选择 *" data-ja="国籍選択 *">Nationality *</label>
             <select id="nationality" name="nationality" class="input-luxury" required>
-              <option value="" disabled selected data-en="Select nationality" data-ko="국적을 선택하세요" data-zh="请选择国籍" data-ja="国籍を選択してください">Select nationality</option>
-              <option value="PH" data-en="Philippine" data-ko="필리핀" data-zh="菲律宾" data-ja="フィリピン">Philippine</option>
-              <option value="FOREIGN" data-en="Foreigner" data-ko="외국인" data-zh="外国人" data-ja="外国人">Foreigner</option>
+              <option value="FOREIGN" selected data-en="Korean" data-ko="한국인" data-zh="韩国人" data-ja="韓国人">Korean</option>
             </select>
           </div>
 
@@ -288,6 +286,8 @@
           <input type="hidden" name="paymentChoice" value="maya">
 
           <div class="review-row review-row--total" style="margin-bottom:24px;"><span data-en="Total" data-ko="총 금액" data-zh="总计" data-ja="合計">Total</span><strong id="pay-total">-</strong></div>
+
+          <p class="fx-note">한국 카드는 <b>필리핀 페소(PHP)</b>로 결제하시면 환차손이 적습니다.</p>
 
           <p class="pay-choose-label" data-en="Available Payment Methods" data-ko="사용 가능한 결제 수단" data-zh="可用支付方式" data-ja="ご利用可能なお支払い方法">Available Payment Methods</p>
 

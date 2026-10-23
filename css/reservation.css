@@ -695,3 +695,17 @@ body {
   color: #fbbf24;
 }
 .input-hint[hidden] { display: none; }
+
+/* 예보 링크는 한국인 전용이라 환율 안내를 한국어로만 보여준다 */
+.fx-note {
+  margin: -8px 0 18px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(56,189,248,0.10);
+  border: 1px solid rgba(56,189,248,0.28);
+  color: #bae6fd;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  word-break: keep-all;
+}
+.fx-note b { color: #7dd3fc; }
