@@ -1284,7 +1284,7 @@ async function loadReferralCodes() {
           <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;" onclick="event.stopPropagation()">
             ${entry.id ? `
             <div style="display:flex;gap:6px;align-items:center;">
-              <input type="number" class="ref-comm-input" data-id="${entry.id}" value="${commRate}" min="0" max="100" placeholder="%" style="width:60px;padding:4px 8px;border:1px solid var(--admin-border);border-radius:6px;font-size:0.85rem;background:var(--admin-bg-2);color:var(--admin-text);text-align:center;">
+              <input type="number" class="ref-comm-input" data-id="${entry.id}" value="${commRate}" min="0" max="100" step="0.1" placeholder="%" style="width:60px;padding:4px 8px;border:1px solid var(--admin-border);border-radius:6px;font-size:0.85rem;background:var(--admin-bg-2);color:var(--admin-text);text-align:center;">
               <button class="ref-comm-save" data-id="${entry.id}" style="padding:4px 10px;background:#6366f1;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;white-space:nowrap;">% 저장</button>
             </div>
             ${unsettled.length > 0 ? `<button class="ref-settle-btn action-btn" data-id="${entry.id}" data-code="${d.code}" data-amount="${unsettledCommission}" style="font-size:0.78rem;white-space:nowrap;background:#be123c;">정산 완료 처리</button>` : ""}

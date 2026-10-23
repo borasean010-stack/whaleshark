@@ -306,7 +306,7 @@
                 </div>
                 <div class="fg">
                   <label>수수료율 (%)</label>
-                  <input type="number" id="ref-commission-input" placeholder="10" min="0" max="100" style="width:100px;" autocomplete="off">
+                  <input type="number" id="ref-commission-input" placeholder="10" min="0" max="100" step="0.1" style="width:100px;" autocomplete="off">
                 </div>
                 <button id="ref-create-btn" class="action-btn" style="background:var(--admin-primary);color:#fff;border-color:var(--admin-primary);">+ 코드 생성</button>
               </div>
@@ -327,7 +327,7 @@
         <div id="view-yebo" class="admin-view" style="display:none;">
           <div class="table-container">
             <div class="table-header">
-              <h2>YEBO 예약 현황</h2>
+              <h2>YEBO 예약 현황 <span style="font-size:.8rem;font-weight:600;color:var(--admin-text-muted);">· 커미션 12.5% (1건당 ₱450)</span></h2>
               <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
                 <div style="display:flex;gap:3px;background:var(--admin-bg-2);border-radius:8px;padding:3px;">
                   <button id="yebo-tab-list" onclick="partnerSetTab('list')" style="padding:5px 14px;border:none;border-radius:6px;font-size:.8rem;font-weight:600;cursor:pointer;background:var(--admin-accent);color:#fff;">예약 목록</button>
@@ -461,6 +461,6 @@
   </div>
 </div>
 
-<script type="module" src="js/admin.js?v=1792680000"></script>
+<script type="module" src="js/admin.js?v=1792770000"></script>
 </body>
 </html>
