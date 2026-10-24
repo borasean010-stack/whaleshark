@@ -478,6 +478,9 @@ function renderReservations(querySnapshot) {
         pendingRows.push(`
           <tr class="${isNew ? 'dash-row-new' : ''}">
             <td style="font-weight:600;">${d.date}</td>
+            <td style="white-space:nowrap;">${d.meetingTime
+              ? `<span style="font-weight:700;">${d.meetingTime}</span>`
+              : '<span style="color:var(--admin-text-muted);">-</span>'}</td>
             <td>${d.name}</td>
             <td>${tourTypeBadge(d.tourType)}</td>
             <td>${d.people}명</td>
@@ -492,7 +495,7 @@ function renderReservations(querySnapshot) {
       });
       pendingTbody.innerHTML = pendingRows.length
         ? pendingRows.join("")
-        : "<tr><td colspan='8' style='text-align:center;color:var(--admin-text-muted);'>대기중 예약이 없습니다 👍</td></tr>";
+        : "<tr><td colspan='9' style='text-align:center;color:var(--admin-text-muted);'>대기중 예약이 없습니다 👍</td></tr>";
 
       const arrived = seenPendingIds === null ? 0 : [...nowPending].filter(id => !seenPendingIds.has(id)).length;
       seenPendingIds = nowPending;
