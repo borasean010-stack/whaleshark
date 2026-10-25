@@ -205,5 +205,17 @@ function isAdmin() {
       allow update: if isAdmin() || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['usageCount']));
       allow create, delete: if isAdmin();
     }
+
+    // 파트너 정산 링크용 토큰 — 어드민만 본다. 토큰이 공개 코드에 남지 않게 여기 둔다.
+    match /partnerConfig/{code} {
+      allow read, write: if isAdmin();
+    }
+
+    // 파트너 정산 요약본 — 어드민이 써두고 파트너 페이지는 링크의 토큰으로 한 건만 읽는다.
+    // get만 열고 list는 막아서, 토큰을 정확히 알아야만 열린다.
+    match /partnerReports/{token} {
+      allow get: if true;
+      allow create, update, delete: if isAdmin();
+    }
   }
 }

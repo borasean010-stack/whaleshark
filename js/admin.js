@@ -52,6 +52,85 @@ let unsubscribeReservations = null;
 // "새로 들어온 건"을 가릴 기준이 없다는 뜻이다.
 let seenPendingIds = null;
 
+// ── 파트너 정산 링크 ──
+// 파트너는 로그인 없이 링크로 본다. 어드민이 예약 스냅샷을 받을 때마다 파트너 몫만
+// 추려 partnerReports/{토큰} 에 써두고, partner.html 은 그 한 문서만 읽는다.
+// 토큰은 어드민만 읽는 partnerConfig 에 두어 공개 코드에 남기지 않는다.
+// 수수료는 확정 예약의 "인원수 × perPerson" (건당 아님) — 계산은 partner.html 에서 한다.
+const PARTNER_REPORTS = {
+  YEBO: { name: "예보 (YEBO)", perPerson: 450 }
+};
+const partnerTokens = {};
+const lastReportJson = {};
+let lastReservationSnap = null;
+
+function newPartnerToken() {
+  const bytes = new Uint8Array(18);
+  crypto.getRandomValues(bytes);
+  return btoa(String.fromCharCode(...bytes)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+async function loadPartnerTokens() {
+  for (const code of Object.keys(PARTNER_REPORTS)) {
+    const ref = doc(db, "partnerConfig", code);
+    const snap = await getDoc(ref);
+    if (snap.exists() && snap.data().token) {
+      partnerTokens[code] = snap.data().token;
+    } else {
+      const token = newPartnerToken();
+      await setDoc(ref, { token, createdAt: serverTimestamp() });
+      partnerTokens[code] = token;
+    }
+  }
+}
+
+function publishPartnerReports(querySnapshot) {
+  for (const [code, cfg] of Object.entries(PARTNER_REPORTS)) {
+    const token = partnerTokens[code];
+    if (!token) continue;
+    const rows = [];
+    querySnapshot.forEach((s) => {
+      const d = s.data();
+      if (d.referralCode !== code || isAbandonedCardBooking(d)) return;
+      // 파트너에게는 이 필드만 넘긴다 — 이메일·연락처는 담지 않는다
+      rows.push({
+        date: d.date || "",
+        name: d.name || "",
+        people: Number(d.people) || 0,
+        totalPrice: Number(d.totalPrice) || 0,
+        status: d.status || "",
+        settled: d.refSettled === true
+      });
+    });
+    const json = JSON.stringify({ partner: { name: cfg.name, perPerson: cfg.perPerson }, reservations: rows });
+    if (json === lastReportJson[code]) continue;
+    lastReportJson[code] = json;
+    setDoc(doc(db, "partnerReports", token), { json, updatedAt: serverTimestamp() })
+      .catch((err) => console.error("파트너 요약 저장 실패:", code, err));
+  }
+}
+
+function renderPartnerLink() {
+  const box = document.getElementById(`${_partnerPrefix}-partner-link`);
+  if (!box) return;
+  const token = partnerTokens[_partnerCode];
+  if (!token) { box.innerHTML = ""; return; }
+  const url = `https://boracaywhaleshark.com/partner?t=${token}`;
+  box.innerHTML = `
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 14px;margin:0 0 12px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;">
+      <span style="font-size:.8rem;font-weight:700;color:#0369a1;">파트너 정산 링크</span>
+      <input readonly value="${url}" style="flex:1;min-width:240px;padding:6px 10px;border:1px solid #cbd5e1;border-radius:6px;font-size:.8rem;background:#fff;">
+      <button class="action-btn" style="background:#0284c7;color:#fff;border-color:#0284c7;">복사</button>
+    </div>`;
+  const btn = box.querySelector("button");
+  btn.addEventListener("click", () => {
+    navigator.clipboard.writeText(url).then(() => {
+      btn.textContent = "복사됨";
+      setTimeout(() => { btn.textContent = "복사"; }, 1500);
+    });
+  });
+}
+
 function updatePendingBadge(count, arrived) {
   const badge = document.getElementById("dash-pending-count");
   if (badge) {
@@ -210,6 +289,10 @@ onAuthStateChanged(auth, async (user) => {
     if (avatar) avatar.textContent = (user.email[0] || "A").toUpperCase();
     loadDashboard();
     runReconcile();
+    loadPartnerTokens().then(() => {
+      if (lastReservationSnap) publishPartnerReports(lastReservationSnap);
+      renderPartnerLink();
+    }).catch(err => console.error("파트너 링크 준비 실패:", err));
   } else {
     if (unsubscribeReservations) {
       unsubscribeReservations();
@@ -316,6 +399,8 @@ function loadReservations() {
 }
 
 function renderReservations(querySnapshot) {
+  lastReservationSnap = querySnapshot;
+  publishPartnerReports(querySnapshot);
   try {
     let total = 0;
     let pending = 0;
@@ -1590,6 +1675,7 @@ function showPartnerView(code, prefix) {
   if (from) from.value = '';
   if (to) to.value = '';
   partnerSetTab('list');
+  renderPartnerLink();
 }
 
 function partnerSetTab(tab) {
