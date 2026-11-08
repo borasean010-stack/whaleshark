@@ -276,10 +276,8 @@ function updateMeetingTime() {
     return;
   }
   group.style.display = "block";
-  if (selectedTour === "R") {
-    pillsBlock.style.display = "flex";
-    fixedNote.style.display = "none";
-  } else {
+  {
+    // 패스트트랙·레귤러·VIP 모두 07:30 고정
     pillsBlock.style.display = "none";
     fixedNote.style.display = "block";
     selectedMeetingTime = "07:30";
