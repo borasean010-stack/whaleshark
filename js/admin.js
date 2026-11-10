@@ -1231,11 +1231,18 @@ function loadDashboard() {
 const TOUR_NAMES_FOR_SETTLEMENT = { VF: "VIP패스트트랙", F: "패스트트랙", R: "레귤러", T: "티켓", H: "호핑투어", L: "랜드투어" };
 
 let settleMonth = null;
+// 결제 시각은 따로 저장하지 않는다 — Maya 결제는 예약 생성 직후 바로 진행되므로 예약 생성 시각을 쓴다
+function fmtPaidAt(ts) {
+  if (!ts || !ts.seconds) return "-";
+  const d = new Date(ts.seconds * 1000);
+  const p = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
 async function loadSettlement() {
   const tbody = document.getElementById("settle-tbody");
   const cards = document.getElementById("settle-cards");
   const sel = document.getElementById("settle-month");
-  tbody.innerHTML = "<tr><td colspan='10' style='text-align:center;'>로딩 중...</td></tr>";
+  tbody.innerHTML = "<tr><td colspan='11' style='text-align:center;'>로딩 중...</td></tr>";
   try {
     const snap = await getDocs(collection(db, "reservations"));
     const paid = [];
@@ -1276,6 +1283,7 @@ async function loadSettlement() {
       return `
         <tr style="${cancelled ? "opacity:.5;" : ""}">
           <td style="font-weight:600;">${r.date}</td>
+          <td style="white-space:nowrap;color:var(--admin-text-muted);">${fmtPaidAt(r.createdAt)}</td>
           <td>${r.name || "-"}</td>
           <td>${tourTypeBadge(r.tourType)}</td>
           <td>${r.people}명</td>
@@ -1286,10 +1294,10 @@ async function loadSettlement() {
           <td style="color:#7e22ce;font-weight:600;" title="${isNetPartner ? `넷가 ₱${netCostOf(r).toLocaleString()}` : ""}">${isNetPartner && !cancelled ? (r.status === "confirmed" ? fmtPeso2(payout) : "확정 후") : "-"}</td>
           <td>${cancelled ? '<span class="badge cancelled">취소 · 환불확인</span>' : `<span class="badge ${r.status === "confirmed" ? "confirmed" : "pending"}">${STATUS_LABELS[r.status] || r.status}</span>`}</td>
         </tr>`;
-    }).join("") : "<tr><td colspan='10' style='text-align:center;color:var(--admin-text-muted);'>이 달 Maya 결제 건이 없습니다.</td></tr>";
+    }).join("") : "<tr><td colspan='11' style='text-align:center;color:var(--admin-text-muted);'>이 달 Maya 결제 건이 없습니다.</td></tr>";
   } catch (err) {
     console.error("Error loading settlement data:", err);
-    tbody.innerHTML = "<tr><td colspan='10' style='text-align:center; color:red;'>불러오는 중 오류가 발생했습니다.</td></tr>";
+    tbody.innerHTML = "<tr><td colspan='11' style='text-align:center; color:red;'>불러오는 중 오류가 발생했습니다.</td></tr>";
   }
 }
 
