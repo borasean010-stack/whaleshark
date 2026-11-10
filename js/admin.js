@@ -1236,7 +1236,7 @@ function fmtPaidAt(ts) {
   if (!ts || !ts.seconds) return "-";
   const d = new Date(ts.seconds * 1000);
   const p = (n) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
 }
 async function loadSettlement() {
   const tbody = document.getElementById("settle-tbody");
