@@ -6,7 +6,7 @@
   const token = new URLSearchParams(location.search).get('t') || document.documentElement.dataset.token || '';
   const app = document.getElementById('app');
 
-  const peso = n => '₱' + Math.round(n || 0).toLocaleString('en-US');
+  const peso = n => '₱' + (Number(n) || 0).toLocaleString('en-US', { maximumFractionDigits: 2 });
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
   const STATUS = {
     confirmed: '<span class="b b-ok">확정</span>',
@@ -48,8 +48,13 @@
     }
   }
 
-  // 확정 예약만 수수료 대상 — 인원 × 1인당 수수료
-  const commissionOf = r => r.status === 'confirmed' ? (Number(r.people) || 0) * data.partner.perPerson : 0;
+  // 확정 예약만 정산 대상 — 정산금(결제금액 − Maya 수수료 − 넷가)은 어드민이 계산해 넣어둔다
+  const commissionOf = r => {
+    if (r.status !== 'confirmed') return 0;
+    if (typeof r.payout === 'number') return r.payout;
+    return (Number(r.people) || 0) * (data.partner.perPerson || 0);
+  };
+  const ym = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); };
 
   function byMonth(rows) {
     const m = {};
@@ -64,15 +69,15 @@
   function render() {
     const rows = data.reservations;
     const confirmed = rows.filter(r => r.status === 'confirmed');
-    const thisMonth = new Date().toISOString().slice(0, 7);
+    const thisMonth = ym();
     const tm = confirmed.filter(r => (r.date || '').slice(0, 7) === thisMonth);
     const unsettled = confirmed.filter(r => !r.settled);
 
     let html = '<div class="cards">' +
       card('이번 달 확정 예약', tm.length + '건') +
       card('이번 달 인원', tm.reduce((s, r) => s + (Number(r.people) || 0), 0) + '명') +
-      card('이번 달 수수료', peso(tm.reduce((s, r) => s + commissionOf(r), 0)), 'hl') +
-      card('미정산 수수료', peso(unsettled.reduce((s, r) => s + commissionOf(r), 0)), unsettled.length ? 'warn' : '') +
+      card('이번 달 정산금', peso(tm.reduce((s, r) => s + commissionOf(r), 0)), 'hl') +
+      card('미정산 정산금', peso(unsettled.reduce((s, r) => s + commissionOf(r), 0)), unsettled.length ? 'warn' : '') +
       '</div>';
 
     html += '<div class="tabs">' +
@@ -98,7 +103,7 @@
     if (!months.length) return '<div class="empty">아직 예약이 없습니다.</div>';
 
     let t = '<div class="tbl-wrap"><table><thead><tr>' +
-      '<th>투어 월</th><th class="num">확정 건수</th><th class="num">인원</th><th class="num">매출</th><th class="num">수수료</th><th>정산</th>' +
+      '<th>투어 월</th><th class="num">확정 건수</th><th class="num">인원</th><th class="num">매출</th><th class="num">정산금</th><th>정산</th>' +
       '</tr></thead><tbody>';
     let tot = { n: 0, p: 0, rev: 0, com: 0 };
     months.forEach(key => {
@@ -127,13 +132,15 @@
     if (!shown.length) return t + '<div class="empty">해당 기간 예약이 없습니다.</div>';
 
     t += '<div class="tbl-wrap"><table><thead><tr>' +
-      '<th>투어일</th><th>예약자</th><th class="num">인원</th><th class="num">금액</th><th class="num">수수료</th><th>상태</th><th>정산</th>' +
+      '<th>투어일</th><th>예약자</th><th class="num">인원</th><th class="num">결제금액</th><th class="num">Maya 수수료</th><th class="num">넷가</th><th class="num">정산금</th><th>상태</th><th>정산</th>' +
       '</tr></thead><tbody>';
     shown.slice().sort((a, b) => (b.date || '').localeCompare(a.date || '')).forEach(r => {
       const com = commissionOf(r);
       t += '<tr><td><b>' + esc(r.date) + '</b></td><td>' + esc(r.name) + '</td>' +
         '<td class="num">' + (Number(r.people) || 0) + '명</td><td class="num">' + peso(r.totalPrice) + '</td>' +
-        '<td class="num">' + (com ? peso(com) : '-') + '</td>' +
+        '<td class="num">' + (r.status === 'confirmed' && r.fee != null ? '− ' + peso(r.fee) : '-') + '</td>' +
+        '<td class="num">' + (r.status === 'confirmed' && r.net != null ? '− ' + peso(r.net) : '-') + '</td>' +
+        '<td class="num"><b>' + (r.status === 'confirmed' ? peso(com) : '-') + '</b></td>' +
         '<td>' + (STATUS[r.status] || esc(r.status)) + '</td>' +
         '<td>' + (r.status !== 'confirmed' ? '-' : r.settled ? '<span class="b b-paid">완료</span>' : '<span class="b b-due">미정산</span>') + '</td></tr>';
     });

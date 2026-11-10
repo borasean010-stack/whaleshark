@@ -11,7 +11,7 @@
   <title>Admin Dashboard | BORACAY WHALE SHARK</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/admin.css?v=1792560000">
+  <link rel="stylesheet" href="css/admin.css?v=1793000000">
 </head>
 <body>
 
@@ -156,16 +156,25 @@
                       stroke="#10b981" stroke-dasharray="0 289" stroke-dashoffset="0"/>
                     <circle class="donut-seg" id="donut-seg-pending" cx="60" cy="60" r="46"
                       stroke="#f59e0b" stroke-dasharray="0 289" stroke-dashoffset="0"/>
+                    <circle class="donut-seg" id="donut-seg-cancelled" cx="60" cy="60" r="46"
+                      stroke="#ef4444" stroke-dasharray="0 289" stroke-dashoffset="0"/>
                   </svg>
                   <div class="donut-center">
                     <div class="donut-val" id="donut-revenue">₱0</div>
-                    <div class="donut-lbl">확정 매출</div>
+                    <div class="donut-lbl">확정 매출 (투어일 기준)</div>
                   </div>
                 </div>
                 <div class="donut-legend">
                   <div class="legend-item"><div class="legend-dot" style="background:#10b981;"></div>확정</div>
                   <div class="legend-item"><div class="legend-dot" style="background:#f59e0b;"></div>대기</div>
                   <div class="legend-item"><div class="legend-dot" style="background:#ef4444;"></div>취소</div>
+                </div>
+                <div class="month-sum">
+                  <div><span>확정</span><b id="month-cnt-confirmed">-</b></div>
+                  <div><span>대기</span><b id="month-cnt-pending">-</b></div>
+                  <div><span>취소</span><b id="month-cnt-cancelled">-</b></div>
+                  <div class="sep"><span>Maya 수수료 (3.5%+₱10)</span><b id="month-maya-fee">-</b></div>
+                  <div class="hl"><span>실수령 (정산완료 기준)</span><b id="month-net-received">-</b></div>
                 </div>
               </div>
 
@@ -270,22 +279,22 @@
 
         <!-- ══════════ VIEW: Settlement ══════════ -->
         <div id="view-settlement" class="admin-view" style="display:none;">
-          <div class="table-container" style="margin-bottom:16px;">
-            <div class="table-header"><h2>정산 필요 (예치금 차감 미확정)</h2></div>
+          <div class="table-container">
+            <div class="table-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+              <h2>Maya 결제 정산 <span style="font-size:.78rem;font-weight:500;color:var(--admin-text-muted);">결제완료 = 정산완료 · 투어일 기준</span></h2>
+              <select id="settle-month" style="padding:6px 10px;border:1px solid var(--admin-border);border-radius:8px;background:var(--admin-bg-2);color:var(--admin-text);"></select>
+            </div>
+            <div class="settle-cards" id="settle-cards"></div>
             <div style="overflow-x:auto;">
               <table>
-                <thead><tr><th>날짜</th><th>에이전시</th><th>그룹명</th><th>금액</th><th>관리</th></tr></thead>
-                <tbody id="settlement-deposit-tbody"></tbody>
+                <thead><tr><th>투어일</th><th>예약자</th><th>투어</th><th>인원</th><th>레퍼럴</th><th>결제금액</th><th>Maya 수수료</th><th>실수령</th><th>파트너 정산금</th><th>상태</th></tr></thead>
+                <tbody id="settle-tbody"></tbody>
               </table>
             </div>
-          </div>
-          <div class="table-container">
-            <div class="table-header"><h2>보라카이션 오피스페이 수금 대기</h2></div>
-            <div style="overflow-x:auto;">
-              <table>
-                <thead><tr><th>날짜</th><th>에이전시</th><th>그룹명</th><th>금액</th><th>관리</th></tr></thead>
-                <tbody id="settlement-cash-tbody"></tbody>
-              </table>
+            <div style="padding:12px 20px;font-size:.75rem;color:var(--admin-text-muted);line-height:1.6;">
+              · Maya 수수료는 카드 요율 3.5% + 건당 ₱10 으로 계산합니다 (GCash·QR 결제는 실제로는 더 적게 나갑니다).<br>
+              · 파트너 정산금 (예보·하바갓) = 결제금액 − Maya 수수료 − 넷가×인원 (패스트트랙 1인 ₱3,150). 확정 예약만 해당됩니다.<br>
+              · 취소된 결제 건은 합계에서 빠집니다 — 환불 여부는 Maya 관리자에서 확인하세요.
             </div>
           </div>
         </div>
@@ -462,6 +471,6 @@
   </div>
 </div>
 
-<script type="module" src="js/admin.js?v=1792900000"></script>
+<script type="module" src="js/admin.js?v=1793000000"></script>
 </body>
 </html>

@@ -56,10 +56,51 @@ let seenPendingIds = null;
 // 파트너는 로그인 없이 링크로 본다. 어드민이 예약 스냅샷을 받을 때마다 파트너 몫만
 // 추려 partnerReports/{토큰} 에 써두고, partner.html 은 그 한 문서만 읽는다.
 // 토큰은 어드민만 읽는 partnerConfig 에 두어 공개 코드에 남기지 않는다.
-// 수수료는 확정 예약의 "인원수 × perPerson" (건당 아님) — 계산은 partner.html 에서 한다.
+// 정산금은 확정 예약의 "결제금액 − Maya 수수료 − 넷가×인원" — 어드민이 계산해 행마다 넣는다.
 const PARTNER_REPORTS = {
   YEBO: { name: "예보 (YEBO)", perPerson: 450 }
 };
+// ── 정산 계산 (Maya 결제는 정산 완료된 것으로 본다) ──
+// Maya Checkout 카드 요율(공시 "starts at"): 3.5% + 건당 ₱10. 결제수단을 따로 받지
+// 않으므로 모든 Maya 결제에 카드 요율을 적용한다 (GCash·QR은 더 싸므로 보수적인 값).
+const MAYA_FEE_RATE = 0.035;
+const MAYA_FEE_FIXED = 10;
+// 1인 넷가 — 에이전시 포털 NET_PRICES 와 같은 표 (패스트트랙 외국인 ₱3,150)
+const SETTLE_NET_PRICES = {
+  VF: { PH: 5000, FOREIGN: 5000 },
+  F:  { PH: 3000, FOREIGN: 3150 },
+  R:  { PH: 2300, FOREIGN: 2600 },
+  T:  { PH: 1620, FOREIGN: 1920 },
+};
+// 정산금 = 결제금액 − Maya 수수료 − 넷가×인원 으로 정산하는 파트너
+const NET_PAYOUT_PARTNERS = ["YEBO", "HABAGAT"];
+const round2 = (n) => Math.round(n * 100) / 100;
+function isMayaPaid(d) {
+  return d.paymentStatus === "paid" && d.paymentMethod === "Maya";
+}
+function mayaFeeOf(d) {
+  const total = Number(d.totalPrice) || 0;
+  if (!isMayaPaid(d) || !total) return 0;
+  return round2(total * MAYA_FEE_RATE + MAYA_FEE_FIXED);
+}
+function netCostOf(d) {
+  const t = SETTLE_NET_PRICES[d.tourType];
+  if (!t) return 0;
+  return t[d.nationality === "PH" ? "PH" : "FOREIGN"] * (Number(d.people) || 0);
+}
+// 파트너 정산금 — 확정 예약만
+function partnerPayoutOf(d) {
+  if (d.status !== "confirmed") return 0;
+  return round2((Number(d.totalPrice) || 0) - mayaFeeOf(d) - netCostOf(d));
+}
+function fmtPeso2(n) {
+  return "₱" + (Number(n) || 0).toLocaleString("en-US", { maximumFractionDigits: 2 });
+}
+// 관리자 PC 시간 기준 "YYYY-MM" (toISOString 은 UTC라 매월 1일 오전 8시 전엔 지난달이 나온다)
+function localYearMonth(date = new Date()) {
+  return date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, "0");
+}
+
 const partnerTokens = {};
 const lastReportJson = {};
 let lastReservationSnap = null;
@@ -99,7 +140,10 @@ function publishPartnerReports(querySnapshot) {
         people: Number(d.people) || 0,
         totalPrice: Number(d.totalPrice) || 0,
         status: d.status || "",
-        settled: d.refSettled === true
+        settled: d.refSettled === true,
+        fee: mayaFeeOf(d),
+        net: netCostOf(d),
+        payout: partnerPayoutOf(d)
       });
     });
     const json = JSON.stringify({ partner: { name: cfg.name, perPerson: cfg.perPerson }, reservations: rows });
@@ -527,7 +571,7 @@ function renderReservations(querySnapshot) {
     }
 
     // 이번달 매출/예약수
-    const thisMonth = new Date().toISOString().slice(0, 7); // "YYYY-MM"
+    const thisMonth = localYearMonth();
     let monthRevenue = 0, monthCount = 0;
     querySnapshot.forEach(docSnap => {
       const d = docSnap.data();
@@ -631,34 +675,43 @@ function tourTypeBadge(type) {
 // ── Right panel: donut chart ──────────────────────────────────────────────
 function updateDonutChart(confirmedCount, pendingCount, querySnapshot) {
   const circ = 2 * Math.PI * 46; // ~289
-  const thisMonth = new Date().toISOString().slice(0, 7);
-  let mConfirmed = 0, mPending = 0, mCancelled = 0, mRevenue = 0;
+  const thisMonth = localYearMonth();
+  let mConfirmed = 0, mPending = 0, mCancelled = 0, mRevenue = 0, mPeople = 0, mFee = 0;
   querySnapshot.forEach(d => {
     const s = d.data();
     if (isAbandonedCardBooking(s)) return;
-    if (!s.date || !s.date.startsWith(thisMonth)) return;
-    if (s.status === 'confirmed') { mConfirmed++; mRevenue += s.totalPrice || 0; }
+    if (!s.date || !s.date.startsWith(thisMonth)) return;   // 투어일 기준
+    if (s.status === 'confirmed') {
+      mConfirmed++;
+      mRevenue += Number(s.totalPrice) || 0;
+      mPeople += Number(s.people) || 0;
+      mFee += mayaFeeOf(s);
+    }
     else if (s.status === 'pending') mPending++;
     else if (s.status === 'cancelled') mCancelled++;
   });
   const total = mConfirmed + mPending + mCancelled || 1;
-  const segConfirmed = document.getElementById("donut-seg-confirmed");
-  const segPending   = document.getElementById("donut-seg-pending");
-  const donutRev     = document.getElementById("donut-revenue");
-  const panelMonth   = document.getElementById("panel-month-label");
-  if (segConfirmed) {
-    const cLen = (mConfirmed / total) * circ;
-    segConfirmed.setAttribute("stroke-dasharray", `${cLen} ${circ - cLen}`);
-    segConfirmed.setAttribute("stroke-dashoffset", "0");
-  }
-  if (segPending) {
-    const cLen = (mConfirmed / total) * circ;
-    const pLen = (mPending / total) * circ;
-    segPending.setAttribute("stroke-dasharray", `${pLen} ${circ - pLen}`);
-    segPending.setAttribute("stroke-dashoffset", `-${cLen}`);
-  }
-  if (donutRev) donutRev.textContent = `₱${mRevenue.toLocaleString()}`;
-  if (panelMonth) panelMonth.textContent = thisMonth;
+  const cLen = (mConfirmed / total) * circ;
+  const pLen = (mPending / total) * circ;
+  const xLen = (mCancelled / total) * circ;
+  const seg = (id, len, offset) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.setAttribute("stroke-dasharray", `${len} ${circ - len}`);
+    el.setAttribute("stroke-dashoffset", `${-offset}`);
+  };
+  seg("donut-seg-confirmed", cLen, 0);
+  seg("donut-seg-pending", pLen, cLen);
+  seg("donut-seg-cancelled", xLen, cLen + pLen);
+
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  set("donut-revenue", fmtPeso2(mRevenue));
+  set("panel-month-label", thisMonth);
+  set("month-cnt-confirmed", `${mConfirmed}건 · ${mPeople}명`);
+  set("month-cnt-pending", `${mPending}건`);
+  set("month-cnt-cancelled", `${mCancelled}건`);
+  set("month-maya-fee", `− ${fmtPeso2(mFee)}`);
+  set("month-net-received", fmtPeso2(round2(mRevenue - mFee)));
 }
 
 function updateActivityList(querySnapshot) {
@@ -1177,75 +1230,66 @@ function loadDashboard() {
 // =====================================================================
 const TOUR_NAMES_FOR_SETTLEMENT = { VF: "VIP패스트트랙", F: "패스트트랙", R: "레귤러", T: "티켓", H: "호핑투어", L: "랜드투어" };
 
+let settleMonth = null;
 async function loadSettlement() {
-  const depositTbody = document.getElementById("settlement-deposit-tbody");
-  const cashTbody = document.getElementById("settlement-cash-tbody");
-  depositTbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>로딩 중...</td></tr>";
-  cashTbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>로딩 중...</td></tr>";
+  const tbody = document.getElementById("settle-tbody");
+  const cards = document.getElementById("settle-cards");
+  const sel = document.getElementById("settle-month");
+  tbody.innerHTML = "<tr><td colspan='10' style='text-align:center;'>로딩 중...</td></tr>";
   try {
-    const [reservationsSnap, agenciesSnap] = await Promise.all([
-      getDocs(query(collection(db, "reservations"), orderBy("createdAt", "desc"))),
-      getDocs(collection(db, "agencies"))
-    ]);
-    const agencyNames = {};
-    agenciesSnap.forEach(d => { agencyNames[d.id] = d.data().name; });
-
-    const depositRows = [];
-    const cashRows = [];
-    reservationsSnap.forEach(docSnap => {
+    const snap = await getDocs(collection(db, "reservations"));
+    const paid = [];
+    snap.forEach(docSnap => {
       const d = docSnap.data();
-      if (d.bookedBy !== "agency") return;
-      const tourName = TOUR_NAMES_FOR_SETTLEMENT[d.tourType] || d.tourType;
-      const agencyName = agencyNames[d.agencyId] || d.agencyId;
-
-      if (d.paymentMethod !== "cash_office" && d.depositApplied === false) {
-        depositRows.push(`
-          <tr>
-            <td>${d.date}</td>
-            <td>${agencyName}</td>
-            <td>${d.name}</td>
-            <td>${fmtPeso(d.totalPrice)}</td>
-            <td><span class="badge pending">잔액 차감 대기</span></td>
-          </tr>
-        `);
-      }
-      if (d.paymentMethod === "cash_office" && d.status === "pending") {
-        cashRows.push(`
-          <tr>
-            <td>${d.date}</td>
-            <td>${agencyName}</td>
-            <td>${d.name}</td>
-            <td>${fmtPeso(d.totalPrice)}</td>
-            <td><button class="action-btn" style="background: var(--admin-success);" data-action="mark-collected" data-id="${docSnap.id}" data-date="${d.date}" data-tourtype="${d.tourType}" data-pushtoken="${d.pushToken || ""}">현금 수령 확인</button></td>
-          </tr>
-        `);
-      }
+      if (isMayaPaid(d) && d.date) paid.push({ id: docSnap.id, ...d });
     });
 
-    depositTbody.innerHTML = depositRows.length ? depositRows.join("") : "<tr><td colspan='5' style='text-align:center;'>정산 필요 건이 없습니다.</td></tr>";
-    cashTbody.innerHTML = cashRows.length ? cashRows.join("") : "<tr><td colspan='5' style='text-align:center;'>수금 대기 건이 없습니다.</td></tr>";
+    const months = [...new Set(paid.map(r => r.date.slice(0, 7)))].sort().reverse();
+    const cur = localYearMonth();
+    if (!months.includes(cur)) months.unshift(cur);
+    if (!settleMonth || !months.includes(settleMonth)) settleMonth = cur;
+    sel.innerHTML = months.map(m => `<option value="${m}"${m === settleMonth ? " selected" : ""}>${m.replace("-", "년 ")}월</option>`).join("");
+    sel.onchange = () => { settleMonth = sel.value; loadSettlement(); };
 
-    cashTbody.querySelectorAll("button[data-action='mark-collected']").forEach(btn => {
-      btn.addEventListener("click", async () => {
-        if (!confirm("현금을 수령하셨나요? 예약 상태를 확정으로 바꿉니다.")) return;
-        try {
-          await updateDoc(doc(db, "reservations", btn.dataset.id), { status: "confirmed" });
-          notifyReservationConfirmed({
-            pushToken: btn.dataset.pushtoken,
-            date: btn.dataset.date,
-            tourType: btn.dataset.tourtype,
-          });
-          loadSettlement();
-        } catch (err) {
-          console.error("Error confirming cash collection:", err);
-          alert("처리에 실패했습니다.");
-        }
-      });
-    });
+    const rows = paid.filter(r => r.date.startsWith(settleMonth)).sort((a, b) => a.date.localeCompare(b.date));
+    const live = rows.filter(r => r.status !== "cancelled");
+    const sum = (arr, f) => round2(arr.reduce((s, r) => s + f(r), 0));
+    const gross = sum(live, r => Number(r.totalPrice) || 0);
+    const fee = sum(live, mayaFeeOf);
+    const received = round2(gross - fee);
+    const partnerPay = sum(live, r => NET_PAYOUT_PARTNERS.includes(r.referralCode) ? partnerPayoutOf(r) : 0);
+    const people = live.reduce((s, r) => s + (Number(r.people) || 0), 0);
+
+    cards.innerHTML = `
+      <div><div class="k">결제 건수</div><div class="v">${live.length}건 · ${people}명</div></div>
+      <div><div class="k">결제 총액</div><div class="v">${fmtPeso2(gross)}</div></div>
+      <div class="fee"><div class="k">Maya 수수료</div><div class="v">− ${fmtPeso2(fee)}</div></div>
+      <div class="hl"><div class="k">실수령 (정산완료)</div><div class="v">${fmtPeso2(received)}</div></div>
+      <div class="pay"><div class="k">파트너 정산금 (예보·하바갓)</div><div class="v">${fmtPeso2(partnerPay)}</div></div>
+      <div><div class="k">파트너 지급 후</div><div class="v">${fmtPeso2(round2(received - partnerPay))}</div></div>`;
+
+    tbody.innerHTML = rows.length ? rows.map(r => {
+      const cancelled = r.status === "cancelled";
+      const f = mayaFeeOf(r);
+      const isNetPartner = NET_PAYOUT_PARTNERS.includes(r.referralCode);
+      const payout = isNetPartner ? partnerPayoutOf(r) : 0;
+      return `
+        <tr style="${cancelled ? "opacity:.5;" : ""}">
+          <td style="font-weight:600;">${r.date}</td>
+          <td>${r.name || "-"}</td>
+          <td>${tourTypeBadge(r.tourType)}</td>
+          <td>${r.people}명</td>
+          <td>${r.referralCode ? `<span style="background:#f3e8ff;color:#7e22ce;font-size:.75rem;font-weight:700;padding:2px 7px;border-radius:4px;">${r.referralCode}</span>` : "-"}</td>
+          <td>${fmtPeso2(r.totalPrice)}</td>
+          <td style="color:#be123c;">− ${fmtPeso2(f)}</td>
+          <td style="font-weight:700;color:#16a34a;">${fmtPeso2(round2((Number(r.totalPrice) || 0) - f))}</td>
+          <td style="color:#7e22ce;font-weight:600;" title="${isNetPartner ? `넷가 ₱${netCostOf(r).toLocaleString()}` : ""}">${isNetPartner && !cancelled ? (r.status === "confirmed" ? fmtPeso2(payout) : "확정 후") : "-"}</td>
+          <td>${cancelled ? '<span class="badge cancelled">취소 · 환불확인</span>' : `<span class="badge ${r.status === "confirmed" ? "confirmed" : "pending"}">${STATUS_LABELS[r.status] || r.status}</span>`}</td>
+        </tr>`;
+    }).join("") : "<tr><td colspan='10' style='text-align:center;color:var(--admin-text-muted);'>이 달 Maya 결제 건이 없습니다.</td></tr>";
   } catch (err) {
     console.error("Error loading settlement data:", err);
-    depositTbody.innerHTML = "<tr><td colspan='5' style='text-align:center; color:red;'>불러오는 중 오류가 발생했습니다.</td></tr>";
-    cashTbody.innerHTML = "";
+    tbody.innerHTML = "<tr><td colspan='10' style='text-align:center; color:red;'>불러오는 중 오류가 발생했습니다.</td></tr>";
   }
 }
 
@@ -1722,6 +1766,13 @@ async function loadPartner() {
     const unsettledAll = confirmedAll.filter(r => !r.refSettled);
     const unsettledRev = unsettledAll.reduce((s, r) => s + (r.totalPrice || 0), 0);
     const pendingAll = allRows.filter(r => r.status === 'pending');
+    // 예보·하바갓: 정산금 = 결제금액 − Maya 수수료 − 넷가×인원
+    const usesNet = NET_PAYOUT_PARTNERS.includes(_partnerCode);
+    const payoutAll = round2(confirmedAll.reduce((s, r) => s + partnerPayoutOf(r), 0));
+    const unsettledPay = round2(unsettledAll.reduce((s, r) => s + partnerPayoutOf(r), 0));
+    const payoutLine = r => usesNet && r.status === 'confirmed'
+      ? `<div style="font-size:0.72rem;font-weight:600;color:#7e22ce;" title="결제 ${fmtPeso2(r.totalPrice)} − Maya ${fmtPeso2(mayaFeeOf(r))} − 넷가 ${fmtPeso2(netCostOf(r))}">정산금 ${fmtPeso2(partnerPayoutOf(r))}</div>`
+      : '';
 
     statsEl.innerHTML = `
       <div style="background:var(--admin-bg-2);border-radius:10px;padding:10px 18px;text-align:center;">
@@ -1737,9 +1788,13 @@ async function loadPartner() {
       <div style="background:#f0f9ff;border-radius:10px;padding:10px 18px;text-align:center;">
         <div style="font-size:1.1rem;font-weight:800;color:#0369a1;">₱${revenueAll.toLocaleString()}</div><div style="font-size:0.75rem;color:#0369a1;">확정 매출</div>
       </div>
+      ${usesNet ? `
+      <div style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:10px;padding:10px 18px;text-align:center;">
+        <div style="font-size:1.1rem;font-weight:800;color:#7e22ce;">${fmtPeso2(payoutAll)}</div><div style="font-size:0.75rem;color:#7e22ce;">정산금 합계</div>
+      </div>` : ''}
       ${unsettledAll.length > 0 ? `
       <div style="background:#fff1f2;border:1px solid #fecdd3;border-radius:10px;padding:10px 18px;text-align:center;">
-        <div style="font-size:1.1rem;font-weight:800;color:#be123c;">₱${unsettledRev.toLocaleString()}</div><div style="font-size:0.75rem;color:#be123c;">미정산 ${unsettledAll.length}건</div>
+        <div style="font-size:1.1rem;font-weight:800;color:#be123c;">${usesNet ? fmtPeso2(unsettledPay) : '₱' + unsettledRev.toLocaleString()}</div><div style="font-size:0.75rem;color:#be123c;">미정산 ${usesNet ? '정산금 ' : ''}${unsettledAll.length}건</div>
       </div>
       <button id="${_partnerPrefix}-settle-btn" style="padding:8px 16px;background:#be123c;color:#fff;border:none;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;">정산 완료 처리</button>
       ` : `
@@ -1765,7 +1820,7 @@ async function loadPartner() {
             <td style="padding:8px 12px;">${r.name}<div style="font-size:0.75rem;color:var(--admin-text-muted);">${r.email||''}</div></td>
             <td style="padding:8px 12px;text-align:center;">${r.people}명</td>
             <td style="padding:8px 12px;">${NAT_LABELS[r.nationality] || r.nationality}</td>
-            <td style="padding:8px 12px;font-weight:700;">₱${(r.totalPrice||0).toLocaleString()}</td>
+            <td style="padding:8px 12px;font-weight:700;">₱${(r.totalPrice||0).toLocaleString()}${payoutLine(r)}</td>
             <td style="padding:8px 12px;">${r.paymentStatus==='paid'?'<span style="color:#16a34a;font-weight:600;">결제완료</span>':'<span style="color:#ca8a04;">미결제</span>'}</td>
             <td style="padding:8px 12px;">${r.referralCode ? `<span style="background:#f3e8ff;color:#7e22ce;font-size:.75rem;font-weight:700;padding:2px 7px;border-radius:4px;">${r.referralCode}</span>` : '<span style="color:var(--admin-text-muted);font-size:.75rem;">-</span>'}</td>
             <td style="padding:8px 12px;"><span style="padding:2px 8px;border-radius:6px;font-size:0.78rem;font-weight:600;background:${r.status==='confirmed'?'#dcfce7':r.status==='pending'?'#fef9c3':'#fee2e2'};color:${r.status==='confirmed'?'#16a34a':r.status==='pending'?'#ca8a04':'#dc2626'}">${STATUS_LABELS[r.status]||r.status}</span></td>
@@ -1835,7 +1890,10 @@ async function loadPartner() {
         const mPend = mRows.filter(r => r.status === 'pending');
         const mRev = mConf.reduce((s, r) => s + (r.totalPrice || 0), 0);
         const mUnsettled = mConf.filter(r => !r.refSettled);
-        const mUnsettledRev = mUnsettled.reduce((s, r) => s + (r.totalPrice || 0), 0);
+        const mUnsettledRev = usesNet
+          ? round2(mUnsettled.reduce((s, r) => s + partnerPayoutOf(r), 0))
+          : mUnsettled.reduce((s, r) => s + (r.totalPrice || 0), 0);
+        const mPayout = round2(mConf.reduce((s, r) => s + partnerPayoutOf(r), 0));
         const [yr, mo] = m.split('-');
         return `
           <div style="background:var(--admin-bg-2);border-radius:12px;margin-bottom:16px;overflow:hidden;">
@@ -1847,8 +1905,9 @@ async function loadPartner() {
               </div>
               <div style="text-align:right;">
                 <div style="font-size:1rem;font-weight:800;color:#0369a1;">₱${mRev.toLocaleString()}</div>
+                ${usesNet ? `<div style="font-size:0.8rem;font-weight:700;color:#7e22ce;">정산금 ${fmtPeso2(mPayout)}</div>` : ''}
                 ${mUnsettled.length > 0
-                  ? `<div style="font-size:0.75rem;color:#be123c;font-weight:600;">미정산 ₱${mUnsettledRev.toLocaleString()} (${mUnsettled.length}건)
+                  ? `<div style="font-size:0.75rem;color:#be123c;font-weight:600;">미정산 ${fmtPeso2(mUnsettledRev)} (${mUnsettled.length}건)
                        <button class="action-btn yebo-month-settle-btn" data-month="${m}" style="margin-left:8px;background:#be123c;padding:3px 8px;font-size:0.72rem;">정산처리</button>
                      </div>`
                   : `<div style="font-size:0.75rem;color:#15803d;font-weight:600;">✓ 정산완료</div>`
@@ -1872,7 +1931,7 @@ async function loadPartner() {
                       <td style="padding:7px 12px;">${r.date}</td>
                       <td style="padding:7px 12px;">${r.name}</td>
                       <td style="padding:7px 12px;text-align:center;">${r.people}명</td>
-                      <td style="padding:7px 12px;font-weight:700;">₱${(r.totalPrice||0).toLocaleString()}</td>
+                      <td style="padding:7px 12px;font-weight:700;">₱${(r.totalPrice||0).toLocaleString()}${payoutLine(r)}</td>
                       <td style="padding:7px 12px;">${r.paymentStatus==='paid'?'<span style="color:#16a34a;font-weight:600;">완료</span>':'<span style="color:#ca8a04;">미결제</span>'}</td>
                       <td style="padding:7px 12px;"><span style="padding:2px 7px;border-radius:5px;font-size:0.75rem;font-weight:600;background:${r.status==='confirmed'?'#dcfce7':r.status==='pending'?'#fef9c3':'#fee2e2'};color:${r.status==='confirmed'?'#16a34a':r.status==='pending'?'#ca8a04':'#dc2626'}">${STATUS_LABELS[r.status]||r.status}</span></td>
                       <td style="padding:7px 12px;">${r.refSettled?'<span style="color:#16a34a;font-weight:600;">✓</span>':'<span style="color:#9ca3af;">-</span>'}</td>

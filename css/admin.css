@@ -382,6 +382,20 @@ button.dash-cancel-btn {
 .donut-lbl  { font-size: .7rem; color: var(--admin-text-muted); }
 .donut-legend { display: flex; gap: 14px; justify-content: center; margin-top: 8px; }
 .legend-item { display: flex; align-items: center; gap: 5px; font-size: .72rem; color: var(--admin-text-muted); }
+.month-sum { margin-top: 14px; border-top: 1px solid var(--admin-border); padding-top: 10px; font-size: .78rem; }
+.month-sum > div { display: flex; justify-content: space-between; padding: 3px 0; color: var(--admin-text-muted); }
+.month-sum b { color: var(--admin-text); font-weight: 700; }
+.month-sum .sep { margin-top: 6px; padding-top: 8px; border-top: 1px dashed var(--admin-border); }
+.month-sum .hl b { color: #16a34a; font-size: .9rem; }
+.settle-cards { display: flex; gap: 10px; flex-wrap: wrap; padding: 16px 20px; border-bottom: 1px solid var(--admin-border); }
+.settle-cards > div { background: var(--admin-bg-2); border-radius: 10px; padding: 10px 16px; min-width: 130px; }
+.settle-cards .k { font-size: .72rem; color: var(--admin-text-muted); }
+.settle-cards .v { font-size: 1.1rem; font-weight: 800; }
+.settle-cards .hl { background: #f0fdf4; }
+.settle-cards .hl .v { color: #16a34a; }
+.settle-cards .fee .v { color: #be123c; }
+.settle-cards .pay .v { color: #7e22ce; }
+
 .legend-dot  { width: 7px; height: 7px; border-radius: 50%; }
 
 /* Activity list */
