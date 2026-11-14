@@ -7,14 +7,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const currentLabel = langSelect.querySelector('.lang-select-current');
 
   const STORAGE_KEY = 'ws_lang';
-  const LANG_NAMES = { ko: '한국어', en: 'English', zh: '中文', ja: '日本語' };
-  const LANG_PREFIX = { ko: '', en: '/en', zh: '/zh', ja: '/ja' };
+  const LANG_NAMES = { ko: '한국어', en: 'English', zh: '中文', ja: '日本語', ru: 'Русский' };
+  const LANG_PREFIX = { ko: '', en: '/en', zh: '/zh', ja: '/ja', ru: '/ru' };
 
   const path = window.location.pathname;
   let currentLang;
   if (path.startsWith('/en/') || path === '/en') currentLang = 'en';
   else if (path.startsWith('/zh/') || path === '/zh') currentLang = 'zh';
   else if (path.startsWith('/ja/') || path === '/ja') currentLang = 'ja';
+  else if (path.startsWith('/ru/') || path === '/ru') currentLang = 'ru';
   else {
     // Root path (ko URL — index.html, tour detail pages). Many first-time
     // visitors here are local Filipino staff/customers or foreign tourists
@@ -29,6 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       currentLang = (navigator.language || '').toLowerCase().startsWith('ko') ? 'ko' : 'en';
     }
+  }
+
+  // zh/ja/ru 페이지로 들어온 손님은 공용 예약 페이지도 같은 언어로 열리게 기억해 둔다
+  if (currentLang === 'zh' || currentLang === 'ja' || currentLang === 'ru') {
+    try { localStorage.setItem(STORAGE_KEY, currentLang); } catch (_) {}
   }
 
   currentLabel.textContent = LANG_NAMES[currentLang];

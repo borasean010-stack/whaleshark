@@ -42,8 +42,8 @@
   <div class="container header-inner">
     <a href="./" class="logo"><img src="assets/mwlogo.webp" alt="Libertad Whale Shark" class="logo-img"><span class="logo-text">BORACAY WHALE SHARK</span></a>
     <nav class="nav">
-      <a href="./" data-en="Home" data-ko="홈" data-zh="首页" data-ja="ホーム">Home</a>
-      <a href="./#comparison-section" data-en="Tours" data-ko="투어" data-zh="行程" data-ja="ツアー">Tours</a>
+      <a href="./" data-en="Home" data-ko="홈" data-zh="首页" data-ja="ホーム" data-ru="Главная">Home</a>
+      <a href="./#comparison-section" data-en="Tours" data-ko="투어" data-zh="行程" data-ja="ツアー" data-ru="Туры">Tours</a>
       <div class="lang-select" id="lang-select">
         <button class="lang-select-trigger" type="button" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color:#fff; padding: 6px 16px; border-radius:99px; font-size:1rem; font-weight:700; cursor:pointer;">🌐 <span class="lang-select-current">한국어</span></button>
         <div class="lang-select-menu">
@@ -51,9 +51,10 @@
           <a href="#" data-lang="en">🇺🇸 English</a>
           <a href="#" data-lang="zh">🇨🇳 中文</a>
           <a href="#" data-lang="ja">🇯🇵 日本語</a>
+          <a href="#" data-lang="ru">🇷🇺 Русский</a>
         </div>
       </div>
-      <a href="reservation" data-en="Book Now" data-ko="예약하기" data-zh="立即预订" data-ja="今すぐ予約">Book Now</a>
+      <a href="reservation" data-en="Book Now" data-ko="예약하기" data-zh="立即预订" data-ja="今すぐ予約" data-ru="Забронировать">Book Now</a>
     </nav>
   </div>
 </header>
@@ -66,7 +67,7 @@
 <div class="wizard-page">
 
   <div class="wizard-hero">
-    <span class="res-badge" id="dyn-badge" data-en="RESERVATION EXPERIENCE" data-ko="예약 안내" data-zh="预约须知" data-ja="ご予約について">RESERVATION EXPERIENCE</span>
+    <span class="res-badge" id="dyn-badge" data-en="RESERVATION EXPERIENCE" data-ko="예약 안내" data-zh="预约须知" data-ja="ご予約について" data-ru="Бронирование">RESERVATION EXPERIENCE</span>
     <h1 class="wizard-hero-title" id="dyn-title">SECURE YOUR TOUR</h1>
     <p class="wizard-hero-desc" id="dyn-desc">Book your private Boracay Whale Shark tour right now.</p>
   </div>
@@ -76,23 +77,23 @@
   <div class="wizard-steps" data-nosnippet>
     <button type="button" class="wizard-step-tab active" data-step-tab="1">
       <span class="wizard-step-num">1</span>
-      <span data-en="Booking Details" data-ko="예약 정보" data-zh="预约信息" data-ja="予約情報">Booking Details</span>
+      <span data-en="Booking Details" data-ko="예약 정보" data-zh="预约信息" data-ja="予約情報" data-ru="Детали брони">Booking Details</span>
     </button>
     <button type="button" class="wizard-step-tab" data-step-tab="2">
       <span class="wizard-step-num">2</span>
-      <span data-en="Guest Info" data-ko="예약자 정보" data-zh="预约人信息" data-ja="お客様情報">Guest Info</span>
+      <span data-en="Guest Info" data-ko="예약자 정보" data-zh="预约人信息" data-ja="お客様情報" data-ru="Данные гостя">Guest Info</span>
     </button>
     <button type="button" class="wizard-step-tab" data-step-tab="3">
       <span class="wizard-step-num">3</span>
-      <span data-en="Review Booking" data-ko="예약 확인" data-zh="预约确认" data-ja="予約確認">Review Booking</span>
+      <span data-en="Review Booking" data-ko="예약 확인" data-zh="预约确认" data-ja="予約確認" data-ru="Проверка брони">Review Booking</span>
     </button>
     <button type="button" class="wizard-step-tab" data-step-tab="4">
       <span class="wizard-step-num">4</span>
-      <span data-en="Payment" data-ko="결제" data-zh="支付" data-ja="お支払い">Payment</span>
+      <span data-en="Payment" data-ko="결제" data-zh="支付" data-ja="お支払い" data-ru="Оплата">Payment</span>
     </button>
     <button type="button" class="wizard-step-tab" data-step-tab="5">
       <span class="wizard-step-num">5</span>
-      <span data-en="Confirm" data-ko="확정" data-zh="确定" data-ja="確定">Confirm</span>
+      <span data-en="Confirm" data-ko="확정" data-zh="确定" data-ja="確定" data-ru="Готово">Confirm</span>
     </button>
   </div>
 
@@ -144,86 +145,86 @@
 
         <!-- ===== STEP 1: BOOKING DETAILS ===== -->
         <div class="wizard-panel active" data-step="1">
-          <h2 data-en="Booking Details" data-ko="예약 정보" data-zh="预约信息" data-ja="予約情報">Booking Details</h2>
+          <h2 data-en="Booking Details" data-ko="예약 정보" data-zh="预约信息" data-ja="予約情報" data-ru="Детали брони">Booking Details</h2>
 
           <div class="form-group">
-            <label for="date" data-en="Desired Tour Date *" data-ko="투어 희망 날짜 *" data-zh="希望游览日期 *" data-ja="希望ツアー日 *">Desired Tour Date *</label>
+            <label for="date" data-en="Desired Tour Date *" data-ko="투어 희망 날짜 *" data-zh="希望游览日期 *" data-ja="希望ツアー日 *" data-ru="Желаемая дата тура *">Desired Tour Date *</label>
             <input type="date" id="date" name="date" class="input-luxury" required>
           </div>
 
           <div class="form-group">
-            <label for="pickupResort" data-en="Resort (optional)" data-ko="리조트 (선택사항)" data-zh="度假村（选填）" data-ja="リゾート（任意）">Resort (optional)</label>
+            <label for="pickupResort" data-en="Resort (optional)" data-ko="리조트 (선택사항)" data-zh="度假村（选填）" data-ja="リゾート（任意）" data-ru="Отель (необязательно)">Resort (optional)</label>
             <input type="text" id="pickupResort" name="pickupResort" class="input-luxury" placeholder="e.g. Shangri-La Boracay"
                    lang="en" data-latin-only>
             <p class="input-hint" id="pickupResort-hint" hidden
                data-en="Please enter the resort name in English so the driver can find it."
                data-ko="기사님이 찾을 수 있도록 리조트명을 영문으로 입력해 주세요."
                data-zh="请用英文填写酒店名称，以便司机查找。"
-               data-ja="ドライバーが分かるよう、リゾート名はローマ字で入力してください。">Please enter the resort name in English so the driver can find it.</p>
+               data-ja="ドライバーが分かるよう、リゾート名はローマ字で入力してください。" data-ru="Введите название отеля латиницей, чтобы водитель мог его найти.">Please enter the resort name in English so the driver can find it.</p>
           </div>
 
           <div class="form-group">
-            <label for="people" data-en="Number of People *" data-ko="참여 인원 *" data-zh="参加人数 *" data-ja="参加人数 *">Number of People *</label>
+            <label for="people" data-en="Number of People *" data-ko="참여 인원 *" data-zh="参加人数 *" data-ja="参加人数 *" data-ru="Количество человек *">Number of People *</label>
             <input type="number" id="people" name="people" class="input-luxury" min="1" max="20" value="2" required>
           </div>
 
           <div class="form-group">
-            <label for="nationality" data-en="Nationality *" data-ko="국적선택 *" data-zh="国籍选择 *" data-ja="国籍選択 *">Nationality *</label>
+            <label for="nationality" data-en="Nationality *" data-ko="국적선택 *" data-zh="国籍选择 *" data-ja="国籍選択 *" data-ru="Гражданство *">Nationality *</label>
             <select id="nationality" name="nationality" class="input-luxury" required>
-              <option value="" disabled selected data-en="Select nationality" data-ko="국적을 선택하세요" data-zh="请选择国籍" data-ja="国籍を選択してください">Select nationality</option>
-              <option value="PH" data-en="Philippine" data-ko="필리핀" data-zh="菲律宾" data-ja="フィリピン">Philippine</option>
-              <option value="FOREIGN" data-en="Foreigner" data-ko="외국인" data-zh="外国人" data-ja="外国人">Foreigner</option>
+              <option value="" disabled selected data-en="Select nationality" data-ko="국적을 선택하세요" data-zh="请选择国籍" data-ja="国籍を選択してください" data-ru="Выберите гражданство">Select nationality</option>
+              <option value="PH" data-en="Philippine" data-ko="필리핀" data-zh="菲律宾" data-ja="フィリピン" data-ru="Филиппины">Philippine</option>
+              <option value="FOREIGN" data-en="Foreigner" data-ko="외국인" data-zh="外国人" data-ja="外国人" data-ru="Иностранец">Foreigner</option>
             </select>
           </div>
 
           <div class="price-preview" id="price-preview" style="display:none;">
-            <span data-en="Price per Person" data-ko="1인 가격" data-zh="每人价格" data-ja="1名あたりの料金">Price per Person</span>
+            <span data-en="Price per Person" data-ko="1인 가격" data-zh="每人价格" data-ja="1名あたりの料金" data-ru="Цена за 1 человека">Price per Person</span>
             <strong id="pp-price">-</strong>
             <span class="price-total" id="pp-total"></span>
           </div>
 
           <div class="form-group">
-            <label for="pickup" data-en="Pick Up Location *" data-ko="픽업 장소 *" data-zh="接送地点 *" data-ja="ピックアップ場所 *">Pick Up Location *</label>
+            <label for="pickup" data-en="Pick Up Location *" data-ko="픽업 장소 *" data-zh="接送地点 *" data-ja="ピックアップ場所 *" data-ru="Место сбора *">Pick Up Location *</label>
             <select id="pickup" name="pickup" class="input-luxury" required>
-              <option value="Jollibee Main Road" selected data-en="Jollibee Main Road" data-ko="메인로드 졸리비" data-zh="乔利比大道" data-ja="ジョリビー・メインロード">Jollibee Main Road</option>
+              <option value="Jollibee Main Road" selected data-en="Jollibee Main Road" data-ko="메인로드 졸리비" data-zh="乔利比大道" data-ja="ジョリビー・メインロード" data-ru="Jollibee, Main Road">Jollibee Main Road</option>
             </select>
           </div>
 
           <div class="form-group" id="meeting-time-group" style="display:none;">
-            <label for="meetingTime" data-en="Meeting Time *" data-ko="미팅 시간 *" data-zh="集合时间 *" data-ja="集合時間 *">Meeting Time *</label>
+            <label for="meetingTime" data-en="Meeting Time *" data-ko="미팅 시간 *" data-zh="集合时间 *" data-ja="集合時間 *" data-ru="Время сбора *">Meeting Time *</label>
 
             <div id="meeting-select-block" style="display:none;">
               <select id="meetingTime" name="meetingTime" class="input-luxury">
-                <option value="07:30" hidden data-en="07:30 AM" data-ko="오전 07:30" data-zh="上午7:30" data-ja="午前7:30">07:30 AM</option>
-                <option value="08:00" data-en="08:00 AM" data-ko="오전 08:00" data-zh="上午8:00" data-ja="午前8:00">08:00 AM</option>
-                <option value="09:00" data-en="09:00 AM" data-ko="오전 09:00" data-zh="上午9:00" data-ja="午前9:00">09:00 AM</option>
-                <option value="10:00" data-en="10:00 AM" data-ko="오전 10:00" data-zh="上午10:00" data-ja="午前10:00">10:00 AM</option>
+                <option value="07:30" hidden data-en="07:30 AM" data-ko="오전 07:30" data-zh="上午7:30" data-ja="午前7:30" data-ru="07:30">07:30 AM</option>
+                <option value="08:00" data-en="08:00 AM" data-ko="오전 08:00" data-zh="上午8:00" data-ja="午前8:00" data-ru="08:00">08:00 AM</option>
+                <option value="09:00" data-en="09:00 AM" data-ko="오전 09:00" data-zh="上午9:00" data-ja="午前9:00" data-ru="09:00">09:00 AM</option>
+                <option value="10:00" data-en="10:00 AM" data-ko="오전 10:00" data-zh="上午10:00" data-ja="午前10:00" data-ru="10:00">10:00 AM</option>
               </select>
             </div>
 
             <p class="map-caption" id="meeting-fixed-note">Meeting Time: 07:30 AM</p>
 
-            <p class="map-caption" data-en="Meeting Point: Jollibee Main Road, Boracay" data-ko="미팅 장소: 메인로드 졸리비, 보라카이" data-zh="集合地点：长滩岛乔利比大道" data-ja="集合場所：ボラカイ ジョリビー・メインロード">Meeting Point: Jollibee Main Road, Boracay</p>
-            <a id="meeting-map-link" href="https://www.google.com/maps/search/?api=1&query=Jollibee+Boracay+Main+Road+Malay+Aklan+Philippines" target="_blank" rel="noopener" class="map-link-btn" data-en="Open in Google Maps" data-ko="구글맵에서 보기" data-zh="在谷歌地图中查看" data-ja="Googleマップで見る">Open in Google Maps</a>
+            <p class="map-caption" data-en="Meeting Point: Jollibee Main Road, Boracay" data-ko="미팅 장소: 메인로드 졸리비, 보라카이" data-zh="集合地点：长滩岛乔利比大道" data-ja="集合場所：ボラカイ ジョリビー・メインロード" data-ru="Место встречи: Jollibee, Main Road, Боракай">Meeting Point: Jollibee Main Road, Boracay</p>
+            <a id="meeting-map-link" href="https://www.google.com/maps/search/?api=1&query=Jollibee+Boracay+Main+Road+Malay+Aklan+Philippines" target="_blank" rel="noopener" class="map-link-btn" data-en="Open in Google Maps" data-ko="구글맵에서 보기" data-zh="在谷歌地图中查看" data-ja="Googleマップで見る" data-ru="Открыть в Google Картах">Open in Google Maps</a>
           </div>
 
           <div class="form-group">
-            <label data-en="Route Map" data-ko="경로 지도" data-zh="路线地图" data-ja="ルートマップ">Route Map</label>
+            <label data-en="Route Map" data-ko="경로 지도" data-zh="路线地图" data-ja="ルートマップ" data-ru="Карта маршрута">Route Map</label>
             <div id="route-map"></div>
-            <p class="map-caption" data-en="Illustrative route only — actual pickup involves a boat transfer to Libertad, Antique." data-ko="실제 경로는 안티케주 리버타드까지 보트 이동을 포함합니다 (참고용 지도)." data-zh="仅为示意路线——实际接送需经安蒂克省利伯塔德的渡船前往。" data-ja="あくまで参考用のルート図です。実際の送迎はアンティーケ州リベルタッドまでの船移動を含みます。">Illustrative route only — actual pickup involves a boat transfer to Libertad, Antique.</p>
+            <p class="map-caption" data-en="Illustrative route only — actual pickup involves a boat transfer to Libertad, Antique." data-ko="실제 경로는 안티케주 리버타드까지 보트 이동을 포함합니다 (참고용 지도)." data-zh="仅为示意路线——实际接送需经安蒂克省利伯塔德的渡船前往。" data-ja="あくまで参考用のルート図です。実際の送迎はアンティーケ州リベルタッドまでの船移動を含みます。" data-ru="Схема маршрута примерная — на самом деле трансфер включает переправу на лодке до Либертада (провинция Антик).">Illustrative route only — actual pickup involves a boat transfer to Libertad, Antique.</p>
           </div>
 
           <div class="wizard-actions">
-            <button type="button" class="wizard-next" data-goto="2" data-en="Next: Guest Info" data-ko="다음: 예약자 정보" data-zh="下一步：预约人信息" data-ja="次へ：お客様情報">Next: Guest Info</button>
+            <button type="button" class="wizard-next" data-goto="2" data-en="Next: Guest Info" data-ko="다음: 예약자 정보" data-zh="下一步：预约人信息" data-ja="次へ：お客様情報" data-ru="Далее: данные гостя">Next: Guest Info</button>
           </div>
         </div>
 
         <!-- ===== STEP 2: GUEST INFO ===== -->
         <div class="wizard-panel" data-step="2">
-          <h2 data-en="Guest Info" data-ko="예약자 정보" data-zh="预约人信息" data-ja="お客様情報">Guest Info</h2>
+          <h2 data-en="Guest Info" data-ko="예약자 정보" data-zh="预约人信息" data-ja="お客様情報" data-ru="Данные гостя">Guest Info</h2>
 
           <div class="form-group">
-            <label for="name" data-en="Name (English) *" data-ko="예약자 성함 (영문) *" data-zh="姓名（英文）*" data-ja="氏名（ローマ字）*">Name (English) *</label>
+            <label for="name" data-en="Name (English) *" data-ko="예약자 성함 (영문) *" data-zh="姓名（英文）*" data-ja="氏名（ローマ字）*" data-ru="Имя (латиницей) *">Name (English) *</label>
             <input type="text" id="name" name="name" class="input-luxury" placeholder="HONG GILDONG"
                    lang="en" autocapitalize="characters" autocomplete="name"
                    data-latin-only pattern="[A-Za-z][A-Za-z .'\-]*" required>
@@ -231,68 +232,68 @@
                data-en="Please enter your name in English, as shown on your passport."
                data-ko="여권과 동일한 영문으로 입력해 주세요."
                data-zh="请输入与护照一致的英文姓名。"
-               data-ja="パスポートと同じローマ字で入力してください。">Please enter your name in English, as shown on your passport.</p>
+               data-ja="パスポートと同じローマ字で入力してください。" data-ru="Введите имя латиницей, как в паспорте.">Please enter your name in English, as shown on your passport.</p>
           </div>
 
           <div class="form-group">
-            <label for="email" data-en="Email *" data-ko="이메일 *" data-zh="邮箱 *" data-ja="メールアドレス *">Email *</label>
+            <label for="email" data-en="Email *" data-ko="이메일 *" data-zh="邮箱 *" data-ja="メールアドレス *" data-ru="Электронная почта *">Email *</label>
             <input type="email" id="email" name="email" class="input-luxury" placeholder="Enter your email address" required>
           </div>
 
           <div class="form-group">
-            <label for="emergencyContact" data-en="Emergency Contact (optional)" data-ko="비상 연락처 (선택)" data-zh="紧急联系方式（选填）" data-ja="緊急連絡先（任意）">Emergency Contact (optional)</label>
+            <label for="emergencyContact" data-en="Emergency Contact (optional)" data-ko="비상 연락처 (선택)" data-zh="紧急联系方式（选填）" data-ja="緊急連絡先（任意）" data-ru="Контакт для экстренной связи (необязательно)">Emergency Contact (optional)</label>
             <input type="tel" id="emergencyContact" name="emergencyContact" class="input-luxury" placeholder="+63 9XX XXX XXXX">
           </div>
 
           <div class="form-group">
-            <label for="referralCode" data-en="Referral Code (optional)" data-ko="레퍼럴 코드 (선택사항)" data-zh="推荐码（选填）" data-ja="紹介コード（任意）">Referral Code (optional)</label>
+            <label for="referralCode" data-en="Referral Code (optional)" data-ko="레퍼럴 코드 (선택사항)" data-zh="推荐码（选填）" data-ja="紹介コード（任意）" data-ru="Реферальный код (необязательно)">Referral Code (optional)</label>
             <input type="text" id="referralCode" name="referralCode" class="input-luxury" placeholder="" autocomplete="off">
           </div>
 
           <div class="wizard-actions">
-            <button type="button" class="wizard-back" data-goto="1" data-en="Back" data-ko="이전" data-zh="上一步" data-ja="戻る">Back</button>
-            <button type="button" class="wizard-next" data-goto="3" data-en="Next: Review Booking" data-ko="다음: 예약 확인" data-zh="下一步：预约确认" data-ja="次へ：予約確認">Next: Review Booking</button>
+            <button type="button" class="wizard-back" data-goto="1" data-en="Back" data-ko="이전" data-zh="上一步" data-ja="戻る" data-ru="Назад">Back</button>
+            <button type="button" class="wizard-next" data-goto="3" data-en="Next: Review Booking" data-ko="다음: 예약 확인" data-zh="下一步：预约确认" data-ja="次へ：予約確認" data-ru="Далее: проверка брони">Next: Review Booking</button>
           </div>
         </div>
 
         <!-- ===== STEP 3: REVIEW BOOKING ===== -->
         <div class="wizard-panel" data-step="3">
-          <h2 data-en="Review Booking" data-ko="예약 확인" data-zh="预约确认" data-ja="予約確認">Review Booking</h2>
+          <h2 data-en="Review Booking" data-ko="예약 확인" data-zh="预约确认" data-ja="予約確認" data-ru="Проверка брони">Review Booking</h2>
           <div class="review-list">
-            <div class="review-row"><span data-en="Package Type" data-ko="패키지 종류" data-zh="套餐类型" data-ja="パッケージ種類">Package Type</span><strong id="rv-package">-</strong></div>
-            <div class="review-row"><span data-en="Travel Date" data-ko="투어 날짜" data-zh="游览日期" data-ja="ツアー日">Travel Date</span><strong id="rv-date">-</strong></div>
-            <div class="review-row"><span data-en="Pick Up Location" data-ko="픽업 장소" data-zh="接送地点" data-ja="ピックアップ場所">Pick Up Location</span><strong id="rv-pickup">-</strong></div>
-            <div class="review-row"><span data-en="Resort" data-ko="리조트" data-zh="度假村" data-ja="リゾート">Resort</span><strong id="rv-resort">-</strong></div>
-            <div class="review-row" id="rv-meeting-row" style="display:none;"><span data-en="Meeting Time" data-ko="미팅 시간" data-zh="集合时间" data-ja="集合時間">Meeting Time</span><strong id="rv-meeting">-</strong></div>
-            <div class="review-row"><span data-en="Passengers" data-ko="인원" data-zh="人数" data-ja="人数">Passengers</span><strong id="rv-people">-</strong></div>
-            <div class="review-row"><span data-en="Nationality" data-ko="국적" data-zh="国籍" data-ja="国籍">Nationality</span><strong id="rv-nationality">-</strong></div>
-            <div class="review-row"><span data-en="Name" data-ko="예약자 성함" data-zh="姓名" data-ja="氏名">Name</span><strong id="rv-name">-</strong></div>
-            <div class="review-row"><span data-en="Email" data-ko="이메일" data-zh="邮箱" data-ja="メール">Email</span><strong id="rv-email">-</strong></div>
-            <div class="review-row"><span data-en="Emergency Contact" data-ko="비상 연락처" data-zh="紧急联系方式" data-ja="緊急連絡先">Emergency Contact</span><strong id="rv-emergency">-</strong></div>
-            <div class="review-row" id="rv-discount-row" style="display:none;color:#16a34a;"><span data-en="Discount" data-ko="할인" data-zh="折扣" data-ja="割引">Discount</span><strong id="rv-discount">-</strong></div>
-            <div class="review-row review-row--total"><span data-en="Total Price" data-ko="총 금액" data-zh="总金额" data-ja="合計金額">Total Price</span><strong id="rv-total">-</strong></div>
+            <div class="review-row"><span data-en="Package Type" data-ko="패키지 종류" data-zh="套餐类型" data-ja="パッケージ種類" data-ru="Тип пакета">Package Type</span><strong id="rv-package">-</strong></div>
+            <div class="review-row"><span data-en="Travel Date" data-ko="투어 날짜" data-zh="游览日期" data-ja="ツアー日" data-ru="Дата тура">Travel Date</span><strong id="rv-date">-</strong></div>
+            <div class="review-row"><span data-en="Pick Up Location" data-ko="픽업 장소" data-zh="接送地点" data-ja="ピックアップ場所" data-ru="Место сбора">Pick Up Location</span><strong id="rv-pickup">-</strong></div>
+            <div class="review-row"><span data-en="Resort" data-ko="리조트" data-zh="度假村" data-ja="リゾート" data-ru="Отель">Resort</span><strong id="rv-resort">-</strong></div>
+            <div class="review-row" id="rv-meeting-row" style="display:none;"><span data-en="Meeting Time" data-ko="미팅 시간" data-zh="集合时间" data-ja="集合時間" data-ru="Время сбора">Meeting Time</span><strong id="rv-meeting">-</strong></div>
+            <div class="review-row"><span data-en="Passengers" data-ko="인원" data-zh="人数" data-ja="人数" data-ru="Кол-во человек">Passengers</span><strong id="rv-people">-</strong></div>
+            <div class="review-row"><span data-en="Nationality" data-ko="국적" data-zh="国籍" data-ja="国籍" data-ru="Гражданство">Nationality</span><strong id="rv-nationality">-</strong></div>
+            <div class="review-row"><span data-en="Name" data-ko="예약자 성함" data-zh="姓名" data-ja="氏名" data-ru="Имя">Name</span><strong id="rv-name">-</strong></div>
+            <div class="review-row"><span data-en="Email" data-ko="이메일" data-zh="邮箱" data-ja="メール" data-ru="Email">Email</span><strong id="rv-email">-</strong></div>
+            <div class="review-row"><span data-en="Emergency Contact" data-ko="비상 연락처" data-zh="紧急联系方式" data-ja="緊急連絡先" data-ru="Экстренный контакт">Emergency Contact</span><strong id="rv-emergency">-</strong></div>
+            <div class="review-row" id="rv-discount-row" style="display:none;color:#16a34a;"><span data-en="Discount" data-ko="할인" data-zh="折扣" data-ja="割引" data-ru="Скидка">Discount</span><strong id="rv-discount">-</strong></div>
+            <div class="review-row review-row--total"><span data-en="Total Price" data-ko="총 금액" data-zh="总金额" data-ja="合計金額" data-ru="Итого к оплате">Total Price</span><strong id="rv-total">-</strong></div>
           </div>
 
           <div class="wizard-actions">
-            <button type="button" class="wizard-back" data-goto="2" data-en="Back" data-ko="이전" data-zh="上一步" data-ja="戻る">Back</button>
-            <button type="button" class="wizard-next" data-goto="4" data-en="Next: Payment" data-ko="다음: 결제" data-zh="下一步：支付" data-ja="次へ：お支払い">Next: Payment</button>
+            <button type="button" class="wizard-back" data-goto="2" data-en="Back" data-ko="이전" data-zh="上一步" data-ja="戻る" data-ru="Назад">Back</button>
+            <button type="button" class="wizard-next" data-goto="4" data-en="Next: Payment" data-ko="다음: 결제" data-zh="下一步：支付" data-ja="次へ：お支払い" data-ru="Далее: оплата">Next: Payment</button>
           </div>
         </div>
 
         <!-- ===== STEP 4: PAYMENT ===== -->
         <div class="wizard-panel" data-step="4">
-          <h2 data-en="Payment" data-ko="결제" data-zh="支付" data-ja="お支払い">Payment</h2>
+          <h2 data-en="Payment" data-ko="결제" data-zh="支付" data-ja="お支払い" data-ru="Оплата">Payment</h2>
 
           <input type="hidden" name="paymentChoice" value="">
 
-          <div class="review-row review-row--total" style="margin-bottom:24px;"><span data-en="Total" data-ko="총 금액" data-zh="总计" data-ja="合計">Total</span><strong id="pay-total">-</strong></div>
+          <div class="review-row review-row--total" style="margin-bottom:24px;"><span data-en="Total" data-ko="총 금액" data-zh="总计" data-ja="合計" data-ru="Итого">Total</span><strong id="pay-total">-</strong></div>
 
-          <p class="pay-choose-label" data-en="Available Payment Methods" data-ko="사용 가능한 결제 수단" data-zh="可用支付方式" data-ja="ご利用可能なお支払い方法">Available Payment Methods</p>
+          <p class="pay-choose-label" data-en="Available Payment Methods" data-ko="사용 가능한 결제 수단" data-zh="可用支付方式" data-ja="ご利用可能なお支払い方法" data-ru="Доступные способы оплаты">Available Payment Methods</p>
 
           <div class="pay-methods-grid">
             <div class="pay-method-card">
               <div class="pay-logos"><img src="assets/logos/visa-mastercard-logo.webp" alt="Visa / Mastercard"></div>
-              <span class="pay-method-name" data-en="Credit / Debit Card" data-ko="신용 / 체크카드" data-zh="信用/借记卡" data-ja="クレジット/デビット">Credit / Debit Card</span>
+              <span class="pay-method-name" data-en="Credit / Debit Card" data-ko="신용 / 체크카드" data-zh="信用/借记卡" data-ja="クレジット/デビット" data-ru="Кредитная/дебетовая карта">Credit / Debit Card</span>
             </div>
             <div class="pay-method-card">
               <div class="pay-logos"><img src="assets/logos/gcash-logo.webp" alt="GCash"></div>
@@ -305,26 +306,26 @@
             <div class="pay-method-card">
               <div class="pay-logos"><img src="assets/logos/qrph-logo.webp" alt="QR Ph"></div>
               <span class="pay-method-name">QR Ph</span>
-              <span class="pay-method-note" data-en="Alipay · WeChat Pay" data-ko="알리페이 · 위챗페이" data-zh="支付宝 · 微信支付" data-ja="Alipay · WeChat Pay">Alipay · WeChat Pay</span>
+              <span class="pay-method-note" data-en="Alipay · WeChat Pay" data-ko="알리페이 · 위챗페이" data-zh="支付宝 · 微信支付" data-ja="Alipay · WeChat Pay" data-ru="Alipay · WeChat Pay">Alipay · WeChat Pay</span>
             </div>
           </div>
 
           <div class="pay-btn-row">
             <button type="submit" class="pay-now-btn" id="submit-btn" data-method="card"
-              data-en="Pay Now" data-ko="결제하기" data-zh="立即支付" data-ja="お支払いへ">결제하기</button>
+              data-en="Pay Now" data-ko="결제하기" data-zh="立即支付" data-ja="お支払いへ" data-ru="Перейти к оплате">결제하기</button>
           </div>
 
           <p id="form-status" class="form-status" role="status"></p>
 
           <div class="wizard-actions">
-            <button type="button" class="wizard-back" data-goto="3" data-en="Back" data-ko="이전" data-zh="上一步" data-ja="戻る">Back</button>
+            <button type="button" class="wizard-back" data-goto="3" data-en="Back" data-ko="이전" data-zh="上一步" data-ja="戻る" data-ru="Назад">Back</button>
           </div>
         </div>
 
         <!-- ===== STEP 5: CONFIRM ===== -->
         <div class="wizard-panel" data-step="5">
-          <h2 data-en="✓ Booking Confirmed" data-ko="✓ 예약이 확정되었습니다" data-zh="✓ 预约已确认" data-ja="✓ 予約が確定しました">✓ Booking Confirmed</h2>
-          <p data-en="Redirecting to your confirmation page..." data-ko="확인 페이지로 이동합니다..." data-zh="正在跳转至确认页面..." data-ja="確認ページへ移動しています...">Redirecting to your confirmation page...</p>
+          <h2 data-en="✓ Booking Confirmed" data-ko="✓ 예약이 확정되었습니다" data-zh="✓ 预约已确认" data-ja="✓ 予約が確定しました" data-ru="✓ Бронирование подтверждено">✓ Booking Confirmed</h2>
+          <p data-en="Redirecting to your confirmation page..." data-ko="확인 페이지로 이동합니다..." data-zh="正在跳转至确认页面..." data-ja="確認ページへ移動しています..." data-ru="Переходим на страницу подтверждения...">Redirecting to your confirmation page...</p>
         </div>
 
       </form>
@@ -334,14 +335,14 @@
     <aside class="wizard-sidebar">
       <div class="summary-card">
         <div class="summary-header">
-          <h3 data-en="Your Booking Summary" data-ko="예약 요약" data-zh="预约摘要" data-ja="ご予約内容">Your Booking Summary</h3>
-          <button type="button" class="summary-edit" data-goto="1" data-en="Edit Your Booking" data-ko="예약 수정" data-zh="修改预约" data-ja="予約を編集">Edit Your Booking</button>
+          <h3 data-en="Your Booking Summary" data-ko="예약 요약" data-zh="预约摘要" data-ja="ご予約内容" data-ru="Ваше бронирование">Your Booking Summary</h3>
+          <button type="button" class="summary-edit" data-goto="1" data-en="Edit Your Booking" data-ko="예약 수정" data-zh="修改预约" data-ja="予約を編集" data-ru="Изменить бронь">Edit Your Booking</button>
         </div>
-        <div class="summary-row"><span data-en="Package Type" data-ko="패키지 종류" data-zh="套餐类型" data-ja="パッケージ種類">Package Type</span><strong id="sum-package">-</strong></div>
-        <div class="summary-row"><span data-en="Travel Date" data-ko="투어 날짜" data-zh="游览日期" data-ja="ツアー日">Travel Date</span><strong id="sum-date">-</strong></div>
-        <div class="summary-row"><span data-en="Pick Up Location" data-ko="픽업 장소" data-zh="接送地点" data-ja="ピックアップ場所">Pick Up Location</span><strong id="sum-pickup">-</strong></div>
-        <div class="summary-row"><span data-en="Passengers" data-ko="인원" data-zh="人数" data-ja="人数">Passengers</span><strong id="sum-people">-</strong></div>
-        <div class="summary-row summary-row--total"><span data-en="Total Price" data-ko="총 금액" data-zh="总金额" data-ja="合計金額">Total Price</span><strong id="sum-total">-</strong></div>
+        <div class="summary-row"><span data-en="Package Type" data-ko="패키지 종류" data-zh="套餐类型" data-ja="パッケージ種類" data-ru="Тип пакета">Package Type</span><strong id="sum-package">-</strong></div>
+        <div class="summary-row"><span data-en="Travel Date" data-ko="투어 날짜" data-zh="游览日期" data-ja="ツアー日" data-ru="Дата тура">Travel Date</span><strong id="sum-date">-</strong></div>
+        <div class="summary-row"><span data-en="Pick Up Location" data-ko="픽업 장소" data-zh="接送地点" data-ja="ピックアップ場所" data-ru="Место сбора">Pick Up Location</span><strong id="sum-pickup">-</strong></div>
+        <div class="summary-row"><span data-en="Passengers" data-ko="인원" data-zh="人数" data-ja="人数" data-ru="Кол-во человек">Passengers</span><strong id="sum-people">-</strong></div>
+        <div class="summary-row summary-row--total"><span data-en="Total Price" data-ko="총 금액" data-zh="总金额" data-ja="合計金額" data-ru="Итого к оплате">Total Price</span><strong id="sum-total">-</strong></div>
       </div>
     </aside>
 
@@ -380,6 +381,12 @@
         'VF': '<b>【VIP Fast Track 含まれるもの】</b><br>入場料・観覧料・環境保護税・<b>専用プライベート車両</b>すべて込み<br>ライフジャケット・荷物預かり・フィン・スノーケルマスク・ミネラルウォーター無料提供<br>Fast Track（ジンベエザメの待ち時間を最小化）<br>ツアー終了後のドロップオフサービス<br><b>リベルタッド専属水中カメラマンサービス</b><br>専属スタッフはご予約人数に応じて配置されます（お一人につき1名ではありません）',
         'R': '<b>【Regular ツアー含まれるもの】</b><br>ガイド・フィン込み<br>※ 一般入場チケットを使用します',
         'T': '<b>【チケットのみのご案内】</b><br>入場チケットのみの単独販売（1,920PHP）<br>チケット受け取り：Boracay Whale Shark 公式オフィス<br>営業時間：午前8:00～午後6:00'
+      },
+      ru: {
+        'F': '<b>[Что входит в Fast Track]</b><br>Входной сбор, сбор за наблюдение, экологический налог и трансфер туда и обратно включены<br>Бесплатно: спасательный жилет, хранение вещей, ласты и питьевая вода<br>Fast Track (минимальное ожидание)<br>Трансфер после окончания тура<br>Подводная съёмка с китовыми акулами включена',
+        'VF': '<b>[Что входит в VIP Fast Track]</b><br>Входной сбор, сбор за наблюдение, экологический налог и <b>индивидуальный автомобиль</b> включены<br>Бесплатно: спасательный жилет, хранение вещей, ласты, маска для снорклинга и питьевая вода<br>Fast Track (минимальное ожидание)<br>Трансфер после окончания тура<br><b>Личный подводный фотограф из Либертада</b><br>Количество персонала зависит от размера группы (не один сотрудник на каждого гостя)',
+        'R': '<b>[Что входит в тур Regular]</b><br>Гид и ласты включены<br>※ Используются обычные входные билеты',
+        'T': '<b>[Только билет]</b><br>Продажа только входного билета (1,920PHP)<br>Получение билета: официальный офис Boracay Whale Shark<br>Часы работы: 8:00 – 18:00'
       }
     };
 
@@ -464,7 +471,8 @@
       en: { VF: 'VIP FAST TRACK', F: 'FAST TRACK', R: 'REGULAR TOUR', T: 'TICKET ONLY' },
       ko: { VF: 'VIP 패스트트랙', F: '패스트트랙', R: '레귤러 투어', T: '티켓 단독' },
       zh: { VF: 'VIP 快速通道', F: '快速通道', R: '常规团', T: '仅门票' },
-      ja: { VF: 'VIPファストトラック', F: 'ファストトラック', R: 'レギュラーツアー', T: 'チケットのみ' }
+      ja: { VF: 'VIPファストトラック', F: 'ファストトラック', R: 'レギュラーツアー', T: 'チケットのみ' },
+      ru: { VF: 'VIP FAST TRACK', F: 'FAST TRACK', R: 'ТУР REGULAR', T: 'ТОЛЬКО БИЛЕТ' }
     };
     const leftPanelDesc = {
       en: {
@@ -490,6 +498,12 @@
         F: '最も人気のオールインクルーシブパッケージ。待ち時間を最小限に、快適にお楽しみいただけます。',
         R: '基本に忠実なジンベエザメツアーです。',
         T: 'Boracay Whale Shark 公式オフィスで入場チケットを受け取るだけです。'
+      },
+      ru: {
+        VF: 'Идеальный премиум-тур с индивидуальным автомобилем и подводным фотографом.',
+        F: 'Самый популярный пакет «всё включено». Комфортно и с минимальным ожиданием.',
+        R: 'Классический тур к китовым акулам — всё самое необходимое.',
+        T: 'Просто получите входной билет в официальном офисе Boracay Whale Shark.'
       }
     };
 
@@ -522,7 +536,7 @@
       const lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
       const d = new Date(val + 'T00:00:00');
       if (isNaN(d)) return val;
-      const locale = { ko: 'ko-KR', zh: 'zh-CN', ja: 'ja-JP' }[lang] || 'en-US';
+      const locale = { ko: 'ko-KR', zh: 'zh-CN', ja: 'ja-JP', ru: 'ru-RU' }[lang] || 'en-US';
       return d.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' });
     }
 
@@ -548,7 +562,8 @@
       en: { PH: 'Philippine', FOREIGN: 'Foreigner' },
       ko: { PH: '필리핀', FOREIGN: '외국인' },
       zh: { PH: '菲律宾', FOREIGN: '外国人' },
-      ja: { PH: 'フィリピン', FOREIGN: '外国人' }
+      ja: { PH: 'フィリピン', FOREIGN: '外国人' },
+      ru: { PH: 'Филиппины', FOREIGN: 'Иностранец' }
     };
 
     function currentPricePerPerson() {
@@ -774,9 +789,19 @@
       placeholderEmail: 'メールアドレスを入力してください',
       placeholderPickupResort: '例：Shangri-La Boracay',
       btnSubmit: '予約を確定する',
+    },
+    ru: {
+      labelDate: 'Желаемая дата тура *',
+      labelPeople: 'Количество человек *',
+      labelName: 'Имя (латиницей) *',
+      labelEmail: 'Электронная почта *',
+      placeholderName: 'IVAN PETROV',
+      placeholderEmail: 'Введите адрес электронной почты',
+      placeholderPickupResort: 'Например: Shangri-La Boracay',
+      btnSubmit: 'Подтвердить бронирование',
     }
   };
-  const LANG_NAMES = { ko: '한국어', en: 'English', zh: '中文', ja: '日本語' };
+  const LANG_NAMES = { ko: '한국어', en: 'English', zh: '中文', ja: '日本語', ru: 'Русский' };
   const LANG_STORAGE_KEY = 'ws_lang';
   // Same detection as the main site (js/i18n.js): respect a saved choice,
   // otherwise follow the visitor's browser language. Keeps the reservation
@@ -789,6 +814,7 @@
         if (nav.startsWith('ko')) return 'ko';
         if (nav.startsWith('zh')) return 'zh';
         if (nav.startsWith('ja')) return 'ja';
+        if (nav.startsWith('ru')) return 'ru';
         return 'en';
       })();
   localStorage.setItem(LANG_STORAGE_KEY, currentLang);
@@ -887,6 +913,6 @@
     });
   });
 </script>
-<script type="module" src="js/reservation.js?v=1792810000"></script>
+<script type="module" src="js/reservation.js?v=1793300000"></script>
 </body>
 </html>

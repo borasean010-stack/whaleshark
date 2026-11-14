@@ -13,13 +13,14 @@
   today.setHours(0, 0, 0, 0);
 
   const lang = document.documentElement.lang || 'en';
-  const locale = { ko: 'ko-KR', en: 'en-US', zh: 'zh-CN', ja: 'ja-JP' }[lang] || lang;
+  const locale = { ko: 'ko-KR', en: 'en-US', zh: 'zh-CN', ja: 'ja-JP', ru: 'ru-RU' }[lang] || lang;
 
   const T = {
     ko: { pick: '날짜를 선택해 주세요.', loading: '여는 중...', none: '해당 날짜의 사진이 아직 없습니다.', error: '불러오지 못했습니다. 잠시 후 다시 시도해 주세요.', prev: '이전 달', next: '다음 달' },
     en: { pick: 'Please choose a date.', loading: 'Opening...', none: 'No photos for that date yet.', error: 'Could not load. Please try again shortly.', prev: 'Previous month', next: 'Next month' },
     zh: { pick: '请选择日期。', loading: '正在打开...', none: '该日期的内容尚未上传。', error: '无法载入，请稍后再试。', prev: '上个月', next: '下个月' },
-    ja: { pick: '日付を選択してください。', loading: '開いています...', none: 'その日付のデータはまだありません。', error: '読み込めませんでした。しばらくしてからお試しください。', prev: '前の月', next: '次の月' }
+    ja: { pick: '日付を選択してください。', loading: '開いています...', none: 'その日付のデータはまだありません。', error: '読み込めませんでした。しばらくしてからお試しください。', prev: '前の月', next: '次の月' },
+    ru: { pick: 'Выберите дату.', loading: 'Открываем...', none: 'Фото за эту дату пока нет.', error: 'Не удалось загрузить. Попробуйте чуть позже.', prev: 'Предыдущий месяц', next: 'Следующий месяц' }
   }[lang] || {};
 
   const monthFmt = new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long' });
