@@ -142,6 +142,7 @@
 }
 </script>
 <link rel="stylesheet" href="../css/tour-schedule.css?v=2">
+<link rel="stylesheet" href="../css/detail-cta.css?v=1">
 </head>
 <body class="theme-blue">
 
@@ -185,6 +186,12 @@
       <tr><th data-en="Refund Policy" data-ko="환불 규정">Refund Policy</th><td data-en="100% refund 15+ days before; non-refundable within 3 days" data-ko="15일 전 100% 환불, 3일 이내 환불 불가">100% refund 15+ days before; non-refundable within 3 days</td></tr>
         </tbody>
       </table>
+      <!-- BOOKING CTA -->
+      <div class="cta-inline" style="--cta:#3b82f6;">
+        <a class="cta-book" href="../reservation?tour=R"><span data-en="Book now" data-ko="지금 예약하기">Book now</span></a>
+        <div class="cta-chat"><a class="kakao" href="https://open.kakao.com/o/s0qOPfJi" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.8 1.9 5.3 4.7 6.7l-1 3.6c-.1.3.3.6.6.4l4.2-2.8c.5.1 1 .1 1.5.1 5.5 0 10-3.6 10-8S17.5 3 12 3z"/></svg><span data-en="KakaoTalk" data-ko="카카오톡 상담">KakaoTalk</span></a><a class="wa" href="https://wa.me/639674667943" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg><span data-en="WhatsApp us" data-ko="왓츠앱 상담">WhatsApp us</span></a></div>
+      </div>
+
     </section>
 
     <!-- RECOMMENDATIONS -->
@@ -385,5 +392,12 @@
     lucide.createIcons();
   </script>
   <script src="../js/i18n.js?v=1792570000" defer></script>
+<!-- MOBILE BOOKING BAR -->
+<div class="cta-bar" style="--cta:#3b82f6;">
+  <div class="price"><b><span data-en="From ₱2,520" data-ko="₱2,520부터">From ₱2,520</span></b><small><span data-en="per person" data-ko="1인 기준">per person</span></small></div>
+  <a class="chat kakao only-ko" href="https://open.kakao.com/o/s0qOPfJi" target="_blank" rel="noopener" aria-label="KakaoTalk"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.8 1.9 5.3 4.7 6.7l-1 3.6c-.1.3.3.6.6.4l4.2-2.8c.5.1 1 .1 1.5.1 5.5 0 10-3.6 10-8S17.5 3 12 3z"/></svg></a><a class="chat only-intl" href="https://wa.me/639674667943" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg></a>
+  <a class="book" href="../reservation?tour=R"><span data-en="Book now" data-ko="지금 예약하기">Book now</span></a>
+</div>
+<script>document.body.classList.add("has-cta-bar");</script>
 </body>
 </html>
