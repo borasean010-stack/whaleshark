@@ -223,10 +223,17 @@ async function reconcilePendingCardPayments() {
     return 0;
   }
 
+  // checkoutId는 DB 권한 때문에 예약에 저장되지 못하는 경우가 많다. 그때는 예약번호
+  // (= Maya requestReferenceNumber)로 조회한다. 오래된 미결제는 다시 바뀔 일이 없으니
+  // 최근 7일 안에 생긴 Maya 예약만 본다.
+  const since = Date.now() - 7 * 24 * 60 * 60 * 1000;
   const stuck = [];
   snap.forEach((docSnap) => {
     const d = docSnap.data();
-    if (d.checkoutId && isAbandonedCardBooking(d)) stuck.push({ id: docSnap.id, checkoutId: d.checkoutId });
+    if (!isAbandonedCardBooking(d)) return;
+    if (d.checkoutId) { stuck.push({ id: docSnap.id, checkoutId: d.checkoutId }); return; }
+    const created = d.createdAt && d.createdAt.toMillis ? d.createdAt.toMillis() : 0;
+    if (d.paymentMethod === "Maya" && created >= since) stuck.push({ id: docSnap.id, rrn: docSnap.id });
   });
 
   let recovered = 0;
@@ -235,7 +242,9 @@ async function reconcilePendingCardPayments() {
       const res = await fetch("/api/maya-status", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ secret: VOUCHER_SECRET, checkoutId: item.checkoutId })
+        body: JSON.stringify(item.checkoutId
+          ? { secret: VOUCHER_SECRET, checkoutId: item.checkoutId }
+          : { secret: VOUCHER_SECRET, rrn: item.rrn })
       });
       const data = await res.json();
       const paid = data.ok && (
