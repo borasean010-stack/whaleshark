@@ -268,7 +268,14 @@ form.addEventListener("submit", async (e) => {
           failure: returnUrl("failed"),
           cancel:  returnUrl("cancelled")
         },
-        requestReferenceNumber: docRef.id
+        requestReferenceNumber: docRef.id,
+        // 웹훅(functions/webhook/maya.js)이 success 페이지 없이도 바우처를 보낼 수 있게
+        metadata: { ws: {
+          tourType: reservation.tourType, date: reservation.date, people: reservation.people,
+          pickup: reservation.pickup || '', meetingTime: reservation.meetingTime || '',
+          nationality: reservation.nationality || '', totalPrice: reservation.totalPrice,
+          currency: reservation.currency || 'PHP', lang: localStorage.getItem('ws_lang') || lang || 'en'
+        } }
       })
     });
     const maya = await mayaRes.json();

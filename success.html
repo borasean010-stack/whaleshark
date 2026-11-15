@@ -225,7 +225,9 @@
           data.status === 'COMPLETED'
         );
         if (paid) {
-          // Firebase Firestore 결제 상태 업데이트
+          // Firebase Firestore 결제 상태 업데이트. paid로 바꾸는 건 한 번만 허용되므로,
+          // Maya 웹훅이 먼저 바꿨으면 여기선 실패하고 바우처도 웹훅이 이미 보냈다.
+          let marked = !pending.reservationId;
           if (pending.reservationId) {
             try {
               const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js");
@@ -240,12 +242,16 @@
               await updateDoc(doc(db, "reservations", pending.reservationId), {
                 paymentStatus: 'paid'
               });
-            } catch (_) {}
+              marked = true;
+            } catch (err) {
+              // 권한 거부 = 웹훅이 이미 처리. 그 밖의 오류(네트워크 등)면 바우처는 보낸다.
+              if (!err || err.code !== 'permission-denied') marked = true;
+            }
           }
 
           // 바우처 이메일 발송
           const r = pending.reservation;
-          await postToScript({
+          if (marked) await postToScript({
             tourType: r.tourType, date: r.date, people: r.people,
             pickup: r.pickup, meetingTime: r.meetingTime, nationality: r.nationality,
             totalPrice: r.totalPrice, paymentStatus: 'paid', paymentMethod: 'Maya',

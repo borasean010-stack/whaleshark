@@ -40,7 +40,7 @@ async function handle(request, env) {
     });
   }
 
-  if (!body.checkoutId && !body.rrn && body.action !== 'webhooks') {
+  if (!body.checkoutId && !body.rrn && body.action !== 'webhooks' && body.action !== 'register_webhooks') {
     return json({ ok: false, error: 'missing_checkoutId' }, 400);
   }
   if (!env.MAYA_SECRET_KEY) {
@@ -61,6 +61,28 @@ async function handle(request, env) {
     const t = await r.text();
     let list; try { list = JSON.parse(t); } catch { list = t.slice(0, 300); }
     return json({ ok: r.ok, httpStatus: r.status, webhooks: list });
+  }
+
+  // 우리 웹훅 주소를 Maya에 등록한다. 주소·이벤트는 고정값이라 누가 불러도
+  // 우리 사이트 말고 다른 곳으로 결제 알림이 새지 않는다. 이미 있으면 건너뛴다.
+  if (body.action === 'register_webhooks') {
+    const CALLBACK = 'https://boracaywhaleshark.com/webhook/maya';
+    const EVENTS = ['CHECKOUT_SUCCESS', 'PAYMENT_SUCCESS', 'PAYMENT_EXPIRED'];
+    const h = { Authorization: 'Basic ' + btoa(key + ':'), 'Content-Type': 'application/json' };
+    const cur = await fetch('https://pg.paymaya.com/checkout/v1/webhooks', { headers: h });
+    let existing = [];
+    try { const j = await cur.json(); if (Array.isArray(j)) existing = j; } catch {}
+    const results = {};
+    for (const name of EVENTS) {
+      const have = existing.find(w => w.name === name);
+      if (have && have.callbackUrl === CALLBACK) { results[name] = 'exists'; continue; }
+      if (have) { results[name] = 'other_url_kept'; continue; }
+      const r = await fetch('https://pg.paymaya.com/checkout/v1/webhooks', {
+        method: 'POST', headers: h, body: JSON.stringify({ name, callbackUrl: CALLBACK })
+      });
+      results[name] = r.ok ? 'created' : 'error_' + r.status + ' ' + (await r.text()).slice(0, 120);
+    }
+    return json({ ok: true, results });
   }
 
   // checkoutId가 예약에 저장되지 못한 경우를 위해, 예약번호(= requestReferenceNumber)로
