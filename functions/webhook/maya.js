@@ -48,7 +48,7 @@ async function handle(request, env) {
     if (res.ok) {
       const c = await res.json();
       const paid = c.paymentStatus === 'PAYMENT_SUCCESS' || c.status === 'PAYMENT_SUCCESS' || c.status === 'COMPLETED';
-      info = { paid, rrn: c.requestReferenceNumber || '', buyer: c.buyer || {}, meta: c.metadata || {}, amount: c.totalAmount };
+      info = { paid, rrn: c.requestReferenceNumber || '', buyer: c.buyer || {}, meta: c.metadata || {}, amount: c.totalAmount, items: c.items || [] };
     }
   }
 
@@ -61,13 +61,19 @@ async function handle(request, env) {
       const arr = Array.isArray(list) ? list : (list.data || []);
       const ok = arr.find(p => p.status === 'PAYMENT_SUCCESS');
       const p = ok || arr[0] || {};
-      info = { paid: !!ok, rrn, buyer: p.buyer || body.buyer || {}, meta: p.metadata || body.metadata || {}, amount: p.amount };
+      info = { paid: !!ok, rrn, buyer: p.buyer || body.buyer || {}, meta: p.metadata || body.metadata || {}, amount: p.amount, items: p.items || body.items || [] };
     }
   }
 
   if (!info) return json({ ok: true, skipped: 'lookup_failed' });
   const hasMeta = !!(info.meta && info.meta.ws);
-  if (!info.paid || !info.rrn) return json({ ok: true, skipped: 'not_paid', hasMeta });
+  if (!info.rrn) return json({ ok: true, skipped: 'no_rrn', hasMeta });
+  if (!info.paid) {
+    // 결제 실패·만료·중도 이탈 → 리마인드 메일 대기열에 올린다. 실제 발송은 Apps Script가
+    // 1시간 뒤에 그 사이 결제됐는지 Maya에 다시 확인하고 나서 한다.
+    const queued = await queueReminder(env, info);
+    return json({ ok: true, skipped: 'not_paid', hasMeta, reminder: queued });
+  }
 
   // 3) 결제완료로 갱신 (status는 그대로 — 관리자가 대기중 목록에서 확정)
   const url = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT}/databases/(default)/documents/reservations/${encodeURIComponent(info.rrn)}` +
@@ -111,4 +117,37 @@ async function handle(request, env) {
   }
 
   return json({ ok: true, confirmed: info.rrn, voucher });
+}
+
+// 체크아웃에 실어 보낸 예약 정보(metadata.ws). 오래된 결제엔 없어서 상품명
+// "VF tour - 2026-12-26"에서라도 투어·날짜를 뽑는다.
+function bookingDetails(info) {
+  const ws = Object.assign({}, (info.meta && info.meta.ws) || {});
+  if (!ws.tourType || !ws.date) {
+    const m = String((info.items && info.items[0] && info.items[0].name) || '').match(/^(\w+) tour - (\d{4}-\d{2}-\d{2})/);
+    if (m) { ws.tourType = ws.tourType || m[1]; ws.date = ws.date || m[2]; }
+  }
+  return ws;
+}
+
+async function queueReminder(env, info) {
+  const ws = bookingDetails(info);
+  const buyer = info.buyer || {};
+  const email = (buyer.contact && buyer.contact.email) || '';
+  if (!email || !ws.tourType || !ws.date) return 'no_details';
+  try {
+    const r = await fetch(VOUCHER_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        secret: env.VOUCHER_SECRET, action: 'queueReminder', rrn: info.rrn, email,
+        name: [buyer.firstName, buyer.lastName].filter(x => x && x !== '-').join(' '),
+        tourType: ws.tourType, date: ws.date, people: ws.people || '',
+        lang: ws.lang || 'en', path: ws.path || '/reservation'
+      })
+    });
+    return r.ok ? 'queued' : 'http_' + r.status;
+  } catch (e) {
+    return 'error';
+  }
 }

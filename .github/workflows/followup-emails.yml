@@ -1,0 +1,25 @@
+name: Follow-up emails
+
+# 매시간: 결제 중 이탈한 손님 리마인드(1시간 뒤) + 투어 다음 날 구글 리뷰 요청.
+# 실제 발송·중복 방지는 바우처 Apps Script(action: followups)가 한다.
+on:
+  schedule:
+    - cron: '7 * * * *'
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: js/admin.js
+          sparse-checkout-cone-mode: false
+      - name: Trigger follow-ups
+        run: |
+          # 바우처 스크립트용 공유 키는 이미 사이트 JS에 들어 있는 값이라 거기서 읽는다
+          WS_SECRET=$(grep -o 'VOUCHER_SECRET = "[^"]*"' js/admin.js | cut -d'"' -f2)
+          curl -sSL \
+            -H 'Content-Type: text/plain;charset=utf-8' \
+            --data "{\"secret\":\"$WS_SECRET\",\"action\":\"followups\"}" \
+            'https://script.google.com/macros/s/AKfycbzTPR3kwrarZUs7_H8Eta094STF_xmIN7BVyF-6JLhg7KMTQgG4DUbbRBwFVqxa3F0k/exec'

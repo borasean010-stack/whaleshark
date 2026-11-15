@@ -105,6 +105,21 @@ function saveFormForRetry() {
     localStorage.setItem(RETRY_KEY, JSON.stringify({ path: location.pathname, at: Date.now(), values }));
   } catch (_) {}
 }
+// 리마인드 메일의 "예약 마저 하기" 링크(?tour=VF&date=…&people=…)로 들어오면 값을 채워둔다
+function prefillFromUrl() {
+  const q = new URLSearchParams(location.search);
+  const date = q.get("date"), people = q.get("people");
+  const dateEl = document.getElementById("date"), peopleEl = document.getElementById("people");
+  if (date && /^\d{4}-\d{2}-\d{2}$/.test(date) && dateEl && !dateEl.value) {
+    dateEl.value = date;
+    if (dateEl._flatpickr) dateEl._flatpickr.setDate(date, true);
+    dateEl.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+  if (people && /^\d{1,2}$/.test(people) && peopleEl) {
+    peopleEl.value = people;
+    peopleEl.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+}
 function restoreAfterFailedPayment() {
   const result = new URLSearchParams(location.search).get("payment");
   if (result !== "failed" && result !== "cancelled") return;
@@ -153,7 +168,7 @@ function showInAppBrowserTip() {
 }
 document.addEventListener("DOMContentLoaded", () => {
   // 페이지 자체 스크립트(언어·투어 선택)가 끝난 뒤에 복원해야 덮어쓰이지 않는다
-  setTimeout(() => { restoreAfterFailedPayment(); showInAppBrowserTip(); }, 0);
+  setTimeout(() => { prefillFromUrl(); syncVfMinPeople(); restoreAfterFailedPayment(); showInAppBrowserTip(); }, 0);
 });
 
 async function callVoucherEndpoint(payload) {
@@ -274,7 +289,8 @@ form.addEventListener("submit", async (e) => {
           tourType: reservation.tourType, date: reservation.date, people: reservation.people,
           pickup: reservation.pickup || '', meetingTime: reservation.meetingTime || '',
           nationality: reservation.nationality || '', totalPrice: reservation.totalPrice,
-          currency: reservation.currency || 'PHP', lang: localStorage.getItem('ws_lang') || lang || 'en'
+          currency: reservation.currency || 'PHP', lang: localStorage.getItem('ws_lang') || lang || 'en',
+          path: location.pathname
         } }
       })
     });

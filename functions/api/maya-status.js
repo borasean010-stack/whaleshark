@@ -67,7 +67,7 @@ async function handle(request, env) {
   // 우리 사이트 말고 다른 곳으로 결제 알림이 새지 않는다. 이미 있으면 건너뛴다.
   if (body.action === 'register_webhooks') {
     const CALLBACK = 'https://boracaywhaleshark.com/webhook/maya';
-    const EVENTS = ['CHECKOUT_SUCCESS', 'PAYMENT_SUCCESS', 'PAYMENT_EXPIRED'];
+    const EVENTS = ['CHECKOUT_SUCCESS', 'PAYMENT_SUCCESS', 'PAYMENT_EXPIRED', 'CHECKOUT_FAILURE', 'CHECKOUT_DROPOUT'];
     const h = { Authorization: 'Basic ' + btoa(key + ':'), 'Content-Type': 'application/json' };
     const cur = await fetch('https://pg.paymaya.com/checkout/v1/webhooks', { headers: h });
     let existing = [];
