@@ -40,7 +40,7 @@ async function handle(request, env) {
     });
   }
 
-  if (!body.checkoutId && !body.rrn) {
+  if (!body.checkoutId && !body.rrn && body.action !== 'webhooks') {
     return json({ ok: false, error: 'missing_checkoutId' }, 400);
   }
   if (!env.MAYA_SECRET_KEY) {
@@ -51,6 +51,16 @@ async function handle(request, env) {
   const key = env.MAYA_SECRET_KEY.trim();
   if (!/^[\x21-\x7e]+$/.test(key)) {
     return json({ ok: false, error: 'bad_secret_key_charset', length: key.length });
+  }
+
+  // Maya에 등록된 웹훅 목록 확인용 (읽기 전용)
+  if (body.action === 'webhooks') {
+    const r = await fetch('https://pg.paymaya.com/checkout/v1/webhooks', {
+      headers: { Authorization: 'Basic ' + btoa(key + ':') }
+    });
+    const t = await r.text();
+    let list; try { list = JSON.parse(t); } catch { list = t.slice(0, 300); }
+    return json({ ok: r.ok, httpStatus: r.status, webhooks: list });
   }
 
   // checkoutId가 예약에 저장되지 못한 경우를 위해, 예약번호(= requestReferenceNumber)로
