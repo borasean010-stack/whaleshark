@@ -212,61 +212,180 @@ function isAbandonedCardBooking(d) {
 // 어드민에서는 존재 자체가 보이지 않는다. Maya에 실제 결제 여부를 되물어
 // 되살린다 — 웹훅이 오든 말든 어드민을 열 때마다 스스로 정리된다.
 const VOUCHER_SECRET = "lA6grkC0pujbOn5B5ooSip3z9N-Wvwre";
-const RECONCILE_LIMIT = 40;
+const VOUCHER_ENDPOINT = "https://script.google.com/macros/s/AKfycbzTPR3kwrarZUs7_H8Eta094STF_xmIN7BVyF-6JLhg7KMTQgG4DUbbRBwFVqxa3F0k/exec";
+const RECONCILE_LIMIT = 60;
+const DAY_MS = 24 * 60 * 60 * 1000;
 
+async function mayaLookup(item) {
+  const res = await fetch("/api/maya-status", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(item.checkoutId
+      ? { secret: VOUCHER_SECRET, checkoutId: item.checkoutId }
+      : { secret: VOUCHER_SECRET, rrn: item.id })
+  });
+  return res.json();
+}
+function mayaPaid(data) {
+  return !!(data && data.ok && (
+    data.paid === true ||
+    data.paymentStatus === "PAYMENT_SUCCESS" ||
+    data.status === "PAYMENT_SUCCESS" ||
+    data.status === "COMPLETED"
+  ));
+}
+
+// 결제 완료 화면을 못 거친 손님은 바우처 메일도 못 받았다. 되살릴 때 대신 보낸다.
+async function sendVoucherFor(d) {
+  const body = JSON.stringify({
+    secret: VOUCHER_SECRET,
+    tourType: d.tourType, date: d.date, people: d.people,
+    pickup: d.pickup, meetingTime: d.meetingTime, nationality: d.nationality,
+    totalPrice: d.totalPrice, paymentStatus: "paid", paymentMethod: "Maya",
+    currency: d.currency || "PHP", name: d.name, email: d.email, lang: "en"
+  });
+  const opts = { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body };
+  const res = await fetch(VOUCHER_ENDPOINT, opts);
+  const text = await res.text();
+  if (text.trim().startsWith("<") && res.url && res.url !== VOUCHER_ENDPOINT) {
+    return (await fetch(res.url, opts)).json();
+  }
+  return JSON.parse(text);
+}
+
+const MAYA_STATUS_KO = {
+  AUTH_FAILED: "카드 인증 실패",
+  PAYMENT_FAILED: "결제 거절",
+  FOR_AUTHENTICATION: "인증 중 이탈",
+  PENDING_TOKEN: "카드 입력 전 이탈",
+  PENDING_PAYMENT: "결제 진행 중 이탈",
+  PAYMENT_EXPIRED: "시간 초과 (창 닫음)",
+  PAYMENT_CANCELLED: "손님이 취소",
+  VOIDED: "Maya에서 취소(환불)",
+  REFUNDED: "Maya에서 환불"
+};
+
+// 어드민을 열 때마다 Maya와 대조한다.
+//  1) 결제는 됐는데 기록이 빠진 예약 → 결제완료로 올리고 바우처 발송
+//  2) 결제 실패·이탈한 최근 손님 → "결제 미완료" 표에 연락처와 함께 보여줌
+//  3) 확정돼 있는데 Maya에서 취소·환불된 예약 → 경고로 보여줌
 async function reconcilePendingCardPayments() {
   let snap;
   try {
     snap = await getDocs(query(collection(db, "reservations"), orderBy("createdAt", "desc")));
   } catch (err) {
     console.error("결제 대조: 예약을 불러오지 못했습니다", err);
-    return 0;
+    return { recovered: 0 };
   }
 
-  // checkoutId는 DB 권한 때문에 예약에 저장되지 못하는 경우가 많다. 그때는 예약번호
-  // (= Maya requestReferenceNumber)로 조회한다. 오래된 미결제는 다시 바뀔 일이 없으니
-  // 최근 7일 안에 생긴 Maya 예약만 본다.
-  const since = Date.now() - 7 * 24 * 60 * 60 * 1000;
-  const stuck = [];
-  snap.forEach((docSnap) => {
-    const d = docSnap.data();
-    if (!isAbandonedCardBooking(d)) return;
-    if (d.checkoutId) { stuck.push({ id: docSnap.id, checkoutId: d.checkoutId }); return; }
-    const created = d.createdAt && d.createdAt.toMillis ? d.createdAt.toMillis() : 0;
-    if (d.paymentMethod === "Maya" && created >= since) stuck.push({ id: docSnap.id, rrn: docSnap.id });
-  });
+  const now = Date.now();
+  const todayStr = localYmd(new Date());
+  const all = [];
+  snap.forEach((docSnap) => all.push({ id: docSnap.id, d: docSnap.data() }));
+  const createdMs = (d) => (d.createdAt && d.createdAt.toMillis ? d.createdAt.toMillis() : 0);
+
+  const unpaid = all.filter(({ d }) =>
+    isAbandonedCardBooking(d) && d.paymentMethod === "Maya" && d.status !== "cancelled" &&
+    (d.checkoutId || createdMs(d) >= now - 7 * DAY_MS));
+  const paidLive = all.filter(({ d }) =>
+    isMayaPaid(d) && d.status !== "cancelled" && (d.date || "") >= todayStr);
 
   let recovered = 0;
-  for (const item of stuck.slice(0, RECONCILE_LIMIT)) {
+  const failed = [];
+  for (const item of unpaid.slice(0, RECONCILE_LIMIT)) {
     try {
-      const res = await fetch("/api/maya-status", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(item.checkoutId
-          ? { secret: VOUCHER_SECRET, checkoutId: item.checkoutId }
-          : { secret: VOUCHER_SECRET, rrn: item.rrn })
-      });
-      const data = await res.json();
-      const paid = data.ok && (
-        data.paymentStatus === "PAYMENT_SUCCESS" ||
-        data.status === "PAYMENT_SUCCESS" ||
-        data.status === "COMPLETED"
-      );
-      if (!paid) continue;
-      await updateDoc(doc(db, "reservations", item.id), { paymentStatus: "paid" });
-      recovered++;
+      const data = await mayaLookup({ id: item.id, checkoutId: item.d.checkoutId });
+      if (mayaPaid(data)) {
+        await updateDoc(doc(db, "reservations", item.id), { paymentStatus: "paid" });
+        recovered++;
+        try {
+          const v = await sendVoucherFor(item.d);
+          if (v && v.ok) await updateDoc(doc(db, "reservations", item.id), { voucherSentByAdminAt: serverTimestamp() });
+        } catch (err) { console.error("바우처 발송 실패:", item.id, err); }
+      } else {
+        const sts = (data && data.statuses) || [];
+        failed.push({ ...item, maya: sts[sts.length - 1] || (data && data.status) || "" });
+      }
     } catch (err) {
       console.error("결제 대조 실패:", item.id, err);
     }
   }
-  return recovered;
+
+  const voided = [];
+  for (const item of paidLive.slice(0, RECONCILE_LIMIT)) {
+    try {
+      const data = await mayaLookup({ id: item.id });
+      if (data && data.ok && !mayaPaid(data) && (data.statuses || []).length) {
+        voided.push({ ...item, maya: data.statuses[data.statuses.length - 1] });
+      }
+    } catch (err) { /* 조회 실패는 건너뛴다 */ }
+  }
+
+  // 같은 손님이 여러 번 시도했으면 한 줄로 묶고, 결국 결제에 성공했으면 뺀다
+  const key = (d) => [(d.email || "").toLowerCase(), d.tourType, d.date].join("|");
+  const paidKeys = new Set(all.filter(({ d }) => d.paymentStatus === "paid").map(({ d }) => key(d)));
+  const groups = new Map();
+  for (const f of failed) {
+    const k = key(f.d);
+    if (paidKeys.has(k)) continue;
+    const g = groups.get(k) || { latest: f, tries: 0 };
+    g.tries++;
+    if (createdMs(f.d) > createdMs(g.latest.d)) g.latest = f;
+    groups.set(k, g);
+  }
+  renderPaymentIssues([...groups.values()], voided);
+  return { recovered };
+}
+
+function localYmd(dt) {
+  return dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, "0") + "-" + String(dt.getDate()).padStart(2, "0");
+}
+function escHtml(v) {
+  return String(v == null ? "" : v).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+function renderPaymentIssues(groups, voided) {
+  const box = document.getElementById("pay-issues");
+  const tbody = document.getElementById("pay-issues-tbody");
+  const count = document.getElementById("pay-issues-count");
+  const warn = document.getElementById("pay-voided");
+  if (!box || !tbody) return;
+  box.style.display = (groups.length || voided.length) ? "block" : "none";
+  if (count) count.textContent = groups.length ? `${groups.length}명` : "";
+  groups.sort((a, b) => (a.latest.d.date || "").localeCompare(b.latest.d.date || ""));
+  tbody.innerHTML = groups.length ? groups.map(({ latest, tries }) => {
+    const d = latest.d;
+    const at = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate() : null;
+    const atStr = at ? `${at.getMonth() + 1}/${at.getDate()} ${String(at.getHours()).padStart(2, "0")}:${String(at.getMinutes()).padStart(2, "0")}` : "-";
+    const phone = (d.emergencyContact || "").replace(/[^\d+]/g, "");
+    const wa = phone ? `<a href="https://wa.me/${escHtml(phone.replace(/^\+/, ""))}" target="_blank" rel="noopener">${escHtml(d.emergencyContact)}</a>` : "-";
+    return `<tr>
+      <td>${escHtml(atStr)}</td>
+      <td>${escHtml(d.date)}</td>
+      <td>${escHtml(d.name)}</td>
+      <td><a href="mailto:${escHtml(d.email)}">${escHtml(d.email)}</a></td>
+      <td>${wa}</td>
+      <td>${escHtml(d.tourType)} · ${escHtml(d.people)}명</td>
+      <td>${fmtPeso(d.totalPrice || 0)}</td>
+      <td>${escHtml(MAYA_STATUS_KO[latest.maya] || latest.maya || "-")}</td>
+      <td>${tries}회</td>
+    </tr>`;
+  }).join("") : `<tr><td colspan="9" style="text-align:center;color:var(--admin-text-muted);">최근 7일 결제 미완료 손님 없음</td></tr>`;
+  if (warn) {
+    warn.style.display = voided.length ? "block" : "none";
+    warn.innerHTML = voided.length
+      ? "⚠️ Maya에서 취소·환불됐는데 우리 쪽은 아직 살아있는 예약: " + voided.map(({ d, maya }) =>
+          `<b>${escHtml(d.name)}</b> (${escHtml(d.date)} · ${escHtml(d.tourType)} · ${fmtPeso(d.totalPrice || 0)} · ${escHtml(MAYA_STATUS_KO[maya] || maya)})`).join(", ") +
+        " — 확인 후 예약을 취소 처리해 주세요."
+      : "";
+  }
 }
 
 function runReconcile() {
-  reconcilePendingCardPayments().then((n) => {
-    if (!n) return;
+  reconcilePendingCardPayments().then(({ recovered }) => {
+    if (!recovered) return;
     const note = document.getElementById("topbar-greeting-sub");
-    if (note) note.textContent = `결제가 확인된 예약 ${n}건을 대기중 목록에 올렸습니다.`;
+    if (note) note.textContent = `결제가 확인된 예약 ${recovered}건을 대기중 목록에 올리고 바우처를 보냈습니다.`;
     loadReservations();
   });
 }
