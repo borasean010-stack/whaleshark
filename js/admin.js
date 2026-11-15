@@ -216,6 +216,13 @@ const VOUCHER_ENDPOINT = "https://script.google.com/macros/s/AKfycbzTPR3kwrarZUs
 const RECONCILE_LIMIT = 60;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
+// VIP는 호텔로 픽업 가므로 손님이 적은 호텔명(resort)을 이름 밑에 보여준다
+function vipHotelHtml(d) {
+  if (!d || d.tourType !== "VF" || !d.resort) return "";
+  const h = String(d.resort).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  return `<div style="font-size:0.75rem;font-weight:600;color:#7e22ce;margin-top:3px;">🏨 ${h}</div>`;
+}
+
 async function mayaLookup(item) {
   const res = await fetch("/api/maya-status", {
     method: "POST",
@@ -547,7 +554,7 @@ function renderReservations(querySnapshot) {
           <div style="font-weight: 600;">${data.date}</div>
           <div style="font-size: 0.8rem; color: var(--admin-text-muted);">신청: ${createdDate}</div>
         </td>
-        <td style="font-weight: bold;">${data.name}</td>
+        <td style="font-weight: bold;">${data.name}${vipHotelHtml(data)}</td>
         <td>${tourBadgeHtml}</td>
         <td>
           <div class="badge ${data.paymentStatus === 'paid' ? 'confirmed' : 'pending'}">
@@ -651,7 +658,7 @@ function renderReservations(querySnapshot) {
             <td style="white-space:nowrap;">${d.meetingTime
               ? `<span style="font-weight:700;">${d.meetingTime}</span>`
               : '<span style="color:var(--admin-text-muted);">-</span>'}</td>
-            <td>${d.name}</td>
+            <td>${d.name}${vipHotelHtml(d)}</td>
             <td>${tourTypeBadge(d.tourType)}</td>
             <td>${d.people}명</td>
             <td>₱${(d.totalPrice||0).toLocaleString()}</td>
@@ -852,7 +859,7 @@ function buildVoucherPreviewHtml(data) {
           <tr>
             <td style="width:50%;padding:12px 0;vertical-align:top;">
               <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">픽업 장소</div>
-              <div style="font-size:15px;font-weight:700;color:#0f172a;">${data.pickup || '-'}</div>
+              <div style="font-size:15px;font-weight:700;color:#0f172a;">${data.pickup || '-'}</div>${data.tourType === 'VF' && data.resort ? `<div style="font-size:13px;color:#7e22ce;margin-top:4px;">🏨 ${String(data.resort).replace(/[&<>"]/g, '')}</div>` : ''}
             </td>
             <td style="width:50%;padding:12px 0;vertical-align:top;">
               <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">총 금액</div>
