@@ -25,25 +25,52 @@ const MAYA_CHECKOUT_URL = "https://pg.paymaya.com/checkout/v1/checkouts";
 const MSG = {
   en: {
     fillFields: "Please fill in all required fields.",
+    vfMin: "VIP Fast Track can be booked for 2 or more people.",
     mayaError: "Could not start Maya payment. Please try again."
   },
   ko: {
     fillFields: "필수 항목을 모두 입력해주세요.",
+    vfMin: "VIP 패스트트랙은 2인 이상부터 예약 가능합니다.",
     mayaError: "Maya 결제를 시작하지 못했습니다. 다시 시도해주세요."
   },
   zh: {
     fillFields: "请填写所有必填项。",
+    vfMin: "VIP快速通道需2人及以上方可预订。",
     mayaError: "无法启动Maya支付，请重试。"
   },
   ja: {
     fillFields: "必須項目をすべて入力してください。",
+    vfMin: "VIPファストトラックは2名様からご予約いただけます。",
     mayaError: "Maya決済を開始できませんでした。再度お試しください。"
   },
   ru: {
     fillFields: "Пожалуйста, заполните все обязательные поля.",
+    vfMin: "VIP Fast Track можно забронировать от 2 человек.",
     mayaError: "Не удалось начать оплату через Maya. Попробуйте ещё раз."
   }
 };
+
+// VIP 패스트트랙은 전용 차량·전담 촬영이라 1인 예약은 받지 않는다.
+// 투어를 VIP로 고르면 인원 칸의 최소값을 2로 올리고, 1로 되어 있으면 2로 맞춘다.
+const VF_MIN_PEOPLE = 2;
+function syncVfMinPeople() {
+  const peopleEl = document.getElementById("people");
+  const checked = document.querySelector('input[name="tourType"]:checked') ||
+    document.querySelector('[name="tourType"]');
+  if (!peopleEl || !checked) return;
+  const isVF = (checked.value || "").trim() === "VF";
+  peopleEl.min = isVF ? VF_MIN_PEOPLE : 1;
+  if (isVF && Number(peopleEl.value) < VF_MIN_PEOPLE) {
+    peopleEl.value = VF_MIN_PEOPLE;
+    peopleEl.dispatchEvent(new Event("input", { bubbles: true }));
+    peopleEl.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+}
+document.querySelectorAll('[name="tourType"]').forEach(el => el.addEventListener("change", syncVfMinPeople));
+document.getElementById("people")?.addEventListener("change", syncVfMinPeople);
+syncVfMinPeople();
+// ?tour=VF 로 들어오면 페이지 스크립트가 DOMContentLoaded에서 라디오를 고르므로 그 뒤에 한 번 더 맞춘다
+document.addEventListener("DOMContentLoaded", syncVfMinPeople);
 
 async function callVoucherEndpoint(payload) {
   const body = JSON.stringify({ secret: VOUCHER_SECRET, ...payload });
@@ -102,6 +129,11 @@ form.addEventListener("submit", async (e) => {
 
   if (!valid) {
     statusEl.textContent = t.fillFields;
+    statusEl.classList.add("error");
+    return;
+  }
+  if (reservation.tourType === "VF" && reservation.people < VF_MIN_PEOPLE) {
+    statusEl.textContent = t.vfMin;
     statusEl.classList.add("error");
     return;
   }
