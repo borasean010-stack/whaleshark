@@ -376,10 +376,17 @@ body {
 @media (max-width: 900px) {
   .detail-content-wrap {
     flex-direction: column;
+    align-items: stretch;
+  }
+  .detail-main {
+    width: 100%;
   }
   .detail-sidebar {
     width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     position: static;
+    padding: 24px 18px;
   }
 }
 
@@ -624,9 +631,15 @@ body {
   background: #F8FAFC;
 }
 .summary-table td {
+  overflow-wrap: anywhere;
   color: var(--ink);
   font-weight: 600;
 }
 @media (max-width: 480px) {
   .summary-table th, .summary-table td { padding: 12px 14px; font-size: 0.88rem; }
+}
+
+/* 모바일: 긴 영어 제목(RECOMMENDATIONS 등)이 화면 밖으로 밀어내지 않게 */
+@media (max-width: 600px) {
+  .learn-title { font-size: clamp(1.4rem, 7vw, 2rem); overflow-wrap: anywhere; }
 }
