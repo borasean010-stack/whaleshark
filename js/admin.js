@@ -253,23 +253,9 @@ async function sendVoucherFor(d) {
   return JSON.parse(text);
 }
 
-const MAYA_STATUS_KO = {
-  AUTH_FAILED: "카드 인증 실패",
-  PAYMENT_FAILED: "결제 거절",
-  FOR_AUTHENTICATION: "인증 중 이탈",
-  PENDING_TOKEN: "카드 입력 전 이탈",
-  PENDING_PAYMENT: "결제 진행 중 이탈",
-  PAYMENT_EXPIRED: "시간 초과 (창 닫음)",
-  EXPIRED: "시간 초과 (창 닫음)",
-  CREATED: "결제창 열기 전 이탈",
-  PAYMENT_CANCELLED: "손님이 취소",
-  VOIDED: "Maya에서 취소(환불)",
-  REFUNDED: "Maya에서 환불"
-};
 
 // 어드민을 열 때마다 Maya와 대조한다.
-//  1) 결제는 됐는데 기록이 빠진 예약 → 결제완료로 올리고 바우처 발송
-//  2) 확정돼 있는데 Maya에서 취소·환불된 예약 → 경고로 보여줌
+//  결제는 됐는데 기록이 빠진 예약 → 결제완료로 올리고 바우처 발송
 async function reconcilePendingCardPayments() {
   let snap;
   try {
@@ -280,16 +266,13 @@ async function reconcilePendingCardPayments() {
   }
 
   const now = Date.now();
-  const todayStr = localYmd(new Date());
   const all = [];
   snap.forEach((docSnap) => all.push({ id: docSnap.id, d: docSnap.data() }));
   const createdMs = (d) => (d.createdAt && d.createdAt.toMillis ? d.createdAt.toMillis() : 0);
 
   const unpaid = all.filter(({ d }) =>
     isAbandonedCardBooking(d) && d.paymentMethod === "Maya" && d.status !== "cancelled" &&
-    createdMs(d) >= now - 7 * DAY_MS && (d.date || "") >= todayStr);
-  const paidLive = all.filter(({ d }) =>
-    isMayaPaid(d) && d.status !== "cancelled" && (d.date || "") >= todayStr);
+    createdMs(d) >= now - 7 * DAY_MS);
 
   let recovered = 0;
   for (const item of unpaid.slice(0, RECONCILE_LIMIT)) {
@@ -308,36 +291,7 @@ async function reconcilePendingCardPayments() {
     }
   }
 
-  const voided = [];
-  for (const item of paidLive.slice(0, RECONCILE_LIMIT)) {
-    try {
-      const data = await mayaLookup({ id: item.id });
-      if (data && data.ok && !mayaPaid(data) && (data.statuses || []).length) {
-        voided.push({ ...item, maya: data.statuses[data.statuses.length - 1] });
-      }
-    } catch (err) { /* 조회 실패는 건너뛴다 */ }
-  }
-
-  renderVoidedWarning(voided);
   return { recovered };
-}
-
-function localYmd(dt) {
-  return dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, "0") + "-" + String(dt.getDate()).padStart(2, "0");
-}
-function escHtml(v) {
-  return String(v == null ? "" : v).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-}
-
-function renderVoidedWarning(voided) {
-  const warn = document.getElementById("pay-voided");
-  if (!warn) return;
-  warn.style.display = voided.length ? "block" : "none";
-  warn.innerHTML = voided.length
-    ? "⚠️ Maya에서 취소·환불됐는데 우리 쪽은 아직 살아있는 예약: " + voided.map(({ d, maya }) =>
-        `<b>${escHtml(d.name)}</b> (${escHtml(d.date)} · ${escHtml(d.tourType)} · ${fmtPeso(d.totalPrice || 0)} · ${escHtml(MAYA_STATUS_KO[maya] || maya)})`).join(", ") +
-      " — 확인 후 예약을 취소 처리해 주세요."
-    : "";
 }
 
 function runReconcile() {
