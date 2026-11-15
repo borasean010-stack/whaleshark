@@ -123,23 +123,8 @@
               </div>
 
 
-              <!-- 결제 미완료 / Maya 대조 결과 -->
+              <!-- Maya에서 취소·환불됐는데 살아있는 예약 경고 -->
               <div id="pay-voided" style="display:none;margin-bottom:14px;padding:12px 16px;border-radius:12px;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;font-size:.88rem;line-height:1.6;"></div>
-              <div class="table-container" id="pay-issues" style="display:none;">
-                <div class="table-header">
-                  <h2>💳 결제 미완료 손님 (최근 7일) <span id="pay-issues-count" class="pending-count"></span></h2>
-                </div>
-                <p style="margin:0 0 10px;font-size:.82rem;color:var(--admin-text-muted);">최근 7일 안에 예약을 시도했지만 Maya 결제가 끝나지 않은 손님이에요 (투어일이 지난 건 제외). 연락해서 다시 결제를 안내해 주세요. 결국 결제에 성공한 손님은 자동으로 빠져요.</p>
-                <div style="overflow-x:auto;">
-                  <table>
-                    <thead>
-                      <tr><th>마지막 시도</th><th>투어일</th><th>예약자</th><th>이메일</th><th>연락처</th><th>투어</th><th>금액</th><th>Maya 상태</th><th>시도</th></tr>
-                    </thead>
-                    <tbody id="pay-issues-tbody"></tbody>
-                  </table>
-                </div>
-              </div>
-
               <!-- Pending quick-action table -->
               <div class="table-container">
                 <div class="table-header">
@@ -488,6 +473,6 @@
   </div>
 </div>
 
-<script type="module" src="js/admin.js?v=1793700000"></script>
+<script type="module" src="js/admin.js?v=1793800000"></script>
 </body>
 </html>
