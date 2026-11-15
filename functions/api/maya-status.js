@@ -40,7 +40,7 @@ async function handle(request, env) {
     });
   }
 
-  if (!body.checkoutId) {
+  if (!body.checkoutId && !body.rrn) {
     return json({ ok: false, error: 'missing_checkoutId' }, 400);
   }
   if (!env.MAYA_SECRET_KEY) {
@@ -51,6 +51,22 @@ async function handle(request, env) {
   const key = env.MAYA_SECRET_KEY.trim();
   if (!/^[\x21-\x7e]+$/.test(key)) {
     return json({ ok: false, error: 'bad_secret_key_charset', length: key.length });
+  }
+
+  // checkoutId가 예약에 저장되지 못한 경우를 위해, 예약번호(= requestReferenceNumber)로
+  // 그 예약에 걸린 결제들을 조회한다. 하나라도 성공이면 결제된 것으로 본다.
+  if (body.rrn) {
+    const r = await fetch(`https://pg.paymaya.com/payments/v1/payment-rrns/${encodeURIComponent(body.rrn)}`, {
+      headers: { Authorization: 'Basic ' + btoa(key + ':') }
+    });
+    const t = await r.text();
+    let list;
+    try { list = JSON.parse(t); } catch { return json({ ok: false, error: 'maya_non_json', httpStatus: r.status }); }
+    if (!r.ok) return json({ ok: false, error: list.error || list.message || 'maya_error', code: list.code || '', httpStatus: r.status });
+    const arr = Array.isArray(list) ? list : (list.data || []);
+    const statuses = arr.map(p => p.status || '');
+    const paid = statuses.includes('PAYMENT_SUCCESS');
+    return json({ ok: true, rrn: true, paid, statuses, status: paid ? 'PAYMENT_SUCCESS' : (statuses[0] || ''), paymentStatus: paid ? 'PAYMENT_SUCCESS' : '' });
   }
 
   const res = await fetch(`${MAYA_BASE}/${encodeURIComponent(body.checkoutId)}`, {
