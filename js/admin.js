@@ -260,6 +260,8 @@ const MAYA_STATUS_KO = {
   PENDING_TOKEN: "카드 입력 전 이탈",
   PENDING_PAYMENT: "결제 진행 중 이탈",
   PAYMENT_EXPIRED: "시간 초과 (창 닫음)",
+  EXPIRED: "시간 초과 (창 닫음)",
+  CREATED: "결제창 열기 전 이탈",
   PAYMENT_CANCELLED: "손님이 취소",
   VOIDED: "Maya에서 취소(환불)",
   REFUNDED: "Maya에서 환불"
@@ -286,7 +288,7 @@ async function reconcilePendingCardPayments() {
 
   const unpaid = all.filter(({ d }) =>
     isAbandonedCardBooking(d) && d.paymentMethod === "Maya" && d.status !== "cancelled" &&
-    (d.checkoutId || createdMs(d) >= now - 7 * DAY_MS));
+    createdMs(d) >= now - 7 * DAY_MS && (d.date || "") >= todayStr);
   const paidLive = all.filter(({ d }) =>
     isMayaPaid(d) && d.status !== "cancelled" && (d.date || "") >= todayStr);
 
