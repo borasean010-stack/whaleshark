@@ -1792,7 +1792,11 @@ iframe.fb-video-thumb {
   font-weight: 700;
   color: #fff;
   background: rgba(255,255,255,0.14);
-  min-width: 210px;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
   text-align: center;
   color-scheme: dark;
   cursor: pointer;
@@ -1824,7 +1828,9 @@ iframe.fb-video-thumb {
 
 /* 크롬은 날짜 칸의 빈 자리 표시를 브라우저 언어로 그립니다(페이지 언어와
    무관). 비어 있을 때는 그걸 감추고 사이트 언어로 된 안내를 대신 얹습니다. */
-.tour-photos-form .date-field { position: relative; display: inline-block; }
+/* iOS 사파리는 날짜 칸의 폭 지정을 무시하고 칸 밖으로 밀어내므로 감싼 칸이 폭을 정한다 */
+.tour-photos-form .date-field { position: relative; display: block; width: 100%; max-width: 340px; margin: 0 auto; box-sizing: border-box; overflow: hidden; border-radius: 99px; }
+.tour-photos-form input[type="date"]::-webkit-date-and-time-value { min-height: 1.4em; }
 .tour-photos-form input[type="date"]:not(.has-value)::-webkit-datetime-edit { opacity: 0; }
 .tour-photos-form input[type="date"]:not(.has-value) { color: transparent; }
 .tour-photos-form .date-field:not(.has-value)::before {
@@ -1841,7 +1847,7 @@ html[lang="ru"] .tour-photos-form .date-field:not(.has-value)::before { content:
 
 
 @media (max-width: 600px) {
-  .tour-photos-form .date-field { width: 100%; }
+  .tour-photos-form .date-field { max-width: none; }
 }
 
 .tour-photos-note {
