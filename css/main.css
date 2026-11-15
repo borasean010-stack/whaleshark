@@ -1780,15 +1780,27 @@ iframe.fb-video-thumb {
   flex-wrap: wrap;
 }
 .tour-photos-form input[type="date"] {
-  padding: 15px 20px;
-  border: none;
-  border-radius: 12px;
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  height: 54px;
+  padding: 0 48px 0 20px;
+  border: 1.5px solid rgba(255,255,255,0.55);
+  border-radius: 99px;
   font-size: 1rem;
   font-family: inherit;
-  font-weight: 600;
-  color: #1C529E;
-  background: #fff;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(255,255,255,0.14);
   min-width: 210px;
+  text-align: center;
+  color-scheme: dark;
+  cursor: pointer;
+}
+.tour-photos-form input[type="date"]:focus { outline: none; border-color: #fff; background: rgba(255,255,255,0.22); }
+.tour-photos-form input[type="date"]::-webkit-date-and-time-value { text-align: center; }
+.tour-photos-form input[type="date"]::-webkit-calendar-picker-indicator {
+  position: absolute; right: 18px; opacity: .9; cursor: pointer;
 }
 .tour-photos-form button {
   padding: 15px 34px;
@@ -1814,6 +1826,18 @@ iframe.fb-video-thumb {
    무관). 비어 있을 때는 그걸 감추고 사이트 언어로 된 안내를 대신 얹습니다. */
 .tour-photos-form .date-field { position: relative; display: inline-block; }
 .tour-photos-form input[type="date"]:not(.has-value)::-webkit-datetime-edit { opacity: 0; }
+.tour-photos-form input[type="date"]:not(.has-value) { color: transparent; }
+.tour-photos-form .date-field:not(.has-value)::before {
+  content: "📅  Select date";
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 700; font-size: 1rem;
+  pointer-events: none;
+}
+html[lang="ko"] .tour-photos-form .date-field:not(.has-value)::before { content: "📅  날짜 선택"; }
+html[lang^="zh"] .tour-photos-form .date-field:not(.has-value)::before { content: "📅  选择日期"; }
+html[lang="ja"] .tour-photos-form .date-field:not(.has-value)::before { content: "📅  日付を選択"; }
+html[lang="ru"] .tour-photos-form .date-field:not(.has-value)::before { content: "📅  Выберите дату"; }
 
 
 @media (max-width: 600px) {

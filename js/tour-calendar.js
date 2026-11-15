@@ -93,14 +93,24 @@
     const day = e.target.closest('.cal-day');
     if (day && !day.disabled) {
       selected = day.dataset.date;
-      if (dateInput) dateInput.value = selected;
+      if (dateInput) { dateInput.value = selected; markDateValue(); }
       say('');
       render();
     }
   });
 
+  // 빈 날짜 칸은 CSS가 "날짜 선택" 안내를 얹고, 값이 생기면 날짜를 보여준다
+  function markDateValue() {
+    if (!dateInput) return;
+    const on = !!dateInput.value;
+    dateInput.classList.toggle('has-value', on);
+    dateInput.parentElement && dateInput.parentElement.classList.toggle('has-value', on);
+  }
   if (dateInput) {
     dateInput.max = ymd(today);
+    markDateValue();
+    dateInput.addEventListener('input', markDateValue);
+    dateInput.addEventListener('change', markDateValue);
     dateInput.addEventListener('change', () => {
       selected = dateInput.value || null;
       say('');
