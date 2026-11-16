@@ -91,19 +91,32 @@ async function handle(request, env) {
   if (!save.ok) return json({ ok: false, error: 'save_failed', httpStatus: save.status }, 500);
 
   // 4) 우리가 처음 확정했다 → 손님이 바우처를 못 받았으니 여기서 보낸다
+  // 이름·이메일 등은 어드민과 똑같이 우리 예약 문서 값을 쓴다. Maya의 buyer 이름은
+  // 손님이 결제창에서 바꿔 적은 값(카드 명의자 등)일 수 있어서 예약자와 다를 수 있다.
+  let rec = {};
+  try {
+    const f = ((await save.json()) || {}).fields || {};
+    for (const k of Object.keys(f)) {
+      const v = f[k];
+      rec[k] = v.stringValue ?? v.integerValue ?? v.doubleValue ?? v.booleanValue;
+    }
+  } catch {}
   const ws = (info.meta && info.meta.ws) || {};
   const buyer = info.buyer || {};
-  const email = (buyer.contact && buyer.contact.email) || '';
+  const email = rec.email || (buyer.contact && buyer.contact.email) || '';
+  const tourType = rec.tourType || ws.tourType;
+  const date = rec.date || ws.date;
   let voucher = 'skipped_no_details';
-  if (email && ws.tourType && ws.date) {
-    const name = [buyer.firstName, buyer.lastName].filter(x => x && x !== '-').join(' ');
+  if (email && tourType && date) {
+    const name = rec.name || [buyer.firstName, buyer.lastName].filter(x => x && x !== '-').join(' ');
     const payload = {
       secret: env.VOUCHER_SECRET,
-      tourType: ws.tourType, date: ws.date, people: ws.people,
-      pickup: ws.pickup, meetingTime: ws.meetingTime, nationality: ws.nationality,
-      totalPrice: ws.totalPrice || (info.amount && (info.amount.value || info.amount)),
+      tourType, date, people: rec.people != null ? Number(rec.people) : ws.people,
+      pickup: rec.pickup || ws.pickup, meetingTime: rec.meetingTime || ws.meetingTime,
+      nationality: rec.nationality || ws.nationality,
+      totalPrice: (rec.totalPrice != null ? Number(rec.totalPrice) : 0) || ws.totalPrice || (info.amount && (info.amount.value || info.amount)),
       paymentStatus: 'paid', paymentMethod: 'Maya',
-      currency: ws.currency || 'PHP', name, email, lang: ws.lang || 'en'
+      currency: rec.currency || ws.currency || 'PHP', name, email, lang: ws.lang || 'en'
     };
     try {
       const r = await fetch(VOUCHER_ENDPOINT, {
