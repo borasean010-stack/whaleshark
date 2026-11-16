@@ -47,7 +47,8 @@ async function handle(request, env) {
     const res = await fetch(`${base}/${encodeURIComponent(id)}`, { headers: auth });
     if (res.ok) {
       const c = await res.json();
-      const paid = c.paymentStatus === 'PAYMENT_SUCCESS' || c.status === 'PAYMENT_SUCCESS' || c.status === 'COMPLETED';
+      // status COMPLETED는 '결제창이 끝났다'는 뜻일 뿐이다. 카드 인증 실패(AUTH_FAILED)도 COMPLETED로 온다.
+      const paid = c.paymentStatus === 'PAYMENT_SUCCESS' || c.status === 'PAYMENT_SUCCESS';
       info = { paid, rrn: c.requestReferenceNumber || '', buyer: c.buyer || {}, meta: c.metadata || {}, amount: c.totalAmount, items: c.items || [] };
     }
   }

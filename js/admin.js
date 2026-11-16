@@ -237,8 +237,7 @@ function mayaPaid(data) {
   return !!(data && data.ok && (
     data.paid === true ||
     data.paymentStatus === "PAYMENT_SUCCESS" ||
-    data.status === "PAYMENT_SUCCESS" ||
-    data.status === "COMPLETED"
+    data.status === "PAYMENT_SUCCESS"
   ));
 }
 

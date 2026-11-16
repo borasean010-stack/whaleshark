@@ -221,8 +221,7 @@
 
         const paid = data.ok && (
           data.paymentStatus === 'PAYMENT_SUCCESS' ||
-          data.status === 'PAYMENT_SUCCESS' ||
-          data.status === 'COMPLETED'
+          data.status === 'PAYMENT_SUCCESS'
         );
         if (paid) {
           // Firebase Firestore 결제 상태 업데이트. paid로 바꾸는 건 한 번만 허용되므로,
