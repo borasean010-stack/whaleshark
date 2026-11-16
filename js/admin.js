@@ -297,15 +297,34 @@ async function reconcilePendingCardPayments() {
     }
   }
 
-  return { recovered };
+  // 반대 방향도 확인: 결제완료로 찍혔는데 Maya엔 성공 결제가 없는 예약(인증 실패·환불·취소)
+  const paidRecent = all.filter(({ d }) =>
+    d.paymentMethod === "Maya" && d.paymentStatus === "paid" && d.status !== "cancelled" &&
+    !d.bookedBy && !d.agencyId && createdMs(d) >= now - 7 * DAY_MS);
+  const mismatched = [];
+  for (const item of paidRecent.slice(0, RECONCILE_LIMIT)) {
+    try {
+      const data = await mayaLookup({ id: item.id, checkoutId: item.d.checkoutId });
+      if (data && data.ok && !mayaPaid(data)) mismatched.push(`${item.d.name} (${item.d.date})`);
+    } catch (err) {
+      console.error("결제 검증 실패:", item.id, err);
+    }
+  }
+
+  return { recovered, mismatched };
 }
 
 function runReconcile() {
-  reconcilePendingCardPayments().then(({ recovered }) => {
-    if (!recovered) return;
+  reconcilePendingCardPayments().then(({ recovered, mismatched = [] }) => {
     const note = document.getElementById("topbar-greeting-sub");
-    if (note) note.textContent = `결제가 확인된 예약 ${recovered}건을 대기중 목록에 올리고 바우처를 보냈습니다.`;
-    loadReservations();
+    const msgs = [];
+    if (recovered) msgs.push(`결제가 확인된 예약 ${recovered}건을 대기중 목록에 올리고 바우처를 보냈습니다.`);
+    if (mismatched.length) msgs.push(`⚠️ Maya에 실제 결제가 없는 예약: ${mismatched.join(", ")} — 확인 후 취소하세요.`);
+    if (note && msgs.length) {
+      note.textContent = msgs.join(" ");
+      if (mismatched.length) { note.style.color = "#dc2626"; note.style.fontWeight = "700"; }
+    }
+    if (recovered) loadReservations();
   });
 }
 
