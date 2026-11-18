@@ -141,6 +141,7 @@
   .whatsapp-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
 </style>
 <script src="https://unpkg.com/lucide@latest"></script>
+<script src="/js/track.js?v=1" defer></script>
 </head>
 <body>
 
@@ -250,6 +251,7 @@
 
           // 바우처 이메일 발송
           const r = pending.reservation;
+          if (window.wsTrack) window.wsTrack('purchase', { tour: r.tourType, value: r.totalPrice, id: pending.reservationId });
           if (marked) await postToScript({
             tourType: r.tourType, date: r.date, people: r.people,
             pickup: r.pickup, meetingTime: r.meetingTime, nationality: r.nationality,

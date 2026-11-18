@@ -307,6 +307,10 @@ form.addEventListener("submit", async (e) => {
     }));
 
     saveFormForRetry();
+    if (window.wsTrack) {
+      window.wsTrack('checkout', { tour: reservation.tourType, value: reservation.totalPrice });
+      if (window.wsTrackEnabled) await new Promise(r => setTimeout(r, 300)); // 전송될 시간
+    }
     window.location.href = maya.redirectUrl;
   } catch (err) {
     console.error(err);
