@@ -24,7 +24,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // already chose a language before, or their browser is set to Korean.
     // The URL/hreflang/JSON-LD still declare this page as Korean — only the
     // on-page text swap target follows this.
-    const saved = localStorage.getItem(STORAGE_KEY);
+    let saved = null;
+    try { saved = localStorage.getItem(STORAGE_KEY); } catch (_) {}
+    // 처음 온 일본어·중국어·러시아어 브라우저 손님은 같은 페이지의 해당 언어판으로 보낸다
+    // (번역판이 있는 메인·투어 상세페이지만). 직접 언어를 고른 적이 있으면 그대로 둔다.
+    if ((!saved || saved === 'ja' || saved === 'zh' || saved === 'ru') &&
+        /^\/((f|r|t|vf)-details(\.html)?|index(\.html)?)?$/.test(path)) {
+      const bl = saved || (navigator.language || '').toLowerCase().slice(0, 2);
+      if (bl === 'ja' || bl === 'zh' || bl === 'ru') {
+        window.location.replace('/' + bl + path + window.location.search + window.location.hash);
+        return;
+      }
+    }
     if (saved === 'ko' || saved === 'en') {
       currentLang = saved;
     } else {
