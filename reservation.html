@@ -2,6 +2,10 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+<script>
+// 예전에 뿌린 아젤리아 QR(/reservation?ref=AZALEA)은 아젤리아 전용 페이지로 보낸다
+if ((new URLSearchParams(location.search).get('ref') || '').toUpperCase() === 'AZALEA') location.replace('/azalea');
+</script>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
