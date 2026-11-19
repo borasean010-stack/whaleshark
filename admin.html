@@ -46,6 +46,7 @@
         <a href="#" class="nav-item" data-view="referral"><span class="ni">🔗</span>레퍼럴</a>
         <a href="#" class="nav-item" data-view="yebo"><span class="ni">⭐</span>YEBO</a>
         <a href="#" class="nav-item" data-view="habagat"><span class="ni">🪁</span>HABAGAT</a>
+        <a href="#" class="nav-item" data-view="azalea"><span class="ni">🌸</span>AZALEA</a>
         <a href="#" class="nav-item" data-view="feliz"><span class="ni">🌺</span>FELIZ</a>
         <a href="#" class="nav-item" data-view="accounts"><span class="ni">👤</span>계정 관리</a>
       </nav>
@@ -293,7 +294,7 @@
             </div>
             <div style="padding:12px 20px;font-size:.75rem;color:var(--admin-text-muted);line-height:1.6;">
               · Maya 수수료는 카드 요율 3.5% + 건당 ₱10 으로 계산합니다 (GCash·QR 결제는 실제로는 더 적게 나갑니다).<br>
-              · 파트너 정산금: 예보 = 결제금액 − Maya 수수료 − 넷가×인원 (패스트트랙 1인 ₱3,150) / 하바갓 = 판매가 × 10% (카드 수수료 우리 부담). 확정 예약만 해당됩니다.<br>
+              · 파트너 정산금: 예보 = 결제금액 − Maya 수수료 − 넷가×인원 (패스트트랙 1인 ₱3,150) / 하바갓·아젤리아 = 판매가 × 10% (카드 수수료 우리 부담). 확정 예약만 해당됩니다.<br>
               · 취소된 결제 건은 합계에서 빠집니다 — 환불 여부는 Maya 관리자에서 확인하세요.
             </div>
           </div>
@@ -394,6 +395,36 @@
             </div>
           </div>
         </div>
+        <div id="view-azalea" class="admin-view" style="display:none;">
+          <div class="table-container">
+            <div class="table-header">
+              <h2>AZALEA 예약 현황 <span style="font-size:.8rem;font-weight:600;color:var(--admin-text-muted);">· 커미션 10%</span></h2>
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                <div style="display:flex;gap:3px;background:var(--admin-bg-2);border-radius:8px;padding:3px;">
+                  <button id="azalea-tab-list" onclick="partnerSetTab('list')" style="padding:5px 14px;border:none;border-radius:6px;font-size:.8rem;font-weight:600;cursor:pointer;background:var(--admin-accent);color:#fff;">예약 목록</button>
+                  <button id="azalea-tab-month" onclick="partnerSetTab('month')" style="padding:5px 14px;border:none;border-radius:6px;font-size:.8rem;font-weight:600;cursor:pointer;background:transparent;color:var(--admin-text-muted);">월별 정산</button>
+                </div>
+                <input type="date" id="azalea-date-from">
+                <span style="color:var(--admin-text-muted);">~</span>
+                <input type="date" id="azalea-date-to">
+                <button id="azalea-filter-btn" class="action-btn" style="background:var(--admin-accent);color:#fff;border-color:var(--admin-accent);">조회</button>
+                <button id="azalea-filter-clear" class="action-btn">전체</button>
+              </div>
+            </div>
+            <div id="azalea-stats"></div>
+            <div id="azalea-view-list">
+              <div style="overflow-x:auto;">
+                <table>
+                  <thead><tr><th>날짜</th><th>예약자</th><th>인원</th><th>국적</th><th>금액</th><th>결제</th><th>레퍼럴</th><th>상태</th><th>정산</th><th>액션</th></tr></thead>
+                  <tbody id="azalea-tbody"><tr><td colspan="9" style="text-align:center;">로딩 중...</td></tr></tbody>
+                </table>
+              </div>
+            </div>
+            <div id="azalea-view-month" style="display:none;padding:16px 20px;">
+              <div id="azalea-month-content"></div>
+            </div>
+          </div>
+        </div>
         <div id="view-feliz" class="admin-view" style="display:none;">
           <div class="table-container">
             <div class="table-header">
@@ -471,6 +502,6 @@
   </div>
 </div>
 
-<script type="module" src="js/admin.js?v=1794000300"></script>
+<script type="module" src="js/admin.js?v=1794000400"></script>
 </body>
 </html>
