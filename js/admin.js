@@ -73,7 +73,13 @@ const SETTLE_NET_PRICES = {
   T:  { PH: 1620, FOREIGN: 1920 },
 };
 // 정산금 = 결제금액 − Maya 수수료 − 넷가×인원 으로 정산하는 파트너
-const NET_PAYOUT_PARTNERS = ["YEBO", "HABAGAT"];
+const NET_PAYOUT_PARTNERS = ["YEBO"];
+// 정산금 = 판매가 × 10% 로 정산하는 리조트 (카드 수수료는 우리 부담). 펠리즈는 해당 없음.
+// 이 방식으로 바꾸기 전에 이미 정산 완료한 건은 옛 방식(결제 − 수수료 − 넷가) 금액 그대로 둔다.
+const COMMISSION_PARTNERS = ["HABAGAT"];
+const COMMISSION_RATE = 0.10;
+const COMMISSION_SINCE = Date.parse("2026-11-19T11:48:00+08:00") / 1000;
+const PAYOUT_PARTNERS = [...NET_PAYOUT_PARTNERS, ...COMMISSION_PARTNERS];
 const round2 = (n) => Math.round(n * 100) / 100;
 function isMayaPaid(d) {
   return d.paymentStatus === "paid" && d.paymentMethod === "Maya";
@@ -89,8 +95,14 @@ function netCostOf(d) {
   return t[d.nationality === "PH" ? "PH" : "FOREIGN"] * (Number(d.people) || 0);
 }
 // 파트너 정산금 — 확정 예약만
+function usesCommission(d) {
+  if (!COMMISSION_PARTNERS.includes(d.referralCode)) return false;
+  const at = d.refSettledAt && d.refSettledAt.seconds;
+  return !(d.refSettled && at && at < COMMISSION_SINCE);
+}
 function partnerPayoutOf(d) {
   if (d.status !== "confirmed") return 0;
+  if (usesCommission(d)) return round2((Number(d.totalPrice) || 0) * COMMISSION_RATE);
   return round2((Number(d.totalPrice) || 0) - mayaFeeOf(d) - netCostOf(d));
 }
 function fmtPeso2(n) {
@@ -1330,7 +1342,7 @@ async function loadSettlement() {
     const gross = sum(live, r => Number(r.totalPrice) || 0);
     const fee = sum(live, mayaFeeOf);
     const received = round2(gross - fee);
-    const partnerPay = sum(live, r => NET_PAYOUT_PARTNERS.includes(r.referralCode) ? partnerPayoutOf(r) : 0);
+    const partnerPay = sum(live, r => PAYOUT_PARTNERS.includes(r.referralCode) ? partnerPayoutOf(r) : 0);
     const people = live.reduce((s, r) => s + (Number(r.people) || 0), 0);
 
     cards.innerHTML = `
@@ -1344,7 +1356,7 @@ async function loadSettlement() {
     tbody.innerHTML = rows.length ? rows.map(r => {
       const cancelled = r.status === "cancelled";
       const f = mayaFeeOf(r);
-      const isNetPartner = NET_PAYOUT_PARTNERS.includes(r.referralCode);
+      const isNetPartner = PAYOUT_PARTNERS.includes(r.referralCode);
       const payout = isNetPartner ? partnerPayoutOf(r) : 0;
       return `
         <tr style="${cancelled ? "opacity:.5;" : ""}">
@@ -1357,7 +1369,7 @@ async function loadSettlement() {
           <td>${fmtPeso2(r.totalPrice)}</td>
           <td style="color:#be123c;">− ${fmtPeso2(f)}</td>
           <td style="font-weight:700;color:#16a34a;">${fmtPeso2(round2((Number(r.totalPrice) || 0) - f))}</td>
-          <td style="color:#7e22ce;font-weight:600;" title="${isNetPartner ? `넷가 ₱${netCostOf(r).toLocaleString()}` : ""}">${isNetPartner && !cancelled ? (r.status === "confirmed" ? fmtPeso2(payout) : "확정 후") : "-"}</td>
+          <td style="color:#7e22ce;font-weight:600;" title="${!isNetPartner ? "" : usesCommission(r) ? "판매가 × 10%" : `넷가 ₱${netCostOf(r).toLocaleString()}`}">${isNetPartner && !cancelled ? (r.status === "confirmed" ? fmtPeso2(payout) : "확정 후") : "-"}</td>
           <td>${cancelled ? '<span class="badge cancelled">취소 · 환불확인</span>' : `<span class="badge ${r.status === "confirmed" ? "confirmed" : "pending"}">${STATUS_LABELS[r.status] || r.status}</span>`}</td>
         </tr>`;
     }).join("") : "<tr><td colspan='11' style='text-align:center;color:var(--admin-text-muted);'>이 달 Maya 결제 건이 없습니다.</td></tr>";
@@ -1840,12 +1852,12 @@ async function loadPartner() {
     const unsettledAll = confirmedAll.filter(r => !r.refSettled);
     const unsettledRev = unsettledAll.reduce((s, r) => s + (r.totalPrice || 0), 0);
     const pendingAll = allRows.filter(r => r.status === 'pending');
-    // 예보·하바갓: 정산금 = 결제금액 − Maya 수수료 − 넷가×인원
-    const usesNet = NET_PAYOUT_PARTNERS.includes(_partnerCode);
+    // 예보: 결제금액 − Maya 수수료 − 넷가×인원 / 하바갓: 판매가 × 10%
+    const usesNet = PAYOUT_PARTNERS.includes(_partnerCode);
     const payoutAll = round2(confirmedAll.reduce((s, r) => s + partnerPayoutOf(r), 0));
     const unsettledPay = round2(unsettledAll.reduce((s, r) => s + partnerPayoutOf(r), 0));
     const payoutLine = r => usesNet && r.status === 'confirmed'
-      ? `<div style="font-size:0.72rem;font-weight:600;color:#7e22ce;" title="결제 ${fmtPeso2(r.totalPrice)} − Maya ${fmtPeso2(mayaFeeOf(r))} − 넷가 ${fmtPeso2(netCostOf(r))}">정산금 ${fmtPeso2(partnerPayoutOf(r))}</div>`
+      ? `<div style="font-size:0.72rem;font-weight:600;color:#7e22ce;" title="${usesCommission(r) ? `판매가 ${fmtPeso2(r.totalPrice)} × 10%` : `결제 ${fmtPeso2(r.totalPrice)} − Maya ${fmtPeso2(mayaFeeOf(r))} − 넷가 ${fmtPeso2(netCostOf(r))}`}">정산금 ${fmtPeso2(partnerPayoutOf(r))}</div>`
       : '';
 
     statsEl.innerHTML = `
