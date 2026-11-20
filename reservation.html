@@ -157,7 +157,7 @@ if ((new URLSearchParams(location.search).get('ref') || '').toUpperCase() === 'A
             <input type="date" id="date" name="date" class="input-luxury" required>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" id="resort-group">
             <label for="pickupResort" data-en="Resort (optional)" data-ko="리조트 (선택사항)" data-zh="度假村（选填）" data-ja="リゾート（任意）" data-ru="Отель (необязательно)">Resort (optional)</label>
             <input type="text" id="pickupResort" name="pickupResort" class="input-luxury" placeholder="e.g. Shangri-La Boracay"
                    lang="en" data-latin-only>
@@ -188,7 +188,7 @@ if ((new URLSearchParams(location.search).get('ref') || '').toUpperCase() === 'A
             <span class="price-total" id="pp-total"></span>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" id="pickup-group">
             <label for="pickup" data-en="Pick Up Location *" data-ko="픽업 장소 *" data-zh="接送地点 *" data-ja="ピックアップ場所 *" data-ru="Место сбора *">Pick Up Location *</label>
             <select id="pickup" name="pickup" class="input-luxury" required>
               <option value="Jollibee Main Road" selected data-en="Jollibee Main Road" data-ko="메인로드 졸리비" data-zh="乔利比大道" data-ja="ジョリビー・メインロード" data-ru="Jollibee, Main Road">Jollibee Main Road</option>
@@ -200,6 +200,7 @@ if ((new URLSearchParams(location.search).get('ref') || '').toUpperCase() === 'A
 
             <div id="meeting-select-block" style="display:none;">
               <select id="meetingTime" name="meetingTime" class="input-luxury">
+                <option value="07:00" data-en="07:00 AM" data-ko="오전 07:00" data-zh="上午7:00" data-ja="午前7:00" data-ru="07:00">07:00 AM</option>
                 <option value="07:30" hidden data-en="07:30 AM" data-ko="오전 07:30" data-zh="上午7:30" data-ja="午前7:30" data-ru="07:30">07:30 AM</option>
                 <option value="08:00" data-en="08:00 AM" data-ko="오전 08:00" data-zh="上午8:00" data-ja="午前8:00" data-ru="08:00">08:00 AM</option>
                 <option value="09:00" data-en="09:00 AM" data-ko="오전 09:00" data-zh="上午9:00" data-ja="午前9:00" data-ru="09:00">09:00 AM</option>
@@ -209,7 +210,8 @@ if ((new URLSearchParams(location.search).get('ref') || '').toUpperCase() === 'A
 
             <p class="map-caption" id="meeting-fixed-note">Meeting Time: 07:30 AM</p>
 
-            <p class="map-caption" data-en="Meeting Point: Jollibee Main Road, Boracay" data-ko="미팅 장소: 메인로드 졸리비, 보라카이" data-zh="集合地点：长滩岛乔利比大道" data-ja="集合場所：ボラカイ ジョリビー・メインロード" data-ru="Место встречи: Jollibee, Main Road, Боракай">Meeting Point: Jollibee Main Road, Boracay</p>
+            <p class="map-caption" id="meeting-point-resort" style="display:none;" data-en="Meeting Point: your resort lobby (VIP private pickup)" data-ko="미팅 장소: 입력하신 리조트 로비 (VIP 전용 차량 픽업)" data-zh="集合地点：您填写的酒店大堂（VIP 专车接送）" data-ja="集合場所：ご入力のリゾートのロビー（VIP専用車でお迎え）" data-ru="Место встречи: лобби вашего отеля (VIP-трансфер)">Meeting Point: your resort lobby (VIP private pickup)</p>
+            <p class="map-caption" id="meeting-point-jollibee" data-en="Meeting Point: Jollibee Main Road, Boracay" data-ko="미팅 장소: 메인로드 졸리비, 보라카이" data-zh="集合地点：长滩岛乔利比大道" data-ja="集合場所：ボラカイ ジョリビー・メインロード" data-ru="Место встречи: Jollibee, Main Road, Боракай">Meeting Point: Jollibee Main Road, Boracay</p>
             <a id="meeting-map-link" href="https://www.google.com/maps/search/?api=1&query=Jollibee+Boracay+Main+Road+Malay+Aklan+Philippines" target="_blank" rel="noopener" class="map-link-btn" data-en="Open in Google Maps" data-ko="구글맵에서 보기" data-zh="在谷歌地图中查看" data-ja="Googleマップで見る" data-ru="Открыть в Google Картах">Open in Google Maps</a>
           </div>
 
@@ -402,11 +404,45 @@ if ((new URLSearchParams(location.search).get('ref') || '').toUpperCase() === 'A
     const meetingFixedNote = document.getElementById('meeting-fixed-note');
     const meetingSelect = document.getElementById('meetingTime');
 
+    // 패스트트랙: 졸리비 집합이라 리조트 칸이 필요 없다 → 숨김
+    // VIP: 리조트로 픽업 가니 리조트 칸이 필수이고, 미팅 장소가 그 리조트가 된다
+    const RESORT_LABEL = {
+      opt: { en: 'Resort (optional)', ko: '리조트 (선택사항)', zh: '度假村（选填）', ja: 'リゾート（任意）', ru: 'Отель (необязательно)' },
+      vip: { en: 'Pickup Resort *', ko: '픽업 리조트 *', zh: '接送酒店 *', ja: '送迎ホテル *', ru: 'Отель для трансфера *' }
+    };
+    function applyMeetingPlace(tour) {
+      const resortGroup = document.getElementById('resort-group');
+      const resortInput = document.getElementById('pickupResort');
+      const resortLabel = resortGroup && resortGroup.querySelector('label');
+      const pickupGroup = document.getElementById('pickup-group');
+      const ptResort = document.getElementById('meeting-point-resort');
+      const ptJollibee = document.getElementById('meeting-point-jollibee');
+      const mapLink = document.getElementById('meeting-map-link');
+      const isVF = tour === 'VF';
+      if (resortGroup) resortGroup.style.display = tour === 'F' ? 'none' : '';
+      if (resortInput) {
+        resortInput.required = isVF;
+        if (tour === 'F') resortInput.value = '';
+      }
+      if (resortLabel) {
+        const src = isVF ? RESORT_LABEL.vip : RESORT_LABEL.opt;
+        Object.entries(src).forEach(([k, v]) => resortLabel.setAttribute('data-' + k, v));
+        const cur = (typeof currentLang !== 'undefined') ? currentLang : 'en';
+        resortLabel.textContent = src[cur] || src.en;
+      }
+      if (pickupGroup) pickupGroup.style.display = isVF ? 'none' : '';
+      if (ptResort) ptResort.style.display = isVF ? '' : 'none';
+      if (ptJollibee) ptJollibee.style.display = isVF ? 'none' : '';
+      if (mapLink) mapLink.style.display = isVF ? 'none' : '';
+    }
+    document.getElementById('pickupResort')?.addEventListener('input', () => { if (typeof updateSummary === 'function') updateSummary(); });
+
     function updateMeetingTime() {
       const selectedValue = document.querySelector('input[name="tourType"]:checked').value;
 
+      applyMeetingPlace(selectedValue);
       if (selectedValue === 'VF') {
-        // VIP는 전용 차량이라 출발 시간을 고를 수 있다 (08·09·10시, 07:30은 패스트트랙·레귤러 전용)
+        // VIP는 전용 차량이라 출발 시간을 고를 수 있다 (07·08·09·10시, 07:30은 패스트트랙·레귤러 전용)
         meetingTimeGroup.style.display = 'block';
         meetingSelectBlock.style.display = 'block';
         meetingFixedNote.style.display = 'none';
@@ -594,7 +630,10 @@ if ((new URLSearchParams(location.search).get('ref') || '').toUpperCase() === 'A
       const pkg = selectedPackageName();
       const dateVal = fmtDate(document.getElementById('date').value);
       const pickupSelect = document.getElementById('pickup');
-      const pickupVal = pickupSelect.selectedOptions[0] ? pickupSelect.selectedOptions[0].textContent : '-';
+      const isVipTour = (document.querySelector('input[name="tourType"]:checked') || {}).value === 'VF';
+      const pickupVal = isVipTour
+        ? (document.getElementById('pickupResort').value.trim() || '-')
+        : (pickupSelect.selectedOptions[0] ? pickupSelect.selectedOptions[0].textContent : '-');
       const resortVal = document.getElementById('pickupResort').value.trim() || '-';
       const peopleVal = document.getElementById('people').value || '-';
       const people = Number(document.getElementById('people').value) || 0;
@@ -671,7 +710,7 @@ if ((new URLSearchParams(location.search).get('ref') || '').toUpperCase() === 'A
       if (window.updateRouteMap) window.updateRouteMap(pickupVal);
     }
 
-    ['date', 'people', 'pickup', 'name', 'email', 'nationality', 'referralCode'].forEach(id => {
+    ['date', 'people', 'pickup', 'name', 'email', 'nationality', 'referralCode', 'meetingTime', 'pickupResort'].forEach(id => {
       document.getElementById(id).addEventListener('input', updateSummary);
       document.getElementById(id).addEventListener('change', updateSummary);
     });
@@ -926,6 +965,6 @@ if ((new URLSearchParams(location.search).get('ref') || '').toUpperCase() === 'A
   });
 </script>
 <script src="/js/addon.js?v=4"></script>
-<script type="module" src="js/reservation.js?v=1794000600"></script>
+<script type="module" src="js/reservation.js?v=1794000700"></script>
 </body>
 </html>
