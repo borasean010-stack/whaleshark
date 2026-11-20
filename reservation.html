@@ -404,7 +404,7 @@ if ((new URLSearchParams(location.search).get('ref') || '').toUpperCase() === 'A
     const meetingFixedNote = document.getElementById('meeting-fixed-note');
     const meetingSelect = document.getElementById('meetingTime');
 
-    // 패스트트랙: 졸리비 집합이라 리조트 칸이 필요 없다 → 숨김
+    // 패스트트랙·레귤러: 졸리비 집합이라 리조트 칸이 필요 없다 → 숨김
     // VIP: 리조트로 픽업 가니 리조트 칸이 필수이고, 미팅 장소가 그 리조트가 된다
     const RESORT_LABEL = {
       opt: { en: 'Resort (optional)', ko: '리조트 (선택사항)', zh: '度假村（选填）', ja: 'リゾート（任意）', ru: 'Отель (необязательно)' },
@@ -419,10 +419,10 @@ if ((new URLSearchParams(location.search).get('ref') || '').toUpperCase() === 'A
       const ptJollibee = document.getElementById('meeting-point-jollibee');
       const mapLink = document.getElementById('meeting-map-link');
       const isVF = tour === 'VF';
-      if (resortGroup) resortGroup.style.display = tour === 'F' ? 'none' : '';
+      if (resortGroup) resortGroup.style.display = isVF ? '' : 'none';
       if (resortInput) {
         resortInput.required = isVF;
-        if (tour === 'F') resortInput.value = '';
+        if (!isVF) resortInput.value = '';
       }
       if (resortLabel) {
         const src = isVF ? RESORT_LABEL.vip : RESORT_LABEL.opt;
@@ -965,6 +965,6 @@ if ((new URLSearchParams(location.search).get('ref') || '').toUpperCase() === 'A
   });
 </script>
 <script src="/js/addon.js?v=4"></script>
-<script type="module" src="js/reservation.js?v=1794000700"></script>
+<script type="module" src="js/reservation.js?v=1794000800"></script>
 </body>
 </html>

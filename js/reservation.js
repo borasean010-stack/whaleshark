@@ -216,7 +216,7 @@ function getReservationData() {
     people,
     // VIP는 리조트로 픽업 → 미팅 장소 = 리조트. 패스트트랙은 졸리비 집합이라 리조트를 받지 않는다.
     pickup: tourType === "VF" ? ((formData.get("pickupResort") || "").trim() || formData.get("pickup")) : formData.get("pickup"),
-    resort: tourType === "F" ? "" : (formData.get("pickupResort") || "").trim(),
+    resort: tourType !== "VF" ? "" : (formData.get("pickupResort") || "").trim(),
     meetingTime: (tourType === "R" || tourType === "F" || tourType === "VF") ? formData.get("meetingTime") : "",
     nationality,
     pricePerPerson,
