@@ -88,6 +88,7 @@ document.addEventListener("DOMContentLoaded", syncVfMinPeople);
 // 결제 단계에서 다시 결제하도록 안내한다.
 const RETRY_KEY = "ws_pay_retry";
 // 유입 경로 — track.js가 손님 브라우저에 담아둔 값 (이번 방문 첫 페이지 / 7일 안 첫 방문)
+const MALUMPATI_PRICE = 3600;
 function readSource() {
   const get = (store, key) => { try { return JSON.parse(store.getItem(key) || "null"); } catch (_) { return null; } };
   const out = {};
@@ -204,7 +205,10 @@ function getReservationData() {
   const refCodeVal = (formData.get("referralCode") || "").trim() || referralCode;
   const discountPP = window.getDiscountPerPerson ? window.getDiscountPerPerson(refCodeVal, tourType) : 0;
   const pricePerPerson = basePricePerPerson ? basePricePerPerson - discountPP : null;
-  const totalPrice = pricePerPerson ? pricePerPerson * people : null;
+  // 옵션: 고래상어 + 말룸파티 원데이 (패스트트랙·VIP만, 1인 3,600 PHP, 할인 없음) — js/addon.js와 같은 값
+  const malumpati = (tourType === "F" || tourType === "VF") && formData.get("addonMalumpati") === "1";
+  const addonPP = malumpati ? MALUMPATI_PRICE : 0;
+  const totalPrice = pricePerPerson ? (pricePerPerson + addonPP) * people : null;
 
   const reservation = {
     tourType,
@@ -222,6 +226,7 @@ function getReservationData() {
     emergencyContact: (formData.get("emergencyContact") || "").trim(),
     referralCode: (formData.get("referralCode") || "").trim() || referralCode,
     source: readSource(),
+    ...(malumpati ? { malumpati: true, malumpatiPrice: MALUMPATI_PRICE } : {}),
     status: "pending",
     createdAt: serverTimestamp()
   };
@@ -301,6 +306,7 @@ form.addEventListener("submit", async (e) => {
           pickup: reservation.pickup || '', meetingTime: reservation.meetingTime || '',
           nationality: reservation.nationality || '', totalPrice: reservation.totalPrice,
           currency: reservation.currency || 'PHP', lang: localStorage.getItem('ws_lang') || lang || 'en',
+          malumpati: !!reservation.malumpati,
           path: location.pathname
         } }
       })

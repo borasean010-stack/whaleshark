@@ -641,7 +641,7 @@ if ((new URLSearchParams(location.search).get('ref') || '').toUpperCase() === 'A
         } else {
           document.getElementById('pp-price').textContent = fmtPHP(perPerson);
         }
-        const effTotal = (discountedPerPerson || perPerson) * people;
+        const effTotal = ((discountedPerPerson || perPerson) + (window.wsAddonPP ? window.wsAddonPP() : 0)) * people;
         const totalLabel = lang === 'ko' ? `(총 ${people}명: ${fmtPHP(effTotal)})` : `(Total for ${people}: ${fmtPHP(effTotal)})`;
         document.getElementById('pp-total').textContent = people > 0 ? totalLabel : '';
       } else {
@@ -664,7 +664,7 @@ if ((new URLSearchParams(location.search).get('ref') || '').toUpperCase() === 'A
       }
 
       // Total price
-      const total = discountedPerPerson && people > 0 ? discountedPerPerson * people : 0;
+      const total = discountedPerPerson && people > 0 ? (discountedPerPerson + (window.wsAddonPP ? window.wsAddonPP() : 0)) * people : 0;
       const totalText = total ? fmtPHP(total) : '-';
       ['sum-total', 'rv-total', 'pay-total'].forEach(id => document.getElementById(id).textContent = totalText);
 
@@ -925,6 +925,7 @@ if ((new URLSearchParams(location.search).get('ref') || '').toUpperCase() === 'A
     });
   });
 </script>
-<script type="module" src="js/reservation.js?v=1794000500"></script>
+<script src="/js/addon.js?v=1"></script>
+<script type="module" src="js/reservation.js?v=1794000600"></script>
 </body>
 </html>

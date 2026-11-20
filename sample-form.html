@@ -575,14 +575,14 @@
       if (perPerson) {
         pricePreview.style.display = 'flex';
         document.getElementById('pp-price').textContent = fmtPHP(perPerson);
-        const totalLabel = lang === 'ko' ? `(총 ${people}명: ${fmtPHP(perPerson * people)})` : `(Total for ${people}: ${fmtPHP(perPerson * people)})`;
+        const totalLabel = lang === 'ko' ? `(총 ${people}명: ${fmtPHP((perPerson + (window.wsAddonPP ? window.wsAddonPP() : 0)) * people)})` : `(Total for ${people}: ${fmtPHP((perPerson + (window.wsAddonPP ? window.wsAddonPP() : 0)) * people)})`;
         document.getElementById('pp-total').textContent = people > 0 ? totalLabel : '';
       } else {
         pricePreview.style.display = 'none';
       }
 
       // Total price
-      const total = perPerson && people > 0 ? perPerson * people : 0;
+      const total = perPerson && people > 0 ? (perPerson + (window.wsAddonPP ? window.wsAddonPP() : 0)) * people : 0;
       const totalText = total ? fmtPHP(total) : '-';
       ['sum-total', 'rv-total', 'pay-total'].forEach(id => document.getElementById(id).textContent = totalText);
 
@@ -819,6 +819,7 @@
     });
   });
 </script>
-<script type="module" src="js/reservation.js?v=1794000500"></script>
+<script src="/js/addon.js?v=1"></script>
+<script type="module" src="js/reservation.js?v=1794000600"></script>
 </body>
 </html>

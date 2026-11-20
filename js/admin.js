@@ -79,7 +79,14 @@ const NET_PAYOUT_PARTNERS = ["YEBO"];
 const COMMISSION_PARTNERS = ["HABAGAT", "AZALEA"];
 const COMMISSION_RATE = 0.10;
 const COMMISSION_SINCE = Date.parse("2026-11-19T11:48:00+08:00") / 1000;
-const PAYOUT_PARTNERS = [...NET_PAYOUT_PARTNERS, ...COMMISSION_PARTNERS];
+// 말룸파티 옵션: 1인 3,600 PHP. 제휴사(예보 제외) 마진은 1인 1,200 PHP.
+// 예보는 마진 없음 — 옵션 금액 전액을 넷가로 잡아 정산금이 늘지 않게 한다.
+const MALUMPATI_PRICE = 3600;
+const MALUMPATI_PARTNER_MARGIN = 1200;
+// 투어 정산은 없고 말룸파티 마진만 받는 제휴사
+const ADDON_ONLY_PARTNERS = ["FELIZ"];
+const PAYOUT_PARTNERS = [...NET_PAYOUT_PARTNERS, ...COMMISSION_PARTNERS, ...ADDON_ONLY_PARTNERS];
+const malumpatiPeople = (d) => (d && d.malumpati ? (Number(d.people) || 0) : 0);
 const round2 = (n) => Math.round(n * 100) / 100;
 function isMayaPaid(d) {
   return d.paymentStatus === "paid" && d.paymentMethod === "Maya";
@@ -94,6 +101,15 @@ function netCostOf(d) {
   if (!t) return 0;
   return t[d.nationality === "PH" ? "PH" : "FOREIGN"] * (Number(d.people) || 0);
 }
+// 정산금 계산 근거 (마우스 올리면 보이는 설명)
+function payoutBasis(r) {
+  const mp = malumpatiPeople(r);
+  if (mp && (ADDON_ONLY_PARTNERS.includes(r.referralCode) || usesCommission(r))) return `고래상어+말룸파티 ${mp}명 × ₱${MALUMPATI_PARTNER_MARGIN.toLocaleString()}`;
+  if (ADDON_ONLY_PARTNERS.includes(r.referralCode)) return "말룸파티 옵션 없음";
+  if (usesCommission(r)) return `판매가 ${fmtPeso2(r.totalPrice)} × 10%`;
+  if (mp) return `투어분만 계산 (말룸파티 옵션 ${fmtPeso2(mp * MALUMPATI_PRICE)} 제외, 마진 없음)`;
+  return `결제 ${fmtPeso2(r.totalPrice)} − Maya ${fmtPeso2(mayaFeeOf(r))} − 넷가 ${fmtPeso2(netCostOf(r))}`;
+}
 // 파트너 정산금 — 확정 예약만
 function usesCommission(d) {
   if (!COMMISSION_PARTNERS.includes(d.referralCode)) return false;
@@ -102,7 +118,16 @@ function usesCommission(d) {
 }
 function partnerPayoutOf(d) {
   if (d.status !== "confirmed") return 0;
+  const mp = malumpatiPeople(d);
+  // 고래상어+말룸파티 예약은 투어 커미션 대신 1인 1,200 PHP가 전체 정산금
+  if (mp && (ADDON_ONLY_PARTNERS.includes(d.referralCode) || usesCommission(d))) return round2(mp * MALUMPATI_PARTNER_MARGIN);
+  if (ADDON_ONLY_PARTNERS.includes(d.referralCode)) return 0;
   if (usesCommission(d)) return round2((Number(d.totalPrice) || 0) * COMMISSION_RATE);
+  // 예보: 말룸파티 옵션은 마진 없음 — 옵션 금액을 빼고 투어만 있었을 때와 똑같이 계산
+  if (mp) {
+    const tour = (Number(d.totalPrice) || 0) - mp * MALUMPATI_PRICE;
+    return round2(tour - (tour * MAYA_FEE_RATE + MAYA_FEE_FIXED) - netCostOf(d));
+  }
   return round2((Number(d.totalPrice) || 0) - mayaFeeOf(d) - netCostOf(d));
 }
 function fmtPeso2(n) {
@@ -576,7 +601,7 @@ function renderReservations(querySnapshot) {
       }
       
       // Tour Type Mapping
-      const tourBadgeHtml = tourTypeBadge(data.tourType);
+      const tourBadgeHtml = tourTypeBadge(data.tourType) + malumpatiBadge(data);
       let tourName = data.tourType;
       if (tourName === "VF") tourName = "VIP패스트트랙";
       if (tourName === "F") tourName = "패스트트랙";
@@ -708,7 +733,7 @@ function renderReservations(querySnapshot) {
               ? `<span style="font-weight:700;">${d.meetingTime}</span>`
               : '<span style="color:var(--admin-text-muted);">-</span>'}</td>
             <td>${d.name}${vipHotelHtml(d)}</td>
-            <td>${tourTypeBadge(d.tourType)}</td>
+            <td>${tourTypeBadge(d.tourType)}${malumpatiBadge(d)}</td>
             <td>${d.people}명</td>
             <td>₱${(d.totalPrice||0).toLocaleString()}</td>
             <td>${d.paymentStatus==='paid'?'<span style="color:#16a34a;font-weight:600;">결제완료</span>':'<span style="color:#ca8a04;">미결제</span>'}</td>
@@ -758,6 +783,9 @@ function renderReservations(querySnapshot) {
 }
 
 // ── Tour type badge ───────────────────────────────────────────────────────
+function malumpatiBadge(d) {
+  return d && d.malumpati ? ' <span style="background:#dcfce7;color:#15803d;font-size:.72rem;font-weight:700;padding:2px 6px;border-radius:4px;white-space:nowrap;">+말룸파티</span>' : "";
+}
 function tourTypeBadge(type) {
   const MAP = {
     VF: { label: 'VIP FT',    cls: 'tour-vf' },
@@ -1369,7 +1397,7 @@ async function loadSettlement() {
       <div><div class="k">결제 총액</div><div class="v">${fmtPeso2(gross)}</div></div>
       <div class="fee"><div class="k">Maya 수수료</div><div class="v">− ${fmtPeso2(fee)}</div></div>
       <div class="hl"><div class="k">실수령 (정산완료)</div><div class="v">${fmtPeso2(received)}</div></div>
-      <div class="pay"><div class="k">파트너 정산금 (예보·하바갓)</div><div class="v">${fmtPeso2(partnerPay)}</div></div>
+      <div class="pay"><div class="k">파트너 정산금</div><div class="v">${fmtPeso2(partnerPay)}</div></div>
       <div><div class="k">파트너 지급 후</div><div class="v">${fmtPeso2(round2(received - partnerPay))}</div></div>`;
 
     tbody.innerHTML = rows.length ? rows.map(r => {
@@ -1382,13 +1410,13 @@ async function loadSettlement() {
           <td style="font-weight:600;">${r.date}</td>
           <td style="white-space:nowrap;color:var(--admin-text-muted);">${fmtPaidAt(r.createdAt)}</td>
           <td>${r.name || "-"}</td>
-          <td>${tourTypeBadge(r.tourType)}</td>
+          <td>${tourTypeBadge(r.tourType)}${malumpatiBadge(r)}</td>
           <td>${r.people}명</td>
           <td>${r.referralCode ? `<span style="background:#f3e8ff;color:#7e22ce;font-size:.75rem;font-weight:700;padding:2px 7px;border-radius:4px;">${r.referralCode}</span>` : "-"}</td>
           <td>${fmtPeso2(r.totalPrice)}</td>
           <td style="color:#be123c;">− ${fmtPeso2(f)}</td>
           <td style="font-weight:700;color:#16a34a;">${fmtPeso2(round2((Number(r.totalPrice) || 0) - f))}</td>
-          <td style="color:#7e22ce;font-weight:600;" title="${!isNetPartner ? "" : usesCommission(r) ? "판매가 × 10%" : `넷가 ₱${netCostOf(r).toLocaleString()}`}">${isNetPartner && !cancelled ? (r.status === "confirmed" ? fmtPeso2(payout) : "확정 후") : "-"}</td>
+          <td style="color:#7e22ce;font-weight:600;" title="${isNetPartner ? payoutBasis(r) : ""}">${isNetPartner && !cancelled ? (r.status === "confirmed" ? fmtPeso2(payout) : "확정 후") : "-"}</td>
           <td>${cancelled ? '<span class="badge cancelled">취소 · 환불확인</span>' : `<span class="badge ${r.status === "confirmed" ? "confirmed" : "pending"}">${STATUS_LABELS[r.status] || r.status}</span>`}</td>
         </tr>`;
     }).join("") : "<tr><td colspan='11' style='text-align:center;color:var(--admin-text-muted);'>이 달 Maya 결제 건이 없습니다.</td></tr>";
@@ -1876,7 +1904,7 @@ async function loadPartner() {
     const payoutAll = round2(confirmedAll.reduce((s, r) => s + partnerPayoutOf(r), 0));
     const unsettledPay = round2(unsettledAll.reduce((s, r) => s + partnerPayoutOf(r), 0));
     const payoutLine = r => usesNet && r.status === 'confirmed'
-      ? `<div style="font-size:0.72rem;font-weight:600;color:#7e22ce;" title="${usesCommission(r) ? `판매가 ${fmtPeso2(r.totalPrice)} × 10%` : `결제 ${fmtPeso2(r.totalPrice)} − Maya ${fmtPeso2(mayaFeeOf(r))} − 넷가 ${fmtPeso2(netCostOf(r))}`}">정산금 ${fmtPeso2(partnerPayoutOf(r))}</div>`
+      ? `<div style="font-size:0.72rem;font-weight:600;color:#7e22ce;" title="${payoutBasis(r)}">정산금 ${fmtPeso2(partnerPayoutOf(r))}</div>`
       : '';
 
     statsEl.innerHTML = `

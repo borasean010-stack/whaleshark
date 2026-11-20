@@ -116,7 +116,8 @@ async function handle(request, env) {
       nationality: rec.nationality || ws.nationality,
       totalPrice: (rec.totalPrice != null ? Number(rec.totalPrice) : 0) || ws.totalPrice || (info.amount && (info.amount.value || info.amount)),
       paymentStatus: 'paid', paymentMethod: 'Maya',
-      currency: rec.currency || ws.currency || 'PHP', name, email, lang: ws.lang || 'en'
+      currency: rec.currency || ws.currency || 'PHP', name, email, lang: ws.lang || 'en',
+      malumpati: rec.malumpati === true || ws.malumpati === true
     };
     try {
       const r = await fetch(VOUCHER_ENDPOINT, {
