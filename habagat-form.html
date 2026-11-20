@@ -36,7 +36,7 @@
 <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
 <!-- Leaflet (Route Map) -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="/js/track.js?v=1" defer></script>
+<script src="/js/track.js?v=2" defer></script>
 </head>
 <body>
 
@@ -423,6 +423,7 @@
     const natGroup = natEl.closest('.form-group');
     if (natGroup) natGroup.style.display = 'none';
     document.getElementById('referralCode').value = 'HABAGAT';
+    try { localStorage.setItem('ws_ref_keep', JSON.stringify({ code: 'HABAGAT', at: Date.now() })); } catch (_) {}
     const refGroup = document.getElementById('referralCode').closest('.form-group');
     if (refGroup) refGroup.style.display = 'none';
 
@@ -819,6 +820,6 @@
     });
   });
 </script>
-<script type="module" src="js/reservation.js?v=1794000002"></script>
+<script type="module" src="js/reservation.js?v=1794000500"></script>
 </body>
 </html>

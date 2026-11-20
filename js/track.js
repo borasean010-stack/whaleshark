@@ -61,3 +61,29 @@ const GADS_PURCHASE_LABEL = '';    // 예: 'AbC-D_efG-h12_34-567'
   const m = location.pathname.match(/(?:^|\/)(f|r|t|vf)-details/);
   if (m) window.wsTrack('view', { tour: m[1].toUpperCase() });
 })();
+
+// 레퍼럴 코드 7일 기억 + 유입 경로 기록. 광고 ID와 상관없이 항상 돈다.
+// 외부로 보내는 건 없고, 손님 브라우저에만 저장했다가 예약할 때 같이 저장한다.
+(function () {
+  try {
+    const now = Date.now();
+    const q = new URLSearchParams(location.search);
+    const ref = (q.get('ref') || '').trim().toUpperCase();
+    if (ref) localStorage.setItem('ws_ref_keep', JSON.stringify({ code: ref, at: now }));
+    if (sessionStorage.getItem('ws_src')) return;   // 이번 방문의 첫 페이지만 기록
+    let host = '';
+    try { host = document.referrer ? new URL(document.referrer).hostname.replace(/^www\./, '') : ''; } catch (_) {}
+    if (host === location.hostname.replace(/^www\./, '')) host = 'site';
+    const src = {
+      from: host || 'direct',
+      utm: [q.get('utm_source'), q.get('utm_medium'), q.get('utm_campaign')].filter(Boolean).join('/'),
+      ad: q.get('gclid') ? 'google_ads' : q.get('fbclid') ? 'facebook' : '',
+      ref: ref,
+      landing: location.pathname,
+      at: new Date(now).toISOString()
+    };
+    sessionStorage.setItem('ws_src', JSON.stringify(src));
+    const first = JSON.parse(localStorage.getItem('ws_src_first') || 'null');
+    if (!first || now - Date.parse(first.at) > 7 * 864e5) localStorage.setItem('ws_src_first', JSON.stringify(src));
+  } catch (_) {}
+})();

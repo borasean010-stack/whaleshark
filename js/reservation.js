@@ -87,6 +87,16 @@ document.addEventListener("DOMContentLoaded", syncVfMinPeople);
 // 페이지가 사라졌다. 이제는 손님이 있던 페이지로 그대로 돌려보내고, 입력값을 복원한 뒤
 // 결제 단계에서 다시 결제하도록 안내한다.
 const RETRY_KEY = "ws_pay_retry";
+// 유입 경로 — track.js가 손님 브라우저에 담아둔 값 (이번 방문 첫 페이지 / 7일 안 첫 방문)
+function readSource() {
+  const get = (store, key) => { try { return JSON.parse(store.getItem(key) || "null"); } catch (_) { return null; } };
+  const out = {};
+  const last = get(sessionStorage, "ws_src");
+  const first = get(localStorage, "ws_src_first");
+  if (last) out.last = last;
+  if (first && (!last || first.at !== last.at)) out.first = first;
+  return out;
+}
 function returnUrl(result) {
   const u = new URL(window.location.href);
   u.hash = "";
@@ -211,6 +221,7 @@ function getReservationData() {
     email: formData.get("email").trim(),
     emergencyContact: (formData.get("emergencyContact") || "").trim(),
     referralCode: (formData.get("referralCode") || "").trim() || referralCode,
+    source: readSource(),
     status: "pending",
     createdAt: serverTimestamp()
   };

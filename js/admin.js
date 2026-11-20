@@ -213,6 +213,24 @@ const PAY_LATER_METHODS = [
   '보라카이션 오피스페이', 'cash_office'
 ];
 
+// 예약에 저장된 유입 경로 한 줄 요약 (track.js가 손님 브라우저에서 담아온 값)
+const SOURCE_NAMES = { direct: "직접/메신저", site: "사이트 내부", google_ads: "구글광고", facebook: "페이스북" };
+function sourceLabel(x) {
+  if (!x) return "";
+  const from = x.ad || x.from || "";
+  let label = SOURCE_NAMES[from] || from.replace(/^(m|l|lm)\./, "");
+  if (x.utm) label += " · " + x.utm;
+  if (x.ref) label += " · ref " + x.ref;
+  return label;
+}
+function sourceLine(src) {
+  if (!src || (!src.last && !src.first)) return "";
+  const escHtml = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const parts = [];
+  if (src.first) parts.push("처음: " + sourceLabel(src.first));
+  if (src.last) parts.push((src.first ? "이번: " : "") + sourceLabel(src.last));
+  return `<div style="font-size:.7rem;color:var(--admin-text-muted);margin-top:3px;white-space:nowrap;" title="${escHtml(JSON.stringify(src))}">${escHtml(parts.join(" / "))}</div>`;
+}
 function isAbandonedCardBooking(d) {
   if (d.bookedBy || d.agencyId) return false;        // 여행사 예약
   if (d.paymentStatus === 'paid') return false;      // 결제 완료
@@ -600,7 +618,7 @@ function renderReservations(querySnapshot) {
           <div>${data.email}</div>
         </td>
         <td>${data.emergencyContact || "-"}</td>
-        <td>${data.referralCode ? `<span style="background:#dbeafe;color:#1d4ed8;padding:2px 7px;border-radius:6px;font-size:0.78rem;font-weight:700;">${data.referralCode}</span>` : "-"}</td>
+        <td>${data.referralCode ? `<span style="background:#dbeafe;color:#1d4ed8;padding:2px 7px;border-radius:6px;font-size:0.78rem;font-weight:700;">${data.referralCode}</span>` : "-"}${sourceLine(data.source)}</td>
         <td>${data.meetingTime ? data.meetingTime + " AM" : "-"}</td>
         <td>${selectHtml}</td>
         <td>

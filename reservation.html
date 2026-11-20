@@ -37,7 +37,7 @@ if ((new URLSearchParams(location.search).get('ref') || '').toUpperCase() === 'A
 <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
 <!-- Leaflet (Route Map) -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="/js/track.js?v=1" defer></script>
+<script src="/js/track.js?v=2" defer></script>
 </head>
 <body>
 
@@ -453,6 +453,13 @@ if ((new URLSearchParams(location.search).get('ref') || '').toUpperCase() === 'A
     // 채 할인만 적용하면 화면 금액과 결제 금액이 어긋난다.
     let storedRef = '';
     try { storedRef = sessionStorage.getItem('ws_ref') || ''; } catch (_) {}
+    // 파트너 링크로 왔다가 나중에 메인 사이트로 다시 와도 7일 동안은 그 코드를 붙인다
+    if (!storedRef) {
+      try {
+        const kept = JSON.parse(localStorage.getItem('ws_ref_keep') || 'null');
+        if (kept && kept.code && Date.now() - kept.at < 7 * 864e5) storedRef = kept.code;
+      } catch (_) {}
+    }
     const requestedRef = urlParams.get('ref') || storedRef;
     if (requestedRef) document.getElementById('referralCode').value = requestedRef;
 
@@ -918,6 +925,6 @@ if ((new URLSearchParams(location.search).get('ref') || '').toUpperCase() === 'A
     });
   });
 </script>
-<script type="module" src="js/reservation.js?v=1794000002"></script>
+<script type="module" src="js/reservation.js?v=1794000500"></script>
 </body>
 </html>
