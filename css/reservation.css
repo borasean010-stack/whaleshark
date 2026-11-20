@@ -377,6 +377,9 @@ body {
 
 /* ── Sidebar: booking summary ── */
 .wizard-sidebar { position: sticky; top: 100px; }
+/* html·body의 overflow-x:hidden이 스크롤 컨테이너를 만들어 sticky(예약 요약 따라오기)를 막는다.
+   clip은 가로 넘침은 그대로 자르면서 스크롤 컨테이너를 만들지 않는다. */
+html, body { overflow-x: clip; }
 .summary-card { padding: 28px; }
 .summary-header {
   display: flex;
