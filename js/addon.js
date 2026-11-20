@@ -33,10 +33,40 @@
       ja: 'VIPファストトラック：マルンパティ部分は混載（ジョイン）ツアーです。',
       ru: 'VIP Fast Track: часть в Малумпати проходит в сборной группе.'
     },
-    sum: { en: 'Malumpati Add-on', ko: '말룸파티 옵션', zh: 'Malumpati 附加', ja: 'マルンパティ追加', ru: 'Малумпати (опция)' }
+    sum: { en: 'Malumpati Add-on', ko: '말룸파티 옵션', zh: 'Malumpati 附加', ja: 'マルンパティ追加', ru: 'Малумпати (опция)' },
+    cancel: { en: 'Cancel', ko: '취소하기', zh: '取消', ja: '取り消す', ru: 'Отменить' },
+    add: { en: 'Add', ko: '추가하기', zh: '添加', ja: '追加する', ru: 'Добавить' },
+    added: { en: '✓ Added', ko: '✓ 추가됨', zh: '✓ 已添加', ja: '✓ 追加済み', ru: '✓ Добавлено' }
   };
   const lang = (document.documentElement.lang || 'en').slice(0, 2);
   const t = (k) => TXT[k][lang] || TXT[k].en;
+
+  if (!document.getElementById('ws-addon-css')) {
+    const css = document.createElement('style');
+    css.id = 'ws-addon-css';
+    css.textContent = `
+      .ws-addon { border:1.5px solid rgba(37,99,235,.25); border-radius:14px; background:rgba(37,99,235,.04); padding:14px; display:grid; gap:14px; grid-template-areas:"photos" "info" "actions"; }
+      .ws-addon.on { border-color:#16a34a; background:rgba(22,163,74,.06); }
+      .ws-addon-photos { grid-area:photos; display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+      .ws-addon-photos img { width:100%; aspect-ratio:1; object-fit:cover; border-radius:10px; display:block; }
+      .ws-addon-info { grid-area:info; line-height:1.55; border-top:1px solid rgba(127,127,127,.25); padding-top:12px; }
+      .ws-addon-title { display:block; font-size:1.05rem; font-weight:700; }
+      .ws-addon-price { display:block; color:#2563eb; font-weight:800; font-size:1.15rem; margin-top:2px; }
+      .ws-addon-desc { display:block; font-size:.86rem; opacity:.85; margin-top:8px; }
+      .ws-addon-extra { display:block; font-size:.8rem; opacity:.7; margin-top:6px; }
+      .ws-addon-vip { display:none; font-size:.84rem; font-weight:600; color:#b45309; margin-top:6px; }
+      .ws-addon-actions { grid-area:actions; display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+      .ws-addon-actions button { padding:12px; border-radius:10px; font-weight:700; font-size:.95rem; cursor:pointer; border:1.5px solid transparent; }
+      .ws-addon-cancel { background:transparent; border-color:rgba(127,127,127,.4) !important; color:inherit; }
+      .ws-addon-cancel:disabled { opacity:.4; cursor:default; }
+      .ws-addon-add { background:#2563eb; color:#fff; }
+      .ws-addon.on .ws-addon-add { background:#16a34a; }
+      @media (min-width: 768px) {
+        .ws-addon { grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); grid-template-areas:"photos info" "actions actions"; align-items:start; }
+        .ws-addon-info { border-top:0; padding-top:0; }
+      }`;
+    document.head.appendChild(css);
+  }
 
   const box = document.createElement('div');
   box.className = 'form-group';
@@ -44,21 +74,47 @@
   box.style.display = 'none';
   box.innerHTML = `
     <label ${L(TXT.head)}>${t('head')}</label>
-    <div class="addon-photos" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px;">
-      ${[1, 2, 3, 4].map((n) => `<img src="/assets/malumpati/${n}.webp" alt="Malumpati" loading="lazy" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;display:block;" onerror="this.remove()">`).join('')}
-    </div>
-    <label for="addonMalumpati" style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1.5px solid rgba(37,99,235,.25);border-radius:12px;background:rgba(37,99,235,.04);cursor:pointer;font-weight:400;text-transform:none;letter-spacing:0;">
-      <input type="checkbox" id="addonMalumpati" name="addonMalumpati" value="1" style="width:20px;height:20px;margin-top:2px;flex:none;accent-color:#2563eb;">
-      <span style="display:block;line-height:1.55;">
-        <strong style="display:block;font-size:1rem;"><span ${L(TXT.title)}>${t('title')}</span> <span style="color:#2563eb;white-space:nowrap;" ${L(TXT.price)}>${t('price')}</span></strong>
-        <span style="display:block;font-size:.86rem;opacity:.85;margin-top:4px;" ${L(TXT.desc)}>${t('desc')}</span>
-        <span style="display:block;font-size:.8rem;opacity:.7;margin-top:6px;" ${L(TXT.extra)}>${t('extra')}</span>
-        <span id="addon-vip-note" style="display:none;font-size:.84rem;font-weight:600;color:#b45309;margin-top:6px;" ${L(TXT.vip)}>${t('vip')}</span>
-      </span>
-    </label>`;
+    <div class="ws-addon">
+      <div class="ws-addon-photos">
+        ${[1, 2, 3, 4].map((n) => `<img src="/assets/malumpati/${n}.webp" alt="Malumpati" loading="lazy" onerror="this.remove()">`).join('')}
+      </div>
+      <div class="ws-addon-info">
+        <span class="ws-addon-title" ${L(TXT.title)}>${t('title')}</span>
+        <span class="ws-addon-price" ${L(TXT.price)}>${t('price')}</span>
+        <span class="ws-addon-desc" ${L(TXT.desc)}>${t('desc')}</span>
+        <span class="ws-addon-extra" ${L(TXT.extra)}>${t('extra')}</span>
+        <span class="ws-addon-vip" id="addon-vip-note" ${L(TXT.vip)}>${t('vip')}</span>
+      </div>
+      <div class="ws-addon-actions">
+        <button type="button" class="ws-addon-cancel" ${L(TXT.cancel)}>${t('cancel')}</button>
+        <button type="button" class="ws-addon-add" ${L(TXT.add)}>${t('add')}</button>
+      </div>
+      <input type="checkbox" id="addonMalumpati" name="addonMalumpati" value="1" hidden>
+    </div>`;
   anchor.insertAdjacentElement('afterend', box);
   const cb = box.querySelector('#addonMalumpati');
   const vipNote = box.querySelector('#addon-vip-note');
+  const card = box.querySelector('.ws-addon');
+  const btnAdd = box.querySelector('.ws-addon-add');
+  const btnCancel = box.querySelector('.ws-addon-cancel');
+  // 페이지마다 배경이 달라(어두운 예약 화면 등) 글자색을 같은 화면의 라벨 색에 맞춘다
+  const matchColor = () => {
+    const ref = form.querySelector('.form-group > label');
+    if (ref) card.style.color = getComputedStyle(ref).color;
+  };
+  matchColor();
+  window.matchMedia && matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', matchColor);
+  // 언어 전환(data-* 교체)에도 맞게, 상태에 따라 버튼 문구 속성을 바꿔 둔다
+  function paintButtons() {
+    const src = cb.checked ? TXT.added : TXT.add;
+    Object.entries(src).forEach(([k, v]) => btnAdd.setAttribute('data-' + k, v));
+    const cur = (document.documentElement.lang || 'en').slice(0, 2);
+    btnAdd.textContent = src[cur] || src.en;
+    btnCancel.disabled = !cb.checked;
+    card.classList.toggle('on', cb.checked);
+  }
+  btnAdd.addEventListener('click', () => { if (!cb.checked) { cb.checked = true; cb.dispatchEvent(new Event('change')); } });
+  btnCancel.addEventListener('click', () => { if (cb.checked) { cb.checked = false; cb.dispatchEvent(new Event('change')); } });
 
   // 사이드 요약에 옵션 줄
   let sumRow = null;
@@ -77,6 +133,7 @@
   window.wsAddonMalumpati = () => window.wsAddonPP() > 0;
 
   function refresh() {
+    paintButtons();
     box.style.display = eligible() ? '' : 'none';
     vipNote.style.display = tour() === 'VF' ? 'block' : 'none';
     const people = Number((document.getElementById('people') || {}).value) || 0;
