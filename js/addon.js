@@ -34,7 +34,6 @@
       ru: 'VIP Fast Track: часть в Малумпати проходит в сборной группе.'
     },
     sum: { en: 'Malumpati Add-on', ko: '말룸파티 옵션', zh: 'Malumpati 附加', ja: 'マルンパティ追加', ru: 'Малумпати (опция)' },
-    cancel: { en: 'Cancel', ko: '취소하기', zh: '取消', ja: '取り消す', ru: 'Отменить' },
     add: { en: 'Add', ko: '추가하기', zh: '添加', ja: '追加する', ru: 'Добавить' },
     added: { en: '✓ Added', ko: '✓ 추가됨', zh: '✓ 已添加', ja: '✓ 追加済み', ru: '✓ Добавлено' }
   };
@@ -55,10 +54,8 @@
       .ws-addon-desc { display:block; font-size:.86rem; opacity:.85; margin-top:8px; }
       .ws-addon-extra { display:block; font-size:.8rem; opacity:.7; margin-top:6px; }
       .ws-addon-vip { display:none; font-size:.84rem; font-weight:600; color:#b45309; margin-top:6px; }
-      .ws-addon-actions { grid-area:actions; display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+      .ws-addon-actions { grid-area:actions; display:grid; }
       .ws-addon-actions button { padding:12px; border-radius:10px; font-weight:700; font-size:.95rem; cursor:pointer; border:1.5px solid transparent; }
-      .ws-addon-cancel { background:transparent; border-color:rgba(127,127,127,.4) !important; color:inherit; }
-      .ws-addon-cancel:disabled { opacity:.4; cursor:default; }
       .ws-addon-add { background:#2563eb; color:#fff; }
       .ws-addon.on .ws-addon-add { background:#16a34a; }
       @media (min-width: 768px) {
@@ -86,7 +83,6 @@
         <span class="ws-addon-vip" id="addon-vip-note" ${L(TXT.vip)}>${t('vip')}</span>
       </div>
       <div class="ws-addon-actions">
-        <button type="button" class="ws-addon-cancel" ${L(TXT.cancel)}>${t('cancel')}</button>
         <button type="button" class="ws-addon-add" ${L(TXT.add)}>${t('add')}</button>
       </div>
       <input type="checkbox" id="addonMalumpati" name="addonMalumpati" value="1" hidden>
@@ -96,7 +92,6 @@
   const vipNote = box.querySelector('#addon-vip-note');
   const card = box.querySelector('.ws-addon');
   const btnAdd = box.querySelector('.ws-addon-add');
-  const btnCancel = box.querySelector('.ws-addon-cancel');
   // 페이지마다 배경이 달라(어두운 예약 화면 등) 글자색을 같은 화면의 라벨 색에 맞춘다
   const matchColor = () => {
     const ref = form.querySelector('.form-group > label');
@@ -110,11 +105,10 @@
     Object.entries(src).forEach(([k, v]) => btnAdd.setAttribute('data-' + k, v));
     const cur = (document.documentElement.lang || 'en').slice(0, 2);
     btnAdd.textContent = src[cur] || src.en;
-    btnCancel.disabled = !cb.checked;
     card.classList.toggle('on', cb.checked);
   }
-  btnAdd.addEventListener('click', () => { if (!cb.checked) { cb.checked = true; cb.dispatchEvent(new Event('change')); } });
-  btnCancel.addEventListener('click', () => { if (cb.checked) { cb.checked = false; cb.dispatchEvent(new Event('change')); } });
+  // 한 버튼으로 켜고 끈다 (추가됨 상태에서 다시 누르면 빠진다)
+  btnAdd.addEventListener('click', () => { cb.checked = !cb.checked; cb.dispatchEvent(new Event('change')); });
 
   // 사이드 요약에 옵션 줄
   let sumRow = null;
