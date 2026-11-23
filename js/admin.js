@@ -571,8 +571,67 @@ function loadReservations() {
   });
 }
 
+// ── 레퍼럴 누락 감지 ──
+// 손님이 파트너 링크(YEBO·리조트 QR)로 먼저 시도했다가, 다른 브라우저·기기에서 코드 없이
+// 결제하면 브라우저 기억(7일)이 넘어가지 않아 코드가 빠진다. 결제완료 예약 중 코드가 없는데
+// 7일 안에 같은 이메일(또는 같은 이름)로 코드가 붙은 예약 시도가 있으면 여기 띄운다.
+const REF_MISS_WINDOW = 7 * 864e5;
+function findMissingReferrals(snap) {
+  const all = [];
+  snap.forEach((ds) => all.push({ id: ds.id, ...ds.data() }));
+  const ms = (d) => (d.createdAt && d.createdAt.toMillis ? d.createdAt.toMillis() : 0);
+  const em = (d) => String(d.email || "").trim().toLowerCase();
+  const nm = (d) => String(d.name || "").trim().toUpperCase().replace(/\s+/g, " ");
+  const withRef = all.filter((d) => d.referralCode && !d.bookedBy && !d.agencyId);
+  const out = [];
+  for (const d of all) {
+    if (d.paymentStatus !== "paid" || d.referralCode || d.refCheckDismissed || d.bookedBy || d.agencyId) continue;
+    const at = ms(d);
+    const hit = withRef
+      .filter((o) => o.id !== d.id && at - ms(o) <= REF_MISS_WINDOW && ms(o) - at <= REF_MISS_WINDOW &&
+        ((em(o) && em(o) === em(d)) || (nm(o) && nm(o) === nm(d))))
+      .sort((a, b) => Math.abs(at - ms(a)) - Math.abs(at - ms(b)))[0];
+    if (hit) out.push({ d, hit });
+  }
+  return out;
+}
+function renderRefMissBanner(snap) {
+  const box = document.getElementById("ref-miss-banner");
+  if (!box) return;
+  const list = findMissingReferrals(snap);
+  if (!list.length) { box.style.display = "none"; box.innerHTML = ""; return; }
+  const esc = (v) => String(v == null ? "" : v).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const day = (d) => (d.createdAt && d.createdAt.toDate ? d.createdAt.toDate().toLocaleDateString("ko-KR", { month: "numeric", day: "numeric" }) : "");
+  box.innerHTML = `<div style="font-weight:800;margin-bottom:8px;">⚠️ 레퍼럴 코드가 빠진 것 같은 결제 ${list.length}건</div>` +
+    list.map(({ d, hit }) => `
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 0;border-top:1px dashed #fdba74;">
+        <span><b>${esc(d.name)}</b> · ${esc(d.date)} ${esc(d.tourType)} ${Number(d.people) || ""}명 · ₱${(Number(d.totalPrice) || 0).toLocaleString()}
+          — ${day(hit)} <b>${esc(hit.referralCode)}</b> 링크로 먼저 시도함 (${em(hit) === em(d) ? "같은 이메일" : "같은 이름"})</span>
+        <button class="action-btn ref-miss-attach" data-id="${esc(d.id)}" data-code="${esc(hit.referralCode)}" data-from="${esc(hit.id)}" style="background:#7e22ce;padding:4px 10px;font-size:.78rem;">${esc(hit.referralCode)} 붙이기</button>
+        <button class="action-btn ref-miss-skip" data-id="${esc(d.id)}" style="background:#94a3b8;padding:4px 10px;font-size:.78rem;">아님</button>
+      </div>`).join("");
+  box.style.display = "";
+  function em(x) { return String(x.email || "").trim().toLowerCase(); }
+}
+document.addEventListener("click", async (e) => {
+  const a = e.target.closest(".ref-miss-attach, .ref-miss-skip");
+  if (!a) return;
+  a.disabled = true;
+  try {
+    if (a.classList.contains("ref-miss-attach")) {
+      await updateDoc(doc(db, "reservations", a.dataset.id), { referralCode: a.dataset.code, refMatchedFrom: a.dataset.from, refAttachedAt: serverTimestamp() });
+    } else {
+      await updateDoc(doc(db, "reservations", a.dataset.id), { refCheckDismissed: true });
+    }
+  } catch (err) {
+    alert("저장 실패: " + (err.code || err.message));
+    a.disabled = false;
+  }
+});
+
 function renderReservations(querySnapshot) {
   lastReservationSnap = querySnapshot;
+  try { renderRefMissBanner(querySnapshot); } catch (err) { console.error("ref-miss", err); }
   publishPartnerReports(querySnapshot);
   try {
     let total = 0;

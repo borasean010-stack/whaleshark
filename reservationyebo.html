@@ -210,6 +210,10 @@ body {
 .cta-btn:hover { background: #0284c7; }
 </style>
 <script src="/js/track.js?v=2" defer></script>
+<script>
+// 예보 링크로 들어온 손님은 나중에 메인 사이트에서 예약해도 7일간 YEBO 코드가 붙는다
+try { sessionStorage.setItem('ws_ref', 'YEBO'); localStorage.setItem('ws_ref_keep', JSON.stringify({ code: 'YEBO', at: Date.now() })); } catch (_) {}
+</script>
 </head>
 <body>
 

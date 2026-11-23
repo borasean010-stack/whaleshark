@@ -5,6 +5,11 @@
   const me = document.currentScript;
   const FORM = me.dataset.form;                       // 예: 'habagat-form'
   const RATE = Number(me.dataset.discount || 0);      // 예: 0.10
+  // 첫 화면만 보고 나갔다가 나중에 메인 사이트에서 예약해도 이 리조트 코드가 붙게 7일간 기억한다
+  const CODE = (me.dataset.code || '').toUpperCase();
+  if (CODE) {
+    try { sessionStorage.setItem('ws_ref', CODE); localStorage.setItem('ws_ref_keep', JSON.stringify({ code: CODE, at: Date.now() })); } catch (_) {}
+  }
   const PRICES = {
     PH:      { VF: 5820, F: 3300, R: 2520, T: 1620 },
     FOREIGN: { VF: 5820, F: 3600, R: 2820, T: 1920 }
@@ -33,6 +38,18 @@
         ['Not included', 'Underwater photos, Fast Track entry']]
     }
   };
+  // 타임테이블 — 상세페이지(f/vf/r-details) 일정과 같다
+  const JOLLIBEE_TT = [['07:30 AM', 'Meet at Jollibee, Main Road', ''], ['09:00 AM', 'Transfer to Libertad', 'About 1 hour'],
+    ['09:30 AM', 'Arrive in Libertad', 'Briefing &amp; safety instructions'], ['10:00 AM', 'Whale shark watching', 'About 30 minutes'],
+    ['10:30 AM', 'Quick freshwater rinse', ''], ['11:30 AM', 'Return to Boracay', 'About 1 hour'], ['12:30 PM', 'Drop-off at Jollibee, Main Road', '']];
+  const TIMETABLE = {
+    VF: { head: 'Pickup at 7, 8, 9 or 10 AM &middot; about 5 hours', rows: [['Start', 'Hotel pickup', 'Private vehicle at your chosen time'],
+      ['+1h 30m', 'Transfer to Libertad', 'About 1 hour'], ['+2h', 'Arrive in Libertad', 'Briefing &amp; safety instructions'],
+      ['+2h 30m', 'Whale shark watching', 'About 30 minutes'], ['+3h', 'Quick freshwater rinse', ''],
+      ['+4h', 'Return to Boracay', 'About 1 hour'], ['+5h', 'Hotel drop-off', 'Private vehicle back to your hotel']] },
+    F: { head: '07:30 &ndash; 12:30 &middot; about 5 hours', rows: JOLLIBEE_TT },
+    R: { head: '07:30 &ndash; 12:30 &middot; about 5 hours', rows: JOLLIBEE_TT }
+  };
   const COMMON = [['Payment', 'Online (Card &middot; GCash &middot; Maya &middot; QR Ph)'],
     ['Confirmation', 'E-voucher emailed right after payment']];
   const ORDER = ['VF', 'F', 'R'];
@@ -56,6 +73,16 @@
     .pl-tour span { display: block; font-size: .72rem; color: #999; margin-top: 2px; }
     .pl-tour em { display: block; font-style: normal; font-weight: 800; font-size: .9rem; margin-top: 6px; color: var(--pl-accent); }
     .pl-tour em small { display: block; font-weight: 600; font-size: .7rem; color: #999; }
+    .pl-tt { margin-bottom: 32px; }
+    .pl-tt-head { font-size: .86rem; font-weight: 700; color: #111; margin-bottom: 12px; }
+    .pl-tt-row { display: grid; grid-template-columns: 74px 1fr; gap: 12px; position: relative; padding: 0 0 14px; }
+    .pl-tt-row::before { content: ''; position: absolute; left: 85px; top: 6px; bottom: -6px; width: 2px; background: #eef0f3; }
+    .pl-tt-row:last-child::before { display: none; }
+    .pl-tt-row .t { font-size: .8rem; font-weight: 800; color: var(--pl-accent); padding-top: 1px; white-space: nowrap; }
+    .pl-tt-row .d { padding-left: 14px; position: relative; font-size: .9rem; font-weight: 600; color: #222; }
+    .pl-tt-row .d::before { content: ''; position: absolute; left: -7px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: #fff; border: 2px solid var(--pl-accent); }
+    .pl-tt-row .d small { display: block; font-size: .76rem; color: #999; font-weight: 400; margin-top: 2px; }
+    .pl-tt-note { font-size: .74rem; color: #aaa; margin-top: 2px; }
     .price-block .ph { margin-top: 6px; font-size: .86rem; color: #666; font-weight: 600; }
     .pl-tour.on { border-color: var(--pl-accent); box-shadow: 0 0 0 1px var(--pl-accent) inset; background: color-mix(in srgb, var(--pl-accent) 6%, #fff); }
     .pl-label { font-size: .7rem; font-weight: 700; color: #bbb; text-transform: uppercase; letter-spacing: 1.2px; margin: 0 0 10px; }
@@ -76,6 +103,16 @@
 
   const q = new URLSearchParams(location.search);
   let tour = ORDER.includes((q.get('tour') || '').toUpperCase()) ? q.get('tour').toUpperCase() : 'F';
+  // 타임테이블 칸 — 'Tour information' 아래
+  const tt = document.createElement('div');
+  if (infoList) {
+    const h = document.createElement('p');
+    h.className = 'sh';
+    h.textContent = 'Timetable';
+    infoList.insertAdjacentElement('afterend', h);
+    tt.className = 'pl-tt';
+    h.insertAdjacentElement('afterend', tt);
+  }
   const ph = document.createElement('div');
   ph.className = 'ph';
   priceBlock.querySelector('.num').insertAdjacentElement('afterend', ph);
@@ -95,6 +132,10 @@
     ph.innerHTML = basePH !== base ? `Filipino guests: &#8369;${fmt(sale(basePH))} / person &middot; mixed groups welcome` : 'Same price for all guests';
     if (incList) incList.innerHTML = t.inc.map((s) => `<li><span class="dot"></span>${s}</li>`).join('');
     if (infoList) infoList.innerHTML = [...t.info, ...COMMON].map(([k, v]) => `<div class="info-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join('');
+    const T = TIMETABLE[tour];
+    tt.innerHTML = `<div class="pl-tt-head">${T.head}</div>` +
+      T.rows.map(([t, d, n]) => `<div class="pl-tt-row"><span class="t">${t}</span><span class="d">${d}${n ? `<small>${n}</small>` : ''}</span></div>`).join('') +
+      '<div class="pl-tt-note">Times may vary with sea and weather conditions.</div>';
     cta.href = `${FORM}?tour=${tour}`;
   }
   pick.addEventListener('click', (e) => {
