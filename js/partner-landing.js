@@ -51,6 +51,8 @@
     @media (max-width: 480px) { .pl-tours { grid-template-columns: 1fr; } .pl-tour { display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 10px; } .pl-tour em { grid-row: 1 / span 2; grid-column: 2; margin-top: 0; text-align: right; } }
     .pl-tour { text-align: left; padding: 12px; border: 1.5px solid #e5e7eb; border-radius: 12px; background: #fff; cursor: pointer; font: inherit; color: #111; }
     .pl-tour b { display: block; font-size: .92rem; }
+    .pl-tour { position: relative; }
+    .pl-tour .pl-best { display: inline-block; margin: 0; position: absolute; top: -9px; right: 10px; background: #f59e0b; color: #fff; font-size: .62rem; font-weight: 800; letter-spacing: .8px; padding: 3px 8px; border-radius: 99px; box-shadow: 0 2px 6px rgba(245,158,11,.35); }
     .pl-tour span { display: block; font-size: .72rem; color: #999; margin-top: 2px; }
     .pl-tour em { display: block; font-style: normal; font-weight: 800; font-size: .9rem; margin-top: 6px; color: var(--pl-accent); }
     .pl-tour em small { display: block; font-weight: 600; font-size: .7rem; color: #999; }
@@ -69,7 +71,7 @@
   pick.className = 'pl-pick';
   pick.innerHTML = `
     <p class="pl-label">Choose your tour</p>
-    <div class="pl-tours">${ORDER.map((k) => `<button type="button" class="pl-tour" data-tour="${k}"><b>${TOURS[k].name}</b><span>${TOURS[k].tag}</span><em></em></button>`).join('')}</div>`;
+    <div class="pl-tours">${ORDER.map((k) => `<button type="button" class="pl-tour" data-tour="${k}">${k === 'F' ? '<span class="pl-best">BEST</span>' : ''}<b>${TOURS[k].name}</b><span>${TOURS[k].tag}</span><em></em></button>`).join('')}</div>`;
   priceBlock.parentNode.insertBefore(pick, priceBlock);
 
   const q = new URLSearchParams(location.search);
