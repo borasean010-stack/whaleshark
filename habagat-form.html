@@ -22,7 +22,7 @@
 <link rel="canonical" href="https://boracaywhaleshark.com/habagat-form">
 
 <link rel="stylesheet" href="css/style.css"> <!-- for nav -->
-<link rel="stylesheet" href="css/reservation.css?v=1794000901">
+<link rel="stylesheet" href="css/reservation.css?v=1794001200">
 <!-- Flatpickr (Premium Datepicker) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
@@ -736,7 +736,7 @@
         document.getElementById('pp-price').innerHTML = (shown.length === 1 || samePrice)
           ? priceHtml(shown[0])
           : shown.map((k) => `${L[k]} ${priceHtml(k)}`).join(' / ');
-        document.getElementById('pp-total').textContent = lang === 'ko' ? `(총 ${people}명: ${fmtPHP(total)})` : `(Total for ${people}: ${fmtPHP(total)})`;
+        document.getElementById('pp-total').innerHTML = (lang === 'ko' ? `총 ${people}명` : `Total for ${people}`) + ` <b>${fmtPHP(total)}</b>`;
       } else {
         pricePreview.style.display = 'none';
       }

@@ -33,7 +33,7 @@
 <link rel="canonical" href="https://boracaywhaleshark.com/reservationyebo">
 
 <link rel="stylesheet" href="css/style.css"> <!-- for nav -->
-<link rel="stylesheet" href="css/reservation.css?v=1794000901">
+<link rel="stylesheet" href="css/reservation.css?v=1794001200">
 <!-- Flatpickr (Premium Datepicker) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
@@ -586,8 +586,8 @@
       if (perPerson) {
         pricePreview.style.display = 'flex';
         document.getElementById('pp-price').textContent = fmtPHP(perPerson);
-        const totalLabel = lang === 'ko' ? `(총 ${people}명: ${fmtPHP(perPerson * people)})` : `(Total for ${people}: ${fmtPHP(perPerson * people)})`;
-        document.getElementById('pp-total').textContent = people > 0 ? totalLabel : '';
+        const totalLabel = (lang === 'ko' ? `총 ${people}명` : `Total for ${people}`) + ` <b>${fmtPHP(perPerson * people)}</b>`;
+        document.getElementById('pp-total').innerHTML = people > 0 ? totalLabel : '';
       } else {
         pricePreview.style.display = 'none';
       }

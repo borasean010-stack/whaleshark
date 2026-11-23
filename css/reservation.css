@@ -734,3 +734,8 @@ html, body { overflow-x: clip; }
   width: 56px; padding: 9px 4px; text-align: center; font-weight: 700; -moz-appearance: textfield;
 }
 .pax-input::-webkit-outer-spin-button, .pax-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+/* 1인 가격은 작게, 총 금액을 크게·강조 */
+.price-preview strong#pp-price { font-size: 0.95rem; font-weight: 700; color: rgba(255, 255, 255, 0.85); }
+.price-preview .price-total { flex-basis: 100%; font-size: 0.85rem; color: rgba(255, 255, 255, 0.7); font-weight: 600; }
+.price-preview .price-total b { font-size: 1.35rem; font-weight: 900; color: #00e5ff; margin-left: 4px; }
