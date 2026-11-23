@@ -1196,13 +1196,6 @@ a.footer-msg-icon:hover { transform: translateY(-3px); filter: brightness(1.08);
 .pkg-card-tag--f   { background: #f97316; box-shadow: 0 4px 12px rgba(249,115,22,0.4); }
 .pkg-card-tag--r   { background: #3b82f6; box-shadow: 0 4px 12px rgba(59,130,246,0.4); }
 .pkg-card-tag--t   { background: #10b981; box-shadow: 0 4px 12px rgba(16,185,129,0.4); }
-/* 패스트트랙 BEST 뱃지 (이미지 왼쪽 위) */
-.pkg-card-best {
-  position: absolute; top: 14px; left: 14px;
-  font-size: 0.66rem; font-weight: 900; letter-spacing: 0.08em; color: #fff;
-  background: #f59e0b; padding: 5px 12px; border-radius: 99px;
-  box-shadow: 0 4px 12px rgba(245,158,11,0.45);
-}
 
 .pkg-card-body {
   padding: 22px 20px 24px;
