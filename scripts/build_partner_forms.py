@@ -2,7 +2,7 @@
 """제휴 리조트 예약폼(habagat/azalea/feliz/sample-form.html)을 reservation.html에서 만든다.
 
 메인 예약폼을 고친 뒤 이 스크립트를 다시 돌리면 제휴 폼에도 그대로 반영된다.
-제휴 폼에서 다른 점: 머리말(제목·OG·noindex), 상단 로고, 레퍼럴 코드 고정, 펠리즈 10% 할인.
+제휴 폼에서 다른 점: 머리말(제목·OG·noindex), 상단 로고, 레퍼럴 코드 고정, 펠리즈 10% 할인, 티켓 단독 없음.
 실행: python3 scripts/build_partner_forms.py
 """
 import re, pathlib
@@ -60,10 +60,12 @@ for slug, p in PARTNERS.items():
         felix = f'''const upper = (code || '').trim().toUpperCase();
       if (upper === '{p['code']}') {{
         // {p['title']} 손님 {int(rate*100)}% 할인 — 국적별 정가 기준, 말룸파티 옵션은 제외
-        const nat = (document.getElementById('nationality') || {{}}).value;
-        const base = ((PRICES[nat] || PRICES.FOREIGN)[tourType]) || 0;
+        const n = nat || (document.getElementById('nationality') || {{}}).value;
+        const base = ((PRICES[n] || PRICES.FOREIGN)[tourType]) || 0;
         return base ? base - Math.round(base * {1 - rate:.2f}) : 0;
       }}'''
         s = sub1(r"const upper = \(code \|\| ''\)\.trim\(\)\.toUpperCase\(\);", felix, s)
+    # 리조트 페이지는 티켓 단독을 팔지 않는다 (VIP·패스트트랙·레귤러만)
+    s = sub1(r'\n\s*<label class="tour-option">\s*<input type="radio" name="tourType" value="T".*?</label>', '', s)
     (ROOT / f'{slug}-form.html').write_text(s)
     print('built', f'{slug}-form.html')

@@ -1,4 +1,5 @@
-// 제휴 리조트 랜딩(habagat·azalea·feliz·sample) — 투어 종류와 국적을 골라 예약폼으로 넘긴다.
+// 제휴 리조트 랜딩(habagat·azalea·feliz·sample) — 투어 종류를 골라 예약폼으로 넘긴다.
+// 외국인·필리핀인 인원은 예약폼에서 따로 받는다(한 예약에 섞을 수 있음).
 // 가격은 reservation.html의 PRICES와 같아야 한다. 펠리즈는 data-discount로 10% 할인.
 (function () {
   const me = document.currentScript;
@@ -30,16 +31,11 @@
         'Life vest and fins'],
       info: [['Meeting point', 'Jollibee Main Road, Boracay'], ['Meeting time', '07:30 AM'],
         ['Not included', 'Underwater photos, Fast Track entry']]
-    },
-    T: {
-      name: 'Ticket Only', h1: 'Ticket Only', tag: 'Admission ticket only',
-      inc: ['Official whale shark site admission ticket', 'Show the QR e-voucher at the site to enter'],
-      info: [['Site hours', '08:00 AM &ndash; 06:00 PM'], ['Not included', 'Transport, guide, gear and photos']]
     }
   };
   const COMMON = [['Payment', 'Online (Card &middot; GCash &middot; Maya &middot; QR Ph)'],
     ['Confirmation', 'E-voucher emailed right after payment']];
-  const ORDER = ['VF', 'F', 'R', 'T'];
+  const ORDER = ['VF', 'F', 'R'];
 
   const h1em = document.querySelector('.masthead h1 em');
   const priceBlock = document.querySelector('.price-block');
@@ -51,15 +47,15 @@
   const css = document.createElement('style');
   css.textContent = `
     .pl-pick { padding: 26px 0 0; }
-    .pl-tours { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+    .pl-tours { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 6px; }
+    @media (max-width: 480px) { .pl-tours { grid-template-columns: 1fr; } .pl-tour { display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 10px; } .pl-tour em { grid-row: 1 / span 2; grid-column: 2; margin-top: 0; text-align: right; } }
     .pl-tour { text-align: left; padding: 12px; border: 1.5px solid #e5e7eb; border-radius: 12px; background: #fff; cursor: pointer; font: inherit; color: #111; }
     .pl-tour b { display: block; font-size: .92rem; }
     .pl-tour span { display: block; font-size: .72rem; color: #999; margin-top: 2px; }
     .pl-tour em { display: block; font-style: normal; font-weight: 800; font-size: .9rem; margin-top: 6px; color: var(--pl-accent); }
+    .pl-tour em small { display: block; font-weight: 600; font-size: .7rem; color: #999; }
+    .price-block .ph { margin-top: 6px; font-size: .86rem; color: #666; font-weight: 600; }
     .pl-tour.on { border-color: var(--pl-accent); box-shadow: 0 0 0 1px var(--pl-accent) inset; background: color-mix(in srgb, var(--pl-accent) 6%, #fff); }
-    .pl-nat { display: grid; grid-template-columns: 1fr 1fr; background: #f3f4f6; border-radius: 12px; padding: 4px; gap: 4px; }
-    .pl-nat button { border: 0; background: transparent; padding: 10px; border-radius: 9px; font: inherit; font-size: .88rem; font-weight: 600; color: #666; cursor: pointer; }
-    .pl-nat button.on { background: #fff; color: #111; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
     .pl-label { font-size: .7rem; font-weight: 700; color: #bbb; text-transform: uppercase; letter-spacing: 1.2px; margin: 0 0 10px; }
     .price-block .num s { font-size: 1.2rem; font-weight: 700; color: #bbb; margin-right: 10px; letter-spacing: 0; }`;
   document.head.appendChild(css);
@@ -73,39 +69,36 @@
   pick.className = 'pl-pick';
   pick.innerHTML = `
     <p class="pl-label">Choose your tour</p>
-    <div class="pl-tours">${ORDER.map((k) => `<button type="button" class="pl-tour" data-tour="${k}"><b>${TOURS[k].name}</b><span>${TOURS[k].tag}</span><em></em></button>`).join('')}</div>
-    <p class="pl-label">Guest type</p>
-    <div class="pl-nat"><button type="button" data-nat="FOREIGN">Foreign guest</button><button type="button" data-nat="PH">Filipino</button></div>`;
+    <div class="pl-tours">${ORDER.map((k) => `<button type="button" class="pl-tour" data-tour="${k}"><b>${TOURS[k].name}</b><span>${TOURS[k].tag}</span><em></em></button>`).join('')}</div>`;
   priceBlock.parentNode.insertBefore(pick, priceBlock);
 
   const q = new URLSearchParams(location.search);
   let tour = ORDER.includes((q.get('tour') || '').toUpperCase()) ? q.get('tour').toUpperCase() : 'F';
-  let nat = (q.get('nationality') || '').toUpperCase() === 'PH' ? 'PH' : 'FOREIGN';
-  const per = priceBlock.querySelector('.per');
-  const perHtml = per ? per.innerHTML : 'Per person';
+  const ph = document.createElement('div');
+  ph.className = 'ph';
+  priceBlock.querySelector('.num').insertAdjacentElement('afterend', ph);
 
   function render() {
     const t = TOURS[tour];
-    const base = PRICES[nat][tour];
-    const price = sale(base);
+    const base = PRICES.FOREIGN[tour];
+    const basePH = PRICES.PH[tour];
     if (h1em) h1em.textContent = t.h1;
     pick.querySelectorAll('.pl-tour').forEach((b) => {
-      b.classList.toggle('on', b.dataset.tour === tour);
-      b.querySelector('em').textContent = '₱' + fmt(sale(PRICES[nat][b.dataset.tour]));
+      const k = b.dataset.tour;
+      b.classList.toggle('on', k === tour);
+      b.querySelector('em').innerHTML = '₱' + fmt(sale(PRICES.FOREIGN[k])) +
+        (PRICES.PH[k] !== PRICES.FOREIGN[k] ? `<small>Filipino ₱${fmt(sale(PRICES.PH[k]))}</small>` : '');
     });
-    pick.querySelectorAll('.pl-nat button').forEach((b) => b.classList.toggle('on', b.dataset.nat === nat));
-    const num = priceBlock.querySelector('.num');
-    num.innerHTML = (RATE ? `<s>&#8369;${fmt(base)}</s>` : '') + `<sup>&#8369;</sup>${fmt(price)}<sub>/ person</sub>`;
-    if (per) per.innerHTML = perHtml + (nat === 'PH' ? ' &middot; Filipino rate' : '');
+    priceBlock.querySelector('.num').innerHTML = (RATE ? `<s>&#8369;${fmt(base)}</s>` : '') + `<sup>&#8369;</sup>${fmt(sale(base))}<sub>/ person</sub>`;
+    ph.innerHTML = basePH !== base ? `Filipino guests: &#8369;${fmt(sale(basePH))} / person &middot; mixed groups welcome` : 'Same price for all guests';
     if (incList) incList.innerHTML = t.inc.map((s) => `<li><span class="dot"></span>${s}</li>`).join('');
     if (infoList) infoList.innerHTML = [...t.info, ...COMMON].map(([k, v]) => `<div class="info-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join('');
-    cta.href = `${FORM}?tour=${tour}&nationality=${nat}`;
+    cta.href = `${FORM}?tour=${tour}`;
   }
   pick.addEventListener('click', (e) => {
     const b = e.target.closest('button');
-    if (!b) return;
-    if (b.dataset.tour) tour = b.dataset.tour;
-    if (b.dataset.nat) nat = b.dataset.nat;
+    if (!b || !b.dataset.tour) return;
+    tour = b.dataset.tour;
     render();
   });
   render();

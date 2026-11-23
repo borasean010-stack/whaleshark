@@ -69,6 +69,17 @@ function syncVfMinPeople() {
     document.querySelector('[name="tourType"]');
   if (!peopleEl || !checked) return;
   const isVF = (checked.value || "").trim() === "VF";
+  // 외국인·필리핀인 인원을 따로 받는 폼: 모자란 인원을 지금 고른 쪽(둘 다 0이면 외국인)에 더한다
+  const pf = document.getElementById("paxForeign"), pp = document.getElementById("paxPH");
+  if (pf && pp) {
+    const sum = (Number(pf.value) || 0) + (Number(pp.value) || 0);
+    if (isVF && sum < VF_MIN_PEOPLE) {
+      const tgt = (Number(pp.value) > 0 && !(Number(pf.value) > 0)) ? pp : pf;
+      tgt.value = (Number(tgt.value) || 0) + (VF_MIN_PEOPLE - sum);
+      tgt.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+    return;
+  }
   peopleEl.min = isVF ? VF_MIN_PEOPLE : 1;
   if (isVF && Number(peopleEl.value) < VF_MIN_PEOPLE) {
     peopleEl.value = VF_MIN_PEOPLE;
@@ -126,7 +137,15 @@ function prefillFromUrl() {
     if (dateEl._flatpickr) dateEl._flatpickr.setDate(date, true);
     dateEl.dispatchEvent(new Event("change", { bubbles: true }));
   }
-  if (people && /^\d{1,2}$/.test(people) && peopleEl) {
+  const pf = document.getElementById("paxForeign");
+  if (people && /^\d{1,2}$/.test(people) && pf) {
+    // 인원을 국적별로 받는 폼 — 링크에는 국적이 없으니 외국인으로 채운다
+    if (!q.get("nationality")) {
+      pf.value = people;
+      document.getElementById("paxPH").value = 0;
+      pf.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+  } else if (people && /^\d{1,2}$/.test(people) && peopleEl) {
     peopleEl.value = people;
     peopleEl.dispatchEvent(new Event("change", { bubbles: true }));
   }
@@ -199,16 +218,33 @@ function getReservationData() {
   const t = MSG[lang] || MSG.en;
   const formData = new FormData(form);
   const tourType = formData.get("tourType").trim();
-  const people = Number(formData.get("people"));
-  const nationality = formData.get("nationality");
-  const basePricePerPerson = window.PRICES && window.PRICES[nationality] ? window.PRICES[nationality][tourType] : null;
   const refCodeVal = (formData.get("referralCode") || "").trim() || referralCode;
-  const discountPP = window.getDiscountPerPerson ? window.getDiscountPerPerson(refCodeVal, tourType) : 0;
-  const pricePerPerson = basePricePerPerson ? basePricePerPerson - discountPP : null;
+  // 외국인·필리핀인을 한 예약에 섞을 수 있는 폼은 국적별 인원 × 국적별 요금으로 계산한다.
+  // 화면의 updateSummary와 같은 식이어야 표시 금액과 결제 금액이 같다.
+  const hasPax = formData.has("paxForeign") && formData.has("paxPH");
+  const pax = hasPax ? { FOREIGN: Number(formData.get("paxForeign")) || 0, PH: Number(formData.get("paxPH")) || 0 } : null;
+  const people = hasPax ? pax.FOREIGN + pax.PH : Number(formData.get("people"));
+  const nationality = hasPax ? (pax.FOREIGN && pax.PH ? "MIXED" : (pax.PH ? "PH" : "FOREIGN")) : formData.get("nationality");
+  const discOf = (nat) => (window.getDiscountPerPerson ? window.getDiscountPerPerson(refCodeVal, tourType, nat) : 0);
+  let tourSubtotal = null;
+  if (hasPax) {
+    let sum = 0, ok = people > 0;
+    for (const nat of ["FOREIGN", "PH"]) {
+      if (!pax[nat]) continue;
+      const base = window.PRICES && window.PRICES[nat] ? window.PRICES[nat][tourType] : null;
+      if (!base) { ok = false; break; }
+      sum += (base - discOf(nat)) * pax[nat];
+    }
+    tourSubtotal = ok ? sum : null;
+  } else {
+    const basePricePerPerson = window.PRICES && window.PRICES[nationality] ? window.PRICES[nationality][tourType] : null;
+    tourSubtotal = basePricePerPerson ? (basePricePerPerson - discOf(nationality)) * people : null;
+  }
+  const pricePerPerson = tourSubtotal && people ? Math.round(tourSubtotal / people) : null;
   // 옵션: 고래상어 + 말룸파티 원데이 (패스트트랙·VIP만, 1인 3,600 PHP, 할인 없음) — js/addon.js와 같은 값
   const malumpati = (tourType === "F" || tourType === "VF") && formData.get("addonMalumpati") === "1";
   const addonPP = malumpati ? MALUMPATI_PRICE : 0;
-  const totalPrice = pricePerPerson ? (pricePerPerson + addonPP) * people : null;
+  const totalPrice = tourSubtotal ? tourSubtotal + addonPP * people : null;
 
   const reservation = {
     tourType,
@@ -219,6 +255,7 @@ function getReservationData() {
     resort: tourType !== "VF" ? "" : (formData.get("pickupResort") || "").trim(),
     meetingTime: (tourType === "R" || tourType === "F" || tourType === "VF") ? formData.get("meetingTime") : "",
     nationality,
+    ...(hasPax ? { paxForeign: pax.FOREIGN, paxPH: pax.PH } : {}),
     pricePerPerson,
     totalPrice,
     currency: "PHP",
@@ -233,9 +270,13 @@ function getReservationData() {
   };
 
   const valid = !!(reservation.tourType && reservation.date && reservation.pickup && reservation.nationality && reservation.name && reservation.email &&
+    reservation.people >= 1 && reservation.totalPrice > 0 &&
     (reservation.tourType !== "VF" || reservation.resort));
   return { reservation, lang, t, valid };
 }
+
+// 결제 금액 점검용 (읽기 전용 — 저장·결제는 하지 않는다)
+window.wsPreviewReservation = () => { const { reservation, valid } = getReservationData(); return { ...reservation, createdAt: null, valid }; };
 
 // 카드(Maya) 결제
 form.addEventListener("submit", async (e) => {
@@ -307,6 +348,7 @@ form.addEventListener("submit", async (e) => {
           tourType: reservation.tourType, date: reservation.date, people: reservation.people,
           pickup: reservation.pickup || '', meetingTime: reservation.meetingTime || '',
           nationality: reservation.nationality || '', totalPrice: reservation.totalPrice,
+          paxForeign: reservation.paxForeign, paxPH: reservation.paxPH,
           currency: reservation.currency || 'PHP', lang: localStorage.getItem('ws_lang') || lang || 'en',
           malumpati: !!reservation.malumpati,
           path: location.pathname

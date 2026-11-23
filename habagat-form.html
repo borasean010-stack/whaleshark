@@ -22,7 +22,7 @@
 <link rel="canonical" href="https://boracaywhaleshark.com/habagat-form">
 
 <link rel="stylesheet" href="css/style.css"> <!-- for nav -->
-<link rel="stylesheet" href="css/reservation.css?v=1794000700">
+<link rel="stylesheet" href="css/reservation.css?v=1794000901">
 <!-- Flatpickr (Premium Datepicker) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
@@ -124,13 +124,6 @@
                 <span>2,820PHP<br><small>Basics included</small></span>
               </div>
             </label>
-            <label class="tour-option">
-              <input type="radio" name="tourType" value="T" required>
-              <div class="tour-card">
-                <h4>Ticket Only</h4>
-                <span>1,920PHP<br><small>Purchase ticket only</small></span>
-              </div>
-            </label>
           </div>
 
           <!-- Inclusions Info Panel -->
@@ -159,17 +152,24 @@
                data-ja="ドライバーが分かるよう、リゾート名はローマ字で入力してください。" data-ru="Введите название отеля латиницей, чтобы водитель мог его найти.">Please enter the resort name in English so the driver can find it.</p>
           </div>
 
-          <div class="form-group">
-            <label for="people" data-en="Number of People *" data-ko="참여 인원 *" data-zh="参加人数 *" data-ja="参加人数 *" data-ru="Количество человек *">Number of People *</label>
-            <input type="number" id="people" name="people" class="input-luxury" min="1" max="20" value="2" required>
-          </div>
-
-          <div class="form-group">
-            <label for="nationality" data-en="Nationality *" data-ko="국적선택 *" data-zh="国籍选择 *" data-ja="国籍選択 *" data-ru="Гражданство *">Nationality *</label>
-            <select id="nationality" name="nationality" class="input-luxury" required>
-              <option value="" disabled selected data-en="Select nationality" data-ko="국적을 선택하세요" data-zh="请选择国籍" data-ja="国籍を選択してください" data-ru="Выберите гражданство">Select nationality</option>
-              <option value="PH" data-en="Philippine" data-ko="필리핀" data-zh="菲律宾" data-ja="フィリピン" data-ru="Филиппины">Philippine</option>
-              <option value="FOREIGN" data-en="Foreigner" data-ko="외국인" data-zh="外国人" data-ja="外国人" data-ru="Иностранец">Foreigner</option>
+          <!-- 인원: 외국인·필리핀인을 따로 받아 한 예약에 섞을 수 있다. people·nationality는 합계·구분으로 자동 채움 -->
+          <div class="form-group" id="guests-group">
+            <label for="paxForeign" data-en="Number of Guests *" data-ko="참여 인원 *" data-zh="参加人数 *" data-ja="参加人数 *" data-ru="Количество гостей *">Number of Guests *</label>
+            <div class="pax-rows">
+              <div class="pax-row">
+                <span class="pax-name"><b data-en="Foreigner" data-ko="외국인" data-zh="外国人" data-ja="外国人" data-ru="Иностранцы">Foreigner</b><small id="pax-price-FOREIGN"></small></span>
+                <span class="pax-ctl"><button type="button" class="pax-btn" data-pax="paxForeign" data-step="-1" aria-label="−">−</button><input type="number" id="paxForeign" name="paxForeign" class="input-luxury pax-input" min="0" max="20" value="2" inputmode="numeric" required><button type="button" class="pax-btn" data-pax="paxForeign" data-step="1" aria-label="+">+</button></span>
+              </div>
+              <div class="pax-row">
+                <span class="pax-name"><b data-en="Filipino" data-ko="필리핀인" data-zh="菲律宾人" data-ja="フィリピン人" data-ru="Граждане Филиппин">Filipino</b><small id="pax-price-PH"></small></span>
+                <span class="pax-ctl"><button type="button" class="pax-btn" data-pax="paxPH" data-step="-1" aria-label="−">−</button><input type="number" id="paxPH" name="paxPH" class="input-luxury pax-input" min="0" max="20" value="0" inputmode="numeric" required><button type="button" class="pax-btn" data-pax="paxPH" data-step="1" aria-label="+">+</button></span>
+              </div>
+            </div>
+            <input type="hidden" id="people" name="people" value="2">
+            <select id="nationality" name="nationality" hidden aria-hidden="true" tabindex="-1">
+              <option value="FOREIGN" selected>FOREIGN</option>
+              <option value="PH">PH</option>
+              <option value="MIXED">MIXED</option>
             </select>
           </div>
 
@@ -471,10 +471,18 @@
     // Pre-fill from the main page's quick booking search widget
     const requestedDate = urlParams.get('date');
     if (requestedDate) document.getElementById('date').value = requestedDate;
-    const requestedPeople = urlParams.get('people');
-    if (requestedPeople) document.getElementById('people').value = requestedPeople;
-    const requestedNationality = urlParams.get('nationality');
-    if (requestedNationality) document.getElementById('nationality').value = requestedNationality;
+    // 메인 빠른예약·리조트 페이지에서 넘어온 인원/국적 → 국적별 인원 칸
+    const requestedPeople = Number(urlParams.get('people')) || 0;
+    const requestedNationality = (urlParams.get('nationality') || '').toUpperCase();
+    const reqF = urlParams.get('foreign'), reqP = urlParams.get('ph');
+    if (reqF !== null || reqP !== null) {
+      document.getElementById('paxForeign').value = Math.min(20, Number(reqF) || 0);
+      document.getElementById('paxPH').value = Math.min(20, Number(reqP) || 0);
+    } else if (requestedPeople || requestedNationality) {
+      const n = Math.min(20, requestedPeople || Number(document.getElementById('paxForeign').value) || 2);
+      document.getElementById('paxForeign').value = requestedNationality === 'PH' ? 0 : n;
+      document.getElementById('paxPH').value = requestedNationality === 'PH' ? n : 0;
+    }
     // 홈이나 상세 페이지를 먼저 거쳐 오면 주소에 ref가 없다. i18n.js가 들어올 때
     // 담아둔 값을 꺼내, 손님이 직접 입력한 것과 똑같이 칸을 채운다 — 칸을 비워둔
     // 채 할인만 적용하면 화면 금액과 결제 금액이 어긋난다.
@@ -597,7 +605,7 @@
     };
     window.REFERRAL_DISCOUNTS = REFERRAL_DISCOUNTS;
 
-    function getDiscountPerPerson(code, tourType) {
+    function getDiscountPerPerson(code, tourType, nat) {
       const upper = (code || '').trim().toUpperCase();
       return (REFERRAL_DISCOUNTS[upper] && REFERRAL_DISCOUNTS[upper][tourType]) || 0;
     }
@@ -609,6 +617,44 @@
       ja: { PH: 'フィリピン', FOREIGN: '外国人' },
       ru: { PH: 'Филиппины', FOREIGN: 'Иностранец' }
     };
+    const PAX_LABEL = {
+      en: { FOREIGN: 'Foreigner', PH: 'Filipino', unit: '' },
+      ko: { FOREIGN: '외국인', PH: '필리핀인', unit: '명' },
+      zh: { FOREIGN: '外国人', PH: '菲律宾人', unit: '人' },
+      ja: { FOREIGN: '外国人', PH: 'フィリピン人', unit: '名' },
+      ru: { FOREIGN: 'Иностранцы', PH: 'Филиппинцы', unit: '' }
+    };
+    const paxEls = { FOREIGN: document.getElementById('paxForeign'), PH: document.getElementById('paxPH') };
+    function paxCounts() {
+      const c = (el) => Math.max(0, Math.min(20, Math.floor(Number(el.value) || 0)));
+      return { FOREIGN: c(paxEls.FOREIGN), PH: c(paxEls.PH) };
+    }
+    // 국적별 인원 → 숨은 people(합계)·nationality(FOREIGN/PH/MIXED). 다른 스크립트(말룸파티 옵션,
+    // VIP 최소 인원)는 people 칸을 보므로, 바뀌면 people에 이벤트를 다시 쏜다.
+    function syncPax() {
+      const p = paxCounts();
+      const sum = p.FOREIGN + p.PH;
+      const peopleEl = document.getElementById('people');
+      const natEl = document.getElementById('nationality');
+      natEl.value = p.FOREIGN && p.PH ? 'MIXED' : (p.PH ? 'PH' : 'FOREIGN');
+      const lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
+      paxEls.FOREIGN.setCustomValidity(sum < 1 ? (lang === 'ko' ? '인원을 1명 이상 입력해 주세요.' : 'Please add at least 1 guest.') : '');
+      if (String(peopleEl.value) !== String(sum)) {
+        peopleEl.value = sum;
+        peopleEl.dispatchEvent(new Event('input', { bubbles: true }));
+        peopleEl.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }
+    document.querySelectorAll('.pax-btn').forEach((b) => b.addEventListener('click', () => {
+      const el = document.getElementById(b.dataset.pax);
+      el.value = Math.max(0, Math.min(20, (Number(el.value) || 0) + Number(b.dataset.step)));
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    }));
+    Object.values(paxEls).forEach((el) => { el.addEventListener('input', syncPax); el.addEventListener('change', syncPax); });
+    function paxText(p, lang) {
+      const L = PAX_LABEL[lang] || PAX_LABEL.en;
+      return ['FOREIGN', 'PH'].filter((k) => p[k]).map((k) => `${L[k]} ${p[k]}${L.unit}`).join(' · ') || '-';
+    }
 
     function currentPricePerPerson() {
       const tour = document.querySelector('input[name="tourType"]:checked').value;
@@ -631,14 +677,15 @@
         ? (document.getElementById('pickupResort').value.trim() || '-')
         : (pickupSelect.selectedOptions[0] ? pickupSelect.selectedOptions[0].textContent : '-');
       const resortVal = document.getElementById('pickupResort').value.trim() || '-';
-      const peopleVal = document.getElementById('people').value || '-';
-      const people = Number(document.getElementById('people').value) || 0;
+      syncPax();
+      const pax = paxCounts();
+      const people = pax.FOREIGN + pax.PH;
       const nameVal = document.getElementById('name').value || '-';
       const emailVal = document.getElementById('email').value || '-';
       const emergencyVal = document.getElementById('emergencyContact').value || '-';
       const lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
-      const nationalityCode = document.getElementById('nationality').value;
-      const nationalityVal = nationalityCode ? nationalityNames[lang][nationalityCode] : '-';
+      const nationalityVal = paxText(pax, lang);
+      const peopleVal = people ? (pax.FOREIGN && pax.PH ? `${people} (${nationalityVal})` : String(people)) : '-';
       const tourVal = document.querySelector('input[name="tourType"]:checked').value;
 
       ['sum-package', 'rv-package'].forEach(id => document.getElementById(id).textContent = pkg);
@@ -662,23 +709,34 @@
         meetingRow.style.display = 'none';
       }
 
-      // Price preview (Step 1)
+      // 금액 — 국적별 인원 × 국적별 요금(할인 반영). js/reservation.js의 getReservationData와 같은 식.
       const pricePreview = document.getElementById('price-preview');
-      const perPerson = currentPricePerPerson();
       const refCode = (document.getElementById('referralCode').value || '').trim();
-      const discount = getDiscountPerPerson(refCode, tourVal);
-      const discountedPerPerson = perPerson ? perPerson - discount : null;
-      if (perPerson) {
+      const L = PAX_LABEL[lang] || PAX_LABEL.en;
+      let tourSum = 0, discountSum = 0;
+      const unit = {};
+      ['FOREIGN', 'PH'].forEach((nat) => {
+        const base = PRICES[nat][tourVal] || 0;
+        const d = getDiscountPerPerson(refCode, tourVal, nat);
+        unit[nat] = { base, net: base - d };
+        tourSum += (base - d) * pax[nat];
+        discountSum += d * pax[nat];
+        const tag = document.getElementById('pax-price-' + nat);
+        if (tag) tag.innerHTML = base ? (d > 0 ? `<s>₱${base.toLocaleString()}</s> ₱${(base - d).toLocaleString()}` : `₱${base.toLocaleString()}`) : '';
+      });
+      const addonTotal = (window.wsAddonPP ? window.wsAddonPP() : 0) * people;
+      const total = people > 0 && tourSum > 0 ? tourSum + addonTotal : 0;
+      if (people > 0) {
         pricePreview.style.display = 'flex';
-        if (discount > 0) {
-          document.getElementById('pp-price').innerHTML =
-            `<s style="color:#aaa;font-weight:400;font-size:.92em">${fmtPHP(perPerson)}</s>&nbsp;<strong style="color:#16a34a">${fmtPHP(discountedPerPerson)}</strong>`;
-        } else {
-          document.getElementById('pp-price').textContent = fmtPHP(perPerson);
-        }
-        const effTotal = ((discountedPerPerson || perPerson) + (window.wsAddonPP ? window.wsAddonPP() : 0)) * people;
-        const totalLabel = lang === 'ko' ? `(총 ${people}명: ${fmtPHP(effTotal)})` : `(Total for ${people}: ${fmtPHP(effTotal)})`;
-        document.getElementById('pp-total').textContent = people > 0 ? totalLabel : '';
+        const shown = ['FOREIGN', 'PH'].filter((k) => pax[k]);
+        const priceHtml = (k) => unit[k].net < unit[k].base
+          ? `<s style="color:#aaa;font-weight:400;font-size:.92em">${fmtPHP(unit[k].base)}</s>&nbsp;<strong style="color:#16a34a">${fmtPHP(unit[k].net)}</strong>`
+          : fmtPHP(unit[k].net);
+        const samePrice = shown.length > 1 && unit.FOREIGN.net === unit.PH.net && unit.FOREIGN.base === unit.PH.base;
+        document.getElementById('pp-price').innerHTML = (shown.length === 1 || samePrice)
+          ? priceHtml(shown[0])
+          : shown.map((k) => `${L[k]} ${priceHtml(k)}`).join(' / ');
+        document.getElementById('pp-total').textContent = lang === 'ko' ? `(총 ${people}명: ${fmtPHP(total)})` : `(Total for ${people}: ${fmtPHP(total)})`;
       } else {
         pricePreview.style.display = 'none';
       }
@@ -687,26 +745,22 @@
       const rvDiscountRow = document.getElementById('rv-discount-row');
       const rvDiscount = document.getElementById('rv-discount');
       if (rvDiscountRow && rvDiscount) {
-        if (discount > 0 && people > 0) {
+        if (discountSum > 0 && people > 0) {
           rvDiscountRow.style.display = '';
-          const ko = lang === 'ko';
-          rvDiscount.textContent = ko
-            ? `-₱${(discount * people).toLocaleString()} (${refCode}, 1인 ₱${discount})`
-            : `-₱${(discount * people).toLocaleString()} (${refCode}, ₱${discount}/pax)`;
+          rvDiscount.textContent = `-₱${discountSum.toLocaleString()} (${refCode})`;
         } else {
           rvDiscountRow.style.display = 'none';
         }
       }
 
       // Total price
-      const total = discountedPerPerson && people > 0 ? (discountedPerPerson + (window.wsAddonPP ? window.wsAddonPP() : 0)) * people : 0;
       const totalText = total ? fmtPHP(total) : '-';
       ['sum-total', 'rv-total', 'pay-total'].forEach(id => document.getElementById(id).textContent = totalText);
 
       if (window.updateRouteMap) window.updateRouteMap(pickupVal);
     }
 
-    ['date', 'people', 'pickup', 'name', 'email', 'nationality', 'referralCode', 'meetingTime', 'pickupResort'].forEach(id => {
+    ['date', 'people', 'paxForeign', 'paxPH', 'pickup', 'name', 'email', 'referralCode', 'meetingTime', 'pickupResort'].forEach(id => {
       document.getElementById(id).addEventListener('input', updateSummary);
       document.getElementById(id).addEventListener('change', updateSummary);
     });
@@ -961,6 +1015,6 @@
   });
 </script>
 <script src="/js/addon.js?v=4"></script>
-<script type="module" src="js/reservation.js?v=1794000800"></script>
+<script type="module" src="js/reservation.js?v=1794000900"></script>
 </body>
 </html>

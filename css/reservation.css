@@ -712,3 +712,25 @@ html, body { overflow-x: clip; }
   word-break: keep-all;
 }
 .fx-note b { color: #7dd3fc; }
+
+/* ── 인원: 외국인 / 필리핀인 ── */
+.pax-rows { display: grid; gap: 10px; }
+.pax-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px; padding: 10px 12px 10px 16px;
+}
+.pax-name { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.pax-name b { font-size: 0.98rem; font-weight: 700; color: #fff; }
+.pax-name small { font-size: 0.8rem; color: rgba(255, 255, 255, 0.6); }
+.pax-name small s { opacity: 0.6; margin-right: 4px; }
+.pax-ctl { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.pax-btn {
+  width: 40px; height: 40px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08); color: #fff; font-size: 1.3rem; line-height: 1; cursor: pointer;
+}
+.pax-btn:hover { background: rgba(255, 255, 255, 0.16); }
+.pax-input.input-luxury {
+  width: 56px; padding: 9px 4px; text-align: center; font-weight: 700; -moz-appearance: textfield;
+}
+.pax-input::-webkit-outer-spin-button, .pax-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }

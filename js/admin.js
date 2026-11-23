@@ -99,7 +99,14 @@ function mayaFeeOf(d) {
 function netCostOf(d) {
   const t = SETTLE_NET_PRICES[d.tourType];
   if (!t) return 0;
+  // 외국인·필리핀인이 섞인 예약은 국적별 인원(paxForeign·paxPH)으로 계산
+  if (d.paxForeign != null || d.paxPH != null) return t.FOREIGN * (Number(d.paxForeign) || 0) + t.PH * (Number(d.paxPH) || 0);
   return t[d.nationality === "PH" ? "PH" : "FOREIGN"] * (Number(d.people) || 0);
+}
+// 국적 표시 — 혼합 예약은 "외국인 2 · 필리핀 1"
+function natLabel(d) {
+  if (d && d.nationality === "MIXED") return `외국인 ${Number(d.paxForeign) || 0} · 필리핀 ${Number(d.paxPH) || 0}`;
+  return ({ PH: "필리핀", CN: "중국인", KR: "한국인", FOREIGN: "외국인" })[d && d.nationality] || (d && d.nationality) || "-";
 }
 // 정산금 계산 근거 (마우스 올리면 보이는 설명)
 function payoutBasis(r) {
@@ -638,7 +645,7 @@ function renderReservations(querySnapshot) {
           ${data.balanceDue ? `<div style="font-size:0.75rem; color:var(--admin-warning); margin-top:4px; font-weight:700;">잔금 ${data.balanceDue.toLocaleString()} 현장결제</div>` : ''}
         </td>
         <td>${data.people}명</td>
-        <td>${{ PH: "필리핀", CN: "중국인", KR: "한국인", FOREIGN: "외국인" }[data.nationality] || "-"}</td>
+        <td>${natLabel(data)}</td>
         <td>
           <div>${data.email}</div>
         </td>
@@ -1952,7 +1959,7 @@ async function loadPartner() {
             <td style="padding:8px 12px;font-weight:600;">${r.date}</td>
             <td style="padding:8px 12px;">${r.name}<div style="font-size:0.75rem;color:var(--admin-text-muted);">${r.email||''}</div></td>
             <td style="padding:8px 12px;text-align:center;">${r.people}명</td>
-            <td style="padding:8px 12px;">${NAT_LABELS[r.nationality] || r.nationality}</td>
+            <td style="padding:8px 12px;">${natLabel(r)}</td>
             <td style="padding:8px 12px;font-weight:700;">₱${(r.totalPrice||0).toLocaleString()}${payoutLine(r)}</td>
             <td style="padding:8px 12px;">${r.paymentStatus==='paid'?'<span style="color:#16a34a;font-weight:600;">결제완료</span>':'<span style="color:#ca8a04;">미결제</span>'}</td>
             <td style="padding:8px 12px;">${r.referralCode ? `<span style="background:#f3e8ff;color:#7e22ce;font-size:.75rem;font-weight:700;padding:2px 7px;border-radius:4px;">${r.referralCode}</span>` : '<span style="color:var(--admin-text-muted);font-size:.75rem;">-</span>'}</td>
