@@ -523,7 +523,6 @@ const VIEW_LOADERS = {
   yebo: () => showPartnerView('YEBO', 'yebo'),
   habagat: () => showPartnerView('HABAGAT', 'habagat'),
   azalea: () => showPartnerView('AZALEA', 'azalea'),
-  feliz: () => showPartnerView('FELIZ', 'feliz'),
   bojamussa: () => showPartnerView('BOJAMUSSA', 'bojamussa'),
   accounts: loadAdminAccounts,
 };
@@ -2171,7 +2170,7 @@ async function loadPartner() {
 
 // 파트너마다 자기 뷰의 버튼이 따로 있으므로 접두사별로 모두 묶는다. 모듈이
 // 로드되는 시점의 _partnerPrefix 하나에만 걸면 나머지 파트너는 조회가 먹지 않는다.
-['yebo', 'habagat', 'azalea', 'feliz', 'bojamussa'].forEach((prefix) => {
+['yebo', 'habagat', 'azalea', 'bojamussa'].forEach((prefix) => {
   document.getElementById(`${prefix}-filter-btn`)?.addEventListener("click", () => {
     _yeboFrom = document.getElementById(`${prefix}-date-from`).value || null;
     _yeboTo = document.getElementById(`${prefix}-date-to`).value || null;
