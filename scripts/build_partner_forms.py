@@ -18,6 +18,10 @@ PARTNERS = {
                     og='assets/logos/feliz-logo.webp', alt='Feliz Hotel Boracay', text='FELIZ HOTEL x WHALE SHARK', rate=0.10),
     'sample':  dict(code='SAMPLE', title='Your Resort', logo='assets/mwlogo.png',
                     og='assets/mwlogo.png', alt='Your Resort', text='YOUR RESORT x WHALE SHARK'),
+    # 보자무싸 — 한국 커뮤니티(예보처럼). 한국어로 열고 레귤러·패스트트랙만 판다.
+    'bojamussa': dict(code='BOJAMUSSA', title='보자무싸', logo='assets/logos/bojamussa-logo.webp',
+                    og='assets/logos/bojamussa-logo.png', alt='보자무싸', text='보자무싸 x 보라카이 고래상어',
+                    lang='ko', drop=('VF', 'T')),
 }
 
 def sub1(pattern, repl, s, flags=re.S):
@@ -28,16 +32,22 @@ def sub1(pattern, repl, s, flags=re.S):
 src = (ROOT / 'reservation.html').read_text()
 for slug, p in PARTNERS.items():
     s = src
-    s = sub1(r'<html lang="ko">', '<html lang="en">', s)
+    ko = p.get('lang') == 'ko'
+    if not ko:
+        s = sub1(r'<html lang="ko">', '<html lang="en">', s)
+    else:
+        # 한국 손님용 — 처음 열 때 한국어 (언어 메뉴로 바꾸면 그 선택을 따른다)
+        s = sub1(r"const savedLang = localStorage\.getItem\(LANG_STORAGE_KEY\);",
+                 "const savedLang = localStorage.getItem(LANG_STORAGE_KEY) || 'ko';", s)
     # 아젤리아 옛 QR 리다이렉트는 메인 전용
     s = sub1(r'<script>\s*// 예전에 뿌린 아젤리아.*?</script>\n', '', s)
     head = f'''<title>{p['title']} x Boracay Whale Shark – Booking</title>
 <meta name="description" content="Book a whale shark tour in Libertad, Antique. Instant confirmation and an e-voucher by email.">
 <meta name="robots" content="noindex, nofollow">
 <meta property="og:type" content="website">
-<meta property="og:locale" content="en_US">
-<meta property="og:title" content="{p['title']} x Boracay Whale Shark">
-<meta property="og:description" content="Whale shark tours in Libertad, Antique. Book online, confirmed instantly.">
+<meta property="og:locale" content="{'ko_KR' if ko else 'en_US'}">
+<meta property="og:title" content="{p['title']} x {'보라카이 고래상어' if ko else 'Boracay Whale Shark'}">
+<meta property="og:description" content="{'리베르타드 고래상어 투어. 온라인 예약 즉시 확정.' if ko else 'Whale shark tours in Libertad, Antique. Book online, confirmed instantly.'}">
 <meta property="og:image" content="https://boracaywhaleshark.com/{p['og']}">
 <meta property="og:url" content="https://boracaywhaleshark.com/{slug}-form">
 <meta property="og:site_name" content="Boracay Whale Shark">
@@ -65,7 +75,8 @@ for slug, p in PARTNERS.items():
         return base ? base - Math.round(base * {1 - rate:.2f}) : 0;
       }}'''
         s = sub1(r"const upper = \(code \|\| ''\)\.trim\(\)\.toUpperCase\(\);", felix, s)
-    # 리조트 페이지는 티켓 단독을 팔지 않는다 (VIP·패스트트랙·레귤러만)
-    s = sub1(r'\n\s*<label class="tour-option">\s*<input type="radio" name="tourType" value="T".*?</label>', '', s)
+    # 리조트 페이지는 티켓 단독을 팔지 않는다 (VIP·패스트트랙·레귤러만). 보자무싸는 VIP도 뺀다.
+    for t in p.get('drop', ('T',)):
+        s = sub1(r'\n\s*<label class="tour-option">\s*<input type="radio" name="tourType" value="' + t + r'".*?</label>', '', s)
     (ROOT / f'{slug}-form.html').write_text(s)
     print('built', f'{slug}-form.html')
