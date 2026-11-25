@@ -217,6 +217,18 @@ body {
 .tour em { display: block; font-style: normal; font-weight: 800; font-size: .92rem; margin-top: 6px; color: #0ea5e9; }
 .tour.on { border-color: #0ea5e9; box-shadow: 0 0 0 1px #0ea5e9 inset; background: #f0f9ff; }
 .tour .best { position: absolute; top: -9px; right: 10px; background: #f59e0b; color: #fff; font-size: .62rem; font-weight: 800; letter-spacing: .8px; padding: 3px 8px; border-radius: 99px; margin: 0; }
+
+/* ── Timetable ── */
+.tt { margin-bottom: 32px; }
+.tt-head { font-size: .86rem; font-weight: 700; color: #111; margin-bottom: 12px; }
+.tt-row { display: grid; grid-template-columns: 74px 1fr; gap: 12px; position: relative; padding: 0 0 14px; }
+.tt-row::before { content: ''; position: absolute; left: 85px; top: 6px; bottom: -6px; width: 2px; background: #eef0f3; }
+.tt-row:nth-last-child(2)::before { display: none; }
+.tt-row .t { font-size: .8rem; font-weight: 800; color: #0ea5e9; padding-top: 1px; white-space: nowrap; }
+.tt-row .d { padding-left: 14px; position: relative; font-size: .9rem; font-weight: 600; color: #222; }
+.tt-row .d::before { content: ''; position: absolute; left: -7px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: #fff; border: 2px solid #0ea5e9; }
+.tt-row .d small { display: block; font-size: .76rem; color: #999; font-weight: 400; margin-top: 2px; }
+.tt-note { font-size: .74rem; color: #aaa; margin-top: 2px; }
 </style>
 <script src="/js/track.js?v=2" defer></script>
 <script>
@@ -251,6 +263,20 @@ try { sessionStorage.setItem('ws_ref', 'BOJAMUSSA'); localStorage.setItem('ws_re
 
   <p class="sh">투어 정보</p>
   <div class="info-list" id="info"></div>
+
+
+  <p class="sh">타임테이블</p>
+  <div class="tt">
+    <div class="tt-head">07:30 – 12:30 · 약 5시간</div>
+    <div class="tt-row"><span class="t">07:30 AM</span><span class="d">졸리비 메인로드 미팅</span></div>
+    <div class="tt-row"><span class="t">09:00 AM</span><span class="d">리베르타드로 이동<small>약 1시간</small></span></div>
+    <div class="tt-row"><span class="t">09:30 AM</span><span class="d">리베르타드 도착<small>브리핑 · 안전 교육</small></span></div>
+    <div class="tt-row"><span class="t">10:00 AM</span><span class="d">고래상어 관람<small>약 30분</small></span></div>
+    <div class="tt-row"><span class="t">10:30 AM</span><span class="d">간단한 샤워</span></div>
+    <div class="tt-row"><span class="t">11:30 AM</span><span class="d">보라카이로 복귀<small>약 1시간</small></span></div>
+    <div class="tt-row"><span class="t">12:30 PM</span><span class="d">졸리비 메인로드 도착</span></div>
+    <div class="tt-note">바다·기상 상황에 따라 시간이 달라질 수 있습니다.</div>
+  </div>
 
   <div class="spacer"></div>
 </div>
