@@ -98,7 +98,7 @@ function mayaFeeOf(d) {
 }
 // 파트너별 넷가 예외 — 보자무싸 레귤러(외국인)는 우리가 ₱2,500을 갖고 나머지(₱320)에서 카드 수수료를 뺀 게 정산금
 const PARTNER_NET_OVERRIDES = {
-  BOJAMUSSA: { R: { FOREIGN: 2500 } },
+  BOJAMUSSA: { R: { FOREIGN: 2500, PH: 2200 } }, // 필리핀 레귤러(₱2,520)도 보자무싸 몫 ₱320
 };
 function netCostOf(d) {
   const base = SETTLE_NET_PRICES[d.tourType];
