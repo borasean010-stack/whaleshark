@@ -248,10 +248,6 @@ try { sessionStorage.setItem('ws_ref', 'BOJAMUSSA'); localStorage.setItem('ws_re
 
 <div class="wrap">
 
-  <div class="tours">
-    <button type="button" class="tour" data-tour="F"><span class="best">BEST</span><b data-i="nF"></b><span data-i="sF"></span><em>₱3,600</em></button>
-    <button type="button" class="tour" data-tour="R"><b data-i="nR"></b><span data-i="sR"></span><em>₱2,820</em></button>
-  </div>
 
   <div class="price-block">
     <div class="per" data-i="per"></div>
@@ -312,7 +308,8 @@ try { sessionStorage.setItem('ws_ref', 'BOJAMUSSA'); localStorage.setItem('ws_re
         ['10:00 AM', 'Whale shark watching', 'About 30 minutes'], ['10:30 AM', 'Quick freshwater rinse', ''], ['11:30 AM', 'Return to Boracay', 'About 1 hour'], ['12:30 PM', 'Drop-off at Jollibee, Main Road', '']]
     }
   }[lang];
-  const PRICE = { F: '3,600', R: '2,820' };
+  // 레귤러는 잠시 판매 중지 — 다시 열려면 R 가격과 위 투어 선택 버튼을 되살린다
+  const PRICE = { F: '3,600' };
   document.title = L.title;
   document.querySelectorAll('[data-i]').forEach((el) => { el.textContent = L[el.dataset.i]; });
   document.getElementById('tt').innerHTML = `<div class="tt-head">${L.ttHead}</div>` +
@@ -329,9 +326,6 @@ try { sessionStorage.setItem('ws_ref', 'BOJAMUSSA'); localStorage.setItem('ws_re
       .map(([k, v]) => `<div class="info-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join('');
     document.getElementById('cta').href = 'bojamussa-form?tour=' + tour;
   }
-  document.querySelector('.tours').addEventListener('click', (e) => {
-    const b = e.target.closest('.tour'); if (!b) return; tour = b.dataset.tour; render();
-  });
   render();
 })();
 </script>
