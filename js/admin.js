@@ -73,7 +73,7 @@ const SETTLE_NET_PRICES = {
   T:  { PH: 1620, FOREIGN: 1920 },
 };
 // 정산금 = 결제금액 − Maya 수수료 − 넷가×인원 으로 정산하는 파트너
-const NET_PAYOUT_PARTNERS = ["YEBO"];
+const NET_PAYOUT_PARTNERS = ["YEBO", "BOJAMUSSA"]; // 보자무싸는 예보와 같은 조건
 // 정산금 = 판매가 × 10% 로 정산하는 리조트 (카드 수수료는 우리 부담). 펠리즈는 해당 없음.
 // 이 방식으로 바꾸기 전에 이미 정산 완료한 건은 옛 방식(결제 − 수수료 − 넷가) 금액 그대로 둔다.
 const COMMISSION_PARTNERS = ["HABAGAT", "AZALEA"];
@@ -518,6 +518,7 @@ const VIEW_LOADERS = {
   habagat: () => showPartnerView('HABAGAT', 'habagat'),
   azalea: () => showPartnerView('AZALEA', 'azalea'),
   feliz: () => showPartnerView('FELIZ', 'feliz'),
+  bojamussa: () => showPartnerView('BOJAMUSSA', 'bojamussa'),
   accounts: loadAdminAccounts,
 };
 
@@ -2164,7 +2165,7 @@ async function loadPartner() {
 
 // 파트너마다 자기 뷰의 버튼이 따로 있으므로 접두사별로 모두 묶는다. 모듈이
 // 로드되는 시점의 _partnerPrefix 하나에만 걸면 나머지 파트너는 조회가 먹지 않는다.
-['yebo', 'habagat', 'azalea', 'feliz'].forEach((prefix) => {
+['yebo', 'habagat', 'azalea', 'feliz', 'bojamussa'].forEach((prefix) => {
   document.getElementById(`${prefix}-filter-btn`)?.addEventListener("click", () => {
     _yeboFrom = document.getElementById(`${prefix}-date-from`).value || null;
     _yeboTo = document.getElementById(`${prefix}-date-to`).value || null;
