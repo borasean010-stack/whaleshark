@@ -242,7 +242,7 @@ try { sessionStorage.setItem('ws_ref', 'BOJAMUSSA'); localStorage.setItem('ws_re
   <img src="assets/logos/bojamussa-logo.webp" alt="BOJAMUSSA">
   <div>
     <div class="tag" data-i="tag"></div>
-    <h1><span data-i="h1a"></span><br><em data-i="h1b"></em></h1>
+    <h1><span data-i="h1a"></span><br><em data-i="h1b"></em><br><span id="h-tour"></span></h1>
   </div>
 </div>
 
@@ -322,6 +322,7 @@ try { sessionStorage.setItem('ws_ref', 'BOJAMUSSA'); localStorage.setItem('ws_re
   let tour = PRICE[q] ? q : 'F';
   function render() {
     document.querySelectorAll('.tour').forEach((b) => b.classList.toggle('on', b.dataset.tour === tour));
+    document.getElementById('h-tour').textContent = L['n' + tour];
     document.getElementById('price').textContent = PRICE[tour];
     document.getElementById('inc').innerHTML = L[tour].map((s) => `<li><span class="dot"></span>${s}</li>`).join('');
     document.getElementById('info').innerHTML = [...L.common, ...(tour === 'R' ? [L.notInc] : []), ...L.pay]
