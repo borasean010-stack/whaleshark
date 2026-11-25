@@ -242,7 +242,7 @@ try { sessionStorage.setItem('ws_ref', 'BOJAMUSSA'); localStorage.setItem('ws_re
   <img src="assets/logos/bojamussa-logo.webp" alt="BOJAMUSSA">
   <div>
     <div class="tag" data-i="tag"></div>
-    <h1><span data-i="h1a"></span><br><em data-i="h1b"></em> <span id="h-tour"></span></h1>
+    <h1><span data-i="h1a"></span><br><em data-i="h1b"></em></h1>
   </div>
 </div>
 
@@ -284,7 +284,7 @@ try { sessionStorage.setItem('ws_ref', 'BOJAMUSSA'); localStorage.setItem('ws_re
   // 가격은 reservation.html의 PRICES.FOREIGN과 같아야 한다
   const L = {
     ko: {
-      title: '보자무싸 x 보라카이 고래상어', tag: '보자무싸 X 보라카이 션', h1a: '보라카이', h1b: '고래상어',
+      title: '보자무싸 x 보라카이 고래상어', tag: '보자무싸 X 보라카이 션', h1a: '보라카이', h1b: '웨일샤크',
       nF: '패스트트랙', sF: '수중 촬영 · 대기 최소화', nR: '레귤러', sR: '기본 구성',
       per: '1인 요금', inc: '포함 사항', info: '투어 정보', tt: '타임테이블', cta: '예약하기',
       F: ['입장료 · 관람료 · 환경보호세', '왕복 차량', '구명조끼 · 오리발 대여', '짐 보관 · 생수 제공', '수중 촬영 포함', 'Fast Track — 고래상어 대기 최소화'],
@@ -322,7 +322,6 @@ try { sessionStorage.setItem('ws_ref', 'BOJAMUSSA'); localStorage.setItem('ws_re
   let tour = PRICE[q] ? q : 'F';
   function render() {
     document.querySelectorAll('.tour').forEach((b) => b.classList.toggle('on', b.dataset.tour === tour));
-    document.getElementById('h-tour').textContent = L['n' + tour];
     document.getElementById('price').textContent = PRICE[tour];
     document.getElementById('inc').innerHTML = L[tour].map((s) => `<li><span class="dot"></span>${s}</li>`).join('');
     document.getElementById('info').innerHTML = [...L.common, ...(tour === 'R' ? [L.notInc] : []), ...L.pay]
