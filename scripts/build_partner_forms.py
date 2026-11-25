@@ -21,7 +21,7 @@ PARTNERS = {
     # 보자무싸 — 예보처럼 레귤러·패스트트랙만 판다. 언어는 메인 폼처럼 폰 언어를 따르고, 없으면 영어.
     'bojamussa': dict(code='BOJAMUSSA', title='보자무싸', logo='assets/logos/bojamussa-logo.webp',
                     og='assets/logos/bojamussa-logo.png', alt='보자무싸', text='BOJAMUSSA x WHALE SHARK',
-                    drop=('VF', 'T', 'R'), no_addon=True),  # 레귤러는 잠시 판매 중지
+                    drop=('VF', 'T'), no_addon=True),
 }
 
 def sub1(pattern, repl, s, flags=re.S):
