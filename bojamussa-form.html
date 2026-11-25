@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -11,9 +11,9 @@
 <meta name="description" content="Book a whale shark tour in Libertad, Antique. Instant confirmation and an e-voucher by email.">
 <meta name="robots" content="noindex, nofollow">
 <meta property="og:type" content="website">
-<meta property="og:locale" content="ko_KR">
-<meta property="og:title" content="보자무싸 x 보라카이 고래상어">
-<meta property="og:description" content="리베르타드 고래상어 투어. 온라인 예약 즉시 확정.">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="보자무싸 x Boracay Whale Shark">
+<meta property="og:description" content="Whale shark tours in Libertad, Antique. Book online, confirmed instantly.">
 <meta property="og:image" content="https://boracaywhaleshark.com/assets/logos/bojamussa-logo.png">
 <meta property="og:url" content="https://boracaywhaleshark.com/bojamussa-form">
 <meta property="og:site_name" content="Boracay Whale Shark">
@@ -36,7 +36,7 @@
 <!-- Header / Nav -->
 <header class="site-header" style="position:fixed; width:100%; z-index:50;">
   <div class="container header-inner">
-    <a href="bojamussa" class="logo"><img src="assets/logos/bojamussa-logo.webp" alt="보자무싸" class="logo-img" style="background:#fff;border-radius:8px;padding:3px 6px;height:40px;width:auto;"><span class="logo-text">보자무싸 x 보라카이 고래상어</span></a>
+    <a href="bojamussa" class="logo"><img src="assets/logos/bojamussa-logo.webp" alt="보자무싸" class="logo-img" style="background:#fff;border-radius:8px;padding:3px 6px;height:40px;width:auto;"><span class="logo-text">BOJAMUSSA x WHALE SHARK</span></a>
     <nav class="nav">
       <a href="./" data-en="Home" data-ko="홈" data-zh="首页" data-ja="ホーム" data-ru="Главная">Home</a>
       <a href="./#comparison-section" data-en="Tours" data-ko="투어" data-zh="行程" data-ja="ツアー" data-ru="Туры">Tours</a>
@@ -900,7 +900,7 @@
   // Same detection as the main site (js/i18n.js): respect a saved choice,
   // otherwise follow the visitor's browser language. Keeps the reservation
   // page in whatever language the visitor already landed in on the main page.
-  const savedLang = localStorage.getItem(LANG_STORAGE_KEY) || 'ko';
+  const savedLang = localStorage.getItem(LANG_STORAGE_KEY);
   let currentLang = (savedLang && LANG_NAMES[savedLang])
     ? savedLang
     : (() => {

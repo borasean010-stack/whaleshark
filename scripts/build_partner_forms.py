@@ -18,10 +18,10 @@ PARTNERS = {
                     og='assets/logos/feliz-logo.webp', alt='Feliz Hotel Boracay', text='FELIZ HOTEL x WHALE SHARK', rate=0.10),
     'sample':  dict(code='SAMPLE', title='Your Resort', logo='assets/mwlogo.png',
                     og='assets/mwlogo.png', alt='Your Resort', text='YOUR RESORT x WHALE SHARK'),
-    # 보자무싸 — 한국 커뮤니티(예보처럼). 한국어로 열고 레귤러·패스트트랙만 판다.
+    # 보자무싸 — 예보처럼 레귤러·패스트트랙만 판다. 언어는 메인 폼처럼 폰 언어를 따르고, 없으면 영어.
     'bojamussa': dict(code='BOJAMUSSA', title='보자무싸', logo='assets/logos/bojamussa-logo.webp',
-                    og='assets/logos/bojamussa-logo.png', alt='보자무싸', text='보자무싸 x 보라카이 고래상어',
-                    lang='ko', drop=('VF', 'T')),
+                    og='assets/logos/bojamussa-logo.png', alt='보자무싸', text='BOJAMUSSA x WHALE SHARK',
+                    drop=('VF', 'T')),
 }
 
 def sub1(pattern, repl, s, flags=re.S):
@@ -35,10 +35,10 @@ for slug, p in PARTNERS.items():
     ko = p.get('lang') == 'ko'
     if not ko:
         s = sub1(r'<html lang="ko">', '<html lang="en">', s)
-    else:
-        # 한국 손님용 — 처음 열 때 한국어 (언어 메뉴로 바꾸면 그 선택을 따른다)
+    if p.get('first_lang'):
+        # 언어를 고른 적 없는 손님은 브라우저 언어와 상관없이 이 언어로 연다
         s = sub1(r"const savedLang = localStorage\.getItem\(LANG_STORAGE_KEY\);",
-                 "const savedLang = localStorage.getItem(LANG_STORAGE_KEY) || 'ko';", s)
+                 f"const savedLang = localStorage.getItem(LANG_STORAGE_KEY) || '{p['first_lang']}';", s)
     # 아젤리아 옛 QR 리다이렉트는 메인 전용
     s = sub1(r'<script>\s*// 예전에 뿌린 아젤리아.*?</script>\n', '', s)
     head = f'''<title>{p['title']} x Boracay Whale Shark – Booking</title>

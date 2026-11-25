@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>보자무싸 x 보라카이 고래상어</title>
+<title>BOJAMUSSA x Boracay Whale Shark</title>
 <meta name="robots" content="noindex, nofollow">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ko_KR">
@@ -239,75 +239,93 @@ try { sessionStorage.setItem('ws_ref', 'BOJAMUSSA'); localStorage.setItem('ws_re
 <body>
 
 <div class="bj-head">
-  <img src="assets/logos/bojamussa-logo.webp" alt="보자무싸">
+  <img src="assets/logos/bojamussa-logo.webp" alt="BOJAMUSSA">
   <div>
-    <div class="tag">보자무싸 X 보라카이 션</div>
-    <h1>보라카이<br><em>고래상어</em> <span id="h-tour">패스트트랙</span></h1>
+    <div class="tag" data-i="tag"></div>
+    <h1><span data-i="h1a"></span><br><em data-i="h1b"></em> <span id="h-tour"></span></h1>
   </div>
 </div>
 
 <div class="wrap">
 
   <div class="tours">
-    <button type="button" class="tour" data-tour="F"><span class="best">BEST</span><b>패스트트랙</b><span>수중 촬영 · 대기 최소화</span><em>₱3,600</em></button>
-    <button type="button" class="tour" data-tour="R"><b>레귤러</b><span>기본 구성</span><em>₱2,820</em></button>
+    <button type="button" class="tour" data-tour="F"><span class="best">BEST</span><b data-i="nF"></b><span data-i="sF"></span><em>₱3,600</em></button>
+    <button type="button" class="tour" data-tour="R"><b data-i="nR"></b><span data-i="sR"></span><em>₱2,820</em></button>
   </div>
 
   <div class="price-block">
-    <div class="per">1인 요금</div>
+    <div class="per" data-i="per"></div>
     <div class="num"><sup>₱</sup><span id="price">3,600</span><sub>/ person</sub></div>
   </div>
 
-  <p class="sh">포함 사항</p>
+  <p class="sh" data-i="inc"></p>
   <ul class="inc-list" id="inc"></ul>
 
-  <p class="sh">투어 정보</p>
+  <p class="sh" data-i="info"></p>
   <div class="info-list" id="info"></div>
 
-
-  <p class="sh">타임테이블</p>
-  <div class="tt">
-    <div class="tt-head">07:30 – 12:30 · 약 5시간</div>
-    <div class="tt-row"><span class="t">07:30 AM</span><span class="d">졸리비 메인로드 미팅</span></div>
-    <div class="tt-row"><span class="t">09:00 AM</span><span class="d">리베르타드로 이동<small>약 1시간</small></span></div>
-    <div class="tt-row"><span class="t">09:30 AM</span><span class="d">리베르타드 도착<small>브리핑 · 안전 교육</small></span></div>
-    <div class="tt-row"><span class="t">10:00 AM</span><span class="d">고래상어 관람<small>약 30분</small></span></div>
-    <div class="tt-row"><span class="t">10:30 AM</span><span class="d">간단한 샤워</span></div>
-    <div class="tt-row"><span class="t">11:30 AM</span><span class="d">보라카이로 복귀<small>약 1시간</small></span></div>
-    <div class="tt-row"><span class="t">12:30 PM</span><span class="d">졸리비 메인로드 도착</span></div>
-    <div class="tt-note">바다·기상 상황에 따라 시간이 달라질 수 있습니다.</div>
-  </div>
+  <p class="sh" data-i="tt"></p>
+  <div class="tt" id="tt"></div>
 
   <div class="spacer"></div>
 </div>
 
 <div class="cta-fixed">
-  <a href="bojamussa-form?tour=F" class="cta-btn" id="cta">예약하기</a>
+  <a href="bojamussa-form?tour=F" class="cta-btn" id="cta" data-i="cta"></a>
 </div>
 
 <script>
 (function () {
+  // 언어: 폰 언어가 한국어면 한국어, 그 밖에는 영어 (예약폼에서 고른 언어가 있으면 그걸 따른다)
+  let saved = null;
+  try { saved = localStorage.getItem('ws_lang'); } catch (_) {}
+  const lang = saved === 'ko' || (!saved && (navigator.language || '').toLowerCase().startsWith('ko')) ? 'ko' : 'en';
+  document.documentElement.lang = lang;
   // 가격은 reservation.html의 PRICES.FOREIGN과 같아야 한다
-  const T = {
-    F: { name: '패스트트랙', price: '3,600',
-      inc: ['입장료 · 관람료 · 환경보호세', '왕복 차량', '구명조끼 · 오리발 대여', '짐 보관 · 생수 제공', '수중 촬영 포함', 'Fast Track — 고래상어 대기 최소화'],
-      extra: [] },
-    R: { name: '레귤러', price: '2,820',
-      inc: ['입장료 · 관람료 · 환경보호세', '왕복 공유 차량', '현지 가이드', '구명조끼 · 오리발 대여'],
-      extra: [['불포함', '수중 촬영, 패스트트랙 입장']] }
-  };
-  const COMMON = [['미팅 장소', '졸리비 메인로드, 보라카이'], ['미팅 시간', '07:30 AM'],
-    ['소요 시간', '약 5~6시간<small>*현장 상황에 따라 소요 시간이 달라질 수 있습니다</small>']];
-  const PAY = [['결제 방식', '온라인 결제 (카드 · GCash · Maya · QR Ph)'], ['예약 확정', '결제 즉시 이메일로 바우처 발송']];
+  const L = {
+    ko: {
+      title: '보자무싸 x 보라카이 고래상어', tag: '보자무싸 X 보라카이 션', h1a: '보라카이', h1b: '고래상어',
+      nF: '패스트트랙', sF: '수중 촬영 · 대기 최소화', nR: '레귤러', sR: '기본 구성',
+      per: '1인 요금', inc: '포함 사항', info: '투어 정보', tt: '타임테이블', cta: '예약하기',
+      F: ['입장료 · 관람료 · 환경보호세', '왕복 차량', '구명조끼 · 오리발 대여', '짐 보관 · 생수 제공', '수중 촬영 포함', 'Fast Track — 고래상어 대기 최소화'],
+      R: ['입장료 · 관람료 · 환경보호세', '왕복 공유 차량', '현지 가이드', '구명조끼 · 오리발 대여'],
+      notInc: ['불포함', '수중 촬영, 패스트트랙 입장'],
+      common: [['미팅 장소', '졸리비 메인로드, 보라카이'], ['미팅 시간', '07:30 AM'],
+        ['소요 시간', '약 5~6시간<small>*현장 상황에 따라 소요 시간이 달라질 수 있습니다</small>']],
+      pay: [['결제 방식', '온라인 결제 (카드 · GCash · Maya · QR Ph)'], ['예약 확정', '결제 즉시 이메일로 바우처 발송']],
+      ttHead: '07:30 – 12:30 · 약 5시간', ttNote: '바다·기상 상황에 따라 시간이 달라질 수 있습니다.',
+      rows: [['07:30 AM', '졸리비 메인로드 미팅', ''], ['09:00 AM', '리베르타드로 이동', '약 1시간'], ['09:30 AM', '리베르타드 도착', '브리핑 · 안전 교육'],
+        ['10:00 AM', '고래상어 관람', '약 30분'], ['10:30 AM', '간단한 샤워', ''], ['11:30 AM', '보라카이로 복귀', '약 1시간'], ['12:30 PM', '졸리비 메인로드 도착', '']]
+    },
+    en: {
+      title: 'BOJAMUSSA x Boracay Whale Shark', tag: 'BOJAMUSSA X WHALE SHARK', h1a: 'Boracay', h1b: 'Whale Shark',
+      nF: 'Fast Track', sF: 'Underwater photos · Minimal wait', nR: 'Regular', sR: 'The essentials',
+      per: 'Price per person', inc: 'Included', info: 'Tour information', tt: 'Timetable', cta: 'Book Now',
+      F: ['Entrance, viewing and environmental fees', 'Round-trip land transfer', 'Life vest and fins', 'Luggage storage and drinking water', 'Underwater photos and video', 'Fast Track — minimal waiting time'],
+      R: ['Entrance, viewing and environmental fees', 'Round-trip shared vehicle', 'Local guide', 'Life vest and fins'],
+      notInc: ['Not included', 'Underwater photos, Fast Track entry'],
+      common: [['Meeting point', 'Jollibee Main Road, Boracay'], ['Meeting time', '07:30 AM'],
+        ['Duration', 'About 5–6 hours<small>*May vary with sea and weather conditions</small>']],
+      pay: [['Payment', 'Online (Card · GCash · Maya · QR Ph)'], ['Confirmation', 'E-voucher emailed right after payment']],
+      ttHead: '07:30 – 12:30 · about 5 hours', ttNote: 'Times may vary with sea and weather conditions.',
+      rows: [['07:30 AM', 'Meet at Jollibee, Main Road', ''], ['09:00 AM', 'Transfer to Libertad', 'About 1 hour'], ['09:30 AM', 'Arrive in Libertad', 'Briefing & safety instructions'],
+        ['10:00 AM', 'Whale shark watching', 'About 30 minutes'], ['10:30 AM', 'Quick freshwater rinse', ''], ['11:30 AM', 'Return to Boracay', 'About 1 hour'], ['12:30 PM', 'Drop-off at Jollibee, Main Road', '']]
+    }
+  }[lang];
+  const PRICE = { F: '3,600', R: '2,820' };
+  document.title = L.title;
+  document.querySelectorAll('[data-i]').forEach((el) => { el.textContent = L[el.dataset.i]; });
+  document.getElementById('tt').innerHTML = `<div class="tt-head">${L.ttHead}</div>` +
+    L.rows.map(([t, d, n]) => `<div class="tt-row"><span class="t">${t}</span><span class="d">${d}${n ? `<small>${n}</small>` : ''}</span></div>`).join('') +
+    `<div class="tt-note">${L.ttNote}</div>`;
   const q = (new URLSearchParams(location.search).get('tour') || '').toUpperCase();
-  let tour = T[q] ? q : 'F';
+  let tour = PRICE[q] ? q : 'F';
   function render() {
-    const t = T[tour];
     document.querySelectorAll('.tour').forEach((b) => b.classList.toggle('on', b.dataset.tour === tour));
-    document.getElementById('h-tour').textContent = t.name;
-    document.getElementById('price').textContent = t.price;
-    document.getElementById('inc').innerHTML = t.inc.map((s) => `<li><span class="dot"></span>${s}</li>`).join('');
-    document.getElementById('info').innerHTML = [...COMMON, ...t.extra, ...PAY]
+    document.getElementById('h-tour').textContent = L['n' + tour];
+    document.getElementById('price').textContent = PRICE[tour];
+    document.getElementById('inc').innerHTML = L[tour].map((s) => `<li><span class="dot"></span>${s}</li>`).join('');
+    document.getElementById('info').innerHTML = [...L.common, ...(tour === 'R' ? [L.notInc] : []), ...L.pay]
       .map(([k, v]) => `<div class="info-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join('');
     document.getElementById('cta').href = 'bojamussa-form?tour=' + tour;
   }
