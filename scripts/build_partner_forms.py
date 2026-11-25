@@ -21,7 +21,7 @@ PARTNERS = {
     # 보자무싸 — 예보처럼 레귤러·패스트트랙만 판다. 언어는 메인 폼처럼 폰 언어를 따르고, 없으면 영어.
     'bojamussa': dict(code='BOJAMUSSA', title='보자무싸', logo='assets/logos/bojamussa-logo.webp',
                     og='assets/logos/bojamussa-logo.png', alt='보자무싸', text='BOJAMUSSA x WHALE SHARK',
-                    drop=('VF', 'T')),
+                    drop=('VF', 'T'), no_addon=True),
 }
 
 def sub1(pattern, repl, s, flags=re.S):
@@ -78,5 +78,8 @@ for slug, p in PARTNERS.items():
     # 리조트 페이지는 티켓 단독을 팔지 않는다 (VIP·패스트트랙·레귤러만). 보자무싸는 VIP도 뺀다.
     for t in p.get('drop', ('T',)):
         s = sub1(r'\n\s*<label class="tour-option">\s*<input type="radio" name="tourType" value="' + t + r'".*?</label>', '', s)
+    if p.get('no_addon'):
+        # 말룸파티 옵션을 팔지 않는 제휴사 — 옵션 스크립트를 빼면 옵션 칸도 금액도 안 붙는다
+        s = sub1(r'<script src="/js/addon\.js\?v=\d+"></script>\n', '', s)
     (ROOT / f'{slug}-form.html').write_text(s)
     print('built', f'{slug}-form.html')
