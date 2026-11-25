@@ -96,8 +96,14 @@ function mayaFeeOf(d) {
   if (!isMayaPaid(d) || !total) return 0;
   return round2(total * MAYA_FEE_RATE + MAYA_FEE_FIXED);
 }
+// 파트너별 넷가 예외 — 보자무싸 레귤러(외국인)는 우리가 ₱2,500을 갖고 나머지(₱320)에서 카드 수수료를 뺀 게 정산금
+const PARTNER_NET_OVERRIDES = {
+  BOJAMUSSA: { R: { FOREIGN: 2500 } },
+};
 function netCostOf(d) {
-  const t = SETTLE_NET_PRICES[d.tourType];
+  const base = SETTLE_NET_PRICES[d.tourType];
+  const over = ((PARTNER_NET_OVERRIDES[d.referralCode] || {})[d.tourType]) || {};
+  const t = base && { ...base, ...over };
   if (!t) return 0;
   // 외국인·필리핀인이 섞인 예약은 국적별 인원(paxForeign·paxPH)으로 계산
   if (d.paxForeign != null || d.paxPH != null) return t.FOREIGN * (Number(d.paxForeign) || 0) + t.PH * (Number(d.paxPH) || 0);
