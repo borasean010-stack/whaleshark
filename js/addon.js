@@ -122,11 +122,16 @@
   }
 
   const tour = () => ((document.querySelector('input[name="tourType"]:checked') || {}).value || '').trim();
-  const eligible = () => tour() === 'F' || tour() === 'VF';
+  // 이 달에 투어하는 예약은 말룸파티 옵션을 고를 수 없다 (YYYY-MM)
+  const BLOCKED_MONTHS = ['2026-11'];
+  const dateVal = () => ((document.getElementById('date') || {}).value || '');
+  const monthOk = () => !BLOCKED_MONTHS.includes(dateVal().slice(0, 7));
+  const eligible = () => (tour() === 'F' || tour() === 'VF') && monthOk();
   window.wsAddonPP = () => (eligible() && cb.checked ? PRICE : 0);
   window.wsAddonMalumpati = () => window.wsAddonPP() > 0;
 
   function refresh() {
+    if (!eligible() && cb.checked) cb.checked = false;
     paintButtons();
     box.style.display = eligible() ? '' : 'none';
     vipNote.style.display = tour() === 'VF' ? 'block' : 'none';
@@ -145,6 +150,8 @@
   cb.addEventListener('change', recalc);
   document.querySelectorAll('input[name="tourType"]').forEach((r) => r.addEventListener('change', recalc));
   document.getElementById('people')?.addEventListener('input', refresh);
+  document.getElementById('date')?.addEventListener('change', recalc);
+  document.getElementById('date')?.addEventListener('input', recalc);
   // 결제 실패 후 되돌아오면 저장된 값이 복원된다 — 복원 뒤 한 번 더 맞춘다
   window.addEventListener('load', () => setTimeout(recalc, 0));
   recalc();
