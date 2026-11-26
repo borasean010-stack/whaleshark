@@ -278,6 +278,9 @@ try { sessionStorage.setItem('ws_ref', 'BOJAMUSSA'); localStorage.setItem('ws_re
   // 언어: 폰 언어가 한국어면 한국어, 그 밖에는 영어 (예약폼에서 고른 언어가 있으면 그걸 따른다)
   let saved = null;
   try { saved = localStorage.getItem('ws_lang'); } catch (_) {}
+  // ?lang=en / ?lang=ko 로 강제 (예약폼까지 이어지게 저장)
+  const qLang = new URLSearchParams(location.search).get('lang');
+  if (qLang === 'en' || qLang === 'ko') { saved = qLang; try { localStorage.setItem('ws_lang', qLang); } catch (_) {} }
   const lang = saved === 'ko' || (!saved && (navigator.language || '').toLowerCase().startsWith('ko')) ? 'ko' : 'en';
   document.documentElement.lang = lang;
   // 가격은 reservation.html의 PRICES.FOREIGN과 같아야 한다
