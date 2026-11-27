@@ -11,7 +11,7 @@
   <title>Admin Dashboard | BORACAY WHALE SHARK</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/admin.css?v=1794100100">
+  <link rel="stylesheet" href="css/admin.css?v=1794100200">
 </head>
 <body>
 
@@ -150,18 +150,7 @@
             <aside class="dash-right">
 
               <!-- 오늘 고래상어 안내 팝업 -->
-              <div class="stats-panel wsn-panel">
-                <div class="panel-title">🐋 오늘 고래상어 안내 팝업</div>
-                <div id="wsn-current" class="wsn-current">불러오는 중...</div>
-                <div class="wsn-tabs">
-                  <button type="button" class="wsn-tab active" data-tab="search">① 탐색 안내</button>
-                  <button type="button" class="wsn-tab" data-tab="sight">② 출현 안내</button>
-                </div>
-                <textarea id="wsn-paste" rows="7" placeholder="아침에 온 탐색 안내문을 그대로 붙여넣으세요"></textarea>
-                <div id="wsn-preview" class="wsn-preview"></div>
-                <button type="button" id="wsn-save" class="wsn-btn wsn-btn-main">탐색 안내 등록</button>
-                <button type="button" id="wsn-off" class="wsn-btn wsn-btn-off" style="display:none;">팝업 끄기</button>
-              </div>
+              <button type="button" id="wsn-launch" class="wsn-launch">🐋 고래상어 안내 등록</button>
 
               <!-- Donut chart -->
               <div class="stats-panel">
@@ -511,6 +500,23 @@
   </div>
 </div>
 
-<script type="module" src="js/admin.js?v=1794100100"></script>
+
+<!-- 오늘 고래상어 안내 등록 창 -->
+<div id="wsn-modal" class="wsn-modal" style="display:none;">
+  <div class="wsn-panel">
+    <button type="button" id="wsn-x" class="wsn-x" aria-label="닫기">✕</button>
+    <div class="panel-title">🐋 오늘 고래상어 안내 팝업</div>
+                <div id="wsn-current" class="wsn-current">불러오는 중...</div>
+                <div class="wsn-tabs">
+                  <button type="button" class="wsn-tab active" data-tab="search">① 탐색 안내</button>
+                  <button type="button" class="wsn-tab" data-tab="sight">② 출현 안내</button>
+                </div>
+                <textarea id="wsn-paste" rows="7" placeholder="아침에 온 탐색 안내문을 그대로 붙여넣으세요"></textarea>
+                <div id="wsn-preview" class="wsn-preview"></div>
+                <button type="button" id="wsn-save" class="wsn-btn wsn-btn-main">탐색 안내 등록</button>
+                <button type="button" id="wsn-off" class="wsn-btn wsn-btn-off" style="display:none;">팝업 끄기</button>
+  </div>
+</div>
+<script type="module" src="js/admin.js?v=1794100200"></script>
 </body>
 </html>

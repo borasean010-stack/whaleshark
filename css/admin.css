@@ -590,3 +590,8 @@ tr.dash-row-new > td:first-child {
 .wsn-panel textarea { width: 100%; box-sizing: border-box; border: 1px solid var(--admin-border); border-radius: 8px; padding: 8px; font-size: .82rem; font-family: inherit; resize: vertical; }
 .wsn-preview { font-size: .76rem; color: #0b63c5; min-height: 1em; margin: 4px 0 8px; }
 .wsn-preview.err { color: #dc2626; }
+.wsn-launch { width: 100%; margin-bottom: 14px; border: 0; border-radius: 12px; padding: 12px; background: #0b63c5; color: #fff; font-size: .9rem; font-weight: 800; cursor: pointer; }
+.wsn-modal { position: fixed; inset: 0; z-index: 9999; background: rgba(15,23,42,.55); display: flex; align-items: center; justify-content: center; padding: 16px; }
+.wsn-modal .wsn-panel { position: relative; width: 100%; max-width: 440px; max-height: calc(100vh - 32px); overflow: auto; background: #fff; border-radius: 16px; padding: 18px; box-shadow: 0 20px 50px rgba(0,0,0,.3); }
+.wsn-modal .panel-title { font-weight: 800; margin-bottom: 10px; padding-right: 28px; }
+.wsn-x { position: absolute; top: 12px; right: 12px; border: 0; background: none; font-size: 1.1rem; cursor: pointer; color: var(--admin-text-muted); }

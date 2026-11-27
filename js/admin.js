@@ -1523,6 +1523,11 @@ function wsnShowPreview() {
     wsnShowPreview();
   }));
   wsnEl("wsn-paste").addEventListener("input", wsnShowPreview);
+  const modal = wsnEl("wsn-modal");
+  wsnEl("wsn-launch").addEventListener("click", () => { modal.style.display = "flex"; loadWhaleNotice(); wsnEl("wsn-paste").focus(); });
+  const hideModal = () => { modal.style.display = "none"; };
+  wsnEl("wsn-x").addEventListener("click", hideModal);
+  modal.addEventListener("click", (e) => { if (e.target === modal) hideModal(); });
   wsnEl("wsn-save").addEventListener("click", async () => {
     const r = wsnBuild();
     if (!r.ok) { alert(r.err || "안내문을 붙여넣어 주세요."); return; }
