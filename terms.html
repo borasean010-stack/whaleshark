@@ -16,6 +16,16 @@
 <link rel="stylesheet" href="css/style.css?v=1786959573">
 <link rel="stylesheet" href="css/main.css?v=1787114131">
 <script src="/js/track.js?v=2" defer></script>
+<script>
+  // 다른 언어를 고른 손님(또는 한국어가 아닌 브라우저)은 해당 언어 약관으로 보낸다. ?lang=ko 면 그대로.
+  (function () {
+    var q = new URLSearchParams(location.search).get('lang');
+    if (q === 'ko') { try { localStorage.setItem('ws_lang', 'ko'); } catch (_) {} return; }
+    var l = null; try { l = localStorage.getItem('ws_lang'); } catch (_) {}
+    if (!l) { var b = (navigator.language || '').slice(0, 2); l = b === 'ko' ? 'ko' : (['zh', 'ja', 'ru'].indexOf(b) >= 0 ? b : 'en'); }
+    if (l && l !== 'ko' && ['en', 'zh', 'ja', 'ru'].indexOf(l) >= 0) location.replace('/' + l + '/terms' + location.hash);
+  })();
+</script>
 </head>
 <body style="background:#fff;">
 
@@ -32,6 +42,7 @@
 <main class="legal-main">
   <h1>이용약관</h1>
   <p class="legal-updated">최종 업데이트: 2026년 8월 18일</p>
+  <p class="legal-updated" style="margin-top:-6px;"><a href="/terms?lang=ko">한국어</a> · <a href="/en/terms">English</a> · <a href="/zh/terms">中文</a> · <a href="/ja/terms">日本語</a> · <a href="/ru/terms">Русский</a></p>
 
   <div class="legal-section">
     <h2>1. 예약 확인</h2>
