@@ -51,8 +51,9 @@
 #wsn-card .wsn-hero{position:relative;aspect-ratio:736/460;background:#1d4f91 url(/assets/whaleshark-popup.webp) center/cover}
 #wsn-card .wsn-hero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,37,80,.05) 40%,rgba(10,37,80,.78))}
 #wsn-card .wsn-date{position:absolute;top:14px;left:14px;z-index:1;background:rgba(255,255,255,.92);color:#0b3b75;font-weight:800;font-size:.8rem;padding:6px 12px;border-radius:99px}
-#wsn-card .wsn-ttl{position:absolute;left:18px;right:18px;bottom:46px;z-index:1;color:#e0f2fe;font-size:.82rem;font-weight:700;letter-spacing:.02em}
-#wsn-card .wsn-badge{position:absolute;left:18px;right:18px;bottom:12px;z-index:1;color:#fff;font-size:1.45rem;font-weight:900;line-height:1.2;text-shadow:0 2px 8px rgba(0,0,0,.35)}
+#wsn-card .wsn-cap{position:absolute;left:18px;right:18px;bottom:14px;z-index:1;display:flex;flex-direction:column;gap:4px}
+#wsn-card .wsn-ttl{color:#e0f2fe;font-size:.82rem;font-weight:700;letter-spacing:.02em}
+#wsn-card .wsn-badge{color:#fff;font-size:1.4rem;font-weight:900;line-height:1.25;text-shadow:0 2px 8px rgba(0,0,0,.35)}
 #wsn-card .wsn-body{padding:16px 18px 14px}
 #wsn-card .wsn-op{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:800;color:#047857;background:#ecfdf5;border-radius:99px;padding:5px 12px}
 #wsn-card .wsn-op.off{color:#b91c1c;background:#fef2f2}
@@ -81,8 +82,8 @@
     css();
     const o = document.createElement('div');
     o.id = 'wsn-overlay';
-    o.innerHTML = `<div id="wsn-card" role="dialog" aria-modal="true" aria-label="${esc(t.title)}">
-  <div class="wsn-hero"><div class="wsn-date">📅 ${esc(dateTxt)}</div><div class="wsn-ttl">${esc(t.title)}</div><div class="wsn-badge">${esc(badge)}</div></div>
+    o.innerHTML = `<div id="wsn-card" class="notranslate" translate="no" role="dialog" aria-modal="true" aria-label="${esc(t.title)}">
+  <div class="wsn-hero"><div class="wsn-date">📅 ${esc(dateTxt)}</div><div class="wsn-cap"><div class="wsn-ttl">${esc(t.title)}</div><div class="wsn-badge">${esc(badge)}</div></div></div>
   <div class="wsn-body">
     <div><span class="wsn-op${st === 'closed' ? ' off' : ''}">${st === 'closed' ? '●' : '●'} ${esc(st === 'closed' ? t.closed.replace('⛔ ', '') : t.open)}</span>${st === 'searching' ? `<span class="wsn-later">${esc(t.later)}</span>` : ''}</div>
     ${cond ? `<div class="wsn-cond">${cond}</div>` : '<div style="height:12px"></div>'}
