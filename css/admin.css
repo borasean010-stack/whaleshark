@@ -584,3 +584,9 @@ tr.dash-row-new > td:first-child {
 .wsn-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
 .wsn-form label { display: flex; flex-direction: column; gap: 3px; font-size: .72rem; color: var(--admin-text-muted); font-weight: 700; }
 .wsn-actions { display: flex; gap: 6px; }
+.wsn-tabs { display: flex; gap: 6px; margin-bottom: 8px; }
+.wsn-tab { flex: 1; border: 1px solid var(--admin-border); background: #fff; border-radius: 10px; padding: 9px 4px; font-size: .84rem; font-weight: 700; color: var(--admin-text-muted); cursor: pointer; }
+.wsn-tab.active { background: #e0efff; border-color: #0b63c5; color: #0b63c5; }
+.wsn-panel textarea { width: 100%; box-sizing: border-box; border: 1px solid var(--admin-border); border-radius: 8px; padding: 8px; font-size: .82rem; font-family: inherit; resize: vertical; }
+.wsn-preview { font-size: .76rem; color: #0b63c5; min-height: 1em; margin: 4px 0 8px; }
+.wsn-preview.err { color: #dc2626; }

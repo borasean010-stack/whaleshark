@@ -1481,57 +1481,59 @@ async function loadWhaleNotice() {
   wsnRenderCurrent(wsnData);
 }
 
-function wsnFill(d) {
-  wsnEl("wsn-date").value = d.date || wsnToday();
-  wsnEl("wsn-status").value = d.status || "searching";
-  wsnEl("wsn-count").value = d.count || 0;
-  ["waves", "wind", "vis"].forEach(k => { wsnEl("wsn-" + k).value = d[k] || ""; });
-  wsnEl("wsn-note").value = d.note || "";
+let wsnTab = "search";
+const wsnCondLabel = (c) => (WSN_COND.find(x => x[0] === c) || [, "-"])[1];
+
+function wsnBuild() {
+  const p = wsnParse(wsnEl("wsn-paste").value);
+  const today = wsnToday();
+  const base = wsnData && wsnData.date === today ? wsnData : {};
+  if (wsnTab === "search") {
+    return { ok: !!wsnEl("wsn-paste").value.trim(), d: {
+      date: today, status: p.status === "closed" ? "closed" : "searching", count: 0,
+      waves: p.waves || "", wind: p.wind || "", vis: p.vis || "",
+      note: p.note && !/^(추후|없음)/.test(p.note) ? p.note : "", active: true } };
+  }
+  if (!p.count) return { ok: false, err: "마리 수를 못 찾았어요 (예: 총 3마리)" };
+  return { ok: true, d: {
+    date: today, status: "sighted", count: p.count,
+    waves: base.waves || "", wind: base.wind || "", vis: base.vis || "",
+    note: base.note && !/탐색/.test(base.note) ? base.note : "", active: true } };
+}
+
+function wsnShowPreview() {
+  const box = wsnEl("wsn-preview");
+  if (!wsnEl("wsn-paste").value.trim()) { box.textContent = ""; box.className = "wsn-preview"; return; }
+  const r = wsnBuild();
+  if (!r.ok) { box.textContent = "⚠️ " + (r.err || ""); box.className = "wsn-preview err"; return; }
+  const d = r.d;
+  const st = d.status === "sighted" ? `🐋 출현 ${d.count}마리` : WSN_STATUS[d.status];
+  box.className = "wsn-preview";
+  box.textContent = `인식됨 → ${d.date} · ${st} · 파도 ${wsnCondLabel(d.waves)} · 바람 ${wsnCondLabel(d.wind)} · 시야 ${wsnCondLabel(d.vis)}`;
 }
 
 (function bindWhaleNotice() {
-  if (!wsnEl("wsn-open")) return;
-  document.querySelectorAll(".wsn-c").forEach(sel => {
-    sel.innerHTML = WSN_COND.map(([v, l]) => `<option value="${v}">${l}</option>`).join("");
-  });
-  wsnEl("wsn-open").addEventListener("click", () => {
-    // 오늘 이미 등록한 게 있으면 그대로 불러와서 추가 안내만 덮어쓰게 한다
-    const base = wsnData && wsnData.date === wsnToday() ? wsnData : { date: wsnToday() };
-    wsnFill(base);
+  if (!wsnEl("wsn-save")) return;
+  document.querySelectorAll(".wsn-tab").forEach(t => t.addEventListener("click", () => {
+    wsnTab = t.dataset.tab;
+    document.querySelectorAll(".wsn-tab").forEach(x => x.classList.toggle("active", x === t));
     wsnEl("wsn-paste").value = "";
-    wsnEl("wsn-form").style.display = "";
-    wsnEl("wsn-open").style.display = "none";
-    wsnEl("wsn-paste").focus();
-  });
-  wsnEl("wsn-paste").addEventListener("input", () => {
-    const p = wsnParse(wsnEl("wsn-paste").value);
-    if (p.status) wsnEl("wsn-status").value = p.status;
-    if (p.count !== undefined) wsnEl("wsn-count").value = p.count;
-    ["waves", "wind", "vis"].forEach(k => { if (p[k] !== undefined) wsnEl("wsn-" + k).value = p[k]; });
-    if (p.note !== undefined) wsnEl("wsn-note").value = /^추후|^없음/.test(p.note) ? "" : p.note;
-    if (p.status === "sighted" && /탐색/.test(wsnEl("wsn-note").value)) wsnEl("wsn-note").value = "";
-  });
-  const closeForm = () => { wsnEl("wsn-form").style.display = "none"; wsnEl("wsn-open").style.display = ""; };
-  wsnEl("wsn-cancel").addEventListener("click", closeForm);
+    wsnEl("wsn-paste").placeholder = wsnTab === "search" ? "아침에 온 탐색 안내문을 그대로 붙여넣으세요" : "출현 안내문을 그대로 붙여넣으세요";
+    wsnEl("wsn-save").textContent = wsnTab === "search" ? "탐색 안내 등록" : "출현 안내 등록";
+    wsnShowPreview();
+  }));
+  wsnEl("wsn-paste").addEventListener("input", wsnShowPreview);
   wsnEl("wsn-save").addEventListener("click", async () => {
-    const d = {
-      date: wsnEl("wsn-date").value || wsnToday(),
-      status: wsnEl("wsn-status").value,
-      count: parseInt(wsnEl("wsn-count").value, 10) || 0,
-      waves: wsnEl("wsn-waves").value,
-      wind: wsnEl("wsn-wind").value,
-      vis: wsnEl("wsn-vis").value,
-      note: wsnEl("wsn-note").value.trim(),
-      active: true
-    };
-    if (d.status === "sighted" && !d.count) { alert("출현 마리 수를 입력해주세요."); return; }
+    const r = wsnBuild();
+    if (!r.ok) { alert(r.err || "안내문을 붙여넣어 주세요."); return; }
     const btn = wsnEl("wsn-save");
     btn.disabled = true;
     try {
-      await setDoc(WSN_REF(), { ...d, updatedAt: serverTimestamp() });
-      wsnData = d;
-      wsnRenderCurrent(d);
-      closeForm();
+      await setDoc(WSN_REF(), { ...r.d, updatedAt: serverTimestamp() });
+      wsnData = r.d;
+      wsnRenderCurrent(r.d);
+      wsnEl("wsn-paste").value = "";
+      wsnShowPreview();
     } catch (e) { alert("저장 실패: " + e.message); }
     btn.disabled = false;
   });
