@@ -1418,7 +1418,132 @@ async function handleDepositRequest(requestId, agencyUid, amount, decision) {
 function loadDashboard() {
   loadReservations();
   loadAgencies();
+  loadWhaleNotice();
 }
+
+// =====================================================================
+// 오늘 고래상어 안내 팝업 — settings/whalesharkToday 문서 하나를 덮어쓴다.
+// 홈페이지(js/whaleshark-notice.js)는 date가 오늘(마닐라)이고 active일 때만 띄운다.
+// =====================================================================
+const WSN_REF = () => doc(db, "settings", "whalesharkToday");
+const WSN_COND = [["", "-"], ["excellent", "매우 좋음"], ["good", "좋음"], ["normal", "보통"], ["bad", "나쁨"], ["verybad", "매우 나쁨"]];
+const WSN_STATUS = { searching: "🔍 탐색중", sighted: "🐋 출현", closed: "⛔ 운영 중단" };
+const wsnEl = (id) => document.getElementById(id);
+const escapeHtml = (v) => String(v == null ? "" : v).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const wsnToday = () => new Date(Date.now() + 8 * 3600e3).toISOString().slice(0, 10);
+
+function wsnCondCode(txt) {
+  const t = String(txt || "").replace(/\s/g, "");
+  if (!t) return "";
+  if (/매우(좋|양호)/.test(t)) return "excellent";
+  if (/매우(나쁨|나쁘|안좋)/.test(t)) return "verybad";
+  if (/(나쁨|나쁘|안좋|높음|강함)/.test(t)) return "bad";
+  if (/보통/.test(t)) return "normal";
+  if (/(좋|양호)/.test(t)) return "good";
+  return "";
+}
+
+function wsnParse(text) {
+  const out = {};
+  const m = text.match(/(\d+)\s*마리/);
+  if (m) { out.status = "sighted"; out.count = parseInt(m[1], 10); }
+  else if (/(결항|운항\s*중단|운영\s*중단|투어\s*취소|미운영|휴무)/.test(text)) out.status = "closed";
+  else if (/탐색/.test(text)) out.status = "searching";
+  const pick = (re) => { const x = text.match(re); return x ? wsnCondCode(x[1]) : undefined; };
+  const w = pick(/파도\s*[:：]\s*([^\n]+)/); if (w !== undefined) out.waves = w;
+  const wi = pick(/바람\s*[:：]\s*([^\n]+)/); if (wi !== undefined) out.wind = wi;
+  const v = pick(/시야\s*[:：]\s*([^\n]+)/); if (v !== undefined) out.vis = v;
+  const n = text.match(/특이사항\s*[:：]\s*([^\n]*)/);
+  if (n) out.note = n[1].trim();
+  return out;
+}
+
+function wsnRenderCurrent(d) {
+  const box = wsnEl("wsn-current");
+  if (!box) return;
+  const live = d && d.active && d.date === wsnToday();
+  wsnEl("wsn-off").style.display = d && d.active ? "" : "none";
+  if (!d || !d.date) { box.innerHTML = '<span class="off">● 등록된 안내 없음</span>'; return; }
+  const cond = (k) => (WSN_COND.find(c => c[0] === d[k]) || [, "-"])[1];
+  const st = d.status === "sighted" ? `🐋 출현 ${d.count || 0}마리` : (WSN_STATUS[d.status] || "-");
+  box.innerHTML =
+    `${live ? '<span class="on">● 홈페이지에 표시 중</span>' : `<span class="off">● 표시 안 됨${d.active ? " (오늘 날짜 아님)" : " (꺼짐)"}</span>`}<br>` +
+    `<b>${escapeHtml(d.date)}</b> · <b>${escapeHtml(st)}</b><br>파도 ${cond("waves")} · 바람 ${cond("wind")} · 시야 ${cond("vis")}` +
+    (d.note ? `<br>특이사항: ${escapeHtml(d.note)}` : "");
+}
+
+let wsnData = null;
+async function loadWhaleNotice() {
+  try {
+    const snap = await getDoc(WSN_REF());
+    wsnData = snap.exists() ? snap.data() : null;
+  } catch (e) { console.warn("whale notice", e); }
+  wsnRenderCurrent(wsnData);
+}
+
+function wsnFill(d) {
+  wsnEl("wsn-date").value = d.date || wsnToday();
+  wsnEl("wsn-status").value = d.status || "searching";
+  wsnEl("wsn-count").value = d.count || 0;
+  ["waves", "wind", "vis"].forEach(k => { wsnEl("wsn-" + k).value = d[k] || ""; });
+  wsnEl("wsn-note").value = d.note || "";
+}
+
+(function bindWhaleNotice() {
+  if (!wsnEl("wsn-open")) return;
+  document.querySelectorAll(".wsn-c").forEach(sel => {
+    sel.innerHTML = WSN_COND.map(([v, l]) => `<option value="${v}">${l}</option>`).join("");
+  });
+  wsnEl("wsn-open").addEventListener("click", () => {
+    // 오늘 이미 등록한 게 있으면 그대로 불러와서 추가 안내만 덮어쓰게 한다
+    const base = wsnData && wsnData.date === wsnToday() ? wsnData : { date: wsnToday() };
+    wsnFill(base);
+    wsnEl("wsn-paste").value = "";
+    wsnEl("wsn-form").style.display = "";
+    wsnEl("wsn-open").style.display = "none";
+    wsnEl("wsn-paste").focus();
+  });
+  wsnEl("wsn-paste").addEventListener("input", () => {
+    const p = wsnParse(wsnEl("wsn-paste").value);
+    if (p.status) wsnEl("wsn-status").value = p.status;
+    if (p.count !== undefined) wsnEl("wsn-count").value = p.count;
+    ["waves", "wind", "vis"].forEach(k => { if (p[k] !== undefined) wsnEl("wsn-" + k).value = p[k]; });
+    if (p.note !== undefined) wsnEl("wsn-note").value = /^추후|^없음/.test(p.note) ? "" : p.note;
+    if (p.status === "sighted" && /탐색/.test(wsnEl("wsn-note").value)) wsnEl("wsn-note").value = "";
+  });
+  const closeForm = () => { wsnEl("wsn-form").style.display = "none"; wsnEl("wsn-open").style.display = ""; };
+  wsnEl("wsn-cancel").addEventListener("click", closeForm);
+  wsnEl("wsn-save").addEventListener("click", async () => {
+    const d = {
+      date: wsnEl("wsn-date").value || wsnToday(),
+      status: wsnEl("wsn-status").value,
+      count: parseInt(wsnEl("wsn-count").value, 10) || 0,
+      waves: wsnEl("wsn-waves").value,
+      wind: wsnEl("wsn-wind").value,
+      vis: wsnEl("wsn-vis").value,
+      note: wsnEl("wsn-note").value.trim(),
+      active: true
+    };
+    if (d.status === "sighted" && !d.count) { alert("출현 마리 수를 입력해주세요."); return; }
+    const btn = wsnEl("wsn-save");
+    btn.disabled = true;
+    try {
+      await setDoc(WSN_REF(), { ...d, updatedAt: serverTimestamp() });
+      wsnData = d;
+      wsnRenderCurrent(d);
+      closeForm();
+    } catch (e) { alert("저장 실패: " + e.message); }
+    btn.disabled = false;
+  });
+  wsnEl("wsn-off").addEventListener("click", async () => {
+    if (!confirm("홈페이지 팝업을 끌까요?")) return;
+    try {
+      await updateDoc(WSN_REF(), { active: false, updatedAt: serverTimestamp() });
+      wsnData = { ...wsnData, active: false };
+      wsnRenderCurrent(wsnData);
+    } catch (e) { alert("실패: " + e.message); }
+  });
+})();
 
 // =====================================================================
 // Settlement — (1) 에이전시 예약인데 잔액 차감이 안 끝난 것(depositApplied

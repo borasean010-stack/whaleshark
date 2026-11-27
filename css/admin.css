@@ -570,3 +570,17 @@ tr.dash-row-new > td:first-child {
   .pending-count.has-new,
   tr.dash-row-new > td { animation: none; }
 }
+
+/* 오늘 고래상어 안내 팝업 패널 */
+.wsn-current { font-size: .82rem; color: var(--admin-text-muted); background: var(--admin-bg-2); border-radius: 10px; padding: 10px 12px; margin-bottom: 10px; line-height: 1.55; }
+.wsn-current b { color: var(--admin-text); }
+.wsn-current .on { color: #16a34a; font-weight: 800; }
+.wsn-current .off { color: #94a3b8; font-weight: 800; }
+.wsn-btn { width: 100%; border: 1px solid var(--admin-border); background: #fff; border-radius: 10px; padding: 10px; font-size: .85rem; font-weight: 700; cursor: pointer; color: var(--admin-text); }
+.wsn-btn-main { background: #0b63c5; border-color: #0b63c5; color: #fff; }
+.wsn-btn-off { margin-top: 8px; color: #dc2626; border-color: #fecaca; background: #fff5f5; }
+.wsn-form { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+.wsn-form textarea, .wsn-form input, .wsn-form select { width: 100%; box-sizing: border-box; border: 1px solid var(--admin-border); border-radius: 8px; padding: 7px 8px; font-size: .82rem; font-family: inherit; background: #fff; }
+.wsn-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.wsn-form label { display: flex; flex-direction: column; gap: 3px; font-size: .72rem; color: var(--admin-text-muted); font-weight: 700; }
+.wsn-actions { display: flex; gap: 6px; }
