@@ -289,16 +289,12 @@
       <label for="qs-date">日期</label>
       <input type="date" id="qs-date" required>
     </div>
-    <div class="bs-field">
-      <label for="qs-people">人数</label>
-      <input type="number" id="qs-people" min="1" max="20" value="2" required>
-    </div>
-    <div class="bs-field">
-      <label for="qs-nationality">国籍</label>
-      <select id="qs-nationality" required>
-        <option value="PH">菲律宾</option>
-        <option value="FOREIGN">外国籍</option>
-      </select>
+    <div class="bs-field gp" data-gp>
+      <label for="qs-guests" >人数</label>
+      <button type="button" id="qs-guests" class="gp-trigger" aria-haspopup="true"><span class="gp-sum">2</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16 4.8a3.2 3.2 0 0 1 0 6.4M18 13.8c1.9.7 3 2.6 3 5.2"/></svg></button>
+      <input type="hidden" id="qs-foreign" value="2">
+      <input type="hidden" id="qs-ph" value="0">
+      <div class="gp-pop" hidden></div>
     </div>
     <button type="submit" class="bs-submit">搜索</button>
   </form>
@@ -814,13 +810,15 @@
       e.preventDefault();
       const tour = document.getElementById('qs-tour').value;
       const date = document.getElementById('qs-date').value;
-      const people = document.getElementById('qs-people').value;
-      const nationality = document.getElementById('qs-nationality').value;
-      const params = new URLSearchParams({ tour, date, people, nationality });
+      const foreign = Math.max(0, parseInt(document.getElementById('qs-foreign').value, 10) || 0);
+      const ph = Math.max(0, parseInt(document.getElementById('qs-ph').value, 10) || 0);
+      if (foreign + ph < 1) { alert('请至少输入1位人数。'); return; }
+      const params = new URLSearchParams({ tour, date, foreign, ph, people: foreign + ph });
       window.location.href = `../reservation.html?${params.toString()}`;
     });
   }
 </script>
+<script src="/js/guest-picker.js?v=1" defer></script>
 <script src="/js/whaleshark-notice.js?v=2" defer></script>
 </body>
 </html>

@@ -140,7 +140,7 @@ function prefillFromUrl() {
   const pf = document.getElementById("paxForeign");
   if (people && /^\d{1,2}$/.test(people) && pf) {
     // 인원을 국적별로 받는 폼 — 링크에는 국적이 없으니 외국인으로 채운다
-    if (!q.get("nationality")) {
+    if (!q.get("nationality") && !q.has("foreign") && !q.has("ph")) {
       pf.value = people;
       document.getElementById("paxPH").value = 0;
       pf.dispatchEvent(new Event("change", { bubbles: true }));
